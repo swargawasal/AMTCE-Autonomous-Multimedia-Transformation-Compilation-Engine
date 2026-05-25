@@ -131,7 +131,7 @@ lazy-loader==0.5
 librosa==0.11.0
 license-expression==30.4.4
 linkify-it-py==2.1.0
-litellm==1.83.14
+litellm>=1.83.14
 llvmlite==0.46.0
 lxml==6.1.0
 markdown-it-py==4.0.0
@@ -162,7 +162,7 @@ oauthlib==3.3.1
 onnx==1.20.1
 onnxruntime==1.19.2
 open_clip_torch==3.3.0
-openai==2.33.0
+openai>=2.30.0
 opencv-contrib-python==4.8.1.78
 opencv-python==4.8.1.78
 opencv-python-headless==4.13.0.92
