@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 venv/
+temp_venv/
 
 # ============================================================
 # SECRETS & CREDENTIALS — Never commit ANY of these
