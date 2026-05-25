@@ -1,4 +1,4 @@
-﻿
+
 aiofiles==24.1.0
 aiohappyeyeballs==2.6.1
 aiohttp==3.13.4
@@ -225,7 +225,7 @@ pypdfium2==5.7.1
 pyperclip==1.11.0
 PyPika==0.51.1
 pyproject_hooks==1.2.0
-pyreadline3==3.5.4
+pyreadline3==3.5.4; sys_platform == 'win32'
 PyRect==0.2.0
 PyScreeze==1.0.1
 pytest==9.0.2
@@ -238,7 +238,7 @@ python-telegram-bot==21.0
 pytube==15.0.0
 pytweening==1.2.0
 pytz==2025.2
-pywin32==311
+pywin32==311; sys_platform == 'win32'
 PyYAML==6.0.3
 pyzmq==27.1.0
 referencing==0.37.0
