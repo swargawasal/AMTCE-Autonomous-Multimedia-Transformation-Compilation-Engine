@@ -14,11 +14,24 @@ import httpx
 import os
 import time
 import asyncio
+from dotenv import load_dotenv
+
+load_dotenv('Credentials/.env')
 
 async def upload():
-    token = '8362783603:AAHKdh3Gae7xkuB3VGQmjfpiVkkPpYXlEOE'
-    chat_id = '1363193987'
-    video_path = r'D:\whatsupneyork\Processed Shorts\Pooja_hedge_3.mp4'
+    token = os.getenv("TELEGRAM_BOT_TOKEN")
+    chat_id = os.getenv("chat_id")
+    
+    if not token or not chat_id:
+        print("ERROR: Missing TELEGRAM_BOT_TOKEN or chat_id in Credentials/.env")
+        return
+        
+    if len(sys.argv) > 1:
+        video_path = sys.argv[1]
+    else:
+        print("ERROR: Missing video path argument")
+        return
+        
     url = f"https://api.telegram.org/bot{token}/sendVideo"
     
     if not os.path.exists(video_path):

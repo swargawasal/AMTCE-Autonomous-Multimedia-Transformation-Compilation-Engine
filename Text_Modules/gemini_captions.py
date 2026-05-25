@@ -1,30 +1,35 @@
 # gemini_captions.py - AI-Powered Caption Generator using Gemini Vision API
 import os
-import logging
+import time
 import random
+import logging
+import hashlib
+import re
+import json
+import warnings
+warnings.filterwarnings("ignore", category=FutureWarning, module="google")
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 from dotenv import load_dotenv
 
 load_dotenv("Credentials/.env", override=True)
 
 logger = logging.getLogger("gemini_captions")
 
-# Try to import Gemini
+from Intelligence_Modules.gemini_governor import gemini_router
+
+HAS_PIL = True
 try:
-    import google.generativeai as genai
     from PIL import Image
-    GEMINI_AVAILABLE = True
 except ImportError:
-    GEMINI_AVAILABLE = False
-    logger.warning("⚠️ google-generativeai not installed. Run: pip install google-generativeai")
+    HAS_PIL = False
 
 try:
     from assets.system_prompts import GEMINI_SYSTEM_ROLE, STYLE_TEMPLATES
 except ImportError:
     # Fallback if file not found locally (dev mode)
-    GEMINI_SYSTEM_ROLE = "You are a caption generator. Output short editorial fashion commentary."
-    STYLE_TEMPLATES = {"viral": "Focus on elegance."}
+    GEMINI_SYSTEM_ROLE = "You are a fashion caption generator. Output short, punchy headline labels only — 2–4 words MAX. Never use full sentences."
+    STYLE_TEMPLATES = {"viral": "Bold street energy"}
     logger.warning("⚠️ assets/system_prompts.py not found. Using minimal fallback.")
 
 try:
@@ -33,62 +38,105 @@ except ImportError:
     quota_manager = None
     logger.warning("⚠️ Intelligence_Modules/gemini_status_manager.py not found. Quota management disabled.")
 
-# --- FALLBACK SYSTEM ---
-# Global index to ensure rotation even across different generator instances
-_fallback_index = 0
+try:
+    from Intelligence_Modules.caption_memory import memory as caption_memory, stable_hash as memory_hash
+except ImportError:
+    caption_memory = None
+    memory_hash = None
 
-FALLBACK_CAPTIONS = [
-  "A confident moment captured effortlessly",
-  "A graceful take on modern glamour",
-  "Elegant movement with a timeless appeal",
-  "Soft tones paired with refined style",
-  "Red carpet elegance done right",
-  "Active style with a polished touch",
-  "A poised presence on the red carpet",
-  "Confidence reflected in every step",
-  "Subtle shine with a refined finish",
-  "A statement look with classic charm",
-  "Naturally elegant and composed",
-  "Understated glamour at its best",
-  "A warm smile with effortless style",
-  "Simple styling, elevated presence",
-  "Graceful glamour without trying too hard",
-  "Timeless elegance in motion",
-  "A balanced blend of confidence and style",
-  "Poised and naturally radiant",
-  "A refined take on classic red",
-  "Clean styling with modern aesthetics",
-  "A polished look with visual appeal",
-  "Contemporary style with calm confidence",
-  "A thoughtfully styled appearance",
-  "A confident fashion moment",
-  "Cool tones with modern elegance",
-  "Soft hues paired with subtle sparkle",
-  "Minimal glamour with strong presence",
-  "A composed and stylish appearance",
-  "Fashion-forward with a calm attitude",
-  "Clean lines and confident energy",
-  "A well-balanced modern aesthetic",
-  "Simple styling done right",
-  "A confident and composed look",
-  "Denim styled with elegance",
-  "Casual fashion with refined detail",
-  "Soft reflections with modern charm",
-  "A thoughtfully styled appearance",
-  "Balanced fashion with visual clarity",
-  "A calm and confident presence",
-  "A refined take on modern fashion",
-  "Style that feels natural and composed",
-  "Clean, modern styling",
-  "Poised red carpet appearance",
-  "Festive style with subtle elegance",
-  "A composed look for a special event",
-  "Confidence reflected through styling",
-  "Evening elegance made effortless",
-  "Light seasonal styling with grace",
-  "Modern fashion with a confident stance",
-  "Relaxed glamour with refined detail"
-]
+try:
+    from Text_Modules.caption_sanitizer import sanitize_caption_text
+except ImportError:
+    def sanitize_caption_text(text: str, target_max: int = 4, hard_max: int = 6) -> str:
+        return text
+
+# --- Helper Functions ---
+
+def stable_hash(text: str) -> int:
+    if memory_hash:
+        return memory_hash(text)
+    return int(hashlib.md5(text.encode()).hexdigest(), 16)
+
+
+def select_style_from_path(path: str, categories: List[str]) -> str:
+    if not categories:
+        return "editorial"
+    return categories[stable_hash(path) % len(categories)]
+
+
+def compress_caption_text(caption: str, filler_words: List[str], priority_words: List[str], target_max: int = 4, hard_max: int = 6) -> str:
+    words = caption.split()
+    # remove fillers
+    filtered = [w for w in words if w.lower() not in filler_words]
+    if len(filtered) <= target_max:
+        return " ".join(filtered[:target_max]).strip()
+    # if still long, keep priority words first, then earliest words to preserve rhythm
+    ranked = sorted(
+        enumerate(filtered),
+        key=lambda x: (filtered[x[0]].lower() in priority_words, -x[0]),
+        reverse=True,
+    )
+    keep_indices = sorted([idx for idx, _ in ranked[:hard_max]])
+    compressed = [filtered[i] for i in keep_indices][:target_max] if len(keep_indices) > target_max else [filtered[i] for i in keep_indices]
+    return " ".join(compressed).strip()
+
+
+def build_negative_patterns(words: List[str]) -> List[re.Pattern]:
+    """Compile case-insensitive word-boundary regex patterns."""
+    patterns = []
+    for w in words or []:
+        escaped = re.escape(w.strip())
+        if not escaped:
+            continue
+        patterns.append(re.compile(rf"\b{escaped}\b", re.IGNORECASE))
+    return patterns
+
+
+def contains_blacklisted(text: str, patterns: List[re.Pattern]) -> bool:
+    if not text or not patterns:
+        return False
+    return any(p.search(text) for p in patterns)
+
+
+def _similarity_guard(text: str, threshold: float = 0.85) -> bool:
+    """Return True if caption is too similar to memory."""
+    return caption_memory.is_too_similar(text, threshold=threshold) if caption_memory else False
+
+
+# --- DYNAMIC FALLBACK SYSTEM ---
+# No more hardcoded generic captions.
+# The fallback pool is built entirely from real AI-generated captions saved in captions_cache.json.
+_CACHE_FALLBACK_PATH = "The_json/captions_cache.json"
+
+def _load_cache_fallbacks() -> list:
+    """Load previously AI-generated captions from disk as the fallback pool."""
+    try:
+        if os.path.exists(_CACHE_FALLBACK_PATH):
+            with open(_CACHE_FALLBACK_PATH, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, list) and data:
+                    return [str(c).strip() for c in data if c and len(str(c).strip()) > 3]
+    except Exception:
+        pass
+    return []
+
+def _save_to_cache_fallback(caption: str):
+    """Append a newly generated caption to captions_cache.json for future fallback use."""
+    try:
+        existing = _load_cache_fallbacks()
+        if caption not in existing:
+            existing.append(caption)
+            # Keep cache to max 200 entries (rotate out oldest)
+            if len(existing) > 200:
+                existing = existing[-200:]
+            os.makedirs(os.path.dirname(_CACHE_FALLBACK_PATH), exist_ok=True)
+            with open(_CACHE_FALLBACK_PATH, "w", encoding="utf-8") as f:
+                json.dump(existing, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        logger.warning(f"⚠️ Could not save caption to cache: {e}")
+
+# Load once at startup — will be empty on first run, grows with each processed video
+FALLBACK_CAPTIONS = _load_cache_fallbacks()
 
 class GeminiCaptionGenerator:
     """
@@ -97,56 +145,48 @@ class GeminiCaptionGenerator:
     """
     
     def __init__(self):
-        if not GEMINI_AVAILABLE:
-            raise ImportError("google-generativeai package not installed")
-        
-        api_key = os.getenv("GEMINI_API_KEY")
-        
-        if not api_key:
-            raise ValueError("GEMINI_API_KEY not found in .env file")
-        
-        if "YOUR_" in api_key or len(api_key) < 20:
-            raise ValueError("GEMINI_API_KEY not configured properly. Get one from https://aistudio.google.com/app/apikey")
-        
-        # Configure Gemini
-        genai.configure(api_key=api_key)
-        
-        # Use Gemini 2.5 Flash FIRST, then Lite
-        self.models = ["gemini-2.5-flash", "gemini-2.5-flash-lite"]
-        
-        # Remove duplicates while preserving order
-        self.models = list(dict.fromkeys(self.models))
-
-        if quota_manager:
-            is_def_banned = quota_manager.is_banned(self.models[0])
-            self.models = quota_manager.filter_models(self.models)
-            if not self.models:
-                logger.error("❌ gemini_captions: All models are BANNED globally.")
-                self.models = ["gemini-2.5-flash-lite"] 
-            
-            if is_def_banned:
-                logger.warning(f"🏷️ gemini_captions: Primary model is BANNED. Using available: {self.models[0]}")
-            else:
-                logger.info(f"🏷️ gemini_captions: ACTIVE (Model: {self.models[0]})")
-        
-        self.current_model_idx = 0
-        self.model = genai.GenerativeModel(self.models[self.current_model_idx])
-        
-        # Define safety settings to prevent blocking (List format for compatibility)
-        self.safety_settings = [
-            {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-            {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-        ]
+        # Use centralized router
+        self.router = gemini_router
         
         # Initialize Caption Cache
         self.cache_file = "The_json/captions_cache.json"
         self.caption_cache = self._load_cache()
 
-        # Initialize Persistent State (Fallback Index)
+        # Initialize persistent state
         self.state_file = "The_json/caption_state.json"
-        self.fallback_index = self._load_state()
+        _state = self._load_state()
+        self.fallback_index = _state.get("fallback_index", 0)
+        self.style_index = _state.get("style_index", 0)
+
+        # Load Diversity Config
+        # Check root first (our master config), then The_json/ as fallback
+        self.prompt_config_path = (
+            "caption_prompt.json"
+            if os.path.exists("caption_prompt.json")
+            else "The_json/caption_prompt.json"
+        )
+        self.diversity_config = self._load_diversity_config()
+        self._negative_patterns = build_negative_patterns(
+            self.diversity_config.get("NEGATIVE_WORDS", [])
+        )
+        
+        # Load usage for rotation
+        self.usage_file = "The_json/captions_usage.json"
+        self.usage_data = self._load_usage_data()
+
+    def _load_usage_data(self) -> dict:
+        try:
+            if os.path.exists(self.usage_file):
+                with open(self.usage_file, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+        except: pass
+        return {}
+
+    def _save_usage_data(self):
+        try:
+            with open(self.usage_file, 'w', encoding='utf-8') as f:
+                json.dump(self.usage_data, f, indent=2)
+        except: pass
 
     def _load_cache(self):
         try:
@@ -154,8 +194,15 @@ class GeminiCaptionGenerator:
                 import json
                 with open(self.cache_file, 'r', encoding='utf-8') as f:
                     data = json.load(f)
-                logger.info(f"💾 Loaded {len(data)} captions from cache.")
-                return data
+                if isinstance(data, list):
+                    filtered = [
+                        c for c in data
+                        if not contains_blacklisted(str(c), self._negative_patterns)
+                    ]
+                    if len(filtered) != len(data):
+                        logger.info(f"♻️ Purged {len(data)-len(filtered)} blacklisted cached captions.")
+                    logger.info(f"💾 Loaded {len(filtered)} captions from cache.")
+                    return filtered
         except Exception:
             pass
         return []
@@ -168,400 +215,378 @@ class GeminiCaptionGenerator:
         except Exception:
             pass
 
-    def _load_state(self) -> int:
-        """Loads the persistent fallback index."""
+    def _load_state(self) -> dict:
+        """Loads persistent indices for fallback and style rotation."""
         try:
             if os.path.exists(self.state_file):
                 import json
                 with open(self.state_file, 'r') as f:
                     data = json.load(f)
-                    return data.get("fallback_index", 0)
-        except Exception: pass
-        return 0
+                    if isinstance(data, dict):
+                        return data
+                    if isinstance(data, int):
+                        return {"fallback_index": data, "style_index": 0}
+        except Exception:
+            pass
+        return {"fallback_index": 0, "style_index": 0}
 
     def _save_state(self):
-        """Saves the persistent fallback index."""
+        """Saves persistent indices for fallback and style rotation."""
         try:
             import json
             with open(self.state_file, 'w') as f:
-                json.dump({"fallback_index": self.fallback_index}, f)
-        except Exception: pass
+                json.dump(
+                    {
+                        "fallback_index": self.fallback_index,
+                        "style_index": getattr(self, "style_index", 0),
+                    },
+                    f,
+                )
+        except Exception:
+            pass
 
-    def _get_style_prompt(self, style: str, strict_mode: bool = False) -> str:
+    def _load_diversity_config(self):
+        try:
+            if os.path.exists(self.prompt_config_path):
+                import json
+                with open(self.prompt_config_path, 'r', encoding='utf-8') as f:
+                    content = json.load(f)
+                    return content
+        except Exception as e:
+            logger.error(f"❌ Failed to load diversity config: {e}")
+        return {}
+
+    def _compress_caption(self, caption: str) -> str:
         """
-        Returns the optimized system prompt for the given style using centralized templates.
+        Priority-aware compression using config.
         """
-        # Inject "Micro-Commentary" variety
-        template_key = random.choice(list(STYLE_TEMPLATES.keys()))
-        style_instruction = STYLE_TEMPLATES.get(template_key, "")
-        
-        # If strict style requested override random
-        if style in ["question", "motivational", "clickbait"]:
-             # Custom overrides for specific functional styles
-             if style == "question": style_instruction = "Ask a short rhetorical question about the style."
-             if style == "motivational": style_instruction = "Focus on confidence and power."
-        
-        full_prompt = (
-            f"{GEMINI_SYSTEM_ROLE}\n\n"
-            f"CURRENT TASK:\n"
-            f"Style Strategy: {template_key.upper()} - {style_instruction}\n\n"
-            f"GENUINENESS RULE: DO NOT return the name of the model alone. DO NOT say 'Saiee' or 'Model'.\n"
-            f"Instead, describe the specific fabric (silk, velvet), the lighting (warm, studio), or the vibe (high-status, red-carpet).\n"
-            f"CRITICAL: Always apply the LAW-BENDING DICTIONARY rules for monetization safety.\n"
+        filler = self.diversity_config.get("FILLER_WORDS", [])
+        priority = self.diversity_config.get("PRIORITY_WORDS", [])
+        return compress_caption_text(caption, filler, priority, target_max=4, hard_max=6)
+
+    def _get_style_prompt(self, style: str, category: str = "editorial") -> str:
+        """
+        Visual garment identification prompt.
+        Gemini looks at the frame and describes what it SEES: color + garment type + texture.
+        NO garment family pre-seeding — any category hint biases Gemini to hallucinate
+        that garment type even when a completely different garment is visible in the frame.
+        """
+        full_role = self.diversity_config.get("content", GEMINI_SYSTEM_ROLE)
+        neg_words = self.diversity_config.get("NEGATIVE_WORDS", [])
+        banned_brands = self.diversity_config.get("BANNED_BRANDS", [])
+        color_words = self.diversity_config.get("COLOR_WORDS", [])
+        texture_words = self.diversity_config.get("TEXTURE_WORDS", [])
+
+        prompt = (
+            f"{full_role}\n\n"
+            f"# YOUR TASK\n"
+            f"Look at the person in this frame. Identify the garment they are wearing.\n"
+            f"Describe ONLY what you actually see in the image — do NOT guess.\n\n"
+            f"# OUTPUT FORMAT (MANDATORY)\n"
+            f"Return EXACTLY 2-3 words: [COLOR] [GARMENT TYPE] or [COLOR] [GARMENT TYPE] [TEXTURE]\n"
+            f"Color must be the actual dominant color of the garment (not skin, not background).\n"
+            f"Use one of these colors if visible: {', '.join(color_words[:15])}, etc.\n"
+            f"Use one of these textures if visible: {', '.join(texture_words[:10])}, etc.\n\n"
+            f"# ABSOLUTE PROHIBITIONS\n"
+            f"NEVER use any brand or designer name. Banned: "
+            f"{', '.join(banned_brands[:10])}, and all others.\n"
+            f"NEVER use these adjectives: {', '.join(neg_words[:12])}, etc.\n"
+            f"NEVER write more than 3 words.\n"
+            f"NEVER describe foreground objects, accessories, or background flowers/decor.\n"
+            f"ONLY describe the GARMENT on the primary person in focus.\n"
         )
-        
-        if strict_mode:
-            full_prompt += "\nSTRICT MODE UPDATE: Your previous attempt was too short or generic. YOU MUST BE DESCRIPTIVE."
-            
-        full_prompt += "\n\nOUTPUT ONLY THE EXPERT CAPTION."
-            
-        return full_prompt
+        return prompt
     
-    def _validate_caption(self, text: str) -> bool:
-        """
-        STRICT VALIDATION GATE (Updated for Micro-Commentary).
-        Returns True if caption is safe to use, False otherwise.
-        """
-        if not text: return False
-        
-        words = text.split()
-        word_count = len(words)
-        
-        # 1. Strict Word Count (8-15 preferrred, 25 max absolute)
-        if word_count < 5: # Too short (label)
-             logger.warning(f"⚠️ Validation Fail: Too Short ({word_count} words) - '{text}'")
-             return False
-        if word_count > 25: # Too long (essay)
-             logger.warning(f"⚠️ Validation Fail: Too Long ({word_count} words) - '{text}'")
-             return False
-             
-        # 2. Line Length Check (Approx 2 lines max)
-        # Average char per word ~5 + space = 6. 25 words = 150 chars.
-        # But we want visual fit. 22 chars per line x 2 lines = 44 chars ideal?
-        # User said "No line should exceed ~22 characters". That is very short.
-        # We will check absolute char length.
-        if len(text) > 160: 
-             logger.warning(f"⚠️ Validation Fail: Too Long Chars ({len(text)})")
-             return False
-
-        text_lower = text.lower()
-        
-        # 3. Banned Phrases (Analytical/Meta)
-        # Relaxed "features" if it makes sense contextually, but "caption:" is hard ban.
-        hard_banned = [
-            "caption:", "here is", "this is a video", "output:", 
-            "analyze:", "assessment:", "image shows"
+    def _next_style_category(self) -> str:
+        categories = self.diversity_config.get("STYLE_CATEGORIES") or [
+            "attitude",
+            "mood",
+            "movement",
+            "texture",
+            "statement",
+            "minimal",
         ]
+        if not categories:
+            return "editorial"
+        category = categories[self.style_index % len(categories)]
+        self.style_index = (self.style_index + 1) % len(categories)
+        self._save_state()
+        return category
+    
+    def get_diversified_fallback(self) -> str:
+        """
+        Pulls a fallback caption from real previously-generated captions in captions_cache.json.
+        sorted by least-recently-used to ensure rotation/diversity.
+        """
+        # Reload cache from disk to get latest
+        fresh_pool = _load_cache_fallbacks()
         
-        for b in hard_banned:
-            if b in text_lower:
-                 return False
-                 
+        if fresh_pool:
+            # Sort by least used for diversity
+            candidates = sorted(fresh_pool, key=lambda x: self.usage_data.get(x, 0))
+            fallback = candidates[0]
+            self.usage_data[fallback] = self.usage_data.get(fallback, 0) + 1
+            self._save_usage_data()
+            logger.info(f"[CAPTION_FALLBACK] Using cached caption: '{fallback}'")
+            return fallback
+
+        # Absolute last resort — cache is empty (first ever run)
+        logger.warning("[CAPTION_FALLBACK] Cache is empty — this is the first run. Returning safe default.")
+        return "Fashion Item"
+    
+    def _validate_caption_raw(self, text: str) -> bool:
+        """
+        Validation gate: blacklist + brand ban + meta phrases.
+        Uses BANNED_BRANDS from caption_prompt.json dynamically so any
+        new brand added to the JSON is auto-blocked without code changes.
+        """
+        if not text:
+            return False
+        text_lower = text.lower()
+        # length guard (2-3 words)
+        word_count = len(text_lower.split())
+        if word_count < 2:
+            return False
+
+        if contains_blacklisted(text_lower, self._negative_patterns):
+            logger.warning(f"⚠️ Banned word detected in: '{text}'")
+            return False
+
+        # ── Dynamic brand ban from config ──────────────────────────────────
+        # BANNED_BRANDS is loaded from caption_prompt.json — add a new brand
+        # there and it's automatically blocked here. No code changes needed.
+        banned_brands = self.diversity_config.get("BANNED_BRANDS", [])
+        for brand in banned_brands:
+            if brand.lower() in text_lower:
+                logger.warning(f"⚠️ [BRAND_BAN] Blocked brand name in caption: '{brand}' in '{text}'")
+                return False
+
+        hard_banned = [
+            "caption:", "here is", "this is a video", "output:",
+            "analyze:", "assessment:", "image shows",
+            "focusing on", "this video", "in this video", "the model",
+            "the outfit", "she is wearing", "she wears", "we see",
+            "featuring a", "this shows", "the look", "this is a",
+        ]
+        if any(b in text_lower for b in hard_banned):
+            return False
+
         return True
+
+    @staticmethod
+    def _enforce_caption_rules(text: str, max_words: int = 3) -> str:
+        """
+        Enforce headline rules: EXACTLY 2-3 words, no trailing period.
+        """
+        if not text:
+            return ""
+        cleaned = text.replace('"', '').replace("'", "").replace('\n', ' ').strip()
+        words = cleaned.split()
+        trimmed = words[:max_words]
+        if len(trimmed) < 2:
+            return " ".join((trimmed + ["energy"])[:max_words]).strip()
+        caption = " ".join(trimmed).strip()
+        if caption:
+            caption = caption[0].upper() + caption[1:]
+        return caption
 
     def generate_caption(self, image_path: str, style: str = "viral") -> str:
         """
         Generate AI caption from video frame (DIRECT MODE ONLY).
         """
-        # global _fallback_index # Removed in favor of self.fallback_index
         try:
             if not os.path.exists(image_path):
                 raise FileNotFoundError(f"Image not found: {image_path}")
                 
-            logger.info(f"🤖 Generating caption (Direct Mode)...")
+            # Rotate style categories instead of hashing for freshness
+            category = self._next_style_category()
             
-            # Retry Loop (Exponential Backoff)
+            logger.info(f"🤖 Generating caption (Direct Mode) [Category: {category}]...")
+            
             import time
             import random
             
-            max_retries = 5 # Increased from 3
-            last_error = None
-            generated_text = None
-            
-            for attempt in range(max_retries):
-                is_strict = attempt > 0
-                prompt = self._get_style_prompt(style, strict_mode=is_strict)
-                
-                try:
-                    with Image.open(image_path) as img:
-                        # Add transport timeout check if possible, mostly implied by library
-                        response = self.model.generate_content([prompt, img], safety_settings=self.safety_settings)
-                        text = response.text.strip()
-                        
-                        # Clean
-                        text = text.replace('"', '').replace("'", "").replace('\n', ' ').strip()
-                        if ":" in text and len(text.split(":")[0]) < 15: 
-                            text = text.split(":")[-1].strip() # Remove "Analysis: ..."
-                        
-                        if self._validate_caption(text):
-                            # UNIQUENESS CHECK
-                            if text in self.caption_cache:
-                                logger.warning(f"⚠️ Duplicate Caption: '{text}'. Retrying...")
-                                time.sleep(1)
-                                continue
-                                
-                            generated_text = text
-                            logger.info(f"📝 Caption generated in attempt {attempt+1}/{max_retries} ({getattr(self.model, 'model_name', 'default')}).")
-                            break
-                        else:
-                            logger.warning(f"⚠️ Validation Failed: '{text}'. Retrying...")
-                            
-                except Exception as e:
-                    last_error = e
-                    err_str = str(e).lower()
-                    
-                    # QUOTA / AVAILABILITY FALLBACK LOGIC
-                    if any(x in err_str for x in ["429", "quota", "500", "404", "not found"]):
-                        if self.current_model_idx < len(self.models) - 1:
-                             old_model = self.models[self.current_model_idx]
-                             
-                             # GLOBAL BAN
-                             if ("429" in err_str or "quota" in err_str) and quota_manager:
-                                 quota_manager.mark_banned(old_model)
-                                 
-                             self.current_model_idx += 1
-                             new_model = self.models[self.current_model_idx]
-                             logger.warning(f"⚠️ Quota Hit on {old_model}. Switching to {new_model}...")
-                             self.model = genai.GenerativeModel(new_model)
-                             continue # IMMEDIATE RETRY
-                        else:
-                             logger.error(f"❌ Quota exceeded on all available models ({self.models}).")
-                             break
+            # 1. BATCH GENERATION: Request 3 candidates in one call
+            prompt = (
+                f"{self._get_style_prompt(style, category=category)}\n\n"
+                f"RULES:\n"
+                f"1. Generate exactly 3 unique candidates.\n"
+                f"2. Return ONLY a JSON list of strings: [\"candidate 1\", \"candidate 2\", \"candidate 3\"]"
+            )
 
-                    # Backoff Strategy
-                    wait_time = (2 ** attempt) + random.uniform(0.1, 1.0)
-                    if "503" in err_str or "timeout" in err_str:
-                         logger.warning(f"⚠️ Network/Server Error ({e}). Retrying in {wait_time:.1f}s...")
-                    else:
-                         logger.warning(f"⚠️ Attempt {attempt+1} failed: {e}. Retrying in {wait_time:.1f}s...")
-                         
-                    time.sleep(wait_time)
+            candidates = []
+            source = "fallback"
+
+            # 1 attempt only — if Gemini is rate-limited, retrying wastes 90+s and double-burns budget.
+            # The cached fallback pool is used immediately on failure.
+            max_retries = 1
+            for attempt in range(max_retries):
+                try:
+                    res_txt = self.router.generate(
+                        task_type="caption",
+                        prompt=[prompt, Image.open(image_path)] if HAS_PIL else prompt,
+                        module_name="gemini_captions",
+                        gen_config={"response_mime_type": "application/json"}
+                    )
+                    
+                    if not res_txt: continue
+
+                    # Parse JSON list
+                    try:
+                        raw_list = json.loads(res_txt)
+                        if isinstance(raw_list, list):
+                            candidates = [str(c) for c in raw_list[:3]]
+                            break
+                    except: continue
+                                
+                except Exception as e:
+                    logger.warning(f"⚠️ Caption batch attempt {attempt+1} failed: {e}")
+
+            if not candidates:
+                logger.error("❌ Caption Batch Generation Failed. Using Diversified Fallback.")
+                generated_text = self.get_diversified_fallback()
+                candidates = [generated_text]
+            else:
+                # Select best locally using existing validation logic
+                valid_candidates = []
+                for c in candidates:
+                    cleaned = c.replace('"', '').replace("'", "").replace('\n', ' ').strip()
+                    if self._validate_caption_raw(cleaned) and not _similarity_guard(cleaned):
+                        valid_candidates.append(self._compress_caption(cleaned))
+                
+                if valid_candidates:
+                    generated_text = random.choice(valid_candidates)
+                else:
+                    generated_text = candidates[0] # Fallback to first if all fail validation
+
+            # Logging
+            print(f"[CAPTION] source={source}")
+            print(f"[CAPTION] candidates={len(candidates)} selected=1")
             
             # --- HARD FALLBACK WITH PERSISTENT ROTATION & PRUNING ---
             if not generated_text:
-                logger.error("❌ Caption Generation Failed. Using Hard Fallback.")
-                
-                # Load Usage Data
-                usage_file = "The_json/captions_usage.json"
-                usage_data = {}
-                try:
-                    if os.path.exists(usage_file):
-                        import json
-                        with open(usage_file, 'r', encoding='utf-8') as f: usage_data = json.load(f)
-                except: pass
-
-                # PRIMARY: Use User's Cache (Full History)
-                if self.caption_cache and len(self.caption_cache) > 0:
-                     # Sort candidates by usage count (ascending) to pick freshest
-                     candidates = sorted(self.caption_cache, key=lambda x: usage_data.get(x, 0))
-                     
-                     # Pick the winner (least used)
-                     generated_text = candidates[0]
-                     
-                     # Increment Usage
-                     new_count = usage_data.get(generated_text, 0) + 1
-                     usage_data[generated_text] = new_count
-                     
-                     # PRUNING LOGIC (User Request: Delete if used > 2 times)
-                     if new_count > 2:
-                         logger.info(f"✂️ Caption '{generated_text}' used {new_count} times. DELETING from cache.")
-                         if generated_text in self.caption_cache:
-                             self.caption_cache.remove(generated_text)
-                             self._save_cache() # Save updated cache
-                         if generated_text in usage_data:
-                             del usage_data[generated_text]
-                     
-                     # Save Usage
-                     try:
-                         with open(usage_file, 'w', encoding='utf-8') as f: 
-                             json.dump(usage_data, f, indent=2)
-                     except: pass
-                     
-                     if new_count <= 2:
-                        logger.info(f"🔄 Used Cache Fallback: '{generated_text}' (Usage: {new_count}/2)")
-                else:
-                     # SECONDARY: Use Hardcoded List (Persistent Index)
-                     generated_text = FALLBACK_CAPTIONS[self.fallback_index % len(FALLBACK_CAPTIONS)]
-                     logger.info(f"🔄 Used Static Fallback #{self.fallback_index}: '{generated_text}'")
-                
-                # Increment & Save Persistent Index
-                self.fallback_index += 1
-                self._save_state()
+                logger.error("❌ Caption Generation Failed. Using cached fallback.")
+                generated_text = self.get_diversified_fallback()
                     
-            # Cache Success (If new generated text)
-            if generated_text and generated_text not in self.caption_cache and generated_text not in FALLBACK_CAPTIONS:
+            if generated_text and generated_text not in self.caption_cache:
                 self.caption_cache.append(generated_text)
                 self._save_cache()
-                
-            return generated_text
+                # Also persist to global fallback pool
+                _save_to_cache_fallback(generated_text)
+
+            final_caption = self._enforce_caption_rules(generated_text, max_words=3)
+            final_caption = sanitize_caption_text(final_caption, target_max=3, hard_max=3)
+            logger.info(f"[CAPTION_ENGINE] caption=\"{final_caption}\"")
+            return final_caption
 
         except Exception as e:
             logger.error(f"❌ Critical Caption Error: {e}")
-            
-            # Use a descriptive fallback, NOT the title
-            fallback = FALLBACK_CAPTIONS[random.randint(0, len(FALLBACK_CAPTIONS)-1)]
-            return fallback
+            fallback = self.get_diversified_fallback()
+            final_caption = self._enforce_caption_rules(fallback)
+            final_caption = sanitize_caption_text(final_caption, target_max=3, hard_max=3)
+            logger.info(f"[CAPTION_ENGINE] caption=\"{final_caption}\"")
+            return final_caption
 
-    
     def generate_hashtags(self, image_path: str, count: int = 5) -> str:
-        """
-        Generate relevant hashtags based on video content.
-        """
         prompt = (
             f"Analyze this image and generate {count} relevant, popular hashtags "
             f"that would work well on YouTube Shorts or Instagram Reels. "
             f"Return ONLY the hashtags separated by spaces, starting with #. "
             f"Focus on trending, viral topics."
         )
-        
         try:
-            img = Image.open(image_path)
-            response = self.model.generate_content([prompt, img], safety_settings=self.safety_settings)
-            hashtags = response.text.strip()
-            
-            # Clean up
-            hashtags = ' '.join([tag for tag in hashtags.split() if tag.startswith('#')])
-            
-            logger.info(f"✨ Generated hashtags: {hashtags}")
-            return hashtags
-            
+            with Image.open(image_path) as img:
+                hashtags = self.router.generate(
+                    task_type="caption",
+                    prompt=[prompt, img],
+                    module_name="gemini_hashtags"
+                )
+                if not hashtags: return "#viral #trending #shorts"
+                hashtags = ' '.join([tag for tag in hashtags.split() if tag.startswith('#')])
+                logger.info(f"✨ Generated hashtags: {hashtags}")
+                return hashtags
         except Exception as e:
             logger.error(f"❌ Hashtag generation failed: {e}")
             return "#viral #trending #shorts"
     
     def generate_title(self, image_path: str) -> str:
-        """
-        Generate a YouTube-ready title based on video content.
-        """
         prompt = (
             "Generate a CATCHY and LAW-BENDING YouTube title (max 60 characters) for this video. "
-            "Target high search intent by using professional synonyms for suggestive terms: "
-            "Replace 'hot' with Bold/Stunning, 'sexy' with Sizzling/Alluring, 'naked' with Unseen/Raw. "
+            "Target high search intent by using professional synonyms for suggestive terms. "
             "Make it clickable, engaging, and optimized for YouTube algorithm. "
             "Use capitalization strategically. Be creative!"
         )
         try:
-            img = Image.open(image_path)
-            response = self.model.generate_content([prompt, img], safety_settings=self.safety_settings)
-            title = response.text.strip().replace('"', '').replace("'", '')
-            
-            if len(title) > 60:
-                title = title[:60].rsplit(' ', 1)[0]
-            
-            logger.info(f"✨ Generated title: '{title}'")
-            return title
-            
+            with Image.open(image_path) as img:
+                title = self.router.generate(
+                    task_type="caption",
+                    prompt=[prompt, img],
+                    module_name="gemini_titles"
+                )
+                if not title: return "Amazing Video You Need To See!"
+                title = title.replace('"', '').replace("'", '')
+                if len(title) > 60:
+                    title = title[:60].rsplit(' ', 1)[0]
+                logger.info(f"✨ Generated title: '{title}'")
+                return title
         except Exception as e:
             logger.error(f"❌ Title generation failed: {e}")
             return "Amazing Video You Need To See!"
 
-
-
     def generate_compilation_title(self, n_videos: int, style: str = "compilation_intro", context: str = None) -> str:
-        """
-        Generate a catchy title for a compilation.
-        """
-        # Zero-Ending Number Rule
         num_str = ""
         if n_videos and n_videos % 10 == 0:
             num_str = f"{n_videos} "
-            
         context_str = f" about: \"{context}\"" if context else ""
         name_rule = f"1. NAME FIRST: The title MUST start with '{context}'.\n" if context else ""
-        
         prompt = (
             f"Generate a HIGHLY CLICKABLE, VIRAL, and LAW-BENDING title for a video compilation containing {n_videos} clips{context_str}. "
-            "LAW-BENDING DICTIONARY: Always swap 'hot' -> Bold/Stunning, 'sexy' -> Sizzling/Alluring, 'boobs' -> Silhouette/Physique. "
             "\nFORMAT RULES (STRICT):\n"
             f"{name_rule}"
             f"2. NUMBER RULE: {'You MUST include the number ' + num_str.strip() + ' in the title.' if num_str else 'Do NOT include any numbers like 11 or 12 in the title.'}\n"
-            "Use emotional triggers, curiosity gaps, and strong adjectives. "
-            "CRITICAL: Must be ADVERTISER FRIENDLY. NO profanity, NO 'WTF', NO NSFW terms. "
-            "Make it sound like a 'Must Watch'. Use emojis at the end to grab attention. "
-            "Max 60 characters. "
-            f"Example: '{context if context else 'Avneet Kaur'}: Her Most {num_str}Stunning Style Transformations! 🔥'"
-            "\n\nRETURN ONLY THE TITLE TEXT."
+            "Max 60 characters. RETURN ONLY THE TITLE TEXT."
         )
-        
         try:
-            # Retry logic for Quota limits (429) & Network
             import time
             import random
-            import os
-            import google.generativeai as genai
-            
-            primary_model = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
-            fallback_model = "gemini-2.5-flash"
-            safety_model = "gemini-2.5-flash-lite"
-            
-            # Using a dynamic chain for 5 attempts
-            models_chain = [primary_model, primary_model, fallback_model, fallback_model, safety_model]
-            
-            for attempt in range(5):
-                try:
-                    current_model_name = models_chain[attempt]
-                    model = genai.GenerativeModel(current_model_name)
-                    
-                    response = model.generate_content([prompt], safety_settings=self.safety_settings)
-                    
-                    title = response.text.strip().replace('"', '').replace("'", "").replace("\n", " ")
-                    if len(title) > 60:
-                        title = title[:60].rsplit(' ', 1)[0]
-                        
-                    # Final safety check for Name First
-                    if context and context.lower() not in title.lower()[:len(context)+5]:
-                        title = f"{context}: {title}"
-                        
-                    logger.info(f"✨ Generated compilation title ({current_model_name}): '{title}'")
-                    return title
-                    
-                except Exception as e:
-                    err_str = str(e).lower()
-                    if "429" in err_str or "quota" in err_str:
-                        logger.warning(f"⚠️ Quota hit (Attempt {attempt+1}). Retrying with fallback logic...")
-                        time.sleep(1.5 * (attempt + 1))
-                        continue
-                    # Original error handling for other exceptions
-                    wait = (2 ** attempt) + random.uniform(0.1, 1.0)
-                    logger.warning(f"⚠️ Gemini Title Error ({e}). Retrying in {wait:.1f}s...")
-                    time.sleep(wait)
-            
-        except Exception as e:
-            logger.error(f"❌ Compilation title generation failed: {e}")
+            title = self.router.generate(
+                task_type="caption",
+                prompt=prompt,
+                module_name="gemini_compilation_titles"
+            )
+            if title:
+                title = title.replace('"', '').replace("'", "").replace("\n", " ")
+                if len(title) > 60:
+                    title = title[:60].rsplit(' ', 1)[0]
+                if context and context.lower() not in title.lower()[:len(context)+5]:
+                    title = f"{context}: {title}"
+                return title
+        except Exception:
             return None
 
-
-# Convenience function for quick caption generation
 def generate_caption_from_video(video_path: str, style: str = "viral", timestamp: str = "00:00:01") -> Optional[str]:
-    """
-    Extract frame from video and generate caption.
-    """
     import subprocess
     import tempfile
-    
+    import os
+    frame_path = None
     try:
-        with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as tmp:
-            frame_path = tmp.name
-        
-        cmd = [
-            "ffmpeg", "-y", "-i", video_path,
-            "-ss", timestamp,
-            "-vframes", "1",
-            frame_path
-        ]
-        
-        subprocess.run(cmd, check=True, capture_output=True)
-        
+        try:
+            from Intelligence_Modules.smart_reuse_engine import get_frame_for_gemini
+            cached_path = get_frame_for_gemini(video_path, timestamp)
+            if cached_path:
+                frame_path = cached_path
+        except Exception: pass
+        if not frame_path:
+            with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as tmp:
+                frame_path = tmp.name
+            cmd = ["ffmpeg", "-y", "-i", video_path, "-ss", timestamp, "-vframes", "1", frame_path]
+            subprocess.run(cmd, check=True, capture_output=True)
         generator = GeminiCaptionGenerator()
-        caption = generator.generate_caption(frame_path, style)
-        
-        return caption
-        
-    except Exception as e:
-        logger.error(f"❌ Failed to generate caption from video: {e}")
+        return generator.generate_caption(frame_path, style)
+    except Exception:
         return None
     finally:
-        if 'frame_path' in locals() and os.path.exists(frame_path):
+        if frame_path and os.path.exists(frame_path) and not frame_path.endswith('.cache'):
              try: os.remove(frame_path)
              except: pass
 
@@ -571,56 +596,133 @@ def generate_hashtags_from_video(video_path: str, count: int = 5) -> Optional[st
     try:
         with tempfile.NamedTemporaryFile(suffix='.jpg', delete=False) as tmp:
             frame_path = tmp.name
-        
-        cmd = [
-            "ffmpeg", "-y", "-i", video_path,
-            "-ss", "00:00:01",
-            "-vframes", "1",
-            frame_path
-        ]
-        
+        cmd = ["ffmpeg", "-y", "-i", video_path, "-ss", "00:00:01", "-vframes", "1", frame_path]
         subprocess.run(cmd, check=True, capture_output=True)
-        
         generator = GeminiCaptionGenerator()
-        tags = generator.generate_hashtags(frame_path, count)
-        
-        return tags
-    except Exception as e:
-        logger.error(f"❌ Failed to generate hashtags from video: {e}")
+        return generator.generate_hashtags(frame_path, count)
+    except Exception:
         return None
     finally:
         if 'frame_path' in locals() and os.path.exists(frame_path):
              try: os.remove(frame_path)
              except: pass
 
-# Wrapper for compiler.py compatibility
 def generate_caption_direct(video_path: str) -> Optional[str]:
-    """
-    Direct wrapper for compiler compatibility.
-    """
     return generate_caption_from_video(video_path, style="viral")
 
 
-# Test function
+def generate_caption_from_context(visual_context: dict, video_path: str = "") -> str:
+    """
+    Text-only caption generation using Gemini system role + diversity config.
+    Uses rotating STYLE_CATEGORIES to keep headlines fresh, then applies
+    validation, compression, blacklist, similarity, and sanitization.
+    """
+    fallback_value = visual_context.get("item_name") or visual_context.get("outfit_type") or (_load_cache_fallbacks() or ["Fashion Item"])[0]
+    try:
+        generator = GeminiCaptionGenerator()
+    except Exception as e:
+        logger.error(f"❌ Caption engine init failed: {e}")
+        return sanitize_caption_text(fallback_value, target_max=3, hard_max=3)
+
+    category = generator._next_style_category()
+
+    # --- ALWAYS GENERATE FRESH: never trust pre-computed caption_candidates ---
+    # Pre-generated candidates come from pipeline brain data that was computed with OLD prompts.
+    # They consistently produce 'Luxury Couture Ensemble' style garbage that gets blacklisted.
+    # Force a live Gemini call with the STRICT system prompt so the ban list is rarely needed.
+
+    # Use the strict system prompt from caption_prompt.json (the 'content' key)
+    strict_system_prompt = generator.diversity_config.get("content", "")
+    if not strict_system_prompt:
+        strict_system_prompt = (
+            "You are a literal garment identifier. Output EXACTLY 2-3 words describing "
+            "the physical visible clothing. Example: 'Brown Leopard Dress', 'Red Silk Saree'. "
+            "No brand names, no editorial words like Couture, Bespoke, Luxury, Heritage."
+        )
+
+    prompt = (
+        f"{strict_system_prompt}\n\n"
+        f"Style Category: {category.upper()}\n"
+        f"Generate exactly 3 unique 2-3 word garment descriptions based on this context: "
+        f"{json.dumps({k: v for k, v in visual_context.items() if k not in ('caption_candidates',)}, ensure_ascii=False)[:800]}\n"
+        f"Return ONLY a JSON list of 3 strings. Each string must be exactly 2-3 words describing a visible garment."
+    )
+
+    generated_list = []
+    try:
+        res = generator.router.generate(
+            task_type="caption",
+            prompt=prompt,
+            module_name="gemini_captions_context",
+            gen_config={"response_mime_type": "application/json"},
+            metadata={"bypass_cache": random.random()}
+        )
+        if res:
+            generated_list = json.loads(res)
+            if isinstance(generated_list, list):
+                generated_list = [str(c).strip() for c in generated_list if c]
+    except Exception as e:
+        logger.warning(f"⚠️ Caption generation call failed: {e}")
+
+    if not generated_list:
+        selected = generator.get_diversified_fallback()
+        print(f"[CAPTION] source=emergency_fallback")
+        return sanitize_caption_text(selected, target_max=3, hard_max=3)
+
+    # Validate generated candidates
+    valid = [c for c in generated_list if generator._validate_caption_raw(c)]
+    if valid:
+        selected = random.choice(valid)
+        # [CACHE POISONING PREVENTED] Do NOT save to cache to prevent cross-video contamination.
+        # _save_to_cache_fallback(selected)
+        print(f"[CAPTION] source=primary")
+    else:
+        # All generated still failed validation — use cache fallback
+        logger.warning(f"⚠️ All generated candidates failed validation: {generated_list}")
+        selected = generator.get_diversified_fallback()
+        print(f"[CAPTION] source=validation_fallback")
+
+    final_caption = sanitize_caption_text(selected, target_max=3, hard_max=3)
+    print(f"[CAPTION] candidates={len(generated_list)} selected=1")
+    return final_caption
+
+    if not generated:
+        logger.warning("⚠️ Context caption failed. Using Diversified Fallback.")
+        generated = generator.get_diversified_fallback()
+
+    final_caption = sanitize_caption_text(generated, target_max=4, hard_max=6)
+    logger.info(f"[CAPTION_ENGINE] caption_generated=\"{final_caption}\"")
+    logger.info(f"[CAPTION_FINAL] caption=\"{final_caption}\"")
+    return final_caption
+
+
+def generate_caption(profile_data: dict = None, video_path: str = "") -> str:
+    """
+    Public helper for upload caption generation.
+    Accepts optional profile_data (expects content_director-style context) and
+    relies on rotating STYLE_CATEGORIES plus similarity + blacklist guards.
+    """
+    visual_context = {}
+    if isinstance(profile_data, dict):
+        visual_context = (
+            profile_data.get("content_director")
+            or profile_data.get("fashion_data")
+            or {}
+        )
+    return generate_caption_from_context(visual_context, video_path=video_path)
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    print("🤖 Gemini Caption Generator Test")
-    
-    if not GEMINI_AVAILABLE:
-        print("❌ google-generativeai not installed")
-        exit(1)
-    
     try:
         generator = GeminiCaptionGenerator()
         print("✅ Gemini initialized successfully!")
     except Exception as e:
         print(f"❌ Initialization failed: {e}")
 
-# Standalone wrapper
 def generate_compilation_title(n_videos: int, context: str = None) -> str:
     try:
         generator = GeminiCaptionGenerator()
         return generator.generate_compilation_title(n_videos, context=context)
-    except Exception as e:
-        logger.error(f"❌ Wrapper failed: {e}")
+    except Exception:
         return f"{context + ': ' if context else ''}Best {n_videos} Viral Moments Compilation"

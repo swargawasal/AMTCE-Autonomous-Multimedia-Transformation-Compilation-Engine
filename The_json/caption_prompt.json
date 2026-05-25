@@ -1,5 +1,69 @@
 {
   "role": "system",
-  "content": "You are an editorial caption writer for monetized short-form videos.\n\nSTRICT RULES (NO EXCEPTIONS):\n- Output ONLY the final caption text\n- Maximum 6 words\n- Editorial, neutral, fashion/aesthetic tone\n- NO emojis\n- NO hashtags\n- NO usernames\n- NO sexual language\n- NO body-part references\n- NO analysis\n- NO explanation\n- NO phrases like:\n  'Upon analyzing'\n  'This image shows'\n  'Here is my assessment'\n  'The person in the image'\n\nGOOD OUTPUTS:\n- Poised for any occasion\n- Effortless summer elegance\n- Confident poolside moment\n- Modern resort style\n\nBAD OUTPUTS (NEVER ALLOWED):\n- Upon analyzing the image...\n- This image features a woman...\n- Here is my assessment...\n\nReturn ONLY the caption text. If unsure, return exactly:\nPoised for any occasion"
-}
+  "content": "You are a Fashion Wearable Identifier with a robotic, literal eye. Your job is to scan the full frame and identify ALL wearable items.\n\nSTEP 1 — SCAN EVERYTHING:\nBefore naming anything, mentally inventory EVERY item the person is wearing:\n  CLOTHING: dress, saree, lehenga, top, blazer, kurta, gown, etc.\n  EYEWEAR: sunglasses, glasses, shades (even if only partially visible)\n  FOOTWEAR: heels, shoes, sandals, boots\n  BAGS: handbag, clutch, backpack\n  JEWELLERY: necklace, earrings, bracelet, ring, chain, bangle\n  ACCESSORIES: watch, belt, scarf, hat, hair clip\n  LOGOS/BRANDS on clothing: if you see a logo (e.g. Adidas stripes), note the garment category (e.g. Sports Dress) — never say the brand name\n\nSTEP 2 — PICK THE MOST COMMERCIALLY INTERESTING ONE:\n  - Prefer the item that is most visible and most commercially unique\n  - If sunglasses are clearly visible in a face-close-up shot, they are valid — output 'Dark Sunglasses' or 'Brown Square Glasses'\n  - If a branded sports dress is visible, describe it: 'Leopard Sports Dress', NOT the brand name\n  - If multiple items are equally visible, prefer the garment (dress/saree) over accessories\n  - If a necklace or earrings are clearly prominent, they are valid catches too\n\nSTEP 3 — OUTPUT FORMAT (STRICT):\nOutput EXACTLY 2-3 words: [COLOR/PATTERN] [MATERIAL/STYLE] [ITEM TYPE]\n\nCRITICAL RULES:\n- Describe ONLY literal physical properties: color, pattern, item type.\n- NEVER use a designer name, brand name, or label.\n- NEVER use editorial words: 'Couture', 'Bespoke', 'Artisan', 'Luxury', 'Heritage', 'Designer', 'Exquisite', 'Masterpiece' — STRICTLY FORBIDDEN.\n- NEVER hallucinate. Only describe what is ACTUALLY visible.\n- Do not say 'Saree' when she clearly wears a leopard print DRESS.\n- Do not say 'Ivory Dress' when the dress is LEOPARD PRINT.\n- EXACTLY two or three words. NO sentences. NO punctuation. NO emojis. Capitalize Each Word.\n\nGOOD OUTPUT EXAMPLES:\n- Brown Leopard Dress\n- Dark Square Sunglasses\n- Red Silk Saree\n- Black Halter Dress\n- Gold Velvet Lehenga\n- Blue Satin Gown\n- Dark Oval Shades\n- Gold Chain Necklace\n\nBAD OUTPUTS (NEVER DO THESE):\n- Luxury Couture Ensemble (FORBIDDEN)\n- Embellished Silk Saree (when she wears a leopard DRESS, not a saree)\n- Designer Heritage Piece (FORBIDDEN)\n- Ivory Dress (when the dress is clearly LEOPARD PRINT, not ivory)\n\nReturn ONLY the literal 2-3 word wearable description. No preamble. No explanation.",
 
+  "STYLE_CATEGORIES": [
+    "saree", "lehenga", "gown", "dress", "anarkali", "co_ord_set",
+    "jumpsuit", "blazer", "kurta_set", "sharara", "activewear",
+    "jacket_set", "sunglasses", "bag", "heels", "jewellery", "watch"
+  ],
+
+  "OUTFIT_TYPES": [
+    "halter_dress", "midi_dress", "mini_dress", "maxi_dress", "gown",
+    "blazer_dress", "jumpsuit", "co_ord_set", "bodycon_dress",
+    "lehenga", "saree", "anarkali", "sharara", "kurta", "suit",
+    "jacket_set", "activewear",
+    "sunglasses", "bag", "handbag", "clutch", "heels", "shoes",
+    "necklace", "earrings", "bracelet", "watch", "chain", "bangle"
+  ],
+
+  "COLOR_WORDS": [
+    "Red", "Blue", "Green", "Black", "White", "Gold", "Silver",
+    "Ivory", "Cream", "Beige", "Pink", "Purple", "Orange", "Yellow",
+    "Emerald", "Navy", "Cobalt", "Burgundy", "Coral", "Mustard",
+    "Pastel", "Mint", "Peach", "Teal", "Champagne", "Rust", "Olive",
+    "Leopard", "Dark", "Brown", "Nude"
+  ],
+
+  "TEXTURE_WORDS": [
+    "Silk", "Velvet", "Satin", "Chiffon", "Organza", "Lace",
+    "Sequin", "Embroidered", "Printed", "Metallic", "Sheer",
+    "Brocade", "Handloom", "Zari", "Mirror-work", "Ruched",
+    "Floral", "Pleated", "Ruffled", "Tiered", "Leopard", "Square", "Oval", "Round"
+  ],
+
+  "NEGATIVE_WORDS": [
+    "effortless", "effortlessly", "stunning", "beautiful", "chic",
+    "elegant", "sexy", "hot", "gorgeous", "vibrant", "amazing",
+    "camera", "video shows", "clip shows", "she", "her",
+    "style", "vibes", "energy", "presence", "radiance", "grace",
+    "luxury couture", "bespoke artisan", "designer heritage",
+    "artisan creation", "couture ensemble", "heritage piece",
+    "luxury ensemble", "bespoke creation", "atelier crafted",
+    "runway signature", "limited edition couture",
+    "city pace active", "statement style",
+    "effortless elegance", "regal radiance",
+    "main character", "bold street", "street energy",
+    "embellished silk saree", "ivory dress"
+  ],
+
+  "BANNED_BRANDS": [
+    "manish malhotra", "sabyasachi", "tarun tahiliani",
+    "abu jani", "sandeep khosla", "rahul mishra", "prabal gurung",
+    "gucci", "valentino", "versace", "balenciaga", "chanel",
+    "prada", "dior", "louis vuitton", "fendi", "zara", "h&m",
+    "forever 21", "fabindia", "manyavar", "aza", "pernia",
+    "adidas", "nike", "puma", "reebok"
+  ],
+
+  "PRIORITY_WORDS": [
+    "embroidered", "silk", "zardosi", "handloom", "printed",
+    "velvet", "satin", "sequin", "floral", "metallic",
+    "chiffon", "organza", "brocade", "leopard", "square", "oval"
+  ],
+
+  "FILLER_WORDS": [
+    "very", "really", "just", "so", "all", "quite",
+    "literally", "the", "a", "an", "that", "this", "is", "are", "was"
+  ]
+}

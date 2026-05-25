@@ -33,7 +33,7 @@ if caps["has_cuda"]:
 print("🔄 Importing ai_engine...")
 import Upscale_Modules.ai_engine as ai_engine
 print("🔄 Importing compiler...")
-import compiler
+from Compiler_Modules import compiler
 print("🔄 Importing gpu_utils...")
 import Upscale_Modules.gpu_utils as gpu_utils
 

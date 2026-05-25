@@ -1,0 +1,65 @@
+{
+  "_comment": "Maps each emotion type to reactor clip filenames inside that emotion folder.",
+  "_comment2": "Add your own .mp4 files into the subfolders and list them here.",
+  "_comment3": "Set is_placeholder=true for any clips not yet recorded — they will be skipped gracefully.",
+  "shocked": {
+    "clips": [
+      "shocked_01.mp4",
+      "shocked_02.mp4"
+    ],
+    "is_placeholder": false
+  },
+  "laughing": {
+    "clips": [
+      "laugh_01.mp4",
+      "laugh_02.mp4",
+      "laugh_03.mp4"
+    ],
+    "is_placeholder": false
+  },
+  "impressed": {
+    "clips": [
+      "impressed_01.mp4"
+    ],
+    "is_placeholder": false
+  },
+  "confused": {
+    "clips": [
+      "confused_01.mp4"
+    ],
+    "is_placeholder": false
+  },
+  "hype": {
+    "clips": [
+      "hype_01.mp4",
+      "hype_02.mp4"
+    ],
+    "is_placeholder": false
+  },
+  "neutral": {
+    "clips": [
+      "neutral_01.mp4",
+      "neutral_02.mp4",
+      "neutral_03.mp4"
+    ],
+    "is_placeholder": false
+  },
+  "cringe": {
+    "clips": [
+      "cringe_01.mp4"
+    ],
+    "is_placeholder": false
+  },
+  "intro": {
+    "clips": [
+      "intro_01.mp4",
+      "intro_02.mp4",
+      "intro_03.mp4"
+    ],
+    "is_placeholder": false
+  },
+  "outro": {
+    "clips": [],
+    "is_placeholder": true
+  }
+}

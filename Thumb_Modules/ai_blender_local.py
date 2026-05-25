@@ -45,22 +45,16 @@ class AIBlender:
             cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0, img)
 
             # 2. Add Text
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            font_scale = 2.0
-            thickness = 4
-            color = (0, 255, 255) # Yellow by default (BGR)
-            
-            if accent_color == "cyan":
-                 color = (255, 255, 0)
-            elif accent_color == "red":
-                 color = (0, 0, 255)
-            elif accent_color == "white":
-                 color = (255, 255, 255)
+            title_text = title_text.upper()
+            font = cv2.FONT_HERSHEY_DUPLEX
+            font_scale = 2.5
+            thickness = 6
+            color = (255, 255, 255) # White, as requested
 
             # Calculate text size to center it
             text_size = cv2.getTextSize(title_text, font, font_scale, thickness)[0]
             text_x = (w - text_size[0]) // 2
-            text_y = int(h * 0.9)  # Near bottom
+            text_y = int(h * 0.78)  # Directly above caption
 
             # If text is too wide, scale it down
             if text_size[0] > w - 40:

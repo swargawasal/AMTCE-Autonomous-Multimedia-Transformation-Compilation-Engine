@@ -1,0 +1,187 @@
+main.py:140 (pollos): # Los Pollos (CPA) links are ONLY allowed when the video is classified as
+main.py:144 (_is_nsfw_profile): def _is_nsfw_profile(detected_niche: str = "") -> bool:
+main.py:718 (los_pollos): LOS_POLLOS_YOUTUBE=no
+main.py:718 (pollos): LOS_POLLOS_YOUTUBE=no
+main.py:719 (los_pollos): LOS_POLLOS_TELEGRAM=yes
+main.py:719 (pollos): LOS_POLLOS_TELEGRAM=yes
+main.py:719 (LOS_POLLOS_TELEGRAM): LOS_POLLOS_TELEGRAM=yes
+main.py:756 (los_pollos): "LOS_POLLOS_YOUTUBE": "no",
+main.py:756 (pollos): "LOS_POLLOS_YOUTUBE": "no",
+main.py:757 (los_pollos): "LOS_POLLOS_TELEGRAM": "yes",
+main.py:757 (pollos): "LOS_POLLOS_TELEGRAM": "yes",
+main.py:757 (LOS_POLLOS_TELEGRAM): "LOS_POLLOS_TELEGRAM": "yes",
+main.py:4126 (pollos): # [LP_GATE v2] Los Pollos activates for ALL actress/fashion niches (not just NSFW).
+main.py:4128 (pollos): # We monetize them via Los Pollos CPA links inside the Telegram group.
+main.py:4135 (los_pollos): _lp_env_enabled = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+main.py:4135 (pollos): _lp_env_enabled = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+main.py:4135 (LOS_POLLOS_TELEGRAM): _lp_env_enabled = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+main.py:4136 (pollos): # REMOVED NSFW gate — actress/fashion content also gets Los Pollos monetization
+main.py:4137 (enable_lp_tele): enable_lp_tele = _lp_env_enabled
+main.py:4138 (enable_lp_tele): if enable_lp_tele:
+main.py:4140 (pollos): f"✅ [LP_GATE] Niche='{_active_niche}' — Los Pollos ENABLED (all actress niches)."
+main.py:4150 (enable_lp_tele): if enable_lp_tele and _mon_brain_2
+main.py:4459 (pollos): # CPA link (Los Pollos) — adult audience segment
+main.py:4461 (enable_lp_tele): if enable_lp_tele:
+main.py:4469 (los_pollos): _lp_file = "Monetization_Metrics/los_pollos_links.json"
+main.py:4469 (pollos): _lp_file = "Monetization_Metrics/los_pollos_links.json"
+main.py:4802 (enable_lp_tele): if enable_lp_tele and lp_link:
+main.py:5085 (enable_lp_tele): if enable_lp_tele and lp_link and "example.com" in lp_link:
+main.py:5088 (los_pollos): "⚠️ WARNING: You are using the default 'example.com' link. Please update 'The_json/los_pollos_links.json'.",
+main.py:5088 (pollos): "⚠️ WARNING: You are using the default 'example.com' link. Please update 'The_json/los_pollos_links.json'.",
+main.py:6498 (pollos): # Append Los Pollos link at the very bottom
+main.py:6511 (TG_BTN_PARTNER): _tg_partner_label = os.getenv("TG_BTN_PARTNER_LABEL", "🔥 Find Your Match")
+main.py:6512 (TG_BTN_CORN): _tg_corn_label    = os.getenv("TG_BTN_CORN_LABEL", "🎬 Watch Full Clips")
+main.py:6513 (los_pollos): # ── Los Pollos link: rotate from los_pollos_links.json (NOT hardcoded env var) ──
+main.py:6513 (pollos): # ── Los Pollos link: rotate from los_pollos_links.json (NOT hardcoded env var) ──
+main.py:6514 (los_pollos): _los_pollos_link = ""
+main.py:6514 (pollos): _los_pollos_link = ""
+main.py:6515 (los_pollos): _lp_tele_enabled = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+main.py:6515 (pollos): _lp_tele_enabled = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+main.py:6515 (LOS_POLLOS_TELEGRAM): _lp_tele_enabled = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+main.py:6519 (los_pollos): "The_json/los_pollos_links.json",
+main.py:6519 (pollos): "The_json/los_pollos_links.json",
+main.py:6520 (los_pollos): "Monetization_Metrics/los_pollos_links.json",
+main.py:6520 (pollos): "Monetization_Metrics/los_pollos_links.json",
+main.py:6527 (los_pollos): _los_pollos_link = random.choice(_lp_data)
+main.py:6527 (pollos): _los_pollos_link = random.choice(_lp_data)
+main.py:6528 (pollos): logger.info("[LP_BTN] Loaded Los Pollos link from %s", _lp_path)
+main.py:6531 (pollos): logger.warning("[LP_BTN] Failed to load Los Pollos link: %s", _lp_e)
+main.py:6541 (los_pollos): if _los_pollos_link:
+main.py:6541 (pollos): if _los_pollos_link:
+main.py:6542 (los_pollos): _tg_btns.append(_IKB_m(_tg_partner_label, url=_los_pollos_link))
+main.py:6542 (pollos): _tg_btns.append(_IKB_m(_tg_partner_label, url=_los_pollos_link))
+main.py:6543 (los_pollos): logger.info("[LP_BTN] Partner button added: %s", _los_pollos_link[:60])
+main.py:6543 (pollos): logger.info("[LP_BTN] Partner button added: %s", _los_pollos_link[:60])
+main.py:6545 (pollos): logger.warning("[LP_BTN] No Los Pollos link available — partner button skipped.")
+Actress_Modules\actress_scheduler.py:422 (pollos): # ── Los Pollos (partner/dating CPA link) ─────────────────────
+Actress_Modules\actress_scheduler.py:425 (los_pollos): los_pollos_link = _cp_tmp._get_next_los_pollos_link()
+Actress_Modules\actress_scheduler.py:425 (pollos): los_pollos_link = _cp_tmp._get_next_los_pollos_link()
+Actress_Modules\actress_scheduler.py:438 (TG_BTN_PARTNER): partner_label = os.getenv("TG_BTN_PARTNER_LABEL", "🔥 Find Your Match").strip()
+Actress_Modules\actress_scheduler.py:439 (TG_BTN_CORN): corn_label    = os.getenv("TG_BTN_CORN_LABEL",   "🎬 Watch Full Clips").strip()
+Actress_Modules\actress_scheduler.py:455 (los_pollos): if los_pollos_link:
+Actress_Modules\actress_scheduler.py:455 (pollos): if los_pollos_link:
+Actress_Modules\actress_scheduler.py:457 (los_pollos): [InlineKeyboardButton(partner_label, url=los_pollos_link)]
+Actress_Modules\actress_scheduler.py:457 (pollos): [InlineKeyboardButton(partner_label, url=los_pollos_link)]
+Actress_Modules\actress_scheduler.py:459 (los_pollos): logger.info("[DUAL_BTN] Partner button: %s", los_pollos_link[:60])
+Actress_Modules\actress_scheduler.py:459 (pollos): logger.info("[DUAL_BTN] Partner button: %s", los_pollos_link[:60])
+Actress_Modules\actress_scheduler.py:461 (pollos): logger.info("[DUAL_BTN] No Los Pollos link available — partner button skipped.")
+Credentials\.env:290 (los_pollos): LOS_POLLOS_YOUTUBE=no
+Credentials\.env:290 (pollos): LOS_POLLOS_YOUTUBE=no
+Credentials\.env:291 (los_pollos): LOS_POLLOS_TELEGRAM=yes
+Credentials\.env:291 (pollos): LOS_POLLOS_TELEGRAM=yes
+Credentials\.env:291 (LOS_POLLOS_TELEGRAM): LOS_POLLOS_TELEGRAM=yes
+Credentials\.env:674 (pollos): # Button 1 (Los Pollos CPA): Label shown on the "Find Your Match" button
+Credentials\.env:675 (TG_BTN_PARTNER): TG_BTN_PARTNER_LABEL=🔥 Find Your Match
+Credentials\.env:680 (TG_BTN_CORN): TG_BTN_CORN_LABEL=🎬 Watch💦🍑
+Credentials\fixed_env_footer.txt:18 (los_pollos): LOS_POLLOS_YOUTUBE=no
+Credentials\fixed_env_footer.txt:18 (pollos): LOS_POLLOS_YOUTUBE=no
+Credentials\fixed_env_footer.txt:19 (los_pollos): LOS_POLLOS_TELEGRAM=yes
+Credentials\fixed_env_footer.txt:19 (pollos): LOS_POLLOS_TELEGRAM=yes
+Credentials\fixed_env_footer.txt:19 (LOS_POLLOS_TELEGRAM): LOS_POLLOS_TELEGRAM=yes
+Intelligence_Modules\monetization_brain.py:87 (los_pollos): self.los_pollos_file = "Monetization_Metrics/los_pollos_links.json"
+Intelligence_Modules\monetization_brain.py:87 (pollos): self.los_pollos_file = "Monetization_Metrics/los_pollos_links.json"
+Intelligence_Modules\monetization_brain.py:1096 (pollos): - Telegram -> Amazon Links (standard niches) OR Los Pollos (NSFW only)
+Intelligence_Modules\monetization_brain.py:1098 (pollos): [TUNED] Hard NSFW gate: Los Pollos (CPA) links are ONLY injected when
+Intelligence_Modules\monetization_brain.py:1167 (pollos): # Los Pollos (CPA) links are ONLY served when the content was
+Intelligence_Modules\monetization_brain.py:1179 (pollos): # NSFW profile: serve Los Pollos CPA link
+Intelligence_Modules\monetization_brain.py:1180 (los_pollos): if not os.path.exists(self.los_pollos_file):
+Intelligence_Modules\monetization_brain.py:1180 (pollos): if not os.path.exists(self.los_pollos_file):
+Intelligence_Modules\monetization_brain.py:1186 (los_pollos): with open(self.los_pollos_file, "r", encoding="utf-8") as f:
+Intelligence_Modules\monetization_brain.py:1186 (pollos): with open(self.los_pollos_file, "r", encoding="utf-8") as f:
+Intelligence_Modules\money_flow_logic.py:257 (pollos): Los Pollos postback), call record_click(hook_text) to weight it higher.
+Intelligence_Modules\money_flow_logic.py:286 (pollos): """Call this from your Telegram callback / Los Pollos postback handler."""
+Intelligence_Modules\money_flow_logic.py:294 (pollos): Call this from your Amazon affiliate callback or Los Pollos postback
+Intelligence_Modules\money_flow_logic.py:549 (pollos): Call this from your Telegram inline button callback or Los Pollos postback.
+Monetization_Metrics\how_it_works.md:22 (pollos): ## 2. Los Pollos Integration (Smartlinks)
+Monetization_Metrics\how_it_works.md:30 (pollos): B -->|"Pick Rotated Link"| E["Smartlink (Los Pollos)"]
+Monetization_Metrics\how_it_works.md:74 (pollos): D -- "Yes" --> E["Priority 2: Editorial AI CTA<br>+ Los Pollos Smartlink"]
+Monetization_Metrics\los_pollos_links.json:3 (casual-honeycasual): "https://r222mrb.casual-honeycasual.com/yd6huy5"
+Monetization_Metrics\report.md:5 (pollos): This report summarizes the current status and logic of the affiliate modules integrated into the bot, specifically focusing on **Los Pollos** (Smartlinks) and **Amazon/Fashion Affiliate** (Fashion Scout).
+Monetization_Metrics\report.md:7 (pollos): ## 2. Los Pollos Integration (Smartlinks)
+Monetization_Metrics\report.md:10 (pollos): - `Intelligence_Modules/monetization_brain.py`: Generates persuasive CTAs for Los Pollos links during content analysis.
+Monetization_Metrics\report.md:11 (pollos): - `Uploader_Modules/community_promoter.py`: Automatically posts rotated Los Pollos links in YouTube comments.
+Monetization_Metrics\report.md:12 (los_pollos): - **Data Source**: `The_json/los_pollos_links.json` (Stores the link pool).
+Monetization_Metrics\report.md:12 (pollos): - **Data Source**: `The_json/los_pollos_links.json` (Stores the link pool).
+Monetization_Metrics\report.md:14 (los_pollos): - `LOS_POLLOS_YOUTUBE`: Toggles links in YouTube comments (Default: `no`).
+Monetization_Metrics\report.md:14 (pollos): - `LOS_POLLOS_YOUTUBE`: Toggles links in YouTube comments (Default: `no`).
+Monetization_Metrics\report.md:15 (los_pollos): - `LOS_POLLOS_TELEGRAM`: Toggles links in Telegram reports (Default: `yes`).
+Monetization_Metrics\report.md:15 (pollos): - `LOS_POLLOS_TELEGRAM`: Toggles links in Telegram reports (Default: `yes`).
+Monetization_Metrics\report.md:15 (LOS_POLLOS_TELEGRAM): - `LOS_POLLOS_TELEGRAM`: Toggles links in Telegram reports (Default: `yes`).
+Monetization_Metrics\verify_pollos.py:12 (pollos): print("Testing Los Pollos Integration...")
+Monetization_Metrics\verify_pollos.py:19 (los_pollos): print("❌ Failed to get monetization link. Check 'The_json/los_pollos_links.json'.")
+Monetization_Metrics\verify_pollos.py:19 (pollos): print("❌ Failed to get monetization link. Check 'The_json/los_pollos_links.json'.")
+Monetization_Metrics\verify_pollos.py:40 (los_pollos): os.environ["LOS_POLLOS_TELEGRAM"] = "no"
+Monetization_Metrics\verify_pollos.py:40 (pollos): os.environ["LOS_POLLOS_TELEGRAM"] = "no"
+Monetization_Metrics\verify_pollos.py:40 (LOS_POLLOS_TELEGRAM): os.environ["LOS_POLLOS_TELEGRAM"] = "no"
+Monetization_Metrics\verify_pollos.py:41 (los_pollos): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+Monetization_Metrics\verify_pollos.py:41 (pollos): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+Monetization_Metrics\verify_pollos.py:41 (enable_lp_tele): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+Monetization_Metrics\verify_pollos.py:41 (LOS_POLLOS_TELEGRAM): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+Monetization_Metrics\verify_pollos.py:42 (enable_lp_tele): mock_mon_link = brain.get_monetization_link() if enable_lp_tele else None
+Monetization_Metrics\verify_pollos.py:45 (los_pollos): os.environ["LOS_POLLOS_TELEGRAM"] = "yes"
+Monetization_Metrics\verify_pollos.py:45 (pollos): os.environ["LOS_POLLOS_TELEGRAM"] = "yes"
+Monetization_Metrics\verify_pollos.py:45 (LOS_POLLOS_TELEGRAM): os.environ["LOS_POLLOS_TELEGRAM"] = "yes"
+Monetization_Metrics\verify_pollos.py:46 (los_pollos): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+Monetization_Metrics\verify_pollos.py:46 (pollos): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+Monetization_Metrics\verify_pollos.py:46 (enable_lp_tele): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+Monetization_Metrics\verify_pollos.py:46 (LOS_POLLOS_TELEGRAM): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in ["yes", "true", "on"]
+Monetization_Metrics\verify_pollos.py:47 (enable_lp_tele): mock_mon_link = brain.get_monetization_link() if enable_lp_tele else None
+Monetization_Metrics\verify_pollos.py:50 (los_pollos): if (not os.getenv("LOS_POLLOS_TELEGRAM") == "no" or mock_mon_link) and os.environ["LOS_POLLOS_TELEGRAM"] == "yes":
+Monetization_Metrics\verify_pollos.py:50 (pollos): if (not os.getenv("LOS_POLLOS_TELEGRAM") == "no" or mock_mon_link) and os.environ["LOS_POLLOS_TELEGRAM"] == "yes":
+Monetization_Metrics\verify_pollos.py:50 (LOS_POLLOS_TELEGRAM): if (not os.getenv("LOS_POLLOS_TELEGRAM") == "no" or mock_mon_link) and os.environ["LOS_POLLOS_TELEGRAM"] == "yes":
+scratch\search_code.py:8 (los_pollos): r"los_pollos",
+scratch\search_code.py:8 (pollos): r"los_pollos",
+scratch\search_code.py:9 (pollos): r"pollos",
+scratch\search_code.py:10 (casual-honeycasual): r"casual-honeycasual",
+scratch\search_code.py:11 (_is_nsfw_profile): r"_is_nsfw_profile",
+scratch\search_code.py:12 (enable_lp_tele): r"enable_lp_tele",
+scratch\search_code.py:13 (los_pollos): r"LOS_POLLOS_TELEGRAM",
+scratch\search_code.py:13 (pollos): r"LOS_POLLOS_TELEGRAM",
+scratch\search_code.py:13 (LOS_POLLOS_TELEGRAM): r"LOS_POLLOS_TELEGRAM",
+scratch\search_code.py:14 (TG_BTN_PARTNER): r"TG_BTN_PARTNER",
+scratch\search_code.py:15 (TG_BTN_CORN): r"TG_BTN_CORN"
+scripts\refactor_intelligence.py:22 (los_pollos): new_lines.append('        self.los_pollos_file = "Monetization_Metrics/los_pollos_links.json"\n')
+scripts\refactor_intelligence.py:22 (pollos): new_lines.append('        self.los_pollos_file = "Monetization_Metrics/los_pollos_links.json"\n')
+scripts\refactor_intelligence_v2.py:35 (los_pollos): self.los_pollos_file = "Monetization_Metrics/los_pollos_links.json"
+scripts\refactor_intelligence_v2.py:35 (pollos): self.los_pollos_file = "Monetization_Metrics/los_pollos_links.json"
+scripts\refactor_intelligence_v2.py:57 (los_pollos): self.los_pollos_file = "Monetization_Metrics/los_pollos_links.json"
+scripts\refactor_intelligence_v2.py:57 (pollos): self.los_pollos_file = "Monetization_Metrics/los_pollos_links.json"
+tests\test_monetization_toggles.py:5 (los_pollos): with patch.dict(os.environ, {"LOS_POLLOS_TELEGRAM": env_val}):
+tests\test_monetization_toggles.py:5 (pollos): with patch.dict(os.environ, {"LOS_POLLOS_TELEGRAM": env_val}):
+tests\test_monetization_toggles.py:5 (LOS_POLLOS_TELEGRAM): with patch.dict(os.environ, {"LOS_POLLOS_TELEGRAM": env_val}):
+tests\test_monetization_toggles.py:7 (los_pollos): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in [
+tests\test_monetization_toggles.py:7 (pollos): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in [
+tests\test_monetization_toggles.py:7 (enable_lp_tele): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in [
+tests\test_monetization_toggles.py:7 (LOS_POLLOS_TELEGRAM): enable_lp_tele = os.getenv("LOS_POLLOS_TELEGRAM", "yes").lower() in [
+tests\test_monetization_toggles.py:14 (enable_lp_tele): if enable_lp_tele:
+tests\test_monetization_toggles.py:18 (enable_lp_tele): if enable_lp_tele and lp_link:
+tests\test_monetization_toggles.py:21 (enable_lp_tele): return enable_lp_tele, raw_caption
+tests\test_monetization_toggles.py:24 (los_pollos): print("Testing LOS_POLLOS_TELEGRAM=no")
+tests\test_monetization_toggles.py:24 (pollos): print("Testing LOS_POLLOS_TELEGRAM=no")
+tests\test_monetization_toggles.py:24 (LOS_POLLOS_TELEGRAM): print("Testing LOS_POLLOS_TELEGRAM=no")
+tests\test_monetization_toggles.py:28 (los_pollos): print("✅ Passed: LOS_POLLOS_TELEGRAM=no correctly hides link")
+tests\test_monetization_toggles.py:28 (pollos): print("✅ Passed: LOS_POLLOS_TELEGRAM=no correctly hides link")
+tests\test_monetization_toggles.py:28 (LOS_POLLOS_TELEGRAM): print("✅ Passed: LOS_POLLOS_TELEGRAM=no correctly hides link")
+tests\test_monetization_toggles.py:30 (los_pollos): print("Testing LOS_POLLOS_TELEGRAM=yes")
+tests\test_monetization_toggles.py:30 (pollos): print("Testing LOS_POLLOS_TELEGRAM=yes")
+tests\test_monetization_toggles.py:30 (LOS_POLLOS_TELEGRAM): print("Testing LOS_POLLOS_TELEGRAM=yes")
+tests\test_monetization_toggles.py:34 (los_pollos): print("✅ Passed: LOS_POLLOS_TELEGRAM=yes correctly shows link")
+tests\test_monetization_toggles.py:34 (pollos): print("✅ Passed: LOS_POLLOS_TELEGRAM=yes correctly shows link")
+tests\test_monetization_toggles.py:34 (LOS_POLLOS_TELEGRAM): print("✅ Passed: LOS_POLLOS_TELEGRAM=yes correctly shows link")
+The_json\los_pollos_links.json:4 (casual-honeycasual): "https://r222mrb.casual-honeycasual.com/yd6huy5"
+Uploader_Modules\community_promoter.py:15 (los_pollos): LOS_POLLOS_FILE = "The_json/los_pollos_links.json"
+Uploader_Modules\community_promoter.py:15 (pollos): LOS_POLLOS_FILE = "The_json/los_pollos_links.json"
+Uploader_Modules\community_promoter.py:90 (TG_BTN_PARTNER): partner_label = os.getenv("TG_BTN_PARTNER_LABEL", "Find Your Match").replace("🔥 ", "").strip()
+Uploader_Modules\community_promoter.py:91 (TG_BTN_CORN): corn_label    = os.getenv("TG_BTN_CORN_LABEL",   "Watch Full Clips").replace("🎬 ", "").strip()
+Uploader_Modules\community_promoter.py:167 (pollos): - CPA links (Los Pollos) are posted inside Telegram group automatically.
+Uploader_Modules\community_promoter.py:184 (TG_BTN_PARTNER): partner_label = os.getenv("TG_BTN_PARTNER_LABEL", "🔥 Find Your Match").strip()
+Uploader_Modules\community_promoter.py:185 (TG_BTN_CORN): corn_label    = os.getenv("TG_BTN_CORN_LABEL",   "🎬 Watch Full Clips").strip()
+Uploader_Modules\community_promoter.py:291 (los_pollos): def _get_next_los_pollos_link(self) -> Optional[str]:
+Uploader_Modules\community_promoter.py:291 (pollos): def _get_next_los_pollos_link(self) -> Optional[str]:
+Uploader_Modules\community_promoter.py:293 (los_pollos): Loads links from los_pollos_links.json and rotates through them.
+Uploader_Modules\community_promoter.py:293 (pollos): Loads links from los_pollos_links.json and rotates through them.
+Uploader_Modules\community_promoter.py:296 (los_pollos): if not os.path.exists(LOS_POLLOS_FILE):
+Uploader_Modules\community_promoter.py:296 (pollos): if not os.path.exists(LOS_POLLOS_FILE):
+Uploader_Modules\community_promoter.py:299 (los_pollos): with open(LOS_POLLOS_FILE, "r", encoding="utf-8") as f:
+Uploader_Modules\community_promoter.py:299 (pollos): with open(LOS_POLLOS_FILE, "r", encoding="utf-8") as f:
+Uploader_Modules\community_promoter.py:313 (pollos): logger.error(f"❌ Failed to rotate Los Pollos links: {e}")

@@ -1,0 +1,63 @@
+  81: def sanitize_clip_ids(segments, input_paths):
+  86:     max_index = max(0, len(input_paths) - 1)
+ 891:     uuid_str, input_path, output_path, title, description, profile_data={}
+ 914:     # --- [FIX] Normalise input_path regardless of tuple/list/str ---
+ 915:     if isinstance(input_path, tuple):
+ 916:         input_path = list(input_path)
+ 917:     if isinstance(input_path, list):
+ 918:         input_paths = [p for p in input_path if p]
+ 920:         input_paths = [input_path] if input_path else []
+ 922:     if not input_paths:
+ 941:     current_video_source = input_paths[0]
+ 944:     context = PipelineContext(video_path=current_video_source)
+ 958:     for p in input_paths:
+ 965:         f"? [Step 0] Initialised. Total Duration: {duration:.2f}s | Clips: {len(input_paths)}"
+ 969:     if WATERMARK_AVAILABLE and current_video_source:
+ 984:             input_path=current_video_source,
+ 998:             current_video_source = wm_output_path
+ 999:             input_paths[0] = current_video_source
+1035:     if SHOT_DETECTOR_AVAILABLE and current_video_source:
+1038:             shots = shot_detector.detect_shots(current_video_source)
+1053:             current_video_source, output_dir="Original_audio", overwrite=False,
+1069:                 current_video_source, profile_data.get("source_type")
+1127:                 beats = _beat_engine.analyze_beats_with_drops(current_video_source)
+1143:                 tracking = subject_tracker.track_subject(current_video_source)
+1154:         # ---- [MULTI_CLIP] Phase 2: CLIP-BY-CLIP INTELLIGENCE ----
+1156:         for i, p in enumerate(input_paths):
+1160:                 logger.info(f"? [MULTI_CLIP] Analyzing Clip {i}: {os.path.basename(p)}")
+1195:                 logger.warning(f"?? [MULTI_CLIP] Failed to analyze clip {i}: {e}")
+1204:             motion_scores = motion_detector.detect_motion(current_video_source)
+1230:                 # [MULTI_CLIP] Mine moments from every input clip so that
+1239:                 #              pipeline runs on current_video_source only.
+1245:                 for _clip_idx, _clip_path in enumerate(input_paths):
+1271:                         f"[MULTI_CLIP] clip={_clip_idx} "
+1284:                     f"clips_mined={len(input_paths)} | "
+1289:                     f"candidate moments across {len(input_paths)} clip(s)"
+1305:         profile_data["video_path"] = current_video_source
+1616:             current_video_source,
+1710:                         _creator_fingerprint = _creator_memory.get_fingerprint(input_paths)
+1722:                             "clip_count":      len(input_paths),
+1793:                         "clip_count": len(input_paths),
+1794:                         "input_paths": input_paths,
+1811:                             video_path=current_video_source,
+1819:                             video_path=current_video_source,
+2461:                 current_video_source,
+2466:                 current_video_source = clean_path
+2474:                 if heavy_remix(current_video_source, remixed_audio):
+2479:                         current_video_source,
+2499:                         current_video_source = remixed
+2511:                 current_video_source,
+2526:                 current_video_source = crop_path
+2557:                             content_director, current_video_source
+2768:                     music_path = current_video_source
+3246:                 current_video_source,
+3256:                 input_paths=input_paths,
+3527:                              "-i", current_video_source,
+3572:                 f"[MULTI_CLIP] segments_generated={len(_scenes)} | "
+3582:                 input_paths,
+3595:                     current_video_source,
+3613:                     input_paths,
+3623:                         current_video_source,
+3631:                     current_video_source,
+3642:                 current_video_source, temp_visual_render
+4016:                 _creator_memory.store_edit(input_paths, _store_meta)

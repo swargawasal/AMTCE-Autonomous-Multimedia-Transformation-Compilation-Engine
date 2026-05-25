@@ -1,4 +1,21 @@
 import os
+import sys
+from Diagnostics_Modules.gemini_trace import GeminiTrace
+import google.generativeai as genai
+
+# ==================== GEMINI FORENSIC PATCH ====================
+_original_generate = genai.GenerativeModel.generate_content
+
+def patched_generate(self, *args, **kwargs):
+    model_name = getattr(self, "model_name", "unknown")
+    start = GeminiTrace.log_start(model_name, args, kwargs)
+    result = _original_generate(self, *args, **kwargs)
+    GeminiTrace.log_end(start)
+    return result
+
+genai.GenerativeModel.generate_content = patched_generate
+# =============================================================
+
 import gradio as gr
 import sys
 import logging
@@ -16,7 +33,7 @@ from Uploader_Modules.meta_uploader import AsyncMetaUploader
 # 2. Initialize authorized modules
 portal = get_portal()
 globals().update(portal.__dict__)
-import compiler
+from Compiler_Modules import compiler
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -106,6 +123,7 @@ def reject_handler(file_path):
             # 2. Find and delete related assets (JSON, Thumbnails)
             # Strategy: Strip extension, look for files starting with that basename
             import glob
+            import re
             directory = os.path.dirname(file_path)
             filename_no_ext = os.path.splitext(os.path.basename(file_path))[0]
             
@@ -124,6 +142,31 @@ def reject_handler(file_path):
                     deleted_files.append(os.path.basename(related))
                 except Exception as del_err:
                      print(f"   ⚠️ Failed to delete {related}: {del_err}")
+
+            # 3. DELETE EXTRACTED AUDIO from Original_audio/ (active/cooldown/root)
+            # Derive the stem — strip trailing index (_1, _2 …) to also match base title
+            _audio_stem_full  = filename_no_ext          # e.g. "Avneet_kaur_3"
+            _audio_stem_clean = re.sub(r"_\d+$", "", _audio_stem_full)  # e.g. "Avneet_kaur"
+            _orig_audio_root  = "Original_audio"
+            _audio_sub_dirs = [
+                os.path.join(_orig_audio_root, "active"),
+                os.path.join(_orig_audio_root, "cooldown"),
+                _orig_audio_root,
+            ]
+            for _adir in _audio_sub_dirs:
+                if not os.path.isdir(_adir):
+                    continue
+                for _acandidate in os.listdir(_adir):
+                    _aname_no_ext = os.path.splitext(_acandidate)[0]
+                    if _aname_no_ext in (_audio_stem_full, _audio_stem_clean):
+                        _apath = os.path.join(_adir, _acandidate)
+                        if os.path.isfile(_apath):
+                            try:
+                                os.remove(_apath)
+                                deleted_files.append(f"[AUDIO] {_acandidate}")
+                                print(f"   🗑️ Deleted audio: {_apath}")
+                            except Exception as _ae:
+                                print(f"   ⚠️ Could not delete audio {_apath}: {_ae}")
                 
             msg = f"🗑️ REJECTED & DELETED:\n{', '.join(deleted_files)}"
             print(msg)
@@ -137,6 +180,7 @@ def reject_handler(file_path):
     else:
         print(f"   ⚠️ File not found or path empty: {file_path}")
         return "🚫 Upload Rejected (File not found).", gr.update(visible=False), gr.update(visible=False), None
+
 
 async def process_harvest(url, title, do_trim, start_time, end_time, do_wm, do_upscale, do_upload, do_overlay, do_vo, force_immediate, progress=gr.Progress()):
     if not url.strip():
@@ -155,7 +199,7 @@ async def process_harvest(url, title, do_trim, start_time, end_time, do_wm, do_u
         logger.info(f">>> UI SIGNAL RECEIVED: Title='{title}', Trim={do_trim}, WM={do_wm}, Upscale={do_upscale}, Upload={do_upload}, Overlay={do_overlay}, VO={do_vo}")
 
         result = download_video(url, custom_title=title.strip())
-        if result:
+        if result and result[0]:
             v_path, is_cached = result
             final_path = os.path.abspath(v_path)
             status = "✅ READY"
@@ -327,6 +371,9 @@ with gr.Blocks(title="AMTCE Control Center", css=get_css()) as demo:
         else:
              logger.info(f"ℹ️ Pipeline Finished. Buttons hidden. DoUpload={do_upload}, File={last_file}, Exists={file_exists}")
              yield last_status, last_file, None, gr.update(visible=False), gr.update(visible=False)
+        
+        # FINAL FORENSIC SUMMARY
+        GeminiTrace.print_summary()
 
     run_btn.click(
         fn=process_wrapper,

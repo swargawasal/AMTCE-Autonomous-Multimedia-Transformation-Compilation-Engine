@@ -1,0 +1,249 @@
+{
+  "pipeline": "audit_passed",
+  "verdict": "unknown",
+  "editorial_title": null,
+  "caption_data": {
+    "caption": "Blue Sports Jersey VIRAL: CLI: Process 'Ankita Singh, guaranteeing a visual impact that lingers long after you've left the space, ensuring you command the room without saying a single word, delivering an instant confidence boost that's visible to everyone around you.",
+    "editorial_script": "Blue Sports Jersey VIRAL: CLI: Process 'Ankita Singh, guaranteeing a visual impact that lingers long after you've left the space, ensuring you command the room without saying a single word, delivering an instant confidence boost that's visible to everyone around you."
+  },
+  "metadata": {
+    "hook_score": 0.2292,
+    "quality_score": 0.5,
+    "transformation_score": 0.0,
+    "item_name": "Blue Sports Jersey",
+    "price_tag": "",
+    "gemini_total_calls": 1,
+    "gemini_call_log": [
+      "MASTER_INTELLIGENCE"
+    ],
+    "editing_diagnostics": {
+      "scene_count": 2,
+      "segments_created": 4,
+      "concat_used": false,
+      "editing_effective": false,
+      "non_chronological": false,
+      "avg_score": 0.125
+    },
+    "feature_flags": {
+      "scene_detection": true,
+      "smart_crop": true,
+      "caption_generation": true,
+      "music_engine": true,
+      "voiceover_generation": true,
+      "beat_detection": false,
+      "price_tag_engine": true,
+      "subject_tracking": false,
+      "scene_reconstruction": true,
+      "watermark_detection": true,
+      "watermark_inpaint": true
+    }
+  },
+  "pipeline_metrics": {
+    "monetization": {
+      "editorial_script": "Blue Sports Jersey VIRAL: CLI: Process 'Ankita Singh, guaranteeing a visual impact that lingers long after you've left the space, ensuring you command the room without saying a single word, delivering an instant confidence boost that's visible to everyone around you.",
+      "final_caption": "Blue Sports Jersey VIRAL: CLI: Process 'Ankita Singh, guaranteeing a visual impact that lingers long after you've left the space, ensuring you command the room without saying a single word, delivering an instant confidence boost that's visible to everyone around you.",
+      "caption": "Blue Sports Jersey VIRAL: CLI: Process 'Ankita Singh, guaranteeing a visual impact that lingers long after you've left the space, ensuring you command the room without saying a single word, delivering an instant confidence boost that's visible to everyone around you.",
+      "cta": null,
+      "monetization_cta": null,
+      "ypp_safe": true,
+      "risk_level": "UNKNOWN",
+      "risk_reason": "Analysis pending or not performed.",
+      "reason": "Analysis pending or not performed.",
+      "transformation_score": 0.0,
+      "policy_citation": "Significant Original Commentary",
+      "fashion_scout": {},
+      "item_name": "Blue Sports Jersey",
+      "improvement_tips": [],
+      "overlay_data": {},
+      "price_data": {
+        "celebrity_price": 27755,
+        "clone_price": 8125,
+        "source": "premium_tier"
+      },
+      "telegram_hook": null,
+      "instagram_hook": null,
+      "youtube_hook": null,
+      "hashtags": null
+    }
+  },
+  "editing_timeline": [
+    {
+      "clip_id": 0,
+      "start": 4.35,
+      "end": 7.2,
+      "style": "clean",
+      "transition": "clean",
+      "reason": "price_tag_stable_anchor",
+      "color_mode": "fashion"
+    },
+    {
+      "clip_id": 0,
+      "start": 2.206,
+      "end": 4.346,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.02). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.019,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 1.25,
+      "beat_offset": 0.033,
+      "_pacing_band": "setup",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 1.0,
+      "importance": 1.0,
+      "bbox": {
+        "x": 161,
+        "y": 468,
+        "w": 91,
+        "h": 135
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 7.64,
+      "end": 9.285,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.03). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.035,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 2.25,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.1906,
+      "importance": 0.1906,
+      "bbox": {
+        "x": 432,
+        "y": 443,
+        "w": 123,
+        "h": 168
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 10.05,
+      "end": 11.736,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.04,
+      "transition_intensity": 0.0,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": null,
+      "reason": "STIE:last_segment @ 40ms",
+      "beat_interval": 1.95,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.6618,
+      "importance": 0.6618,
+      "bbox": {
+        "x": 148,
+        "y": 492,
+        "w": 98,
+        "h": 131
+      }
+    }
+  ],
+  "monetization": {
+    "editorial_script": "Blue Sports Jersey VIRAL: CLI: Process 'Ankita Singh, guaranteeing a visual impact that lingers long after you've left the space, ensuring you command the room without saying a single word, delivering an instant confidence boost that's visible to everyone around you.",
+    "final_caption": "Blue Sports Jersey VIRAL: CLI: Process 'Ankita Singh, guaranteeing a visual impact that lingers long after you've left the space, ensuring you command the room without saying a single word, delivering an instant confidence boost that's visible to everyone around you.",
+    "caption": "Blue Sports Jersey VIRAL: CLI: Process 'Ankita Singh, guaranteeing a visual impact that lingers long after you've left the space, ensuring you command the room without saying a single word, delivering an instant confidence boost that's visible to everyone around you.",
+    "cta": null,
+    "monetization_cta": null,
+    "ypp_safe": true,
+    "risk_level": "UNKNOWN",
+    "risk_reason": "Analysis pending or not performed.",
+    "reason": "Analysis pending or not performed.",
+    "transformation_score": 0.0,
+    "policy_citation": "Significant Original Commentary",
+    "fashion_scout": {},
+    "item_name": "Blue Sports Jersey",
+    "improvement_tips": [],
+    "overlay_data": {},
+    "price_data": {
+      "celebrity_price": 27755,
+      "clone_price": 8125,
+      "source": "premium_tier"
+    },
+    "telegram_hook": null,
+    "instagram_hook": null,
+    "youtube_hook": null,
+    "hashtags": null
+  },
+  "processed_only_path": "Compilations/viral_vanguard_1779726629.mp4",
+  "audit": {
+    "verdict": "ACTIVE",
+    "creative_score": 1.0,
+    "silent_failures": [],
+    "health_report": {
+      "modules_connected": 22,
+      "modules_total": 22,
+      "modules_disconnected": [],
+      "signals": {
+        "beats": 44,
+        "retention_peaks": 9,
+        "emotional_spikes": 1,
+        "fused_moments": 2,
+        "candidate_moments": 20
+      },
+      "segments_generated": 4,
+      "diversity_score": 1.0,
+      "creative_edit_score": 1.0,
+      "creative_pipeline_integrity": true
+    }
+  }
+}

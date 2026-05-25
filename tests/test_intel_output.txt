@@ -1,0 +1,41 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.10.11, pytest-9.0.2, pluggy-1.6.0 -- D:\Autonomous Multimedia Transformation & Compilation Engine (AMTCE)\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: D:\Autonomous Multimedia Transformation & Compilation Engine (AMTCE)
+configfile: pytest.ini
+plugins: anyio-4.12.0, xdist-3.8.0
+collecting ... collected 7 items
+
+tests/test_intelligence_pipeline.py::test_hook_variant_scoring PASSED    [ 14%]
+tests/test_intelligence_pipeline.py::test_trend_opportunity_calculation PASSED [ 28%]
+tests/test_intelligence_pipeline.py::test_scene_editing_verifier PASSED  [ 42%]
+tests/test_intelligence_pipeline.py::test_transition_scoring PASSED      [ 57%]
+tests/test_intelligence_pipeline.py::test_feature_flag_merging PASSED    [ 71%]
+tests/test_intelligence_pipeline.py::test_master_prompt_signal_honesty PASSED [ 85%]
+tests/test_intelligence_pipeline.py::test_no_edit_hard_stop_terminates_pipeline FAILED [100%]
+
+================================== FAILURES ===================================
+_________________ test_no_edit_hard_stop_terminates_pipeline __________________
+C:\Program Files\Python310\lib\unittest\mock.py:1376: in patched
+    with self.decoration_helper(patched,
+C:\Program Files\Python310\lib\contextlib.py:135: in __enter__
+    return next(self.gen)
+C:\Program Files\Python310\lib\unittest\mock.py:1358: in decoration_helper
+    arg = exit_stack.enter_context(patching)
+C:\Program Files\Python310\lib\contextlib.py:492: in enter_context
+    result = _cm_type.__enter__(cm)
+C:\Program Files\Python310\lib\unittest\mock.py:1431: in __enter__
+    self.target = self.getter()
+C:\Program Files\Python310\lib\unittest\mock.py:1618: in <lambda>
+    getter = lambda: _importer(target)
+C:\Program Files\Python310\lib\unittest\mock.py:1257: in _importer
+    thing = __import__(import_path)
+Compiler_Modules\__init__.py:1: in <module>
+    from .orchestrator import compile_video
+E     File "D:\Autonomous Multimedia Transformation & Compilation Engine (AMTCE)\Compiler_Modules\orchestrator.py", line 1664
+E       continue
+E       ^^^^^^^^
+E   SyntaxError: 'continue' not properly in loop
+=========================== short test summary info ===========================
+FAILED tests/test_intelligence_pipeline.py::test_no_edit_hard_stop_terminates_pipeline
+=================== 1 failed, 6 passed, 1 warning in 3.01s ====================

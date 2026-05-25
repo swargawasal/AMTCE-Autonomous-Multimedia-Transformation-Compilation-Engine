@@ -5,6 +5,8 @@ from google.oauth2.credentials import Credentials
 import urllib.request
 import urllib.parse
 
+import argparse
+
 # Add parent directory to path to import config if needed
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -14,22 +16,42 @@ SCOPES = [
     "https://www.googleapis.com/auth/yt-analytics.readonly",
     "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
 ]
-CLIENT_SECRET_FILE = "Credentials/client_secret.json"
-TOKEN_FILE = "Credentials/token.json"
 
-def authenticate():
+# Defaults (root)
+DEFAULT_CLIENT_SECRET_FILE = "Credentials/client_secret.json"
+DEFAULT_TOKEN_FILE = "Credentials/token.json"
+
+def authenticate(client_secret_file=None, token_file=None):
     print("🚀 Starting Manual YouTube Authentication...")
     
-    if not os.path.exists(CLIENT_SECRET_FILE):
-        print(f"❌ Error: {CLIENT_SECRET_FILE} not found!")
+    # Use provided paths or fall back to defaults
+    secret_path = client_secret_file or DEFAULT_CLIENT_SECRET_FILE
+    token_path = token_file or DEFAULT_TOKEN_FILE
+
+    if not os.path.exists(secret_path):
+        print(f"❌ Error: {secret_path} not found!")
         print("Please download your OAuth 2.0 Client ID JSON from Google Cloud Console")
-        print("and save it as 'client_secret.json' in the 'Credentials' directory.")
+        print(f"and save it as '{os.path.basename(secret_path)}' in the correct directory.")
         return
 
-    flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
+    # --- DEMO DETECTION ---
+    try:
+         with open(secret_path, 'r', encoding='utf-8') as f:
+             raw = f.read()
+             if "DEMO_CLIENT_ID" in raw or "DEMO_CLIENT_SECRET" in raw:
+                  print(f"\n❌ Error: {secret_path} contains placeholder 'DEMO' credentials!")
+                  print("   The Google library will fail if you try to use these.")
+                  print("   Please replace them with a real client_secret.json from Google Cloud Console.")
+                  return
+    except Exception:
+         pass
+
+    flow = InstalledAppFlow.from_client_secrets_file(secret_path, SCOPES)
     
     print("\n" + "="*50)
     print("📢 ACTION REQUIRED: YouTube Authentication Needed")
+    print(f"   Using Secret: {secret_path}")
+    print(f"   Saving Token: {token_path}")
     print("="*50)
     
     try:
@@ -74,14 +96,20 @@ def authenticate():
         flow.fetch_token(code=code)
         creds = flow.credentials
     
-    with open(TOKEN_FILE, "w", encoding="utf-8") as f:
+    with open(token_path, "w", encoding="utf-8") as f:
         f.write(creds.to_json())
         
-    print(f"✅ Authentication successful! Token saved to {TOKEN_FILE}")
+    print(f"✅ Authentication successful! Token saved to {token_path}")
     print("You can now restart the bot or try uploading again.")
 
 if __name__ == "__main__":
     # Ensure we are in the root directory
     root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     os.chdir(root_dir)
-    authenticate()
+
+    parser = argparse.ArgumentParser(description="AMTCE YouTube Authentication Script")
+    parser.add_argument("--secret", help="Path to client_secret.json")
+    parser.add_argument("--token", help="Path to save token.json")
+    args = parser.parse_args()
+
+    authenticate(client_secret_file=args.secret, token_file=args.token)

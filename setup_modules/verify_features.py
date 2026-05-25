@@ -83,6 +83,10 @@ class TestFeatureImplementation(unittest.TestCase):
                 # Case A: Instagram Reel
                 url_ig = "https://www.instagram.com/reel/TEST_IG_ID_123/"
                 res = download_video(url_ig)
+                # [FIX] Unpack tuple
+                if isinstance(res, tuple):
+                    res, _ = res
+                
                 # Check if find_by_id was called with expected extraction
                 mock_find.assert_any_call("TEST_IG_ID_123")
                 print("   ✅ Instagram Reel ID Extracted: TEST_IG_ID_123")
@@ -90,6 +94,10 @@ class TestFeatureImplementation(unittest.TestCase):
                 # Case B: Facebook Reel
                 url_fb = "https://www.facebook.com/reel/987654321"
                 res = download_video(url_fb)
+                # [FIX] Unpack tuple
+                if isinstance(res, tuple):
+                    res, _ = res
+                    
                 mock_find.assert_any_call("987654321")
                 print("   ✅ Facebook Reel ID Extracted: 987654321")
                 
@@ -104,43 +112,52 @@ class TestFeatureImplementation(unittest.TestCase):
         try:
             from Text_Modules.text_overlay import add_logo_overlay
             
-            # Mock subprocess.run AND os.path.exists
-            # We need to mock os.path.exists specifically for the logic checks
+            # Mock subprocess.run, os.path.exists, and the cleaner to ensure integration.
             original_exists = os.path.exists
-            
+            cleaned_path = os.path.join("assets", "logo", "brand_logo_clean.png")
+
+            # allow cleaned path to flip from False->True after cleaner is invoked
+            seen_clean = {"called": False}
+
             def side_effect_exists(path):
-                if "logo.png" in str(path) or "input.mp4" in str(path):
+                p = str(path)
+                if "logo.png" in p or "input.mp4" in p:
                     return True
+                if p == cleaned_path:
+                    # before the cleaner has been called, pretend it does not exist
+                    return seen_clean["called"]
                 return original_exists(path)
+
+            def mark_clean_called(*args, **kwargs):
+                seen_clean["called"] = True
+                return True
 
             with patch("subprocess.run") as mock_run, \
                  patch("time.time", return_value=12345), \
-                 patch("os.path.exists", side_effect=side_effect_exists):
+                 patch("os.path.exists", side_effect=side_effect_exists), \
+                 patch("Utilities.logo_transparency_cleaner.clean_logo_background") as mock_clean:
                 
                 mock_run.return_value.returncode = 0
+                # when cleaner is called we mark the cleaned path available
+                mock_clean.side_effect = mark_clean_called
+                mock_clean.return_value = True
                 
-                # Test Logo
+                # Test Logo — should trigger cleaner and use cleaned file
                 add_logo_overlay("input.mp4", "output.mp4", "logo.png", lane_context="caption")
-                
-                # Check args
-                if mock_run.call_args:
-                    args = mock_run.call_args[0][0]
-                    # args is list of cmd parts. Join to search.
-                    cmd_str = " ".join(args)
-                    
-                    # Verify collision avoidance match
-                    if "H-h-50" in cmd_str:
-                        print(f"   ✅ Logo Collision Avoidance Detected (H-h-50)")
-                    else:
-                        print(f"   ⚠️ CMD: {cmd_str}")
-                        self.fail(f"Logo collision avoidance missing")
-                else:
-                    self.fail("subprocess.run was NOT called (Method exited early?)")
-                    
-        except ImportError:
-            self.fail("Could not import text_overlay")
-            
-    # --- 4. Uploader Module Load Verification ---
+                mock_clean.assert_called_once()
+                args = mock_run.call_args[0][0] if mock_run.call_args else []
+                cmd_str = " ".join(args)
+
+                # Ensure we reference the cleaned filename (not the original)
+                self.assertIn("brand_logo_clean.png", cmd_str, msg=f"cleaned logo not used: {cmd_str}")
+
+                # Verify new positioning and delay expressions
+                self.assertIn("x=(W-w)/2", cmd_str, msg=f"Logo not centered: {cmd_str}")
+                self.assertIn("y=H-h-60", cmd_str, msg=f"Y position incorrect: {cmd_str}")
+                self.assertIn("enable='gte(t,0.75)'", cmd_str, msg=f"Delay missing: {cmd_str}")
+                print("   ✅ Logo overlay filter string looks correct")
+        except Exception as e:
+            self.fail(f"Branding overlay test failed: {e}")
     def test_quota_lock(self):
         print("\n[TEST] Uploader Module Import...")
         try:
@@ -150,17 +167,50 @@ class TestFeatureImplementation(unittest.TestCase):
             # Verify module loaded and has expected callable
             self.assertTrue(hasattr(uploader_mod, 'upload_video') or callable(getattr(uploader_mod, 'upload_video', None)) or True,
                 "uploader module should be importable")
-            print("   ✅ Uploader module imported cleanly")
         except ImportError as e:
             self.fail(f"Could not import uploader module: {e}")
         except Exception as e:
             self.fail(f"Uploader import failed: {e}")
 
+    def test_orchestrator_logo_cleanup(self):
+        print("\n[TEST] Orchestrator Logo Cleanup Invocation...")
+        from Compiler_Modules import orchestrator
+        # patch clean_logo_background so we can detect call and stop execution
+        try:
+            from Utilities.logo_transparency_cleaner import clean_logo_background
+        except ImportError:
+            self.skipTest("Logo cleaner missing")
+
+        # Force os.path.exists to simulate: source logo exists, cleaned dest missing,
+        # all other paths default to real filesystem.
+        def exists_side(path):
+            p = os.path.normpath(str(path)).lower()
+            if p.endswith(os.path.normpath(os.path.join("logo", "Brand_logo.png")).lower()):
+                return True
+            if p.endswith(os.path.normpath(os.path.join("assets", "logo", "brand_logo_clean.png")).lower()):
+                return False
+            return original_exists(path)
+
+        original_exists = os.path.exists
+        with patch("Utilities.logo_transparency_cleaner.clean_logo_background") as mock_clean, \
+             patch("os.path.exists", side_effect=exists_side):
+            # make cleaner raise to simulate failure path; orchestrator should catch it
+            def stopper(src, dst):
+                raise RuntimeError("halt")
+            mock_clean.side_effect = stopper
+
+            # run pipeline (it will continue past cleaning despite exception)
+            orchestrator.compile_video("jid","in.mp4","out.mp4","t","d")
+
+            # verify cleaner was called
+            mock_clean.assert_called_once()
+            print("   ✅ Cleaner was invoked during orchestrator initialization (caught failure)")
+
     # --- 5. Compiler Shim Verification ---
     def test_ferrari_command(self):
         print("\n[TEST] Compiler Shim Integrity...")
         try:
-            import compiler
+            from Compiler_Modules import compiler
             # Verify the shim exposes required functions
             self.assertTrue(callable(getattr(compiler, 'compile_with_transitions', None)),
                 "compile_with_transitions must be callable")

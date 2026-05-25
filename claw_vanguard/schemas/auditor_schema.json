@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Vanguard Auditor Report",
+  "type": "object",
+  "properties": {
+    "approved": {
+      "type": "boolean",
+      "description": "Whether the auditor recommends promoting this code change."
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Architectural quality score (0.0 - 1.0)."
+    },
+    "critique": {
+      "type": "string",
+      "description": "Detailed human-readable critique of the code change."
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "severity": { "enum": ["low", "medium", "high", "critical"] }
+        },
+        "required": ["type", "severity"]
+      }
+    },
+    "fix_suggestions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Specific actionable steps to improve the code."
+    }
+  },
+  "required": ["approved", "score", "critique", "risks", "fix_suggestions"]
+}

@@ -12,7 +12,7 @@ opencv-python-headless
 
 # Utilities
 tqdm==4.66.1
-Pillow==10.1.0
+Pillow==10.3.0
 
 # YouTube Upload
 google-api-python-client==2.108.0
@@ -21,6 +21,6 @@ google-auth-oauthlib==1.1.0
 
 # AI Caption & Audio Generation
 google-generativeai>=0.8.3
-kokoro>=0.1.0
-soundfile
-torch
+#kokoro>=0.1.0
+#soundfile
+#torch

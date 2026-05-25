@@ -1,0 +1,192 @@
+{
+  "pipeline": "audit_passed",
+  "verdict": "unknown",
+  "editorial_title": null,
+  "caption_data": {
+    "caption": "Grey Graphic Tank VIRAL: CLI: Process 'Muskan Karia, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+    "editorial_script": "Grey Graphic Tank VIRAL: CLI: Process 'Muskan Karia, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you, anchoring your visual dominance with a fabric that feels as premium as it looks."
+  },
+  "metadata": {
+    "hook_score": 0.3255,
+    "quality_score": 0.5,
+    "transformation_score": 0.0,
+    "item_name": "Grey Graphic Tank",
+    "price_tag": "",
+    "gemini_total_calls": 1,
+    "gemini_call_log": [
+      "MASTER_INTELLIGENCE"
+    ],
+    "editing_diagnostics": {
+      "scene_count": 2,
+      "segments_created": 2,
+      "concat_used": false,
+      "editing_effective": false,
+      "non_chronological": false,
+      "avg_score": 0.266
+    },
+    "feature_flags": {
+      "scene_detection": true,
+      "smart_crop": true,
+      "caption_generation": true,
+      "music_engine": true,
+      "voiceover_generation": true,
+      "beat_detection": false,
+      "price_tag_engine": true,
+      "subject_tracking": false,
+      "scene_reconstruction": true,
+      "watermark_detection": true,
+      "watermark_inpaint": true
+    }
+  },
+  "pipeline_metrics": {
+    "monetization": {
+      "editorial_script": "Grey Graphic Tank VIRAL: CLI: Process 'Muskan Karia, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+      "final_caption": "Grey Graphic Tank VIRAL: CLI: Process 'Muskan Karia, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+      "caption": "Grey Graphic Tank VIRAL: CLI: Process 'Muskan Karia, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+      "cta": null,
+      "monetization_cta": null,
+      "ypp_safe": true,
+      "risk_level": "UNKNOWN",
+      "risk_reason": "Analysis pending or not performed.",
+      "reason": "Analysis pending or not performed.",
+      "transformation_score": 0.0,
+      "policy_citation": "Significant Original Commentary",
+      "fashion_scout": {},
+      "item_name": "Grey Graphic Tank",
+      "improvement_tips": [],
+      "overlay_data": {},
+      "price_data": {
+        "celebrity_price": 27220,
+        "clone_price": 10666,
+        "source": "premium_tier"
+      },
+      "telegram_hook": null,
+      "instagram_hook": null,
+      "youtube_hook": null,
+      "hashtags": null
+    }
+  },
+  "editing_timeline": [
+    {
+      "clip_id": 0,
+      "start": 1.927,
+      "end": 4.826,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.01). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.008,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 2.7,
+      "beat_offset": 0.033,
+      "_pacing_band": "setup",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 1.0,
+      "importance": 1.0,
+      "bbox": {
+        "x": 496,
+        "y": 257,
+        "w": 167,
+        "h": 236
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 8.326,
+      "end": 11.124,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.04,
+      "transition_intensity": 0.0,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": null,
+      "reason": "STIE:last_segment @ 40ms",
+      "beat_interval": 2.6,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.0,
+      "importance": 0.0,
+      "bbox": {
+        "x": 454,
+        "y": 399,
+        "w": 114,
+        "h": 147
+      }
+    }
+  ],
+  "monetization": {
+    "editorial_script": "Grey Graphic Tank VIRAL: CLI: Process 'Muskan Karia, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+    "final_caption": "Grey Graphic Tank VIRAL: CLI: Process 'Muskan Karia, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+    "caption": "Grey Graphic Tank VIRAL: CLI: Process 'Muskan Karia, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+    "cta": null,
+    "monetization_cta": null,
+    "ypp_safe": true,
+    "risk_level": "UNKNOWN",
+    "risk_reason": "Analysis pending or not performed.",
+    "reason": "Analysis pending or not performed.",
+    "transformation_score": 0.0,
+    "policy_citation": "Significant Original Commentary",
+    "fashion_scout": {},
+    "item_name": "Grey Graphic Tank",
+    "improvement_tips": [],
+    "overlay_data": {},
+    "price_data": {
+      "celebrity_price": 27220,
+      "clone_price": 10666,
+      "source": "premium_tier"
+    },
+    "telegram_hook": null,
+    "instagram_hook": null,
+    "youtube_hook": null,
+    "hashtags": null
+  },
+  "processed_only_path": "Compilations/viral_vanguard_1779328398.mp4",
+  "audit": {
+    "verdict": "ACTIVE",
+    "creative_score": 0.95,
+    "silent_failures": [],
+    "health_report": {
+      "modules_connected": 22,
+      "modules_total": 22,
+      "modules_disconnected": [],
+      "signals": {
+        "beats": 8,
+        "retention_peaks": 7,
+        "emotional_spikes": 3,
+        "fused_moments": 1,
+        "candidate_moments": 7
+      },
+      "segments_generated": 2,
+      "diversity_score": 1.0,
+      "creative_edit_score": 0.95,
+      "creative_pipeline_integrity": true
+    }
+  }
+}

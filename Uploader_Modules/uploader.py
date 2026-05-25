@@ -33,8 +33,13 @@ SCOPES = [
     "https://www.googleapis.com/auth/yt-analytics.readonly",
     "https://www.googleapis.com/auth/yt-analytics-monetary.readonly"
 ]
+
+# ── Default (root) credential paths ──────────────────────────────────────────
 CLIENT_SECRET_FILE = os.environ.get("CLIENT_SECRET_FILE", "Credentials/client_secret.json")
 TOKEN_FILE = os.environ.get("YOUTUBE_TOKEN_FILE", "Credentials/token.json")
+
+# ── Niche credential root (folder names must match NICHE_LIST in gemini_enhance_for_watermark) ──
+SOCIAL_MEDIA_CREDS_ROOT = "Credentials/social_media"
 
 logger = logging.getLogger("uploader")
 logger.setLevel(logging.INFO)
@@ -44,7 +49,7 @@ if os.path.exists(TOKEN_FILE):
     logger.info("ℹ️ NOTE: Community Promotion/Analytics requires re-authentication (delete token.json). Uploads will continue normally without it.")
 
 def check_platform_lock() -> bool:
-    """Checks if the 24h platform safety lock is active (Quota or Copyright)."""
+    """Checks if the 2h platform safety lock is active (Quota or Copyright)."""
     lock_file = "youtube_platform.lock"
     if os.path.exists(lock_file):
         try:
@@ -53,8 +58,8 @@ def check_platform_lock() -> bool:
                 timestamp = data.get("timestamp", 0)
                 reason = data.get("reason", "Unknown Enforcement")
             
-            # Check 24h expiration
-            if time.time() - timestamp < 86400:
+            # Check 2h expiration
+            if time.time() - timestamp < 7200:
                 return True
             else:
                 os.remove(lock_file)
@@ -64,11 +69,11 @@ def check_platform_lock() -> bool:
     return False
 
 def set_platform_lock(reason: str):
-    """Sets a 24h platform safety lock."""
+    """Sets a 2h platform safety lock."""
     with open("youtube_platform.lock", "w") as f:
         json.dump({"timestamp": time.time(), "reason": reason}, f)
-    logger.warning(f"🛑 PLATFORM LOCK SET: {reason}. Uploads paused for 24 hours.")
-    send_telegram_notification(f"🛑 [MONETIZATION GUARDRAIL] YouTube Lock Active: {reason}\nUploads paused for 24h.")
+    logger.warning(f"🛑 PLATFORM LOCK SET: {reason}. Uploads paused for 2 hours.")
+    send_telegram_notification(f"🛑 [MONETIZATION GUARDRAIL] YouTube Lock Active: {reason}\nUploads paused for 2h.")
 
 
 def send_telegram_notification(message: str):
@@ -84,14 +89,76 @@ def send_telegram_notification(message: str):
         except Exception as e:
             logger.warning(f"⚠️ Failed to send Telegram notification: {e}")
 
-def get_valid_credentials():
+
+def _resolve_credential_paths(niche: str = None):
+    """
+    Niche-Aware Credential Resolver.
+
+    Resolution order:
+      1. Niche folder:          Credentials/social_media/<niche>/token.json
+      2. General_Fallback:      Credentials/social_media/General_Fallback/token.json
+      3. Root default:          Credentials/token.json  (original behaviour)
+
+    Returns (token_path, client_secret_path) — always a valid pair.
+    Both files must exist for the tier to be accepted.
+    """
+    def _tier_valid(folder: str) -> bool:
+        t = os.path.join(folder, "token.json")
+        c = os.path.join(folder, "client_secret.json")
+        if not (os.path.exists(t) and os.path.exists(c)):
+            return False
+            
+        # --- DEMO DETECTION ---
+        # Check if the secret file contains "DEMO_" placeholders
+        try:
+             with open(c, 'r', encoding='utf-8') as f:
+                 raw = f.read()
+                 if "DEMO_CLIENT_ID" in raw or "DEMO_CLIENT_SECRET" in raw:
+                      logger.warning(f"⚠️ [UPLOADER] {c} contains placeholder 'DEMO' credentials. Skipping tier.")
+                      return False
+        except Exception:
+             pass
+        return True
+
+    # Tier 1 — requested niche (skip if niche is None or already General_Fallback)
+    if niche and niche != "General_Fallback":
+        niche_folder = os.path.join(SOCIAL_MEDIA_CREDS_ROOT, niche)
+        if _tier_valid(niche_folder):
+            logger.info(f"🎯 [UPLOADER] Using niche credentials: {niche}")
+            return (
+                os.path.join(niche_folder, "token.json"),
+                os.path.join(niche_folder, "client_secret.json"),
+            )
+        else:
+            logger.info(f"📂 [UPLOADER] No credentials for niche '{niche}'. Falling back to General_Fallback.")
+
+    # Tier 2 — General_Fallback
+    fallback_folder = os.path.join(SOCIAL_MEDIA_CREDS_ROOT, "General_Fallback")
+    if _tier_valid(fallback_folder):
+        logger.info("🔀 [UPLOADER] Using General_Fallback credentials.")
+        return (
+            os.path.join(fallback_folder, "token.json"),
+            os.path.join(fallback_folder, "client_secret.json"),
+        )
+    else:
+        logger.info("📂 [UPLOADER] No General_Fallback credentials found. Falling back to root Credentials/.")
+
+    # Tier 3 — root default (original TOKEN_FILE / CLIENT_SECRET_FILE)
+    logger.info("🔑 [UPLOADER] Using root default credentials.")
+    return TOKEN_FILE, CLIENT_SECRET_FILE
+
+
+def get_valid_credentials(niche: str = None):
     """
     Retrieves and refreshes valid credentials.
+    Accepts an optional niche to route to the correct credential folder.
     """
+    token_file, client_secret_file = _resolve_credential_paths(niche)
+
     creds = None
-    if os.path.exists(TOKEN_FILE):
+    if os.path.exists(token_file):
         try:
-            creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+            creds = Credentials.from_authorized_user_file(token_file, SCOPES)
         except Exception:
             logger.warning("Failed to read token file, will run auth flow.")
             creds = None
@@ -104,7 +171,7 @@ def get_valid_credentials():
                 while refresh_retry < 3:
                     try:
                         creds.refresh(Request())
-                        with open(TOKEN_FILE, "w", encoding="utf-8") as f:
+                        with open(token_file, "w", encoding="utf-8") as f:
                             f.write(creds.to_json())
                         logger.info("✅ Token refreshed and saved.")
                         break
@@ -124,23 +191,38 @@ def get_valid_credentials():
             print("If you are in Colab/Headless, look for the '🔗' link below.")
             print("!"*60 + "\n")
             try:
-                # Auto-run the auth script
-                subprocess.check_call([sys.executable, "scripts/auth_youtube.py"])
+                # [SAFETY] Explicitly check if the secret file exists before calling the script
+                if not client_secret_file or not os.path.exists(client_secret_file):
+                    logger.error(f"❌ CRITICAL: client_secret.json not found at {client_secret_file or 'DEFAULT'}. "
+                                 "Auto-auth cannot proceed. Please ensure Credentials/client_secret.json is present.")
+                    raise Exception(f"Missing client_secret.json at {client_secret_file}")
+
+                # Auto-run the auth script with the specific niche paths if resolved
+                auth_cmd = [sys.executable, "scripts/auth_youtube.py"]
+                if token_file:
+                    auth_cmd.extend(["--token", token_file])
+                if client_secret_file:
+                    auth_cmd.extend(["--secret", client_secret_file])
+                
+                logger.info(f"🚀 Launching auth script: {' '.join(auth_cmd)}")
+                subprocess.check_call(auth_cmd)
                 
                 # Reload credentials after script finishes
-                if os.path.exists(TOKEN_FILE):
-                    creds = Credentials.from_authorized_user_file(TOKEN_FILE, SCOPES)
+                if os.path.exists(token_file):
+                    creds = Credentials.from_authorized_user_file(token_file, SCOPES)
+                else:
+                    logger.error(f"❌ Auth script finished but {token_file} was not created.")
             except Exception as e:
                 logger.error(f"❌ Auto-auth failed: {e}")
 
             if not creds or not creds.valid:
-                logger.error("❌ Authentication failed: Token expired or missing.")
-                raise Exception("YouTube Authentication Failed. Please run 'python scripts/auth_youtube.py' locally to refresh credentials.")
+                logger.error(f"❌ Authentication failed for niche {niche or 'Root'}: Token expired or missing.")
+                raise Exception(f"YouTube Authentication Failed (Niche: {niche or 'Root'}). Please run 'python scripts/auth_youtube.py' locally to refresh credentials.")
     return creds
 
-def _get_service_sync():
+def _get_service_sync(niche: str = None):
     import socket
-    creds = get_valid_credentials()
+    creds = get_valid_credentials(niche=niche)
     # Force a 60-second default socket timeout so uploads don't hang infinitely on network drop
     socket.setdefaulttimeout(60)
     service = build("youtube", "v3", credentials=creds)
@@ -159,7 +241,7 @@ def verify_metadata(file_path: str) -> bool:
             "-show_format", 
             file_path
         ]
-        result = subprocess.check_output(cmd, shell=True).decode().strip()
+        result = subprocess.check_output(cmd).decode().strip()  # shell=False (default) — cmd is a safe list
         data = json.loads(result)
         tags = data.get("format", {}).get("tags", {})
         
@@ -212,7 +294,6 @@ def refresh_metadata(file_path: str) -> bool:
         subprocess.check_call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         
         # Verify output exists
-        # Verify output exists
         if os.path.exists(temp_path) and os.path.getsize(temp_path) > 0:
             # Atomic Move (with Retry)
             try:
@@ -241,6 +322,7 @@ def _upload_sync(
     description: Optional[str] = None,
     privacy: str = "public",
     publish_at: Optional[str] = None,
+    niche: Optional[str] = None,
 ) -> Optional[str]:
     # 0. Check Platform Lock First
     if check_platform_lock():
@@ -252,7 +334,7 @@ def _upload_sync(
         logger.error("❌ Upload rejected: File must be .mp4")
         return None
 
-    service = _get_service_sync()
+    service = _get_service_sync(niche=niche)
     logger.info(f"DEBUG: _upload_sync called with title input: '{title}'")
     
     # Robust title logic: Ensure it's not None, not empty, and not just whitespace
@@ -274,13 +356,25 @@ def _upload_sync(
         
     logger.info(f"📋 Final Title for Upload: '{final_title}'")
         
-    DISCLAIMER = (
-        "\n\n---"
-        "\nCopyright Disclaimer Under Section 107 of the Copyright Act 1976, allowance is made for \"fair use\" "
-        "for purposes such as criticism, commenting, news reporting, teaching, scholarship, and research. "
-        "Fair use is a use permitted by copyright statute that might otherwise be infringing. "
-        "Non-profit, educational or personal use tips the balance in favor of fair use."
-    )
+    # --- OPTIONAL COPYRIGHT DISCLAIMER ---
+    show_disclaimer = os.getenv("SHOW_COPYRIGHT_DISCLAIMER", "true").lower() == "true"
+    if show_disclaimer:
+        # Check for custom disclaimer in .env
+        env_disclaimer = os.getenv("COPYRIGHT_DISCLAIMER")
+        if env_disclaimer:
+            DISCLAIMER = "\n\n---\n" + env_disclaimer
+        else:
+            # Fallback to standard Fair Use disclaimer
+            DISCLAIMER = (
+                "\n\n---"
+                "\nCopyright Disclaimer Under Section 107 of the Copyright Act 1976, allowance is made for \"fair use\" "
+                "for purposes such as criticism, commenting, news reporting, teaching, scholarship, and research. "
+                "Fair use is a use permitted by copyright statute that might otherwise be infringing. "
+                "Non-profit, educational or personal use tips the balance in favor of fair use."
+            )
+    else:
+        DISCLAIMER = ""
+
     final_description = ((description or "").strip() + ("\n\n" + hashtags if hashtags else "")).strip() + DISCLAIMER
 
     status_dict = {
@@ -349,9 +443,6 @@ def _upload_sync(
                     logger.info("✅ Upload complete: %s", video_id)
                     
                     # 4. Set Thumbnail (Optional)
-                    # We check for a matching .jpg/.png in sample_thumbs/ with same basename?
-                    # Or we look for 'thumb_output.jpg' in current dir?
-                    # Strategy: If a file ending in '_thumb.jpg' exists in temp or downloads, use it.
                     thumb_path = file_path.replace(".mp4", "_thumb.jpg")
                     if os.path.exists(thumb_path):
                          set_youtube_thumbnail(video_id, thumb_path)
@@ -386,16 +477,14 @@ def _upload_sync(
             time.sleep(2 ** retry)
 
         except (ssl.SSLError, socket.error, ConnectionError, ProtocolError, ReadTimeoutError, Timeout) as e:
-            # Catch known transient network errors WITHOUT dumping a full traceback unless it's a permanent failure
             logger.warning("🌐 Transient Network Error (Retry %d/10): %s", retry + 1, e)
             retry += 1
-            if retry > 10: # More retries for network issues
+            if retry > 10:
                 logger.error("Max retries reached due to persistent network errors.")
                 return None
-            time.sleep(min(2 ** retry, 60)) # Cap backoff at 60s
+            time.sleep(min(2 ** retry, 60))
 
         except Exception as e:
-            # Non-network exceptions still get a traceback for debugging
             logger.exception("⚠️ Unexpected Upload Error (Retry %d/5): %s", retry + 1, e)
             retry += 1
             if retry > 5:
@@ -429,9 +518,10 @@ async def upload_to_youtube(
     description: Optional[str] = None,
     privacy: str = "public",
     publish_at: Optional[str] = None,
+    niche: Optional[str] = None,
 ) -> Optional[str]:
     print(f"DEBUG: uploader.upload_to_youtube called for {file_path}")
-    return await asyncio.to_thread(_upload_sync, file_path, hashtags, title, description, privacy, publish_at)
+    return await asyncio.to_thread(_upload_sync, file_path, hashtags, title, description, privacy, publish_at, niche)
 
 # Expose authentication for other modules (e.g., community_promoter)
 get_authenticated_service = _get_service_sync

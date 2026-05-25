@@ -12,7 +12,7 @@ logger = logging.getLogger("audio_processing")
 FFMPEG_BIN = os.getenv("FFMPEG_BIN", "ffmpeg")
 ENABLE_TREMOLO = os.getenv("ENABLE_TREMOLO", "no").lower() == "yes"
 COMPILATION_MASTER_MODE = os.getenv("COMPILATION_MASTER_MODE", "heavy")
-AUDIO_TIMEOUT = int(os.getenv("AUDIO_TIMEOUT", 25))
+AUDIO_TIMEOUT = int(os.getenv("AUDIO_TIMEOUT", 9000))  # Increased from 25 to 900s for long compilations
 AUDIO_FORCE_SAFE = os.getenv("AUDIO_FORCE_SAFE", "no").lower() == "yes"
 AUDIO_FORCE_HEAVY = os.getenv("AUDIO_FORCE_HEAVY", "no").lower() == "yes"
 SPEECH_MODE = os.getenv("SPEECH_MODE", "auto").lower()
@@ -26,6 +26,23 @@ _audio_meta = {
     "final_lufs_target": -14
 }
 _audio_debug = {"errors": []}
+
+def has_audio_stream(path: str) -> bool:
+    """Returns True if the video file contains at least one audio stream."""
+    try:
+        ffprobe_bin = FFMPEG_BIN.replace("ffmpeg", "ffprobe") if "ffmpeg" in FFMPEG_BIN.lower() else "ffprobe"
+        cmd = [
+            ffprobe_bin, "-v", "error",
+            "-select_streams", "a:0",
+            "-show_entries", "stream=codec_type",
+            "-of", "json", path,
+        ]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=10)
+        data = json.loads(result.stdout)
+        return len(data.get("streams", [])) > 0
+    except Exception as e:
+        logger.warning(f"⚠️ has_audio_stream checking failed for {path}: {e}")
+        return False  # Assume no audio if probe fails
 
 def _get_loudnorm_filter():
     """Returns the standard YouTube-safe loudness normalization filter."""
@@ -62,6 +79,10 @@ def heavy_remix(input_path: str, output_path: str, original_volume: float = 1.15
     """
     logger.info(f"🎛️ Audio Remix Fix: {input_path} (Volume: {original_volume}x)")
     
+    if not has_audio_stream(input_path):
+        logger.warning(f"⚠️ Source has no audio stream, skipping remix: {input_path}")
+        return False
+        
     # 1. Transformative Decision Layer
     # Logic: If reuse detected (default assumption for this module), ensure transform
     transform_required = True 
@@ -182,6 +203,19 @@ def mix_background_music(input_video: str, output_video: str, volume: float = 0.
     bg_track = random.choice(tracks)
     logger.info(f"🎵 Mixing background music: {os.path.basename(bg_track)} (Vol: {volume})")
     
+    if not has_audio_stream(input_video):
+        logger.info("⚠️ Original video has no audio stream. Simply attaching background music directly.")
+        cmd_simple = [
+            FFMPEG_BIN, "-y", "-i", input_video,
+            "-stream_loop", "-1", "-i", bg_track,
+            "-filter_complex", f"[1:a]volume={volume},aresample=44100,{_get_loudnorm_filter()}[out]",
+            "-map", "0:v", "-map", "[out]",
+            "-c:v", "copy", "-c:a", "aac",
+            "-shortest", output_video
+        ]
+        return _safe_ffmpeg_run(cmd_simple)
+
+    
     # 5. Smart Mixer Hardening
     # - Stream loop the music input
     # - Dynamic Sidechain: duck music when main audio speaks
@@ -201,7 +235,7 @@ def mix_background_music(input_video: str, output_video: str, volume: float = 0.
         f"[1:a]volume={volume},aresample=44100[bg];"
         f"[0:a]volume=1.0,aresample=44100[main];"
         f"[bg][main]sidechaincompress=threshold={duck_threshold}:ratio=10:attack=35:release=200[ducked_bg];"
-        f"[main][ducked_bg]amix=inputs=2:duration=first:dropout_transition=2[mixed];"
+        f"[main][ducked_bg]amix=inputs=2:duration=first:dropout_transition=0.5[mixed];"
         f"[mixed]{_get_loudnorm_filter()}[out]"
     )
     
@@ -224,7 +258,7 @@ def mix_background_music(input_video: str, output_video: str, volume: float = 0.
     filter_simple = (
         f"[1:a]volume={volume*0.8}[bg];" # Reduce volume further for safety
         f"[0:a]volume=1.0[main];"
-        f"[main][bg]amix=inputs=2:duration=first[a];"
+        f"[main][bg]amix=inputs=2:duration=first:dropout_transition=0.5[a];"
         f"[a]{_get_loudnorm_filter()}[out]"
     )
     cmd_fallback = [
@@ -250,6 +284,10 @@ def apply_compilation_mastering(input_path: str, output_path: str, original_volu
     """
     logger.info(f"🏟️ Applying Compilation Mastering (Heavy Remix): {input_path} (Volume: {original_volume}x)")
     
+    if not has_audio_stream(input_path):
+        logger.warning(f"⚠️ Source has no audio stream, skipping mastering: {input_path}")
+        return False
+        
     # Effects Chain:
     # 1. Bass Boost (Stronger)
     # 2. Exciter (Highs)

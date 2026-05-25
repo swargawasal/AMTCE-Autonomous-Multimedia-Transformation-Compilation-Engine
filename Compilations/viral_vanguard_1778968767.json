@@ -1,0 +1,450 @@
+{
+  "pipeline": "audit_passed",
+  "verdict": "unknown",
+  "editorial_title": null,
+  "caption_data": {
+    "caption": "White Cotton Robe VIRAL: CLI: Process 'Lisa', ensuring you command the room without saying a single word, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+    "editorial_script": "White Cotton Robe VIRAL: CLI: Process 'Lisa', ensuring you command the room without saying a single word, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you."
+  },
+  "metadata": {
+    "hook_score": 0.4649,
+    "quality_score": 0.5,
+    "transformation_score": 0.0,
+    "item_name": "White Cotton Robe",
+    "price_tag": "",
+    "gemini_total_calls": 1,
+    "gemini_call_log": [
+      "MASTER_INTELLIGENCE"
+    ],
+    "editing_diagnostics": {
+      "scene_count": 28,
+      "segments_created": 8,
+      "concat_used": false,
+      "editing_effective": false,
+      "non_chronological": false,
+      "avg_score": 0.143
+    },
+    "feature_flags": {
+      "scene_detection": true,
+      "smart_crop": true,
+      "caption_generation": true,
+      "music_engine": true,
+      "voiceover_generation": true,
+      "beat_detection": false,
+      "price_tag_engine": true,
+      "subject_tracking": false,
+      "scene_reconstruction": true,
+      "watermark_detection": true,
+      "watermark_inpaint": true
+    }
+  },
+  "pipeline_metrics": {
+    "monetization": {
+      "editorial_script": "White Cotton Robe VIRAL: CLI: Process 'Lisa', ensuring you command the room without saying a single word, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+      "final_caption": "White Cotton Robe VIRAL: CLI: Process 'Lisa', ensuring you command the room without saying a single word, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+      "caption": "White Cotton Robe VIRAL: CLI: Process 'Lisa', ensuring you command the room without saying a single word, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+      "cta": null,
+      "monetization_cta": null,
+      "ypp_safe": true,
+      "risk_level": "UNKNOWN",
+      "risk_reason": "Analysis pending or not performed.",
+      "reason": "Analysis pending or not performed.",
+      "transformation_score": 0.0,
+      "policy_citation": "Significant Original Commentary",
+      "fashion_scout": {},
+      "item_name": "White Cotton Robe",
+      "improvement_tips": [],
+      "overlay_data": {},
+      "price_data": {
+        "celebrity_price": 29999,
+        "clone_price": 13956,
+        "source": "premium_tier"
+      },
+      "telegram_hook": null,
+      "instagram_hook": null,
+      "youtube_hook": null,
+      "hashtags": null
+    }
+  },
+  "editing_timeline": [
+    {
+      "clip_id": 0,
+      "start": 0.94,
+      "end": 3.94,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.02). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.021,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "setup",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.0,
+      "importance": 0.0
+    },
+    {
+      "clip_id": 0,
+      "start": 24.967,
+      "end": 26.967,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.02). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.021,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 2.45,
+      "beat_offset": 0.033,
+      "_pacing_band": "setup",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.724,
+      "importance": 0.724,
+      "bbox": {
+        "x": 549,
+        "y": 933,
+        "w": 149,
+        "h": 149
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 51.267,
+      "end": 53.767,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.03). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.026,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 1.0,
+      "importance": 1.0
+    },
+    {
+      "clip_id": 0,
+      "start": 5.04,
+      "end": 7.719,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.00). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.003,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 1.5,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.3895,
+      "importance": 0.3895
+    },
+    {
+      "clip_id": 0,
+      "start": 26.967,
+      "end": 29.0,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.00). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.001,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 1.65,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.5421,
+      "importance": 0.5421,
+      "bbox": {
+        "x": 476,
+        "y": 746,
+        "w": 100,
+        "h": 186
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 3.367,
+      "end": 5.367,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.01). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.006,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 1.0,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.3213,
+      "importance": 0.3213,
+      "bbox": {
+        "x": 55,
+        "y": 742,
+        "w": 109,
+        "h": 109
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 8.933,
+      "end": 10.928,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.01). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.008,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 1.45,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.2999,
+      "importance": 0.2999
+    },
+    {
+      "clip_id": 0,
+      "start": 35.24,
+      "end": 37.11,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.04,
+      "transition_intensity": 0.0,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": null,
+      "reason": "STIE:last_segment @ 40ms",
+      "beat_interval": 4.15,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.174,
+      "importance": 0.174
+    }
+  ],
+  "monetization": {
+    "editorial_script": "White Cotton Robe VIRAL: CLI: Process 'Lisa', ensuring you command the room without saying a single word, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+    "final_caption": "White Cotton Robe VIRAL: CLI: Process 'Lisa', ensuring you command the room without saying a single word, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+    "caption": "White Cotton Robe VIRAL: CLI: Process 'Lisa', ensuring you command the room without saying a single word, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+    "cta": null,
+    "monetization_cta": null,
+    "ypp_safe": true,
+    "risk_level": "UNKNOWN",
+    "risk_reason": "Analysis pending or not performed.",
+    "reason": "Analysis pending or not performed.",
+    "transformation_score": 0.0,
+    "policy_citation": "Significant Original Commentary",
+    "fashion_scout": {},
+    "item_name": "White Cotton Robe",
+    "improvement_tips": [],
+    "overlay_data": {},
+    "price_data": {
+      "celebrity_price": 29999,
+      "clone_price": 13956,
+      "source": "premium_tier"
+    },
+    "telegram_hook": null,
+    "instagram_hook": null,
+    "youtube_hook": null,
+    "hashtags": null
+  },
+  "processed_only_path": "Compilations/viral_vanguard_1778968767.mp4",
+  "audit": {
+    "verdict": "ACTIVE",
+    "creative_score": 1.0,
+    "silent_failures": [],
+    "health_report": {
+      "modules_connected": 22,
+      "modules_total": 22,
+      "modules_disconnected": [],
+      "signals": {
+        "beats": 24,
+        "retention_peaks": 15,
+        "emotional_spikes": 8,
+        "fused_moments": 1,
+        "candidate_moments": 27
+      },
+      "segments_generated": 8,
+      "diversity_score": 1.0,
+      "creative_edit_score": 1.0,
+      "creative_pipeline_integrity": true
+    }
+  }
+}

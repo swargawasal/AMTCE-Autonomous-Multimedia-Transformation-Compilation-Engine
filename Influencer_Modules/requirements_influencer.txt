@@ -1,0 +1,32 @@
+# Influencer Engine — Python requirements
+# 100% commercial-safe  (Apache 2.0 / CreativeML RAIL+M)
+# NO InsightFace | NO ArcFace | NO FaceID | NO FLUX dev weights
+# ──────────────────────────────────────────────────────────────
+
+# Core diffusion framework (Apache 2.0)
+diffusers>=0.28.0
+transformers>=4.40.0
+accelerate>=0.30.0
+
+# PyTorch (BSD-style — commercial OK)
+# Install separately for your CUDA version:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+# The Colab notebook handles this automatically.
+
+# Image processing (HPND / MIT / Apache 2.0)
+Pillow>=10.0.0
+opencv-python-headless>=4.8.0
+
+# Face detection — MediaPipe (Apache 2.0, NO InsightFace)
+mediapipe>=0.10.0
+
+# OpenPose skeleton extraction — controlnet-aux with DWPose (Apache 2.0)
+controlnet-aux>=0.0.9
+
+# HuggingFace model hub / model management (Apache 2.0)
+huggingface-hub>=0.22.0
+safetensors>=0.4.0
+sentencepiece>=0.1.99
+
+# ONNX runtime (needed by controlnet-aux DWPose — Apache 2.0)
+onnxruntime-gpu>=1.17.0

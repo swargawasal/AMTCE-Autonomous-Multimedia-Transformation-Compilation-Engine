@@ -2,20 +2,23 @@ import sys
 import os
 
 # Ensure we can find local modules
-sys.path.append(os.path.abspath("d:/whatsupneyork"))
+PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+sys.path.append(PROJECT_ROOT)
 
 import logging
 import cv2
 import json
+from dotenv import load_dotenv
 
 # Setup Logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("debug_viz")
 
+# Load credentials from .env
+load_dotenv("Credentials/.env")
+
 # Force Env
 os.environ["WATERMARK_INPAINT_QUALITY"] = "hybrid"
-# Use working API KEY
-os.environ["GEMINI_API_KEY"] = "AIzaSyCyyz-_BBimZSXOKD9zlJfl0zYbhHKmlwo"
 
 try:
     try:
@@ -29,7 +32,7 @@ except ImportError as e:
     sys.exit(1)
 
 def run_debug_viz():
-    video_path = r"D:\whatsupneyork\downloads\Avneet_kaur.mp4"
+    video_path = sys.argv[1] if len(sys.argv) > 1 else os.path.join(PROJECT_ROOT, "downloads", "sample.mp4")
     if not os.path.exists(video_path):
         logger.error("Video not found")
         return
@@ -37,7 +40,7 @@ def run_debug_viz():
     logger.info(f"🔎 Scanning (Direct Gemini): {video_path}")
     
     # Init Gemini
-    gemini_enhance.init_gemini(os.environ["GEMINI_API_KEY"])
+    # gemini_enhance.init_gemini(os.environ["GEMINI_API_KEY"]) # Deprecated - handled automatically via env
 
     # 1. Get Watermarks from Hybrid Detector
     # We call the wrapper which handles the JSON parsing
@@ -95,7 +98,7 @@ def run_debug_viz():
         cv2.putText(frame, f"#{i+1} {label}", (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 0, 255), 3)
 
     # Save
-    out_path = r"D:\whatsupneyork\temp\debug_detection_viz_v2.jpg"
+    out_path = os.path.join(PROJECT_ROOT, "temp", "debug_detection_viz_v2.jpg")
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
     cv2.imwrite(out_path, frame)
     logger.info(f"💾 Saved debug visualization to: {out_path}")

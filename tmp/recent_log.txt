@@ -1,0 +1,600 @@
+﻿    value: "gemini-3.1-pro"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-3.1-pro"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-3.1-pro"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+, retry_delay {
+  seconds: 17
+}
+]
+2026-03-28 11:06:47,244 - gemini_routing - INFO - {"timestamp": "2026-03-28T11:06:47.243781", "selected_model": "gemini-2.5-pro", "score": 1.0, "task_type": "vision", "reason": "routed", "rate_limited": false}
+2026-03-28 11:07:08,715 - gemini_governor - WARNING - 🚫 Model gemini-2.5-pro BANNED for 0:05:00 due to 429.
+2026-03-28 11:07:08,723 - gemini_governor - ERROR - ❌ Gemini Call Failed (vision via gemini-2.5-pro): 429 You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. 
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 0, model: gemini-2.5-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro
+* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_input_token_count, limit: 0, model: gemini-2.5-pro
+Please retry in 55.847375637s. [links {
+  description: "Learn more about Gemini API quotas"
+  url: "https://ai.google.dev/gemini-api/docs/rate-limits"
+}
+, violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerDayPerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.5-pro"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_requests"
+  quota_id: "GenerateRequestsPerMinutePerProjectPerModel-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.5-pro"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerMinute-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.5-pro"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+violations {
+  quota_metric: "generativelanguage.googleapis.com/generate_content_free_tier_input_token_count"
+  quota_id: "GenerateContentInputTokensPerModelPerDay-FreeTier"
+  quota_dimensions {
+    key: "model"
+    value: "gemini-2.5-pro"
+  }
+  quota_dimensions {
+    key: "location"
+    value: "global"
+  }
+}
+, retry_delay {
+  seconds: 55
+}
+]
+2026-03-28 11:07:08,914 - gemini_routing - INFO - {"timestamp": "2026-03-28T11:07:08.914161", "selected_model": "gemini-2.5-flash", "score": 1.0, "task_type": "vision", "reason": "routed", "rate_limited": false}
+2026-03-28 11:07:46,956 - shot_detector - INFO - ✨ [SHOT_DETECTION] shots_found=7 (Gemini Semantic Vision)
+2026-03-28 11:07:46,957 - orchestrator - INFO - ✅ [SHOT_DETECTION] scenes_detected=7
+2026-03-28 11:07:46,960 - video_pipeline - INFO - [AUDIO_EXTRACT] Already exists — skipping: watermark_clean.mp3
+2026-03-28 11:07:46,961 - orchestrator - INFO - 🎵 [AUDIO_EXTRACT] Ready: watermark_clean.mp3
+2026-03-28 11:07:46,962 - orchestrator - INFO - 🔍 [Step 0.5] Source Detection...
+2026-03-28 11:07:46,963 - source_detector - INFO - 🔍 Source Detection: link (Reused: True)
+2026-03-28 11:07:46,963 - orchestrator - INFO - ⚖️ [Step 0.6] Transformation Engine Strategy...
+2026-03-28 11:07:46,966 - orchestrator - INFO - 🥁 [Step 1b] Audio Beat Detection on Master Clip...
+2026-03-28 11:07:46,967 - pipeline_audit - INFO - [RUNTIME_TRACER] CALLED → beat_engine.analyze_beats_with_drops()
+2026-03-28 11:07:48,480 - beat_engine - INFO - 💥 Beat drops detected: 0 / 26 beats
+2026-03-28 11:07:48,482 - pipeline_audit - INFO - [STEP_TRACER] ✔  beat_detection  (1.52s)
+2026-03-28 11:07:48,482 - orchestrator - INFO - 🎯 [Step 1c] Subject Tracking on Master Clip...
+2026-03-28 11:07:48,482 - subject_tracker - INFO - 🎬 [SUBJECT_TRACKING] Requesting Gemini Vision semantic analysis...
+2026-03-28 11:07:50,588 - gemini_routing - INFO - {"timestamp": "2026-03-28T11:07:50.587517", "selected_model": "gemini-2.5-flash", "score": 1.0, "task_type": "vision", "reason": "routed", "rate_limited": false}
+2026-03-28 11:08:24,424 - subject_tracker - INFO - ✨ [SUBJECT_TRACKING] active | entries=7 | change_events=7
+2026-03-28 11:08:24,425 - pipeline_audit - INFO - [STEP_TRACER] ✔  subject_tracking  (35.95s)
+2026-03-28 11:08:24,467 - orchestrator - INFO - 🎬 [Step 1d.1] Motion Detection...
+2026-03-28 11:08:24,486 - motion_detector - INFO - 🎬 [MOTION] Analyzing watermark_clean.mp4... (dur=22.6s)
+2026-03-28 11:08:29,351 - motion_detector - INFO - ✅ [MOTION] Analysis complete: 338 data points.
+2026-03-28 11:08:29,351 - orchestrator - INFO - ✅ [MOTION_DETECTION] scores=338
+2026-03-28 11:08:29,352 - pipeline_audit - INFO - [STEP_TRACER] ✔  motion_detection  (4.88s)
+2026-03-28 11:08:29,352 - orchestrator - INFO - ⛏️ [Step 1d] MomentMiner — Mining candidate moments...
+2026-03-28 11:08:29,352 - moment_miner - INFO - [MOMENT_MINER] Starting moment extraction...
+2026-03-28 11:08:29,353 - moment_miner - INFO - [MOMENT_MINER] Motion spikes computed: 337
+2026-03-28 11:08:29,398 - moment_miner - INFO - [MOMENT_MINER] Adaptive motion threshold=0.045
+2026-03-28 11:08:29,398 - moment_miner - INFO - [MOMENT_MINER] Boosted motion threshold=0.027
+2026-03-28 11:08:29,398 - moment_miner - INFO - [MOMENT_MINER] Motion peaks detected: 11
+2026-03-28 11:08:29,399 - moment_miner - INFO - [MOMENT_MINER] Face moments detected: 4
+2026-03-28 11:08:29,399 - moment_miner - INFO - [MOMENT_MINER] Reaction moments detected: 6
+2026-03-28 11:08:29,399 - moment_miner - INFO - [MOMENT_MINER] Beat moments detected: 26
+2026-03-28 11:08:29,400 - moment_miner - INFO - [MOMENT_MINER] Scene boundary moments detected: 13
+2026-03-28 11:08:29,400 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=0.2 strength=0.243
+2026-03-28 11:08:29,400 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=1.8 strength=0.13
+2026-03-28 11:08:29,400 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=3.4 strength=0.614
+2026-03-28 11:08:29,400 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=5.267 strength=0.052
+2026-03-28 11:08:29,400 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=6.733 strength=0.088
+2026-03-28 11:08:29,400 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=8.2 strength=0.426
+2026-03-28 11:08:29,400 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=9.467 strength=0.261
+2026-03-28 11:08:29,401 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=11.4 strength=0.427
+2026-03-28 11:08:29,401 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=13.933 strength=0.45
+2026-03-28 11:08:29,401 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=17.667 strength=0.241
+2026-03-28 11:08:29,401 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=19.867 strength=0.063
+2026-03-28 11:08:29,401 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=0.0 strength=0.55
+2026-03-28 11:08:29,401 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=3.77 strength=0.55
+2026-03-28 11:08:29,401 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=9.4 strength=0.55
+2026-03-28 11:08:29,401 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=13.17 strength=0.45
+2026-03-28 11:08:29,401 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=3.77 strength=0.55
+2026-03-28 11:08:29,402 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=7.53 strength=0.55
+2026-03-28 11:08:29,402 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=9.4 strength=0.55
+2026-03-28 11:08:29,402 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=13.17 strength=0.45
+2026-03-28 11:08:29,402 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=15.07 strength=0.55
+2026-03-28 11:08:29,402 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=18.83 strength=0.55
+2026-03-28 11:08:29,402 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=0.2 strength=0.5
+2026-03-28 11:08:29,402 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=1.15 strength=0.2
+2026-03-28 11:08:29,403 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=1.65 strength=0.2
+2026-03-28 11:08:29,403 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=2.35 strength=0.2
+2026-03-28 11:08:29,403 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=3.05 strength=0.2
+2026-03-28 11:08:29,403 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=3.55 strength=0.5
+2026-03-28 11:08:29,403 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=4.25 strength=0.3
+2026-03-28 11:08:29,403 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=4.95 strength=0.2
+2026-03-28 11:08:29,403 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=5.45 strength=0.2
+2026-03-28 11:08:29,403 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=6.15 strength=0.2
+2026-03-28 11:08:29,405 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=7.35 strength=0.5
+2026-03-28 11:08:29,405 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=8.05 strength=0.2
+2026-03-28 11:08:29,405 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=8.65 strength=0.2
+2026-03-28 11:08:29,405 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=9.25 strength=0.5
+2026-03-28 11:08:29,405 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=10.0 strength=0.2
+2026-03-28 11:08:29,405 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=12.6 strength=0.2
+2026-03-28 11:08:29,405 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=13.8 strength=0.2
+2026-03-28 11:08:29,405 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=15.0 strength=0.5
+2026-03-28 11:08:29,405 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=15.7 strength=0.2
+2026-03-28 11:08:29,406 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=16.65 strength=0.2
+2026-03-28 11:08:29,406 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=17.6 strength=0.2
+2026-03-28 11:08:29,406 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=18.8 strength=0.5
+2026-03-28 11:08:29,406 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=19.5 strength=0.2
+2026-03-28 11:08:29,406 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=20.7 strength=0.2
+2026-03-28 11:08:29,406 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=21.4 strength=0.2
+2026-03-28 11:08:29,406 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=22.6 strength=0.4
+2026-03-28 11:08:29,406 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=0.0 strength=0.55
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=3.7 strength=0.305
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=3.7 strength=0.55
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=7.5 strength=0.305
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=7.5 strength=0.55
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=9.4 strength=0.305
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=9.4 strength=0.55
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=13.2 strength=0.305
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=13.2 strength=0.55
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=15.1 strength=0.305
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=15.1 strength=0.55
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=18.8 strength=0.305
+2026-03-28 11:08:29,407 - moment_miner - INFO - [MULTI_CLIP_MOMENT] clip=0 time=18.8 strength=0.55
+2026-03-28 11:08:29,408 - moment_miner - INFO - [MOMENT_MINER] After deduplication: 13
+2026-03-28 11:08:29,408 - moment_miner - WARNING - [MOMENT_MINER] Low candidate count: 13 (target: 15-30)
+2026-03-28 11:08:29,408 - moment_miner - INFO - [MOMENT_MINER] candidates_found=13
+2026-03-28 11:08:29,408 - moment_miner - INFO - [MOMENT_MINER] unique_timestamps=13
+2026-03-28 11:08:29,409 - moment_miner - INFO - [MOMENT_MINER] Debug export: temp\job_ae0f3f\candidate_moments_debug.json
+2026-03-28 11:08:29,409 - orchestrator - INFO - [MULTI_CLIP] clip=0 moments=13 source=watermark_clean.mp4
+2026-03-28 11:08:29,409 - orchestrator - INFO - ✅ [MOMENT_MINER] candidate_moments=13 | clips_mined=1 | unique_clip_ids=[0]
+2026-03-28 11:08:29,410 - orchestrator - INFO - 🎬 CREATIVE_EDITOR MomentMiner mined 13 candidate moments across 1 clip(s)
+2026-03-28 11:08:29,410 - pipeline_audit - INFO - [STEP_TRACER] ✔  moment_miner  (0.06s)
+2026-03-28 11:08:29,410 - orchestrator - INFO - 🎭 [Step 1e.5] Expression Change Detection...
+2026-03-28 11:08:29,410 - expression_change_engine - INFO - [EXPRESSION_ENGINE] Starting analysis — video=watermark_clean.mp4 | duration=18.8s | face_frames=7
+2026-03-28 11:08:29,418 - expression_change_engine - INFO - [EXPRESSION_ENGINE] Processing 7 face frames...
+2026-03-28 11:08:30,631 - expression_change_engine - INFO - [EXPRESSION_ENGINE] Computed 0 embedding deltas
+2026-03-28 11:08:30,632 - expression_change_engine - INFO - [EXPRESSION_ENGINE] No expression timeline generated
+2026-03-28 11:08:30,632 - orchestrator - INFO - ✅ [EXPRESSION_ENGINE] changes_detected=0 | threshold=0.0000 | strongest=0.0000
+2026-03-28 11:08:30,632 - orchestrator - INFO - 📈 [Step 1f] Retention Curve Analysis...
+2026-03-28 11:08:30,632 - retention_curve_engine - INFO - 📈 [Retention] Starting analysis — duration=22.6s | moments=13 | motion_pts=338 | face_pts=7 | beats=26
+2026-03-28 11:08:30,633 - retention_curve_engine - INFO - 📈 [Retention] Timeline: 409 sample points
+2026-03-28 11:08:30,662 - retention_curve_engine - INFO - 📈 [Retention] Smoothing complete — window=5 | points=409
+2026-03-28 11:08:30,664 - retention_curve_engine - INFO - 📈 [Retention] Peaks detected: 7 | threshold=0.2731 | strongest=0.4452
+2026-03-28 11:08:30,665 - retention_curve_engine - INFO - 📈 [Retention] Peak times: [1.73, 3.07, 4.2, 7.35, 9.2, 11.53, 14.0]
+2026-03-28 11:08:30,683 - retention_curve_engine - INFO - 📈 [Retention] Debug export → temp\job_ae0f3f\retention_curve_debug.json
+2026-03-28 11:08:30,684 - orchestrator - INFO - ✅ [RETENTION_ENGINE] peaks_detected=7 | strongest=0.445 | times=[1.73, 3.07, 4.2, 7.35, 9.2, 11.53, 14.0]
+2026-03-28 11:08:30,684 - orchestrator - INFO - 😮 [Step 1g] Emotional Spike Detection...
+2026-03-28 11:08:30,684 - emotional_spike_detector - INFO - 😮 [EMOTIONAL_SPIKE] Starting analysis — duration=22.6s | face_pts=7 | motion_pts=338 | beats=26
+2026-03-28 11:08:30,722 - emotional_spike_detector - INFO - 😮 [EMOTIONAL_SPIKE] Timeline: 360 sample points
+2026-03-28 11:08:30,722 - emotional_spike_detector - INFO - 🎬 [EMOTIONAL_SPIKE] fallback → mathematical algorithm
+2026-03-28 11:08:30,724 - emotional_spike_detector - INFO - ✅ [EMOTIONAL_SPIKE] spikes_detected=2 | threshold=0.3500 | strongest=0.4200
+2026-03-28 11:08:30,724 - emotional_spike_detector - INFO - 😮 [EMOTIONAL_SPIKE] Spike times: [3.0, 14.0]
+2026-03-28 11:08:30,724 - emotional_spike_detector - INFO - 😮 [EMOTIONAL_SPIKE] Spike types: {'motion': 2}
+2026-03-28 11:08:30,726 - emotional_spike_detector - INFO - 😮 [EMOTIONAL_SPIKE] Debug export: temp\job_ae0f3f\emotional_spikes_debug.json
+2026-03-28 11:08:30,727 - orchestrator - INFO - ✅ [EMOTIONAL_SPIKE] spikes_detected=2 | strongest=0.420 | times=[3.0, 14.0]
+2026-03-28 11:08:30,727 - orchestrator - INFO - 🛠️ [Step 1g.5] Signal Repair Layer — Bootstrapping weak signals...
+2026-03-28 11:08:30,727 - Content_Intelligence.signal_repair_layer - INFO - [SIGNAL_REPAIR] dead_moments_removed=0 | alive=13
+2026-03-28 11:08:30,727 - Content_Intelligence.signal_repair_layer - INFO - [SIGNAL_REPAIR] confidence_scored=13 | mean_confidence=0.452
+2026-03-28 11:08:30,728 - Content_Intelligence.signal_repair_layer - INFO - [SIGNAL_REPAIR] semantic_scoring complete | moments_scored=13 | mean=0.372 | strength=MEDIUM
+2026-03-28 11:08:30,728 - Content_Intelligence.signal_repair_layer - INFO - ✅ [SIGNAL_REPAIR] health=0.60 | mode=NORMAL | candidates=13 | semantic=MEDIUM
+2026-03-28 11:08:30,728 - orchestrator - INFO - ✅ [SIGNAL_REPAIR] health=0.60 | flags={'emotion_missing': False, 'face_missing': True, 'retention_weak': False, 'fallback_active': False, 'signal_mode': 'normal'}
+2026-03-28 11:08:30,728 - orchestrator - INFO - 🔀 [Step 1h] Signal Fusion...
+2026-03-28 11:08:30,728 - signal_fusion_engine - INFO - 🔀 [SIGNAL_FUSION] Starting fusion — anchors=13 | retention_peaks=7 | emotional_spikes=2 | motion_pts=338 | face_pts=7 | beats=26
+2026-03-28 11:08:30,730 - signal_fusion_engine - INFO - 🔀 [SIGNAL_FUSION] Timeline: 13 sample points
+2026-03-28 11:08:30,730 - signal_fusion_engine - INFO - ✅ [SIGNAL_FUSION] final_moments=6 | strongest=0.7083
+2026-03-28 11:08:30,730 - signal_fusion_engine - INFO - 🔀 [SIGNAL_FUSION] Moment times: [0.0, 3.4, 7.5, 9.4, 15.07, 18.8]
+2026-03-28 11:08:30,730 - signal_fusion_engine - INFO - 🔀 [SIGNAL_FUSION] Dominant sources: {'attention_shift': 6}
+2026-03-28 11:08:30,732 - signal_fusion_engine - INFO - 🔀 [SIGNAL_FUSION] Debug export: temp\job_ae0f3f\signal_fusion_debug.json
+2026-03-28 11:08:30,732 - orchestrator - INFO - ✅ [SIGNAL_FUSION] final_moments=6 | strongest=0.708 | times=[0.0, 3.4, 7.5, 9.4, 15.07, 18.8]
+2026-03-28 11:08:30,732 - orchestrator - INFO - 🌊 [PACING_ENGINE] wave_start=0.00s | wave_peak=0.00s | wave_end=18.80s
+2026-03-28 11:08:30,732 - Core_Modules.strategy_optimizer - INFO - StrategyOptimizer: memory cold (0/5 videos), emitting null hints
+2026-03-28 11:08:30,732 - orchestrator - INFO - 🧠 [SOE] memory_cold=True | videos_learned=0 (need >= 5 to emit hints)
+2026-03-28 11:08:30,733 - pipeline_audit - INFO - [RUNTIME_TRACER] CALLED → editor_brain.process_moments()
+2026-03-28 11:08:30,733 - gemini_routing - INFO - {"timestamp": "2026-03-28T11:08:30.733563", "selected_model": "gemini-2.5-flash", "score": 1.0, "task_type": "analyzer", "reason": "routed", "rate_limited": false}
+2026-03-28 11:08:39,543 - rag_bootstrap - INFO - [RAG_BOOTSTRAP] Collection already populated (43 patterns). Skipping load.
+2026-03-28 11:08:40,386 - orchestrator - INFO - ✅ [EDITOR_BRAIN] persona=ANALYST | segments=6
+2026-03-28 11:08:40,387 - orchestrator - INFO - 📊 [SIGNAL_HEALTH] health=1.00 — sufficient signals for creative editing.
+2026-03-28 11:08:40,387 - orchestrator - INFO - 🖼️ [Step 1j] Frame Extraction (Peak-biased)...
+2026-03-28 11:08:43,142 - orchestrator - INFO - ✅ [FRAME_EXTRACTION] frames_extracted=6 | targeted=yes
+2026-03-28 11:08:43,142 - pipeline_audit - INFO - [STEP_TRACER] ✔  frame_extraction  (2.77s)
+2026-03-28 11:08:43,143 - orchestrator - INFO - 🧠 [Step 2] Master Intelligence Request...
+2026-03-28 11:08:43,143 - orchestrator - INFO - 🧠 [Step 2] [GEMINI_MASTER_REQUEST] Sent...
+2026-03-28 11:08:43,150 - creator_memory - INFO - [CreatorMemory] 🧠 Loaded fingerprint for 'watermark_clean' | renders=5 | hook_type=motion_peak | avg_cut=2.11s
+2026-03-28 11:08:43,151 - creative_brain - WARNING - [CreativeBrain] _gemini_intent error: 'GeminiGovernor' object has no attribute 'generate_content'
+2026-03-28 11:08:43,151 - orchestrator - INFO - 🎬 [CREATIVE_BRAIN_PASS1] intent derived | theme='Highlight the strongest visual moments in an engag' | hook=3.4 | climax=13.2 | pairs=5
+2026-03-28 11:08:43,152 - orchestrator - INFO - 🎭 [CONTRAST_PAIRS] Detected 2 action-reaction pairs
+2026-03-28 11:08:43,198 - unified_intelligence - INFO - 📸 [FRAME_CONTEXT] 6 frames | timestamps=[]
+2026-03-28 11:08:43,198 - unified_intelligence - INFO - [UNIFIED_INTEL] 🎬 Pass 2 with creative intent injected | hook=3.4 | climax=13.2 | pacing=rhythm_driven | contrast_pairs=5
+2026-03-28 11:08:43,276 - unified_intelligence - INFO - ✅ [FRAME_VALIDATION] 6/6 frames validated as PIL Images.
+2026-03-28 11:08:43,277 - unified_intelligence - INFO - 🧠 [GEMINI_MASTER_REQUEST] Starting nested analysis for watermark_clean.mp4...
+2026-03-28 11:08:43,277 - unified_intelligence - INFO - 🧠 [GEMINI_MASTER_REQUEST] Sent via Router (Attempt 1)
+2026-03-28 11:08:43,371 - gemini_routing - INFO - {"timestamp": "2026-03-28T11:08:43.371750", "selected_model": "gemini-2.5-flash", "score": 1.0, "task_type": "master", "reason": "routed", "rate_limited": false}
+2026-03-28 11:09:22,463 - unified_intelligence - WARNING - ⚠️ [MASTER_SCHEMA_RECOVERY] Gemini returned a flat segment list (5 items). Wrapping into master schema skeleton.
+2026-03-28 11:09:22,464 - unified_intelligence - INFO - 🔍 [MASTER_RAW_RESPONSE] {'editing_plan': {'segments': [{'clip_id': 0, 'start': 3.4, 'end': 4.95, 'role': 'hook', 'transition_type': None, 'emotion_score': 0.614, 'importance_score': 0.4, 'visual_moment_description': "Open on Disha Patani's radiant smile, as she elegantly holds a small plant and microphone, capturing an immediate sense of glamour and positive engagement.", 'fashion_identification': None}, {'clip_id': 0, 'start': 4.95, 'end': 7.5, 'role': 'build', 'transition_type': 'hard_cut', 'emotion_score': 0.55, 'importance_score': 0.2, 'visual_moment_description': 'A sharp cut reveals a dynamic back shot of Disha Patani, showcasing the intricate detail of her sparkling backless dress, hinting at sophisticated style.', 'fashion_identification': None}, {'clip_id': 0, 'start': 7.5, 'end': 9.4, 'role': 'elevation', 'transition_type': 'zoom', 'emotion_score': 0.55, 'importance_score': 0.3, 'visual_moment_description': "Zoom in on Disha's confident and charming expression, as she interacts, radiating poise and presence.", 'fashion_identification': None}, {'clip_id': 0, 'start': 9.4, 'end': 11.4, 'role': 'elevation', 'transition_type': 'hard_cut', 'emotion_score': 0.427, 'importance_score': 0.25, 'visual_moment_description': 'A rapid cut to a powerful and graceful pose, highlighting the fluidity of her movements and the elegance of her ensemble.', 'fashion_identification': None}, {'clip_id': 0, 'start': 11.4, 'end': 13.2, 'role': 'climax', 'transition_type': 'whip_pan', 'emotion_score': 0.55, 'importance_score': 0.45, 'visual_moment_description': "The sequence culminates in a swift whip-pan to Disha Patani's ultimate glamorous stance, delivering a striking and memorable final impression.", 'fashion_identification': None}]}, 'intent': 'unknown', 'feature_proposals': {}, 'editing_strategy': {}, 'content_director': {}}
+2026-03-28 11:09:22,464 - unified_intelligence - INFO - [MASTER] Fallback used: editing_modifiers derived from RAG-heuristic.
+2026-03-28 11:09:22,464 - unified_intelligence - INFO - [MASTER] Fallback used: caption_candidates derived locally.
+2026-03-28 11:09:22,465 - unified_intelligence - INFO - [SEGMENT_RECOVERY] Promoted 5 segments from 'editing_plan.segments' -> edited_segments
+2026-03-28 11:09:22,465 - unified_intelligence - INFO - [MASTER] fallback_used=True
+2026-03-28 11:09:22,479 - unified_intelligence - INFO - ✅ [MASTER_ANALYSIS_SUCCESS] Processed. Time: 39.27s | Calls: 1
+2026-03-28 11:09:22,483 - orchestrator - INFO - ✅ [MASTER_ANALYSIS_SUCCESS] Mapping data to profile...
+2026-03-28 11:09:22,484 - orchestrator - INFO - [SCHEMA_GATE] Passed=5 segments
+2026-03-28 11:09:22,485 - orchestrator - INFO - [CLIMAX_KEPT] Gemini verdict= score=6.00 — trusting Gemini's climax, skipping rebuild
+2026-03-28 11:09:22,485 - orchestrator - INFO - ✅ [NARRATIVE_FLOW] quality=MEDIUM | score=0.431 | reordered=False | pairs=4
+2026-03-28 11:09:22,486 - orchestrator - INFO - 🧠 [EDITOR_AUTHORITY] LOCKED (Viral Tier verified) | med=0.48 | std=0.04
+2026-03-28 11:09:22,486 - orchestrator - INFO - 💎 [EDITOR_SOURCE]=gemini_direct | winners=5
+2026-03-28 11:09:22,486 - content_intelligence - INFO - 🧠 [CI] narrative='' style='' tone='' hook=''
+2026-03-28 11:09:22,486 - content_intelligence - INFO - 🧠 [CI] Feature flags derived: [none]
+2026-03-28 11:09:22,487 - orchestrator - INFO - 🧠 [CONTENT_INTEL] narrative='' style='' active_flags=[]
+2026-03-28 11:09:22,487 - transformation_engine - INFO - 🛡️ Transformation rules overriding Gemini flags. Score (0.0) < 2 for Reused Content.
+2026-03-28 11:09:22,487 - orchestrator - INFO - 🚩 Final Feature Flags: {'scene_detection': True, 'smart_crop': True, 'caption_generation': True, 'music_engine': True, 'voiceover_generation': True, 'beat_detection': False, 'price_tag_engine': False, 'subject_tracking': False, 'scene_reconstruction': True, 'watermark_detection': True, 'watermark_inpaint': True}
+2026-03-28 11:09:22,488 - trend_opportunity_engine - INFO - 🔀 [TOE] No trend signal — skipping opportunity analysis
+2026-03-28 11:09:22,488 - orchestrator - INFO - 🔀 [TREND_ENGINE] stage=unknown angle= score=0.000
+2026-03-28 11:09:22,488 - hook_variants - INFO - 🎣 [HookVariants] No base hook provided. Returning default.
+2026-03-28 11:09:22,488 - orchestrator - INFO - 🎣 [HOOK_VARIANTS] hint=0.00s confidence=0.000
+2026-03-28 11:09:22,488 - orchestrator - INFO - ⏭️  [Step 2b] Shot Scoring skipped — candidate_moments present (Moment Authority active).
+2026-03-28 11:09:22,504 - monetization_brain - INFO - ✅ Loaded niche_prompts.json for monetization_brain
+2026-03-28 11:09:22,507 - monetization_brain - INFO - 🧠 YPP Editor Brain: ACTIVE (Model: gemini-2.5-flash-lite)
+2026-03-28 11:09:22,507 - monetization_brain - INFO - 💰 Brain: Performing Lite Monetization Update (0 API Calls)...
+2026-03-28 11:09:22,529 - orchestrator - INFO - ✅ [MASTER_ANALYSIS_SUCCESS] Pipeline data fully populated.
+2026-03-28 11:09:22,531 - audio_processing - INFO - 🎛️ Audio Remix Fix: temp\job_ae0f3f\watermark_clean.mp4 (Volume: 1.15x)
+2026-03-28 11:09:26,123 - audio_processing - INFO - ✅ Audio Remix Complete (Clean Beat Preset + Loudnorm)
+2026-03-28 11:09:26,627 - orchestrator - INFO - 🎛️ Audio Remixed (Bypass Active)
+2026-03-28 11:09:38,766 - orchestrator - INFO - ✂️ Final Edge Crop Applied.
+2026-03-28 11:09:40,561 - orchestrator - INFO - [CAPTION_ENGINE] generated=True caption="Luxury Couture Ensemble"
+2026-03-28 11:09:41,210 - orchestrator - INFO - 📝 [CAPTION_RESOLUTION] caption_text_resolved="Luxury Couture Ensemble"
+2026-03-28 11:09:41,210 - orchestrator - INFO - 🏷️  [BRAND] Brand overlay queued: '@swargawasal'
+2026-03-28 11:09:41,210 - orchestrator - INFO - 🔤 [TITLE_OVERLAY] SHOW_USER_TITLE_OVERLAY=no — title overlay skipped.
+2026-03-28 11:09:41,274 - music_manager - WARNING - ⚠️ Skipping corrupted or empty track: test_track_1.mp3 (5 bytes)
+2026-03-28 11:09:41,275 - music_manager - WARNING - ⚠️ Skipping corrupted or empty track: test_track_2.mp3 (5 bytes)
+2026-03-28 11:09:41,275 - music_manager - INFO - 🎵 Music Manager loaded 5 tracks from 'music':
+2026-03-28 11:09:41,275 - music_manager - INFO -     └─ Heatwave Glow.mp3
+2026-03-28 11:09:41,275 - music_manager - INFO -     └─ mirror.mp3
+2026-03-28 11:09:41,275 - music_manager - INFO -     └─ Runway Heat.mp3
+2026-03-28 11:09:41,276 - music_manager - INFO -     └─ ... and 2 more.
+2026-03-28 11:09:41,276 - music_manager - INFO - 🎵 Music Manager organized by usage. Least used tracks prioritized.
+2026-03-28 11:09:41,277 - music_manager - INFO - 🎵 [MUSIC_ENGINE] Mode: beat_match
+2026-03-28 11:09:42,062 - beat_engine - INFO - 🥁 Detected 25 beats in track.
+2026-03-28 11:09:42,070 - music_manager - INFO - 🥁 [BPM] 'watermark_clean.mp3' → 105.1 BPM (25 beats)
+2026-03-28 11:09:42,071 - music_manager - INFO - 🎯 [BEAT_MATCH] Clip BPM: 105.1 — searching for matching BGM track...
+2026-03-28 11:09:42,968 - beat_engine - INFO - 🥁 Detected 200 beats in track.
+2026-03-28 11:09:43,037 - music_manager - INFO - 🥁 [BPM] 'Whispered Flame.mp3' → 77.2 BPM (200 beats)
+2026-03-28 11:09:44,027 - beat_engine - INFO - 🥁 Detected 209 beats in track.
+2026-03-28 11:09:44,123 - music_manager - INFO - 🥁 [BPM] 'Slow Burn Seduction.mp3' → 72.8 BPM (209 beats)
+2026-03-28 11:09:45,084 - beat_engine - INFO - 🥁 Detected 172 beats in track.
+2026-03-28 11:09:45,171 - music_manager - INFO - 🥁 [BPM] 'Runway Heat.mp3' → 79.6 BPM (172 beats)
+2026-03-28 11:09:46,059 - beat_engine - INFO - 🥁 Detected 171 beats in track.
+2026-03-28 11:09:46,138 - music_manager - INFO - 🥁 [BPM] 'Heatwave Glow.mp3' → 67.5 BPM (171 beats)
+2026-03-28 11:09:47,168 - beat_engine - INFO - 🥁 Detected 317 beats in track.
+2026-03-28 11:09:47,259 - music_manager - INFO - 🥁 [BPM] 'mirror.mp3' → 101.2 BPM (317 beats)
+2026-03-28 11:09:47,259 - music_manager - INFO - ✅ [BEAT_MATCH] Best match: 'mirror.mp3' (101.2 BPM, delta=3.9) for clip BPM 105.1
+2026-03-28 11:09:47,260 - orchestrator - INFO - 🎵 Selected Music: mirror.mp3
+2026-03-28 11:09:47,261 - pipeline_audit - INFO - [RUNTIME_TRACER] CALLED → creative_editor_bridge.run()
+2026-03-28 11:09:47,261 - creative_editor_bridge - INFO - 🎬 [CreativeEditorBridge] Starting enrichment pass...
+2026-03-28 11:09:47,261 - pipeline_audit - INFO - [RUNTIME_TRACER] CALLED → beat_engine.analyze_beats_with_drops()
+2026-03-28 11:09:49,821 - beat_engine - INFO - 💥 Beat drops detected: 0 / 317 beats
+2026-03-28 11:09:49,825 - creative_editor_bridge - INFO - 🥁 BGM BeatEngine: 317 beats, 0 drops.
+2026-03-28 11:09:49,826 - creative_editor_bridge - INFO - 🎵 Beat thinning: 317 → 171 beats (removed 146 too-close beats, min_spacing=0.7s)
+2026-03-28 11:09:49,826 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 15.40s
+2026-03-28 11:09:49,826 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 18.90s
+2026-03-28 11:09:49,826 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 19.80s
+2026-03-28 11:09:49,827 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 30.20s
+2026-03-28 11:09:49,827 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 31.10s
+2026-03-28 11:09:49,827 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 31.95s
+2026-03-28 11:09:49,827 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 32.80s
+2026-03-28 11:09:49,827 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 34.55s
+2026-03-28 11:09:49,827 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 35.45s
+2026-03-28 11:09:49,827 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 36.25s
+2026-03-28 11:09:49,827 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 37.15s
+2026-03-28 11:09:49,827 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 38.90s
+2026-03-28 11:09:49,828 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 39.80s
+2026-03-28 11:09:49,828 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 40.60s
+2026-03-28 11:09:49,828 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 44.95s
+2026-03-28 11:09:49,828 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 45.85s
+2026-03-28 11:09:49,828 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 46.75s
+2026-03-28 11:09:49,828 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 47.60s
+2026-03-28 11:09:49,828 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 48.90s
+2026-03-28 11:09:49,829 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 49.80s
+2026-03-28 11:09:49,829 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 51.95s
+2026-03-28 11:09:49,829 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 52.85s
+2026-03-28 11:09:49,829 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 54.55s
+2026-03-28 11:09:49,829 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 55.40s
+2026-03-28 11:09:49,829 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 56.30s
+2026-03-28 11:09:49,829 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 57.15s
+2026-03-28 11:09:49,830 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 58.90s
+2026-03-28 11:09:49,830 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 59.80s
+2026-03-28 11:09:49,830 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 61.50s
+2026-03-28 11:09:49,830 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 62.80s
+2026-03-28 11:09:49,830 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 64.55s
+2026-03-28 11:09:49,830 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 67.15s
+2026-03-28 11:09:49,830 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 68.05s
+2026-03-28 11:09:49,830 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 68.90s
+2026-03-28 11:09:49,831 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 70.20s
+2026-03-28 11:09:49,831 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 77.15s
+2026-03-28 11:09:49,831 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 92.80s
+2026-03-28 11:09:49,831 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 101.50s
+2026-03-28 11:09:49,831 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 102.35s
+2026-03-28 11:09:49,831 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 104.10s
+2026-03-28 11:09:49,831 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 105.00s
+2026-03-28 11:09:49,831 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 105.85s
+2026-03-28 11:09:49,832 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 107.15s
+2026-03-28 11:09:49,832 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 108.90s
+2026-03-28 11:09:49,832 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 109.75s
+2026-03-28 11:09:49,832 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 111.50s
+2026-03-28 11:09:49,832 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 112.35s
+2026-03-28 11:09:49,832 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 117.15s
+2026-03-28 11:09:49,832 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 121.50s
+2026-03-28 11:09:49,833 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 123.25s
+2026-03-28 11:09:49,833 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 124.10s
+2026-03-28 11:09:49,833 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 125.85s
+2026-03-28 11:09:49,833 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 127.15s
+2026-03-28 11:09:49,833 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 148.45s
+2026-03-28 11:09:49,833 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 150.20s
+2026-03-28 11:09:49,833 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 151.05s
+2026-03-28 11:09:49,833 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 152.80s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 155.40s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 158.45s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 160.20s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 161.50s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 162.35s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 164.10s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 165.85s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 168.45s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 170.20s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 171.05s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 172.80s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 173.65s
+2026-03-28 11:09:49,834 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 175.40s
+2026-03-28 11:09:49,836 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 177.15s
+2026-03-28 11:09:49,836 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 179.75s
+2026-03-28 11:09:49,836 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 181.50s
+2026-03-28 11:09:49,836 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 182.35s
+2026-03-28 11:09:49,836 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 184.10s
+2026-03-28 11:09:49,836 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 185.85s
+2026-03-28 11:09:49,836 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 186.70s
+2026-03-28 11:09:49,836 - creative_editor_bridge - INFO - ⚡ Beat drop detected at 188.45s
+2026-03-28 11:09:49,837 - creative_editor_bridge - INFO - 🎵 Beat classification complete: 78 drops, 79 strong, 14 weak.
+2026-03-28 11:09:49,837 - creative_editor_bridge - INFO - 🎵 Computing beat match scores for candidate moments...
+2026-03-28 11:09:49,837 - pipeline_audit - INFO - [RUNTIME_TRACER] CALLED → music_driven_editor.score_scenes()
+2026-03-28 11:09:49,837 - music_driven_editor - INFO - 🎬 Motion-aware scene scoring applied
+2026-03-28 11:09:49,838 - pipeline_audit - INFO - [RUNTIME_TRACER] CALLED → music_driven_editor.map_scenes_to_beats()
+2026-03-28 11:09:49,838 - creative_editor_bridge - INFO - 🎵 MusicDrivenEditor mapped 6 beat-scene blocks.
+2026-03-28 11:09:49,838 - creative_editor_bridge - WARNING - ⚠️ Only 0 beat segments generated (need ≥ 4). Skipping beat-driven timeline override.
+2026-03-28 11:09:49,838 - creative_editor_bridge - INFO - 🎬 [CreativeEditorBridge] Enrichment pass complete.
+2026-03-28 11:09:49,838 - orchestrator - INFO - 🥁 BEAT_ALIGNMENT CreativeEditorBridge complete — bgm_classified_beats=171 | beat_segments=0
+2026-03-28 11:09:49,838 - orchestrator - INFO - 🎬 CREATIVE_EDITOR Beat-driven timeline: 0 segments from 171 classified beats
+2026-03-28 11:09:49,838 - pipeline_audit - INFO - [STEP_TRACER] ✔  creative_editor_bridge  (2.58s)
+2026-03-28 11:09:49,839 - orchestrator - INFO - 🎭 [Step 2c] Creative Director...
+2026-03-28 11:09:49,839 - pipeline_audit - INFO - [RUNTIME_TRACER] CALLED → creative_director.build_strategy()
+2026-03-28 11:09:49,839 - pipeline_audit - INFO - [RUNTIME_TRACER] CALLED → creative_director.build_narrative_story_map()
+2026-03-28 11:09:49,840 - orchestrator - INFO - 🎭 Narrative Story Map: 3 moments sequenced
+2026-03-28 11:09:49,840 - orchestrator - INFO - 📖 STORY_STRUCTURE 
+2026-03-28 11:09:49,840 - orchestrator - INFO - 🎬 CREATIVE_EDITOR Narrative arc: 3 story moments
+2026-03-28 11:09:49,840 - orchestrator - INFO - ⏱ SHOT_PACING cut_density=medium | preferred_segment=2.0s-4.5s
+2026-03-28 11:09:49,840 - orchestrator - INFO - 🎭 Creative Director complete.
+2026-03-28 11:09:49,867 - orchestrator - INFO - 📖 [STORY_BUILDER] arc=inspiration_arc | persona=ANALYST | segments_built=6 | pacing_hint=yes
+2026-03-28 11:09:49,867 - orchestrator - INFO - 🔄 [Step 3] Timeline Reconstruction...
+2026-03-28 11:09:49,867 - orchestrator - INFO - 🧠 [ELITE] Seeding reconstructed_timeline with 5 Gemini segments for humanization.
+2026-03-28 11:09:49,867 - orchestrator - INFO - ✅ [TIMELINE_RECONSTRUCTOR] segments_generated=5 | moments_selected=13
+2026-03-28 11:09:49,867 - orchestrator - INFO - 🎬 CREATIVE_EDITOR Timeline reconstructed — 5 segments from 13 moments
+2026-03-28 11:09:49,868 - pipeline_audit - INFO - [STEP_TRACER] ✔  timeline_reconstruction  (0.0s)
+2026-03-28 11:09:49,868 - orchestrator - INFO - 📖 [COHERENCE_ENGINE] coherence_score=0.750 | arc_valid=True | issues=[]
+2026-03-28 11:09:49,868 - smart_price_tag - INFO - [PRICE_ESTIMATOR] Tier fallback: celebrity=₹29,000 clone=₹2,499
+2026-03-28 11:09:49,868 - orchestrator - INFO - 💰 [PRICE_ESTIMATOR] Centralized estimate locked: celebrity=₹29,000 clone=₹2,499 source=tier_random
+2026-03-28 11:09:49,869 - orchestrator - INFO - 📐 7s Split Logic Enabled (Duration >= 21s)
+2026-03-28 11:09:51,923 - trend_opportunity_engine - INFO - 🔀 [TOE] No trend signal — skipping opportunity analysis
+2026-03-28 11:09:52,188 - hook_engine - INFO - 🪝 [Hook] Audit Formula: (0.50 * 0.00) / 2
+2026-03-28 11:09:52,188 - hook_engine - INFO - 🪝 [Hook] Best hook: t=0.938s score=0.356 type=visual_attention
+2026-03-28 11:09:52,188 - smart_scene_editor - INFO - 📊 Motion Events: 0
+2026-03-28 11:09:52,188 - smart_scene_editor - INFO - 📊 Attention Events: 0
+2026-03-28 11:09:52,188 - smart_scene_editor - INFO - 📊 Hook Score: 0.00
+2026-03-28 11:09:52,189 - smart_scene_editor - INFO - 🎯 Smart Reframe: 0 keyframes generated.
+2026-03-28 11:09:52,189 - smart_scene_editor - INFO - 📊 Cold Start Injected: True (at 1.5s)
+2026-03-28 11:09:52,190 - smart_scene_editor - INFO - 📊 Edit Density: Increasing due to cold start
+2026-03-28 11:09:52,190 - smart_scene_editor - INFO - [SmartSceneEditor] scenes=5 moment_driven=True persona=HYPE
+2026-03-28 11:09:52,190 - orchestrator - INFO - 🎬 Using reconstructed_timeline as base_scenes for RhythmBuilder.
+2026-03-28 11:09:52,190 - pipeline_audit - INFO - [RUNTIME_TRACER] CALLED → rhythm_timeline_builder.build_timeline()
+2026-03-28 11:09:52,190 - rhythm_timeline_builder - INFO - 🥁 RhythmTimelineBuilder: Starting micro-extraction...
+2026-03-28 11:09:52,191 - rhythm_timeline_builder - INFO - 📊 [COVERAGE] 9.8s / 13.2s = 74% of source utilized
+2026-03-28 11:09:52,192 - rhythm_timeline_builder - INFO - ✅ RhythmTimelineBuilder: Generated 5 segments. Total duration: 9.8s (total_source=13.2s)
+2026-03-28 11:09:52,192 - pacing_architect - INFO - [PacingArchitect] ✅ Shaped 5 segments | preset=rhythm_driven | before=9.8s → after=10.3s | bands=setup/build/escalation/climax
+2026-03-28 11:09:52,192 - orchestrator - INFO - 🎬 Rhythm Timeline overrode scenes with human-style cuts.
+2026-03-28 11:09:52,192 - orchestrator - INFO - ⏱ SHOT_PACING RhythmBuilder — 5 shots | avg=2.07s | total=10.3s
+2026-03-28 11:09:52,192 - orchestrator - INFO - 🎨 ENERGY_STYLE RhythmBuilder transitions=['whip_pan', 'clean', 'hard_cut', 'match_cut']
+2026-03-28 11:09:52,192 - orchestrator - INFO - 🧠 VARIETY_CHECK RhythmBuilder segment_diversity=1.00
+2026-03-28 11:09:52,192 - orchestrator - INFO - 🚀 [Step 8] Render Engine Start...
+2026-03-28 11:09:52,193 - orchestrator - INFO - 🎨 [HUMANIZED_RENDER] Using beat-snapped humanized timeline: 5 segments
+2026-03-28 11:09:52,193 - orchestrator - INFO - [MULTI_CLIP] segments_generated=5 | unique_clips_used=[0]
+2026-03-28 11:09:52,229 - video_pipeline - INFO - 🔍 Validating 5 segments across 1 clip(s) (clip-0 duration: 22.60s)...
+2026-03-28 11:09:52,591 - video_pipeline - INFO - ✂ Trim Segments: 5 shots → 10.3s highlight
+2026-03-28 11:09:52,592 - video_pipeline - INFO - 📊 [RENDER_VERIFICATION] total_segments=5 | timeline_duration=10.35s
+2026-03-28 11:09:52,620 - video_pipeline - INFO - 🏎️ Scene Reconstruction Render: 5 segment(s) → temp\job_ae0f3f\visual_render_temp.mp4
+2026-03-28 11:10:01,713 - video_pipeline - INFO - ✅ Scene Reconstruction done in 9.09s (~310 frames @ 34.1 fps, 10.3s output)
+2026-03-28 11:10:03,702 - quality_evaluator - WARNING - ⚠️ Quality HARD_FAIL: Score=-0.707 | Blur=-0.707, Edge=0.093
+2026-03-28 11:10:04,022 - orchestrator - ERROR - 🚨 [QUALITY_EVALUATOR] HARD_FAIL: score=-0.707 | reasons=['Catastrophic Degrade (Score: -0.71)']
+2026-03-28 11:10:04,023 - text_overlay - INFO - [TEXT_OVERLAY] caption_render_mode=png_overlay
+2026-03-28 11:10:04,024 - text_overlay - INFO - [TEXT_OVERLAY] caption_position=above_brand
+2026-03-28 11:10:04,024 - text_overlay - INFO - [TEXT_OVERLAY] overlay_delay=0.75
+2026-03-28 11:10:05,171 - caption_renderer - INFO - 🎨 [CAPTION_RENDERER] png_generated=temp\captions\caption_10332_2549.png
+2026-03-28 11:10:05,172 - text_overlay - INFO - [TEXT_OVERLAY] font_loaded=D:\Autonomous Multimedia Transformation & Compilation Engine (AMTCE)\assets\fonts\Inter-Bold.ttf
+2026-03-28 11:10:11,608 - orchestrator - INFO - ✅ Unified post-render overlay applied.
+2026-03-28 11:10:11,608 - orchestrator - INFO - 🔍 [Step 9] Running Integrated Diagnostics...
+2026-03-28 11:10:12,292 - orchestrator - INFO - 🎞️ Visual Render Duration: 10.37s
+2026-03-28 11:10:12,335 - orchestrator - INFO - 📊 [SEGMENT_VALIDATOR] verdict=REAL_EDITOR | score=0.292
+2026-03-28 11:10:12,364 - scene_editing_verifier - INFO - ✅ [Verifier] True scene reconstruction confirmed. Segments=5, AvgScore=0.29, Dur Ratio=0.46
+2026-03-28 11:10:12,364 - orchestrator - INFO - 🔍 [SRV_VERIFIER] outcome=True
+2026-03-28 11:10:12,364 - orchestrator - INFO - 🎛️ Mixing Final Audio (VO + BGM)...
+2026-03-28 11:10:12,390 - audio_processing - INFO - 🎛️ Audio Remix Fix: music\mirror.mp3 (Volume: 1.0x)
+2026-03-28 11:10:21,911 - audio_processing - INFO - ✅ Audio Remix Complete (Clean Beat Preset + Loudnorm)
+2026-03-28 11:10:21,911 - audio_pipeline - INFO - 🎛️ BGM Fingerprint Bypass: Heavy Remix Applied to remixed_bgm_1603.mp3
+2026-03-28 11:10:23,800 - orchestrator - INFO - ✅ Final Audio Mixed Successfully.
+2026-03-28 11:10:23,800 - orchestrator - INFO - 💾 [Step 10] Pipeline Complete. Writing Sidecar.
+2026-03-28 11:10:23,801 - orchestrator - INFO - 📊 [GEMINI_CALL_SUMMARY] Total Requests: 1 | Log: [MASTER_INTELLIGENCE]
+2026-03-28 11:10:23,801 - orchestrator - INFO - 
+PIPELINE FEATURE REPORT
+------------------------------
+watermark_detection -> EXECUTED
+watermark_inpaint -> EXECUTED
+scene_detection -> EXECUTED
+scene_reconstruction -> EXECUTED
+voiceover_generation -> DISABLED
+caption_generation -> EXECUTED
+price_tag_engine -> DISABLED
+music_engine -> EXECUTED
+smart_crop -> DISABLED
+trend_engine -> EXECUTED
+hook_engine -> EXECUTED
+beat_detection -> EXECUTED
+subject_tracking -> EXECUTED
+moment_miner -> EXECUTED
+expression_change_detector -> EXECUTED
+retention_curve_engine -> EXECUTED
+emotional_spike_detector -> EXECUTED
+signal_repair_layer -> EXECUTED
+signal_fusion_engine -> EXECUTED
+editor_brain -> EXECUTED
+creative_editor_bridge -> EXECUTED
+timeline_reconstructor -> EXECUTED
+compilation_mode -> SKIPPED
+quality_evaluator -> FAILED
+brand_overlay -> EXECUTED
+2026-03-28 11:10:23,819 - feature_auditor - INFO - 💾 Feature Report saved to Processed Shorts\processed_video_feature_report.json
+2026-03-28 11:10:23,819 - pipeline_audit - INFO - [STEP_TRACER] ✔  gemini_analysis  (0.0s)
+2026-03-28 11:10:23,819 - pipeline_audit - INFO - [STEP_TRACER] ✔  creative_director  (0.0s)
+2026-03-28 11:10:23,819 - pipeline_audit - INFO - [STEP_TRACER] ✔  scene_editor  (0.0s)
+2026-03-28 11:10:23,819 - pipeline_audit - INFO - [STEP_TRACER] ✔  video_render  (0.0s)
+2026-03-28 11:10:23,820 - pipeline_audit - INFO - [STEP_TRACER] ✔  caption_overlay  (0.0s)
+2026-03-28 11:10:23,820 - pipeline_audit - INFO - [STEP_TRACER] ✔  audio_mix  (0.0s)
+2026-03-28 11:10:23,951 - pipeline_audit - INFO - ℹ️  expression_changes → no signals (optional, not a failure)
+2026-03-28 11:10:23,952 - pipeline_audit - INFO - ℹ️  selected_shots → no signals (optional, not a failure)
+2026-03-28 11:10:23,953 - pipeline_audit - INFO - ⚡ Beat drop detected at 15.40s
+2026-03-28 11:10:23,953 - pipeline_audit - INFO - ⚡ Beat drop detected at 18.90s
+2026-03-28 11:10:23,953 - pipeline_audit - INFO - ⚡ Beat drop detected at 19.80s
+2026-03-28 11:10:23,953 - pipeline_audit - INFO - ⏱ SHOT_PACING Segment 0 → 1.55s
+2026-03-28 11:10:23,953 - pipeline_audit - INFO - ⏱ SHOT_PACING Segment 1 → 2.55s
+2026-03-28 11:10:23,953 - pipeline_audit - INFO - ⏱ SHOT_PACING Segment 2 → 1.90s
+2026-03-28 11:10:23,954 - pipeline_audit - INFO - ⏱ SHOT_PACING Segment 3 → 2.00s
+2026-03-28 11:10:23,954 - pipeline_audit - INFO - ⏱ SHOT_PACING Segment 4 → 1.80s
+2026-03-28 11:10:23,954 - pipeline_audit - INFO - 🎨 ENERGY_STYLE transition=whip
+2026-03-28 11:10:23,954 - pipeline_audit - INFO - 🎨 ENERGY_STYLE transition=hard_cut
+2026-03-28 11:10:23,954 - pipeline_audit - INFO - 🧠 VARIETY_CHECK segment_diversity_score=0.60
+2026-03-28 11:10:23,984 - pipeline_audit - INFO - 🎬 EDITOR_CONFIDENCE  score=0.92 | beat=1.00 | motion=1.00 | story=1.00 | variety=0.60 | diversity=1.00
+2026-03-28 11:10:23,988 - orchestrator - INFO - 🎬 EDITOR_CONFIDENCE score=0.92
+2026-03-28 11:10:23,988 - orchestrator - INFO - 
+════════════════════════════════════════════════════════════
+  AUTONOMOUS CREATIVE EDITOR: ACTIVE
+  Creative Score: 0.92
+════════════════════════════════════════════════════════════
+2026-03-28 11:10:24,001 - orchestrator - INFO - 
+════════════════════════════════════════════════════════════════════════
+  PIPELINE EXECUTION TRACE
+════════════════════════════════════════════════════════════════════════
+  Step  1 → ✔  beat_detection  (1.52s)
+  Step  2 → ✔  subject_tracking  (35.95s)
+  Step  3 → ✔  motion_detection  (4.88s)
+  Step  4 → ✔  moment_miner  (0.06s)
+  Step  5 → ✔  frame_extraction  (2.77s)
+  Step  6 → ✔  creative_editor_bridge  (2.58s)
+  Step  7 → ✔  timeline_reconstruction
+════════════════════════════════════════════════════════════════════════
+2026-03-28 11:10:24,002 - creator_memory - INFO - [CreatorMemory] 💾 Updated fingerprint for 'watermark_clean' | render #6 | avg_cut=2.10s
+2026-03-28 11:10:24,084 - __main__ - INFO - 🎨 Generating Auto-Thumbnail...
+2026-03-28 11:10:26,819 - thumb_gen - INFO - 📸 Extracting frame at 8.40s...
+2026-03-28 11:10:27,193 - thumb_gen - INFO - 🎨 Overlaying title: 'Disha patani'
+2026-03-28 11:10:27,447 - ai_blender - INFO - ✅ Thumbnail created: sample_thumbs\Disha_patani_02_thumb.jpg
+2026-03-28 11:10:27,448 - thumb_gen - INFO - ✅ Auto-Thumbnail Generated: sample_thumbs\Disha_patani_02_thumb.jpg
+2026-03-28 11:10:27,448 - __main__ - INFO - ✅ Thumbnail Ready: sample_thumbs\Disha_patani_02_thumb.jpg
+2026-03-28 11:10:29,816 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8372331620:AAFzz3-1Rb4cOdQku5FOkHXD9DoE4dQAnco/sendMessage "HTTP/1.1 200 OK"
+2026-03-28 11:10:29,868 - __main__ - INFO - [PRICE_SYNC] Using precomputed price: celebrity=29,000 clone=2,499 source=tier_random
+2026-03-28 11:10:29,894 - __main__ - INFO - ⏱️ Tier 2: Generating Compressed Telegram Preview (~10s)...
+2026-03-28 11:10:31,542 - __main__ - INFO - 📤 Tier 2 Proxy Ready (0.85MB). Uploading...
+2026-03-28 11:10:35,650 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8372331620:AAFzz3-1Rb4cOdQku5FOkHXD9DoE4dQAnco/sendVideo "HTTP/1.1 200 OK"
+2026-03-28 11:10:35,655 - __main__ - INFO - ✅ Tier 2 Compressed Preview Uploaded!
+2026-03-28 11:12:39,076 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8372331620:AAFzz3-1Rb4cOdQku5FOkHXD9DoE4dQAnco/answerCallbackQuery "HTTP/1.1 200 OK"
+2026-03-28 11:12:39,081 - __main__ - INFO - 📩 [APPROVE] approve_upload called by User 1363193987
+2026-03-28 11:12:39,081 - __main__ - INFO - 📊 [APPROVE] Session State: WAITING_FOR_APPROVAL
+2026-03-28 11:12:40,260 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8372331620:AAFzz3-1Rb4cOdQku5FOkHXD9DoE4dQAnco/sendMessage "HTTP/1.1 200 OK"
+2026-03-28 11:12:43,846 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8372331620:AAFzz3-1Rb4cOdQku5FOkHXD9DoE4dQAnco/sendMessage "HTTP/1.1 200 OK"
+2026-03-28 11:12:43,854 - __main__ - INFO - 📤 [_perform_upload] Starting for User 1363193987
+2026-03-28 11:12:43,854 - __main__ - INFO - 📁 [_perform_upload] Video Path: Processed Shorts\Disha_patani_02.mp4
+2026-03-28 11:12:44,477 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8372331620:AAFzz3-1Rb4cOdQku5FOkHXD9DoE4dQAnco/sendMessage "HTTP/1.1 200 OK"
+2026-03-28 11:12:44,483 - __main__ - INFO - 🚀 Calling uploader for: Processed Shorts\Disha_patani_02.mp4
+2026-03-28 11:12:44,483 - analytics_optimizer - INFO - ✨ Using Cached Upload Optimization (Expires in 29 days)
+2026-03-28 11:12:44,484 - __main__ - INFO - 📅 [ANALYTICS_OPTIMIZER] Optimal publish: Thursday @ 19:00 → 2026-04-03T03:00:00Z
+2026-03-28 11:12:46,185 - uploader - INFO - ✅ Token refreshed and saved.
+2026-03-28 11:12:46,217 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2026-03-28 11:12:46,257 - uploader - INFO - DEBUG: _upload_sync called with title input: 'Disha patani | Bold outfit | Sizzling look | Stunning appearance | Viral sensation'
+2026-03-28 11:12:46,258 - uploader - INFO - 📋 Final Title for Upload: 'Disha patani | Bold outfit | Sizzling look | Stunning appearance | Viral sensation'
+2026-03-28 11:12:46,258 - uploader - INFO - 🚀 Starting upload request to YouTube API...
+2026-03-28 11:12:47,005 - uploader - WARNING - ⚠️ Metadata Warning: No 'Unique ID' found in file comments (Comment: ...).
+2026-03-28 11:12:47,006 - uploader - INFO - ✅ Metadata Verified: Filesystem Timestamp = Sat Mar 28 11:10:23 2026
+2026-03-28 11:12:47,006 - uploader - WARNING - 🔄 Stale/Missing Metadata detected. Engaging Auto-Refresh Safety Net...
+2026-03-28 11:12:47,006 - uploader - INFO - 🔄 Injecting Fresh Unique ID: a960265c-02e2-4913-a174-509f16594fb1...
+2026-03-28 11:12:47,714 - uploader - INFO - ✅ Metadata refreshed successfully.
+2026-03-28 11:12:47,763 - uploader - INFO - ✅ Metadata Verified: Found Unique ID in comments.
+2026-03-28 11:12:47,764 - uploader - INFO - ✅ Metadata Verified: Filesystem Timestamp = Sat Mar 28 11:12:47 2026
+2026-03-28 11:12:47,770 - uploader - INFO - ✅ Upload request created. Starting chunk upload loop...
+2026-03-28 11:12:47,770 - uploader - INFO - 🚀 Starting upload: Processed Shorts\Disha_patani_02.mp4
+2026-03-28 11:13:01,926 - uploader - INFO - 📤 Upload progress: 19%
+2026-03-28 11:13:12,618 - uploader - INFO - 📤 Upload progress: 39%
+2026-03-28 11:13:23,210 - uploader - INFO - 📤 Upload progress: 59%
+2026-03-28 11:13:33,361 - uploader - INFO - 📤 Upload progress: 79%
+2026-03-28 11:13:43,485 - uploader - INFO - 📤 Upload progress: 98%
+2026-03-28 11:13:45,463 - uploader - INFO - ✅ Upload complete: OyY-0DQUJhs
+2026-03-28 11:13:45,530 - __main__ - INFO - 🚀 Triggering Cross-Promotion (Background Task). Video Type: Short
+2026-03-28 11:13:45,543 - googleapiclient.discovery_cache - INFO - file_cache is only supported with oauth2client<4.0.0
+2026-03-28 11:13:45,547 - Core_Modules.self_optimizing_editor - INFO - SelfOptimizingEditor ready — 0 patterns in memory, 0 videos learned
+2026-03-28 11:13:45,548 - Core_Modules.video_log - INFO - VideoLog: wrote video_logs\OyY-0DQUJhs.json
+2026-03-28 11:13:45,548 - Core_Modules.self_optimizing_editor - INFO - SelfOptimizingEditor: recorded upload OyY-0DQUJhs
+2026-03-28 11:13:45,549 - __main__ - INFO - 🧠 [SOE] Upload recorded: OyY-0DQUJhs
+2026-03-28 11:13:45,552 - community_promoter - INFO - ⏲️ Scheduling Community Promotion in 20s (Link: https://youtube.com/watch?v=OyY-0DQUJhs)...
+2026-03-28 11:13:47,850 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8372331620:AAFzz3-1Rb4cOdQku5FOkHXD9DoE4dQAnco/sendMessage "HTTP/1.1 200 OK"
+2026-03-28 11:13:47,855 - __main__ - INFO - ⏳ Waiting 5s before Telegram group broadcast (post-Instagram cooldown)...
+2026-03-28 11:13:54,859 - httpx - INFO - HTTP Request: POST https://api.telegram.org/bot8372331620:AAFzz3-1Rb4cOdQku5FOkHXD9DoE4dQAnco/sendMessage "HTTP/1.1 200 OK"

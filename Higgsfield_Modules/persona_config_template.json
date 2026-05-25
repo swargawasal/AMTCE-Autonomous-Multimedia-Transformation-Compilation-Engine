@@ -1,0 +1,36 @@
+{
+  "_comment": "Higgsfield persona config. Place this file in: social_media/<Influencer_Name>/higgsfield.json",
+  "_version": "1.0",
+
+  "soul_id_trained": false,
+  "_soul_id_note": "Set to true after running 'higgsfield soul train' with ~20 face reference photos",
+
+  "soul_id_reference": "face_reference.jpg",
+  "_reference_note": "Place your AI persona's base face image in the same folder as this config",
+
+  "niche": "fashion",
+  "_niche_options": ["fashion", "ethnic", "activewear", "luxury", "western"],
+
+  "default_style": "editorial",
+  "_style_options": ["editorial", "street", "luxury", "amalfi_summer", "tokyo_streetstyle", "quiet_luxury"],
+
+  "earn_account_verified": false,
+  "_earn_note": "Set to true after verifying Instagram/YouTube on higgsfield.ai/earn",
+
+  "social_handles": {
+    "instagram": "@your_handle",
+    "youtube":   "your_channel_id"
+  },
+
+  "generation_preferences": {
+    "video_duration_seconds": 3,
+    "preferred_model": "nano_banana_pro",
+    "_model_note": "nano_banana_pro is cheapest. kling_3 is premium but costs more credits.",
+    "always_include_product_image": true
+  },
+
+  "earn_campaigns": {
+    "_note": "List active campaign names from higgsfield.ai/earn that this persona will target",
+    "active": []
+  }
+}

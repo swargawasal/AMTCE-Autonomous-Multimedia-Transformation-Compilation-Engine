@@ -18,7 +18,7 @@ def harvest_action(url, title):
     try:
         result = download_video(url, custom_title=title if title.strip() else None)
         
-        if result:
+        if result and result[0]:
             v_path, is_cached = result
             abs_path = os.path.abspath(v_path)
             status = "♻️ Reused from Cache" if is_cached else "✅ Downloaded Successfully"
@@ -139,7 +139,7 @@ def harvest_action(url, title, start_time, end_time, do_trim):
     
     try:
         result = download_video(url, custom_title=title if title.strip() else None)
-        if result:
+        if result and result[0]:
             v_path, is_cached = result
             final_path = os.path.abspath(v_path)
             status = "♻️ DISK CACHE HIT" if is_cached else "✅ HARVEST SUCCESSFUL"

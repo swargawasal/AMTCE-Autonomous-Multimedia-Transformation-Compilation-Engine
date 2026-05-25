@@ -3,7 +3,8 @@ import json
 import logging
 import random
 from typing import Optional
-import google.generativeai as genai
+from gemini_governor import gemini_router
+from Intelligence_Modules.gemini_governor import gemini_router
 from PIL import Image
 import io
 
@@ -27,14 +28,7 @@ class PredictionGenerator:
     to break hash detection and reach 60% YPP.
     """
     def __init__(self):
-        self.api_key = os.getenv("GEMINI_API_KEY")
-        if self.api_key:
-            genai.configure(api_key=self.api_key)
-            # Use model from env if available, else fallback to 2.5-flash-lite
-            model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
-            self.model = genai.GenerativeModel(model_name)
-        else:
-            self.model = None
+        self.router = gemini_router
 
     async def generate_future_concept(self, context: str, output_path: str) -> Optional[str]:
         """
@@ -50,8 +44,9 @@ class PredictionGenerator:
         
         # 1. Generate the 'Future Description'
         try:
-            response = self.model.generate_content(IMAGE_SYNTHESIS_PROMPT.format(context=context))
-            description = response.text.strip()
+            res_txt = self.router.generate(task_type="creative", prompt=IMAGE_SYNTHESIS_PROMPT.format(context=context), module_name="generator")
+            if not res_txt: return None
+            description = res_txt.strip()
             
             # 2. Create a 'Blueprint' Image (Original Pixel Grid)
             # We use PIL to generate a unique technical blueprint frame

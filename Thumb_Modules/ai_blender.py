@@ -35,32 +35,23 @@ class AIBlender:
 
             h, w = img.shape[:2]
 
-            # --- Simple Text Overlay Logic ---
-            # (Can be expanded with more improved styling later)
-            
-            # 1. Darken bottom area for text readability
-            overlay = img.copy()
-            cv2.rectangle(overlay, (0, int(h * 0.7)), (w, h), (0, 0, 0), -1)
-            alpha = 0.6
-            cv2.addWeighted(overlay, alpha, img, 1 - alpha, 0, img)
+            # --- Clean Text Overlay Logic ---
 
-            # 2. Add Text
-            font = cv2.FONT_HERSHEY_SIMPLEX
-            font_scale = 2.0
-            thickness = 4
-            color = (0, 255, 255) # Yellow by default (BGR)
-            
-            if accent_color == "cyan":
-                 color = (255, 255, 0)
-            elif accent_color == "red":
-                 color = (0, 0, 255)
-            elif accent_color == "white":
-                 color = (255, 255, 255)
+            # 1. Overlay setup (Black box completely removed per user request)
+            # The name is clean and floating without a dark overlay strip.
+            title_text = title_text.upper()
+            font = cv2.FONT_HERSHEY_DUPLEX
+            font_scale = 2.5
+            thickness = 6
+            color = (255, 255, 255) # White, as requested
 
             # Calculate text size to center it
             text_size = cv2.getTextSize(title_text, font, font_scale, thickness)[0]
             text_x = (w - text_size[0]) // 2
-            text_y = int(h * 0.9)  # Near bottom
+            
+            # Position the text neatly ABOVE the standard video caption area
+            # Moving it from 0.65 down to 0.78 to hover directly near the caption
+            text_y = int(h * 0.78)  
 
             # If text is too wide, scale it down
             if text_size[0] > w - 40:
@@ -68,6 +59,12 @@ class AIBlender:
                  text_size = cv2.getTextSize(title_text, font, font_scale, thickness)[0]
                  text_x = (w - text_size[0]) // 2
 
+            # 2. Draw Text with a solid drop-shadow/outline for readability
+            # Draw Outline (Thick Black)
+            outline_thickness = thickness + 4
+            cv2.putText(img, title_text, (text_x, text_y), font, font_scale, (0, 0, 0), outline_thickness)
+            
+            # Draw Inner Text (Yellow)
             cv2.putText(img, title_text, (text_x, text_y), font, font_scale, color, thickness)
 
             # 3. Save

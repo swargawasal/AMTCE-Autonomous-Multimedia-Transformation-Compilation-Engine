@@ -3,15 +3,35 @@ __pycache__/
 *.py[cod]
 *$py.class
 venv/
-.env
 
-# Secrets & Credentials
+# ============================================================
+# SECRETS & CREDENTIALS — Never commit ANY of these
+# ============================================================
+.env
+*.env
+Credentials/
+credentials/
+[Cc]redentials/
+!Credentials/.env.example
+
+# OAuth / Google / YouTube tokens
 *client_secret*.json
 token.json
+*token*.json
 *credentials*.json
-Credentials/*.json
 
-# Project Specific Data
+# SMTP / Email secrets
+smtp_pass*
+email_creds*
+
+# API key files
+*api_key*
+*apikey*
+*.key
+
+# ============================================================
+# PROJECT RUNTIME DATA
+# ============================================================
 temp/
 jobs/
 downloads/
@@ -22,30 +42,59 @@ debug_frames/
 temp_watermark/
 logs/
 *.log
+Influencer_Output/
+cache/
+data/
+rag/
+intelligence_cache/
+analytics_cache.json
 
-# Caches
+# ============================================================
+# CACHES
+# ============================================================
 Processed_Cache/
 .gradio/
 .pytest_cache/
 
-# Models
+# ============================================================
+# AI MODELS (large binaries)
+# ============================================================
 models/
 *.pt
 *.pth
 *.onnx
+*.bin
+*.safetensors
 
-# Media
+# ============================================================
+# MEDIA FILES
+# ============================================================
 *.mp4
 *.mp3
 *.wav
 *.avi
 *.mkv
+*.webm
+*.jpg
+*.jpeg
+*.png
+*.gif
+# Whitelist static assets committed intentionally
+!assets/**/*.png
+!assets/**/*.jpg
+!logo/**
 
-# VS Code / IDE
+# ============================================================
+# VS CODE / IDE
+# ============================================================
 .vscode/
 .idea/
 *.swp
 
+# ============================================================
 # OS
+# ============================================================
 .DS_Store
 Thumbs.db
+bot.log
+bit.log

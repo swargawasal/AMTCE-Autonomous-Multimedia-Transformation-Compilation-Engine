@@ -12,7 +12,7 @@ load_dotenv("Credentials/.env")
 # Enable logging to stdout
 logging.basicConfig(level=logging.INFO, stream=sys.stdout)
 
-from Intelligence_Modules.fashion_scout import scout
+from Monetization_Metrics.fashion_scout import scout
 
 def test_final_direct():
     print("\n--- FINAL DIRECT FASHION SCOUT TEST ---")

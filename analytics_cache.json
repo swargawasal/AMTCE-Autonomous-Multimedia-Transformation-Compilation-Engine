@@ -1,8 +1,8 @@
 {
   "optimization_result": {
-    "day": "Friday",
+    "day": "Tuesday",
     "hour": 19,
-    "reason": "Friday has the highest total views; 19:00 is within the peak viewing window (19:00-20:00) for Fashion/Lifestyle content."
+    "reason": "Tuesday is the peak viewership day; 19:00 aligns with prime time audience engagement for fashion and lifestyle content."
   },
-  "last_fetch_timestamp": 1771854570.651067
+  "last_fetch_timestamp": 1779578218.485761
 }

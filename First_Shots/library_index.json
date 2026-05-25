@@ -1,0 +1,209 @@
+{
+  "_meta": {
+    "version": "1.2",
+    "note": "Maps Gemini-detected fashion topics to AI influencer intro clips. Add clips to each topic subfolder and set is_placeholder to false.",
+    "voice_duration_sec": "3-4",
+    "total_clip_duration_sec": "4-5",
+    "character": "Priyanshi (one voice for now, expand categories later)"
+  },
+  "street_casual": {
+    "description": "Street look, casual outdoor, urban fashion, jeans, top, t-shirt, sneakers, street style, daily casual, weekend, errands, minimal",
+    "keywords": [
+      "street",
+      "casual",
+      "jeans",
+      "top",
+      "t-shirt",
+      "sneakers",
+      "urban",
+      "daily",
+      "hoodie",
+      "cap",
+      "denim",
+      "weekend",
+      "coffee",
+      "brunch",
+      "minimal",
+      "relaxed",
+      "errands",
+      "simple"
+    ],
+    "character": "Priyanshi",
+    "script": "When you don't know what to wear, get yourself a beige t-shirt.",
+    "clips": [
+      "Priyanshi/When you don't know what to wear, get yourself a beige t-shirt..mp4"
+    ],
+    "is_placeholder": false
+  },
+  "party_evening": {
+    "description": "Night out, party dress, cocktail, evening, glamorous, bold, sequin, mini dress, halter, night look",
+    "keywords": [
+      "party",
+      "evening",
+      "night",
+      "cocktail",
+      "sequin",
+      "mini dress",
+      "halter",
+      "glam",
+      "disco",
+      "club",
+      "night out"
+    ],
+    "character": "Priyanshi",
+    "script": "When you don't know what to wear, get yourself a sequin skirt.",
+    "clips": [
+      "Priyanshi/When you don't know what to wear, get yourself a sequin skirt..mp4"
+    ],
+    "is_placeholder": false
+  },
+  "gym_activewear": {
+    "description": "Gym, workout, fitness, leggings, sports bra, activewear, athleisure, yoga pants, running, biker shorts",
+    "keywords": [
+      "gym",
+      "workout",
+      "fitness",
+      "leggings",
+      "sports bra",
+      "activewear",
+      "yoga",
+      "running",
+      "athletic",
+      "training",
+      "biker shorts"
+    ],
+    "character": "Priyanshi",
+    "script": "When you don't know what to wear, get yourself biker shorts.",
+    "clips": [
+      "Priyanshi/When you don't know what to wear, get yourself biker shorts..mp4"
+    ],
+    "is_placeholder": false
+  },
+  "wedding_festive": {
+    "description": "Wedding, lehenga, saree, festive, bridal, traditional, ethnic, ethnic wear, kurta, dupatta, anarkali, churidar, mehndi, sangeet",
+    "keywords": [
+      "wedding",
+      "lehenga",
+      "saree",
+      "festive",
+      "bridal",
+      "traditional",
+      "ethnic",
+      "kurta",
+      "dupatta",
+      "anarkali",
+      "churidar",
+      "mehndi",
+      "sangeet"
+    ],
+    "character": "Priyanshi",
+    "script": "When you don't know what to wear, get yourself a traditional saree.",
+    "clips": [
+      "Priyanshi/When you don't know what to wear, get yourself a traditional saree..mp4"
+    ],
+    "is_placeholder": false
+  },
+  "office_formal": {
+    "description": "Work outfit, professional look, corporate style, blazer, button-up shirt, formal, office wear, business casual",
+    "keywords": [
+      "office",
+      "formal",
+      "blazer",
+      "button-up",
+      "corporate",
+      "professional",
+      "business",
+      "work",
+      "suit",
+      "shirt"
+    ],
+    "character": "Priyanshi",
+    "script": "When you don't know what to wear, get yourself a black button-up.",
+    "clips": [
+      "Priyanshi/When you don't know what to wear, get yourself a black button-up..mp4"
+    ],
+    "is_placeholder": false
+  },
+  "airport_travel": {
+    "description": "Airport look, travel style, vacation, holiday, comfortable travel outfit, co-ord set, airport fashion, track suit",
+    "keywords": [
+      "airport",
+      "travel",
+      "vacation",
+      "holiday",
+      "trip",
+      "co-ord",
+      "comfortable",
+      "touring",
+      "flight",
+      "track suit"
+    ],
+    "character": "Priyanshi",
+    "script": "When you don't know what to wear, get yourself a comfy track suit.",
+    "clips": [
+      "Priyanshi/When you don't know what to wear, get yourself a comfy track suit..mp4"
+    ],
+    "is_placeholder": false
+  },
+  "bold_glamour": {
+    "description": "Bold look, sequin top, beaded top, sizzling, statement piece, glamour diva, sequin skirt, sequin beaded top",
+    "keywords": [
+      "bold",
+      "sequin",
+      "beaded",
+      "statement",
+      "sizzling",
+      "glamour",
+      "gown",
+      "backless"
+    ],
+    "character": "Priyanshi",
+    "script": "When you don't know what to wear, get yourself a sequin top.",
+    "clips": [
+      "Priyanshi/When you don't know what to wear, get yourself a sequin top..mp4"
+    ],
+    "is_placeholder": false
+  },
+  "event_photoshoot": {
+    "description": "Event arrival, photoshoot, elegant outfit, premiere, film launch, audio launch, trailer launch, award, celebrity event, red carpet",
+    "keywords": [
+      "event",
+      "premiere",
+      "launch",
+      "award",
+      "arrival",
+      "elegant",
+      "film",
+      "trailer",
+      "celebrity",
+      "photoshoot",
+      "red carpet",
+      "shoot",
+      "bts"
+    ],
+    "character": "Priyanshi",
+    "script": "When you don't know what to wear, get yourself a statement gown.",
+    "clips": [
+      "Priyanshi/When you don't know what to wear, get yourself a statement gown..mp4"
+    ],
+    "is_placeholder": false
+  },
+  "generic_fashion": {
+    "description": "Universal fashion fallback for any look that does not match a specific category above",
+    "keywords": [
+      "fashion",
+      "outfit",
+      "look",
+      "style",
+      "wear",
+      "clothes",
+      "dress"
+    ],
+    "character": "Priyanshi",
+    "script": "Welcome back to my channel. When you don't know what to wear, get yourself this.",
+    "clips": [
+      "general_intro/Welcome back to my channel When you don't know what to wear, get yourself this.mp4"
+    ],
+    "is_placeholder": false
+  }
+}

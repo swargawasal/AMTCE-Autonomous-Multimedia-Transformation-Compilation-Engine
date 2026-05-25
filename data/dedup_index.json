@@ -1180,7 +1180,7 @@
     "sha256": "91ff93079167c32b7b8cc99f234985334667f996df5f4ec21f0c6d6b19878d16",
     "phash": "acd0908345840808",
     "source": "user_submission",
-    "created_at": "2026-01-17T17:37:43.274535"
+    "created_at": "2026-03-13T17:53:01.666580"
   },
   "93288c57_026b06f6": {
     "video_id": "93288c57",
@@ -1278,7 +1278,7 @@
     "sha256": "00e488ad8261f636f0284fbe80387b8b889ba754673e87a9ec0d296b140e22dd",
     "phash": "ce2eb2583dd2c112",
     "source": "user_submission",
-    "created_at": "2026-01-18T05:44:43.386927"
+    "created_at": "2026-03-06T18:32:23.164048"
   },
   "82e211a4_c8619f7f": {
     "video_id": "82e211a4",
@@ -1712,7 +1712,7 @@
     "sha256": "68d1156593cae1ee4b012cbfbb8a0518aa1fd4c9d474514337d8ff9d9f3a0d0a",
     "phash": "efc510525c1821c0",
     "source": "user_submission",
-    "created_at": "2026-01-21T22:39:46.466232"
+    "created_at": "2026-03-04T11:19:57.988385"
   },
   "85cf2125_1aa476a1": {
     "video_id": "85cf2125",
@@ -3364,7 +3364,7 @@
     "sha256": "675dc740f39c42bbb3e16a0d4367a30d770264dcc7a8d480b06233e7af211758",
     "phash": "f840240000640090",
     "source": "user_submission",
-    "created_at": "2026-03-01T21:13:37.915144"
+    "created_at": "2026-03-03T19:58:58.513642"
   },
   "175656ff_27718e60": {
     "video_id": "175656ff",
@@ -3379,5 +3379,5241 @@
     "phash": "d220704091420000",
     "source": "user_submission",
     "created_at": "2026-03-02T18:54:28.327970"
+  },
+  "0cfa2da4_34904e80": {
+    "video_id": "0cfa2da4",
+    "sha256": "34904e8085fe15117f2e787a2ac02b981167c4ef73a62a0218036cad9a942c5a",
+    "phash": "cae0c9c0214110c0",
+    "source": "user_submission",
+    "created_at": "2026-03-03T00:48:03.989473"
+  },
+  "5f66020d_ceffe4a4": {
+    "video_id": "5f66020d",
+    "sha256": "ceffe4a47b6c5edeb4d2a3cea0ef55094ba073e131c0fed109dee95b855306d7",
+    "phash": "c2330d96fc1b01cc",
+    "source": "user_submission",
+    "created_at": "2026-03-03T01:12:25.600413"
+  },
+  "53767647_34904e80": {
+    "video_id": "53767647",
+    "sha256": "34904e8085fe15117f2e787a2ac02b981167c4ef73a62a0218036cad9a942c5a",
+    "phash": "cae0c9c0214110c0",
+    "source": "user_submission",
+    "created_at": "2026-03-03T01:37:58.601868"
+  },
+  "a5950df8_34904e80": {
+    "video_id": "a5950df8",
+    "sha256": "34904e8085fe15117f2e787a2ac02b981167c4ef73a62a0218036cad9a942c5a",
+    "phash": "cae0c9c0214110c0",
+    "source": "user_submission",
+    "created_at": "2026-03-03T02:05:29.410521"
+  },
+  "d8605768_34904e80": {
+    "video_id": "d8605768",
+    "sha256": "34904e8085fe15117f2e787a2ac02b981167c4ef73a62a0218036cad9a942c5a",
+    "phash": "cae0c9c0214110c0",
+    "source": "user_submission",
+    "created_at": "2026-03-03T02:26:14.362960"
+  },
+  "b467bbc4_34904e80": {
+    "video_id": "b467bbc4",
+    "sha256": "34904e8085fe15117f2e787a2ac02b981167c4ef73a62a0218036cad9a942c5a",
+    "phash": "cae0c9c0214110c0",
+    "source": "user_submission",
+    "created_at": "2026-03-03T02:46:39.380978"
+  },
+  "8ebcca05_34904e80": {
+    "video_id": "8ebcca05",
+    "sha256": "34904e8085fe15117f2e787a2ac02b981167c4ef73a62a0218036cad9a942c5a",
+    "phash": "cae0c9c0214110c0",
+    "source": "user_submission",
+    "created_at": "2026-03-03T02:55:02.874129"
+  },
+  "f7279b29_fe863527": {
+    "video_id": "f7279b29",
+    "sha256": "fe863527961c6c449a66ddfc12468cab2363a7c57a6f4ea4b98560acabca6f98",
+    "phash": "dc1ea7a018485940",
+    "source": "user_submission",
+    "created_at": "2026-03-03T19:08:36.963123"
+  },
+  "fbdc48d0_d3995d65": {
+    "video_id": "fbdc48d0",
+    "sha256": "d3995d659686798dc7cf1beecb50733f4956c410aeac6af6360565721c574c97",
+    "phash": "88f0560ce0024080",
+    "source": "user_submission",
+    "created_at": "2026-03-03T13:23:03.064664"
+  },
+  "6c5e8852_a7313aa2": {
+    "video_id": "6c5e8852",
+    "sha256": "a7313aa2ded5aaaac2a80de32a3e390e55781519080f30a0e0f89e31c2ad2e24",
+    "phash": "d95526b6b102dec8",
+    "source": "user_submission",
+    "created_at": "2026-03-03T14:41:58.273285"
+  },
+  "0cdbf389_b7e014e2": {
+    "video_id": "0cdbf389",
+    "sha256": "b7e014e2641310e497d3029b64343986b6bd9b9ce12df04b67ad9f6030f81252",
+    "phash": "93206d3f30428f2f",
+    "source": "user_submission",
+    "created_at": "2026-03-03T14:55:15.011790"
+  },
+  "2e89444e_b4d26ebf": {
+    "video_id": "2e89444e",
+    "sha256": "b4d26ebf6309384258e1f403bb168c3d1a5e42e7730715592f5cd5ec3ea85405",
+    "phash": "8aaaf4c8c0c01010",
+    "source": "user_submission",
+    "created_at": "2026-03-03T15:23:50.466770"
+  },
+  "d67cba55_1f0b25fc": {
+    "video_id": "d67cba55",
+    "sha256": "1f0b25fcb68da2e72c7d7b13b5179749e4a6e43bd7f7de3eafa4365d7c4ff9bf",
+    "phash": "884806a411008280",
+    "source": "user_submission",
+    "created_at": "2026-03-03T15:58:05.643289"
+  },
+  "4e21bb39_72b78ce4": {
+    "video_id": "4e21bb39",
+    "sha256": "72b78ce478994cb81f08c37b595334d3ae212fd922039fe7592c3a48df6effea",
+    "phash": "a4c012c20130c001",
+    "source": "user_submission",
+    "created_at": "2026-03-03T19:02:13.626851"
+  },
+  "fb1b55af_1ad09be0": {
+    "video_id": "fb1b55af",
+    "sha256": "1ad09be0bed3edc17f9661a0bb3639fb48feb10f45a3da35b8900300ebbe11a6",
+    "phash": "d8245a88c01c2004",
+    "source": "user_submission",
+    "created_at": "2026-03-03T20:58:07.927756"
+  },
+  "64575700_8f017763": {
+    "video_id": "64575700",
+    "sha256": "8f017763ac91912eed127fc7ccc9dc5d66cc1b10fefc7dc2c3d94c6c61699db2",
+    "phash": "a418880888000020",
+    "source": "user_submission",
+    "created_at": "2026-03-03T21:24:18.415983"
+  },
+  "4865c755_d445e116": {
+    "video_id": "4865c755",
+    "sha256": "d445e11602862f5e284fb1cbe8097a970bca4b21f2205435d869f6afdf46977d",
+    "phash": "b861629a40794c4c",
+    "source": "user_submission",
+    "created_at": "2026-03-03T22:39:59.988633"
+  },
+  "ef5e060a_4198e4fb": {
+    "video_id": "ef5e060a",
+    "sha256": "4198e4fb9ba8880669957277bea694c279e33596a65ceb8eb12a8501348c9af6",
+    "phash": "a424040e32124811",
+    "source": "user_submission",
+    "created_at": "2026-03-03T22:54:09.910899"
+  },
+  "5733b456_5e3250f3": {
+    "video_id": "5733b456",
+    "sha256": "5e3250f37ee964df764e965581079c5095ff9f0b7499daa704f3249cb3b52f14",
+    "phash": "d81d0062a401f49b",
+    "source": "user_submission",
+    "created_at": "2026-03-03T23:29:31.251441"
+  },
+  "e89438ff_1ad09be0": {
+    "video_id": "e89438ff",
+    "sha256": "1ad09be0bed3edc17f9661a0bb3639fb48feb10f45a3da35b8900300ebbe11a6",
+    "phash": "d8245a88c01c2004",
+    "source": "user_submission",
+    "created_at": "2026-03-04T00:02:03.017049"
+  },
+  "a060ee55_d2a9162d": {
+    "video_id": "a060ee55",
+    "sha256": "d2a9162d09163a9e64918ab535908b4266e4662e8d09a57562bfc9f7cd5c429b",
+    "phash": "f9f426121e608080",
+    "source": "user_submission",
+    "created_at": "2026-03-04T00:15:47.421475"
+  },
+  "f2242e4d_94628320": {
+    "video_id": "f2242e4d",
+    "sha256": "94628320de7a37a53f30fd761657c43f553f57dd6023e82ffb488feea596eda6",
+    "phash": "a8d1828250888040",
+    "source": "user_submission",
+    "created_at": "2026-03-04T10:36:17.162732"
+  },
+  "7f09e82b_732e28ab": {
+    "video_id": "7f09e82b",
+    "sha256": "732e28abd17dcbd9a2ca5842a27ca56ac0222e23e1bbea97295c29449ea7809d",
+    "phash": "9900c0480a8286a1",
+    "source": "user_submission",
+    "created_at": "2026-03-04T11:13:54.582944"
+  },
+  "74219273_176f86ff": {
+    "video_id": "74219273",
+    "sha256": "176f86ffd5510407b6681aceec72f2443a9a35739cf46191000720d634bfbcdf",
+    "phash": "b59b4a40c0601282",
+    "source": "user_submission",
+    "created_at": "2026-03-04T11:40:17.229746"
+  },
+  "85dc14ec_1ec6ac3b": {
+    "video_id": "85dc14ec",
+    "sha256": "1ec6ac3bcb0d916c2d3792f285613a01bc2c57b9b4482280f57cdc583145c00d",
+    "phash": "f86d00b14f008c90",
+    "source": "user_submission",
+    "created_at": "2026-03-04T11:46:10.404628"
+  },
+  "123d4f72_d7fa8dac": {
+    "video_id": "123d4f72",
+    "sha256": "d7fa8dac32810df91404f4459bfc1f7e6d814c00c287744a3f71a52baceed8d8",
+    "phash": "84e888b43082200a",
+    "source": "user_submission",
+    "created_at": "2026-03-04T12:18:21.945025"
+  },
+  "34f3e4d4_86c8cc6e": {
+    "video_id": "34f3e4d4",
+    "sha256": "86c8cc6ec0621bc6beb00c58cc03e04bbe0c8b905f5c68f54b4b1bbe87f33b80",
+    "phash": "91996c6462129b12",
+    "source": "user_submission",
+    "created_at": "2026-03-04T12:56:00.890118"
+  },
+  "d046cc5a_e64cd90a": {
+    "video_id": "d046cc5a",
+    "sha256": "e64cd90ad5b853c80dfc0359ae208e933222fb8144f6e9b5d2003ca96ab66952",
+    "phash": "8820758008809880",
+    "source": "user_submission",
+    "created_at": "2026-03-04T15:48:51.876156"
+  },
+  "7579fff8_bd630b02": {
+    "video_id": "7579fff8",
+    "sha256": "bd630b0227ce00fc86a2131d7fdf0adda960e58a6e0f2772ec24e0d4490ea386",
+    "phash": "94d462e6c6a61808",
+    "source": "user_submission",
+    "created_at": "2026-03-04T17:18:34.947559"
+  },
+  "116a1703_4706f773": {
+    "video_id": "116a1703",
+    "sha256": "4706f7730744cb851fc2a1c14dd377c28052630e00f84c3f37144f8cae3868f2",
+    "phash": "f091ca8400008c00",
+    "source": "user_submission",
+    "created_at": "2026-03-04T19:34:20.476705"
+  },
+  "af11e2f8_552c294b": {
+    "video_id": "af11e2f8",
+    "sha256": "552c294bf32d21cc99955279d0d69630a412ba2227e65f136ca3e76b99efe47e",
+    "phash": "8c13a490e048f460",
+    "source": "user_submission",
+    "created_at": "2026-03-04T17:49:18.709741"
+  },
+  "5358b28e_e80f5df1": {
+    "video_id": "5358b28e",
+    "sha256": "e80f5df1258657e0b035bede839297f7865ce30da700e9cf2361ac29a103035a",
+    "phash": "e842689c45400390",
+    "source": "user_submission",
+    "created_at": "2026-03-04T20:15:53.621419"
+  },
+  "621ac908_98c4a5f9": {
+    "video_id": "621ac908",
+    "sha256": "98c4a5f99628be3654c4173017cabd5afc80002427976506f2b517520e3ad804",
+    "phash": "e9c900009d191120",
+    "source": "user_submission",
+    "created_at": "2026-03-04T23:09:28.517756"
+  },
+  "4861cd16_4c4007d0": {
+    "video_id": "4861cd16",
+    "sha256": "4c4007d027759dea26c32947025f037d4a8f777fbcedd8195e59bbb9e29df550",
+    "phash": "dfba304444de8e80",
+    "source": "user_submission",
+    "created_at": "2026-03-19T07:47:04.396849"
+  },
+  "27d6662e_cee42fbc": {
+    "video_id": "27d6662e",
+    "sha256": "cee42fbcf4e6149a71bd1dfa86efc3df605d7c6f50ef49c5f5ce4b1d46bc5e1d",
+    "phash": "98087fe018718080",
+    "source": "user_submission",
+    "created_at": "2026-03-04T23:44:06.388967"
+  },
+  "b3f1aad2_95ad6d05": {
+    "video_id": "b3f1aad2",
+    "sha256": "95ad6d05f27c331812b7c2825d4ff446849112a25829d67b1d838d1fdb2a82bd",
+    "phash": "9b4ca17822374333",
+    "source": "user_submission",
+    "created_at": "2026-03-05T00:12:20.137757"
+  },
+  "a3a56b48_ba76850f": {
+    "video_id": "a3a56b48",
+    "sha256": "ba76850fb0c0255ab5b12dc261f386634730ad73421b328f5b5efb7c25bf3a9f",
+    "phash": "efce0c6810004020",
+    "source": "user_submission",
+    "created_at": "2026-03-05T00:31:14.701035"
+  },
+  "5dc6c210_ba76850f": {
+    "video_id": "5dc6c210",
+    "sha256": "ba76850fb0c0255ab5b12dc261f386634730ad73421b328f5b5efb7c25bf3a9f",
+    "phash": "efce0c6810004020",
+    "source": "user_submission",
+    "created_at": "2026-03-05T00:32:37.653684"
+  },
+  "7b56ccd5_1e542b46": {
+    "video_id": "7b56ccd5",
+    "sha256": "1e542b463c47e0442fced7a76e8794f2dba85a3a3182ce68d7fa8d8ad14fc2c3",
+    "phash": "e6e4592003b10c00",
+    "source": "user_submission",
+    "created_at": "2026-03-05T00:34:43.428241"
+  },
+  "2e53ce1f_ed18b361": {
+    "video_id": "2e53ce1f",
+    "sha256": "ed18b361713fac17da9b1709e4f81a565158496fe992acd854a596a610c323b4",
+    "phash": "a2d104b8787040a8",
+    "source": "user_submission",
+    "created_at": "2026-03-05T02:05:26.760968"
+  },
+  "46485308_50e7e828": {
+    "video_id": "46485308",
+    "sha256": "50e7e82896d41b93bdbef54f9a7a7e2602802dd3492d7eed3110700c2de230c0",
+    "phash": "832125d4848481d0",
+    "source": "user_submission",
+    "created_at": "2026-03-05T01:49:30.317377"
+  },
+  "2212fad8_7420eee0": {
+    "video_id": "2212fad8",
+    "sha256": "7420eee08672ebb03b3995770214ca3a24dc85cf7699d59e128a7b9b788877f8",
+    "phash": "9c40a734450805c8",
+    "source": "user_submission",
+    "created_at": "2026-03-05T02:13:03.085280"
+  },
+  "b0bed8ff_63b29fbd": {
+    "video_id": "b0bed8ff",
+    "sha256": "63b29fbddc8d77d631a249ce18c0ee4e216355afb3b003eee3b82a15124eeeb8",
+    "phash": "c01a289dd0200dd0",
+    "source": "user_submission",
+    "created_at": "2026-03-05T02:34:53.295027"
+  },
+  "6d8c5589_c3478f26": {
+    "video_id": "6d8c5589",
+    "sha256": "c3478f263763a13ed1d7623bd2280a0c4db9885c6a88de5356c3e618515edcb9",
+    "phash": "881e2660f161220a",
+    "source": "user_submission",
+    "created_at": "2026-03-05T02:47:32.179839"
+  },
+  "45d04268_4ff9cfa3": {
+    "video_id": "45d04268",
+    "sha256": "4ff9cfa370f957f44823ac65c231faf8f5e88e89610a8c5ce878c2792b1a0d67",
+    "phash": "a5b070d260828050",
+    "source": "user_submission",
+    "created_at": "2026-03-05T18:19:00.150411"
+  },
+  "d44bfc64_47f6dac8": {
+    "video_id": "d44bfc64",
+    "sha256": "47f6dac86a57bc14d824d2a662fdb07af3f46a89847e02d6280a2c16306565b4",
+    "phash": "a8f880840b608208",
+    "source": "user_submission",
+    "created_at": "2026-03-06T13:57:33.077597"
+  },
+  "83877663_9770f145": {
+    "video_id": "83877663",
+    "sha256": "9770f1459db279a414b57f5ca928b2a76238fb84117c07d0b1d996e7da8997fc",
+    "phash": "cfbae96184c01090",
+    "source": "user_submission",
+    "created_at": "2026-03-06T14:15:51.625246"
+  },
+  "c63e55a7_342238b9": {
+    "video_id": "c63e55a7",
+    "sha256": "342238b9372759dc0c3e5362cee66e4e32113d53534203e4fedbdfecd415fd5d",
+    "phash": "9c90a181402d1802",
+    "source": "user_submission",
+    "created_at": "2026-03-06T16:12:10.231356"
+  },
+  "48eb7354_342238b9": {
+    "video_id": "48eb7354",
+    "sha256": "342238b9372759dc0c3e5362cee66e4e32113d53534203e4fedbdfecd415fd5d",
+    "phash": "9c90a181402d1802",
+    "source": "user_submission",
+    "created_at": "2026-03-06T16:16:18.861742"
+  },
+  "65927f36_186098b7": {
+    "video_id": "65927f36",
+    "sha256": "186098b797efaa7fdfce05549599907d1c6a5b8a7e3b5d3b8217f9e77736aaa7",
+    "phash": "ce6c480628dce028",
+    "source": "user_submission",
+    "created_at": "2026-03-06T16:16:53.789629"
+  },
+  "76b192e5_186098b7": {
+    "video_id": "76b192e5",
+    "sha256": "186098b797efaa7fdfce05549599907d1c6a5b8a7e3b5d3b8217f9e77736aaa7",
+    "phash": "ce6c480628dce028",
+    "source": "user_submission",
+    "created_at": "2026-03-06T17:44:42.096069"
+  },
+  "f4570177_186098b7": {
+    "video_id": "f4570177",
+    "sha256": "186098b797efaa7fdfce05549599907d1c6a5b8a7e3b5d3b8217f9e77736aaa7",
+    "phash": "ce6c480628dce028",
+    "source": "user_submission",
+    "created_at": "2026-03-06T17:44:53.616370"
+  },
+  "a357fb96_342238b9": {
+    "video_id": "a357fb96",
+    "sha256": "342238b9372759dc0c3e5362cee66e4e32113d53534203e4fedbdfecd415fd5d",
+    "phash": "9c90a181402d1802",
+    "source": "user_submission",
+    "created_at": "2026-03-06T17:45:58.514734"
+  },
+  "2155dae6_56576e57": {
+    "video_id": "2155dae6",
+    "sha256": "56576e57952547302acb3507cf1fad96728083b057086a881f95ce8ecab4a820",
+    "phash": "a35897e022cc4802",
+    "source": "user_submission",
+    "created_at": "2026-03-06T17:51:09.032674"
+  },
+  "6cd4929a_698ec3af": {
+    "video_id": "6cd4929a",
+    "sha256": "698ec3af553c0611ec715c8a8a0d2fcfbee635fa7335ec8803641c46186cf438",
+    "phash": "eca0331308244c08",
+    "source": "user_submission",
+    "created_at": "2026-03-06T17:52:09.848452"
+  },
+  "6397f15c_70737abc": {
+    "video_id": "6397f15c",
+    "sha256": "70737abc58f481d684e7f280a77d7f32cab52ef6858b91db433ff23eeca89301",
+    "phash": "f8d0474890044002",
+    "source": "user_submission",
+    "created_at": "2026-03-06T17:52:48.615163"
+  },
+  "cc3b1695_87118927": {
+    "video_id": "cc3b1695",
+    "sha256": "8711892759f36efae192d4f83e0f25ec4fd6caae6a6686d2e1d698f1eecbd1ab",
+    "phash": "84088962e4026001",
+    "source": "user_submission",
+    "created_at": "2026-03-06T18:00:40.456719"
+  },
+  "2c523916_78825e6a": {
+    "video_id": "2c523916",
+    "sha256": "78825e6a709ccf231617f89a5d81d85243b1a093a22d4e2536bfb266e2b7462b",
+    "phash": "a22028851094944a",
+    "source": "user_submission",
+    "created_at": "2026-03-06T18:02:07.553467"
+  },
+  "1288a3df_a15fa522": {
+    "video_id": "1288a3df",
+    "sha256": "a15fa5223a76483ae9067d66aacb13238d6434307c05a25259d85d9a1be89b78",
+    "phash": "d51801ac70420404",
+    "source": "user_submission",
+    "created_at": "2026-03-06T18:22:39.803375"
+  },
+  "5459792f_3aaac54b": {
+    "video_id": "5459792f",
+    "sha256": "3aaac54bfcfacf06895d5fa3aea1aa587fc82e53ece9a61f02b918f603ee7523",
+    "phash": "807801a696869808",
+    "source": "user_submission",
+    "created_at": "2026-03-06T18:23:48.671087"
+  },
+  "01d1c998_963c6f82": {
+    "video_id": "01d1c998",
+    "sha256": "963c6f823facb9313bf0dd7b891664e75b511995c1ef4ad7602397a71bdd4306",
+    "phash": "cc73738c0001029d",
+    "source": "user_submission",
+    "created_at": "2026-03-06T18:25:48.657621"
+  },
+  "4427c1e1_1b594df8": {
+    "video_id": "4427c1e1",
+    "sha256": "1b594df818cd5fca4d664e617c792ad145dc2291fa9e6bea4425dc447076c302",
+    "phash": "936b485100626a00",
+    "source": "user_submission",
+    "created_at": "2026-03-06T18:33:29.894449"
+  },
+  "e7258b86_dfeff318": {
+    "video_id": "e7258b86",
+    "sha256": "dfeff318c9c61a0d72194c00ce9139a832a3205eed7296b84d258cc18df74f6e",
+    "phash": "d528285bf2853fbc",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:02:06.719444"
+  },
+  "b3c74979_9dd841eb": {
+    "video_id": "b3c74979",
+    "sha256": "9dd841ebbcbef61bebf0e5008cad42d77b5618e362cc068801317975678f5d4c",
+    "phash": "b1086a1489c22143",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:02:52.241545"
+  },
+  "f438577b_bbe9ba28": {
+    "video_id": "f438577b",
+    "sha256": "bbe9ba2896e6c02e52bda03aa25683fe70a490677e498b422a36ae4a45c095b7",
+    "phash": "92a86db569b49592",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:29:05.731958"
+  },
+  "d8bc7655_342238b9": {
+    "video_id": "d8bc7655",
+    "sha256": "342238b9372759dc0c3e5362cee66e4e32113d53534203e4fedbdfecd415fd5d",
+    "phash": "9c90a181402d1802",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:14:39.720360"
+  },
+  "6f51fcef_186098b7": {
+    "video_id": "6f51fcef",
+    "sha256": "186098b797efaa7fdfce05549599907d1c6a5b8a7e3b5d3b8217f9e77736aaa7",
+    "phash": "ce6c480628dce028",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:14:48.041437"
+  },
+  "f130cd64_85f01d92": {
+    "video_id": "f130cd64",
+    "sha256": "85f01d924863b2f465b56a3724fa83e5ad965169f724ce4d33d40934ac1e3d13",
+    "phash": "bc2a908184300280",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:14:59.280322"
+  },
+  "dc58d2d8_342238b9": {
+    "video_id": "dc58d2d8",
+    "sha256": "342238b9372759dc0c3e5362cee66e4e32113d53534203e4fedbdfecd415fd5d",
+    "phash": "9c90a181402d1802",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:27:26.837852"
+  },
+  "dcad266b_186098b7": {
+    "video_id": "dcad266b",
+    "sha256": "186098b797efaa7fdfce05549599907d1c6a5b8a7e3b5d3b8217f9e77736aaa7",
+    "phash": "ce6c480628dce028",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:27:39.097377"
+  },
+  "386f285d_85f01d92": {
+    "video_id": "386f285d",
+    "sha256": "85f01d924863b2f465b56a3724fa83e5ad965169f724ce4d33d40934ac1e3d13",
+    "phash": "bc2a908184300280",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:27:50.046591"
+  },
+  "cae8af60_e4ef733b": {
+    "video_id": "cae8af60",
+    "sha256": "e4ef733b413fd97221b63a4a6efb4e63c53e369d653862d9d0263814d03ef716",
+    "phash": "cd2a90c1a4094c44",
+    "source": "user_submission",
+    "created_at": "2026-03-06T19:59:04.627716"
+  },
+  "a9a3206a_98a2ee11": {
+    "video_id": "a9a3206a",
+    "sha256": "98a2ee11201c0ffbcf0a09c4b60f848d3322c0ec7472c0425a1f80a11e8a04dc",
+    "phash": "c2bc1cb140522dbc",
+    "source": "user_submission",
+    "created_at": "2026-03-06T20:24:51.068315"
+  },
+  "4b02151f_16c501f1": {
+    "video_id": "4b02151f",
+    "sha256": "16c501f13fe28e1ceb8521bf70b23308e6087324b546861e4c87e562a622c9d6",
+    "phash": "9424b1b15a292484",
+    "source": "user_submission",
+    "created_at": "2026-03-06T20:31:52.615552"
+  },
+  "fd4e4e5f_30b22737": {
+    "video_id": "fd4e4e5f",
+    "sha256": "30b2273755871b9a5c515e9a25fedb16a10a97519a64b6368a50877c5d5dd9fd",
+    "phash": "80b040c000802400",
+    "source": "user_submission",
+    "created_at": "2026-03-06T21:28:45.655865"
+  },
+  "37483c30_d279a289": {
+    "video_id": "37483c30",
+    "sha256": "d279a2896f1c322825bb71416aa4d5ef6f01f42fa5cc8a19202cb1f2a61c3af1",
+    "phash": "e1c27464961a1b41",
+    "source": "user_submission",
+    "created_at": "2026-03-06T21:29:15.528277"
+  },
+  "2bd86287_42d0e5cf": {
+    "video_id": "2bd86287",
+    "sha256": "42d0e5cf7a6037c270c6474eed9c1864714532cf61a53f8175bf172481211c20",
+    "phash": "eab184e410181080",
+    "source": "user_submission",
+    "created_at": "2026-03-06T21:29:59.395435"
+  },
+  "18c7c0bd_f3b6d4a0": {
+    "video_id": "18c7c0bd",
+    "sha256": "f3b6d4a0d1ee5eeb96ce6052c6be1e5468e42abfd3f82e481641d5c460d7c652",
+    "phash": "91234c9c21e0166a",
+    "source": "user_submission",
+    "created_at": "2026-03-06T22:27:31.341544"
+  },
+  "7a3b45ce_ca034af5": {
+    "video_id": "7a3b45ce",
+    "sha256": "ca034af51eb70d374d098c49de43012de3032e88ed80d3b81a9a92306c3f7923",
+    "phash": "946248eae7840484",
+    "source": "user_submission",
+    "created_at": "2026-03-06T23:45:40.200339"
+  },
+  "29e23ae8_539f6974": {
+    "video_id": "29e23ae8",
+    "sha256": "539f69747efe2e49370c39ae8588bea251f4065a0c9a623a810638435fba1c91",
+    "phash": "969953a50cd3b11a",
+    "source": "user_submission",
+    "created_at": "2026-03-08T16:18:58.685887"
+  },
+  "d4b84fd8_5c239e9f": {
+    "video_id": "d4b84fd8",
+    "sha256": "5c239e9ff57a57d1b937280a51c4edb4d0defeee902897ad946cc0c586c2b940",
+    "phash": "dc600a83b1128828",
+    "source": "user_submission",
+    "created_at": "2026-03-08T21:42:49.168022"
+  },
+  "0ef7d766_0dab6af6": {
+    "video_id": "0ef7d766",
+    "sha256": "0dab6af60e130b88b6cd12edc85e4dbe2ccf5621d72eb1f80242fa55c4e48975",
+    "phash": "981633202211a628",
+    "source": "user_submission",
+    "created_at": "2026-03-08T22:30:01.906545"
+  },
+  "580d6164_b868cc85": {
+    "video_id": "580d6164",
+    "sha256": "b868cc85626eff8f222f7870d738b83649ba2adee80acf4fb90b0e37df11ed1f",
+    "phash": "886ce0a301828410",
+    "source": "user_submission",
+    "created_at": "2026-03-08T23:13:55.552015"
+  },
+  "bd3ed996_1de09b30": {
+    "video_id": "bd3ed996",
+    "sha256": "1de09b306dc60e8002847138f09699b32b24d07e439bcadadde89db872204023",
+    "phash": "ca21d48325f0041c",
+    "source": "user_submission",
+    "created_at": "2026-03-09T00:20:42.304481"
+  },
+  "b606a155_ec80a249": {
+    "video_id": "b606a155",
+    "sha256": "ec80a2496c55aeebb5e3520fa36ee1a83f52e1af4d50aa2235d27ac6b8ebbc44",
+    "phash": "e11a448494d9cc04",
+    "source": "user_submission",
+    "created_at": "2026-03-09T08:40:02.964841"
+  },
+  "a11d0fbc_9b2ef796": {
+    "video_id": "a11d0fbc",
+    "sha256": "9b2ef7962e4cf736a90235bb3bb7e3e20b2d94b8129fdbaed369f03b24955303",
+    "phash": "d4a08b8a4c491480",
+    "source": "user_submission",
+    "created_at": "2026-03-09T08:44:44.348538"
+  },
+  "622052e3_6baab139": {
+    "video_id": "622052e3",
+    "sha256": "6baab139bc247b968b83b4f3a5634c9c60ae67c55a69dcf83a27a423682d9733",
+    "phash": "946366d486b4690b",
+    "source": "user_submission",
+    "created_at": "2026-03-09T11:42:12.726920"
+  },
+  "2be1fd97_eed31d2a": {
+    "video_id": "2be1fd97",
+    "sha256": "eed31d2a73f43ecbba55a53a95be5552b60d054903ee62c7445637d276121289",
+    "phash": "b48ab092c9a50070",
+    "source": "user_submission",
+    "created_at": "2026-03-09T14:40:43.986309"
+  },
+  "5d598670_a5792af1": {
+    "video_id": "5d598670",
+    "sha256": "a5792af167a85687eb84a1e840e7666a39d15d91a035d4bc91662042bc401a32",
+    "phash": "dc0837f260c42638",
+    "source": "user_submission",
+    "created_at": "2026-03-10T14:09:21.662837"
+  },
+  "58ac47a9_9a6ff40d": {
+    "video_id": "58ac47a9",
+    "sha256": "9a6ff40d2ec811cc4dbfe5c2096f9efc1652be9839e9dda9409e97028fb1962b",
+    "phash": "a80a0244f4b0811b",
+    "source": "user_submission",
+    "created_at": "2026-03-09T17:31:43.793526"
+  },
+  "57492e08_7650b38c": {
+    "video_id": "57492e08",
+    "sha256": "7650b38c86fba3943f8d101b02ac134da9a113020decf909ef5587480788efb0",
+    "phash": "e5c81ce86004a440",
+    "source": "user_submission",
+    "created_at": "2026-03-09T17:53:14.858104"
+  },
+  "92e22209_14808356": {
+    "video_id": "92e22209",
+    "sha256": "14808356206648c6ecfc16e65d986277d02fee7d6255c65ec8f85e410f17e832",
+    "phash": "a5d03e0542023c2c",
+    "source": "user_submission",
+    "created_at": "2026-03-09T22:57:57.620794"
+  },
+  "ed8bfc9e_1b1528d4": {
+    "video_id": "ed8bfc9e",
+    "sha256": "1b1528d4c3615b2082233736568d44a8c5c6e228b90c052bf59890e8f15babc8",
+    "phash": "eaa0801490083808",
+    "source": "user_submission",
+    "created_at": "2026-03-10T00:17:44.151868"
+  },
+  "a4c77541_abd7de7c": {
+    "video_id": "a4c77541",
+    "sha256": "abd7de7c3ff9cae217edc4b9dab847b7e686117829c7c4c6e0ba66af26f43f36",
+    "phash": "f268801440628884",
+    "source": "user_submission",
+    "created_at": "2026-03-10T00:19:49.849591"
+  },
+  "60f249a9_0f7dfdbc": {
+    "video_id": "60f249a9",
+    "sha256": "0f7dfdbc6125f5a240ba5d5dcaf1634f963f9d19d491e3e2d131cca63278beb4",
+    "phash": "a0e069c2450290a0",
+    "source": "user_submission",
+    "created_at": "2026-03-10T00:20:55.275365"
+  },
+  "74b92a49_81b4d004": {
+    "video_id": "74b92a49",
+    "sha256": "81b4d004d584f173e4fb59678a91decfc16e124a083a83c171821e6febf020a2",
+    "phash": "ce3f2310103b84e7",
+    "source": "user_submission",
+    "created_at": "2026-03-10T00:22:19.172950"
+  },
+  "e2011f76_77b94d52": {
+    "video_id": "e2011f76",
+    "sha256": "77b94d5277100dc4f865c8d8235922abf63ddff4ae65fbe76411a8d1254196b1",
+    "phash": "d919707406e66418",
+    "source": "user_submission",
+    "created_at": "2026-03-10T11:18:12.376523"
+  },
+  "8e4bc50d_13d62f23": {
+    "video_id": "8e4bc50d",
+    "sha256": "13d62f237d14dfd321c8dad9106e4ca30f69975b12cbd5d965f54319895de717",
+    "phash": "95ca1d64a1303852",
+    "source": "user_submission",
+    "created_at": "2026-03-10T12:05:15.494626"
+  },
+  "f18e5869_c0dd9de4": {
+    "video_id": "f18e5869",
+    "sha256": "c0dd9de41c4a292bb0ca86f10260077d046ae2dfba1cbb42ede0a77763504a2a",
+    "phash": "8dd426328b208290",
+    "source": "user_submission",
+    "created_at": "2026-03-10T13:33:10.004207"
+  },
+  "86138225_e805d32e": {
+    "video_id": "86138225",
+    "sha256": "e805d32e5cb8dec8f9d15eb52fb7debcf42fb565b28fed535cd14e748e0128dc",
+    "phash": "e880b016c0814000",
+    "source": "user_submission",
+    "created_at": "2026-03-10T13:35:44.391973"
+  },
+  "0030f516_9b73f089": {
+    "video_id": "0030f516",
+    "sha256": "9b73f089d22da044d5713015e08c9e1b992dca3d80e6a0ad7f0ffc19aec1c6ec",
+    "phash": "c2b1a2c842c81116",
+    "source": "user_submission",
+    "created_at": "2026-03-10T13:37:26.896220"
+  },
+  "175af586_9ce1dabd": {
+    "video_id": "175af586",
+    "sha256": "9ce1dabd788cb2fe455bce0802bff57f303d71ea0108bcf6947af6a5b405a8eb",
+    "phash": "e5300b88f0029860",
+    "source": "user_submission",
+    "created_at": "2026-03-11T14:25:10.526694"
+  },
+  "ea1419c4_ba7b2b84": {
+    "video_id": "ea1419c4",
+    "sha256": "ba7b2b843096742c1bc1fc38df69c3ef02e7391069208a2b750c4f1402b4dc99",
+    "phash": "e860474242298484",
+    "source": "user_submission",
+    "created_at": "2026-03-11T14:28:06.475936"
+  },
+  "c93988fa_9629cf1d": {
+    "video_id": "c93988fa",
+    "sha256": "9629cf1d30709e3694ef297b52f1637762079ee777171eb1aea68e6ba829e203",
+    "phash": "f96630db04119089",
+    "source": "user_submission",
+    "created_at": "2026-03-11T14:28:39.435958"
+  },
+  "39d7dbae_8035dbad": {
+    "video_id": "39d7dbae",
+    "sha256": "8035dbad4b0605b79551e453c6595ccd5fe571ab2b717f3e485c18644bf9b222",
+    "phash": "89e25c313230508d",
+    "source": "user_submission",
+    "created_at": "2026-03-11T14:32:29.156436"
+  },
+  "c61a9699_768e9366": {
+    "video_id": "c61a9699",
+    "sha256": "768e93666bf99f238f43734c3ed43e137e454d6cf161259b4405cdad7a8164ce",
+    "phash": "a69430430c0d3230",
+    "source": "user_submission",
+    "created_at": "2026-03-11T14:33:33.678639"
+  },
+  "43fc5be4_84ec8491": {
+    "video_id": "43fc5be4",
+    "sha256": "84ec84917938ad9191011d487d3a028f8ec3eaa5d337950d2dc51ee05da3c642",
+    "phash": "98626292810000a0",
+    "source": "user_submission",
+    "created_at": "2026-03-11T15:38:39.852803"
+  },
+  "2569c207_15b547b0": {
+    "video_id": "2569c207",
+    "sha256": "15b547b0119f0999ff5c2a2885fb08c930b2ba56e8b8fbefccbc1fc8b7613d5d",
+    "phash": "e1704c0400880400",
+    "source": "user_submission",
+    "created_at": "2026-03-11T15:39:28.461731"
+  },
+  "99131922_36d5fd7b": {
+    "video_id": "99131922",
+    "sha256": "36d5fd7b50d46cfeb683b745253a7e668cdeefed9636d735f308826a49a4cbca",
+    "phash": "92617a44844c29b9",
+    "source": "user_submission",
+    "created_at": "2026-03-11T15:42:16.741872"
+  },
+  "802ee7bc_79f084ab": {
+    "video_id": "802ee7bc",
+    "sha256": "79f084ab976ec5d031f61c42cb650240169751cca94d01c307ebe01d8e26edf9",
+    "phash": "9646c81104403210",
+    "source": "user_submission",
+    "created_at": "2026-03-11T15:43:11.667303"
+  },
+  "277ed5be_9e0166c3": {
+    "video_id": "277ed5be",
+    "sha256": "9e0166c3577eec06b9e51955d63032784742dac37a1879dd6303f6506669d1de",
+    "phash": "d242245008580b40",
+    "source": "user_submission",
+    "created_at": "2026-03-11T15:44:11.533196"
+  },
+  "ab4fc455_ebf09a60": {
+    "video_id": "ab4fc455",
+    "sha256": "ebf09a60493c45066f3c21805cd6405e3e902d9108f10804ecb539f14392d3c0",
+    "phash": "c920b4a08181c010",
+    "source": "user_submission",
+    "created_at": "2026-03-11T21:27:49.327347"
+  },
+  "eb8ab15d_08a30ce0": {
+    "video_id": "eb8ab15d",
+    "sha256": "08a30ce0c97ae0c5d58308521031b9da7446da075600881ee0cec38f62ae1ba0",
+    "phash": "84382bc2864ec870",
+    "source": "user_submission",
+    "created_at": "2026-03-11T17:24:01.608884"
+  },
+  "6cef5b8c_6d8d5ddd": {
+    "video_id": "6cef5b8c",
+    "sha256": "6d8d5dddb74d798fb2e69aa1297f315a304fe7a350ab3a647fcd675d5f9d74c1",
+    "phash": "cc32b0819c006141",
+    "source": "user_submission",
+    "created_at": "2026-03-11T17:49:38.921965"
+  },
+  "98dc48d3_81f833d4": {
+    "video_id": "98dc48d3",
+    "sha256": "81f833d4b8b65dd4107140741719867d9d2d1f7e4634b78730f7c0d4a1bc1093",
+    "phash": "98262298445355d4",
+    "source": "user_submission",
+    "created_at": "2026-03-11T17:55:25.265803"
+  },
+  "288e777b_35704ad8": {
+    "video_id": "288e777b",
+    "sha256": "35704ad869c3a7c4af47663b3b44e1e6e01b770345609e4ba4fa87e095ee9e40",
+    "phash": "82e6608c88112082",
+    "source": "user_submission",
+    "created_at": "2026-03-11T17:55:51.632690"
+  },
+  "15dca58e_66d1325a": {
+    "video_id": "15dca58e",
+    "sha256": "66d1325acfd308bac8eb005f525e2c58a278d32df73217109ffaaf742b9621e1",
+    "phash": "cf70331c10ce3087",
+    "source": "user_submission",
+    "created_at": "2026-03-11T20:45:10.478663"
+  },
+  "636b5126_c0b814c1": {
+    "video_id": "636b5126",
+    "sha256": "c0b814c1aab7047268a5807da9e3dabd669c14ed4048ccb8aad1b12282aa97ee",
+    "phash": "a5da2134db912030",
+    "source": "user_submission",
+    "created_at": "2026-03-11T21:26:19.405210"
+  },
+  "e8d00f37_531da50e": {
+    "video_id": "e8d00f37",
+    "sha256": "531da50ec45259bd409b75b83239ae9a2463a79a891980b2a81bcd4c78323693",
+    "phash": "e13889a524c04052",
+    "source": "user_submission",
+    "created_at": "2026-03-11T21:50:46.265470"
+  },
+  "f89102c0_26e71512": {
+    "video_id": "f89102c0",
+    "sha256": "26e715127d29a04a3f25930e2974f1a55d6ed23cf71c2ab495fd3f7008391619",
+    "phash": "91c14b32341dc984",
+    "source": "user_submission",
+    "created_at": "2026-03-11T21:57:53.343978"
+  },
+  "3b649e28_c422dd14": {
+    "video_id": "3b649e28",
+    "sha256": "c422dd14a58345aa352db69b7e7bd91692811db09de1ae64d8945f930ea839cd",
+    "phash": "a801d08ce0191860",
+    "source": "user_submission",
+    "created_at": "2026-03-11T23:09:41.686468"
+  },
+  "9ef80e60_e12e22ea": {
+    "video_id": "9ef80e60",
+    "sha256": "e12e22ea1ffd6d879f0ea3d4edd70a998185e5bac258b1efb168f8ed6b419fd6",
+    "phash": "c0e1228080000808",
+    "source": "user_submission",
+    "created_at": "2026-03-11T23:08:44.516422"
+  },
+  "262ec21d_e3ff81e6": {
+    "video_id": "262ec21d",
+    "sha256": "e3ff81e67d8cb8646a1686f54a33da08c6c2cbcd638b3aa6b33a5e17e0c3be4b",
+    "phash": "985166a033a28116",
+    "source": "user_submission",
+    "created_at": "2026-03-12T02:39:37.815673"
+  },
+  "03068c87_661448c5": {
+    "video_id": "03068c87",
+    "sha256": "661448c5065f7d94c755ea7590afaf002ae14708bbd1396b539d19f0f6bc0d79",
+    "phash": "a208800484c20830",
+    "source": "user_submission",
+    "created_at": "2026-03-12T02:39:07.311363"
+  },
+  "5f8e2b56_e3ff81e6": {
+    "video_id": "5f8e2b56",
+    "sha256": "e3ff81e67d8cb8646a1686f54a33da08c6c2cbcd638b3aa6b33a5e17e0c3be4b",
+    "phash": "985166a033a28116",
+    "source": "user_submission",
+    "created_at": "2026-03-12T03:01:41.256600"
+  },
+  "c2200950_fb448227": {
+    "video_id": "c2200950",
+    "sha256": "fb448227b2f7db5ec86262cea69ebe0cf83792b9534002b538c45b134de095e5",
+    "phash": "d912244c8972c480",
+    "source": "user_submission",
+    "created_at": "2026-03-12T03:23:44.773725"
+  },
+  "fedebc3c_bd19a238": {
+    "video_id": "fedebc3c",
+    "sha256": "bd19a23894590d72b0aa7039a20ee4896b0c6f871b8353ebf4cf12a270d0d2f8",
+    "phash": "885a504fc2308d61",
+    "source": "user_submission",
+    "created_at": "2026-03-12T03:31:28.204939"
+  },
+  "24628d84_95d6a08e": {
+    "video_id": "24628d84",
+    "sha256": "95d6a08e85f2a105d1c397aa0f69cec324d7cc0a0de9885183ccaf5ca28c3808",
+    "phash": "e0bb1f0c14000189",
+    "source": "user_submission",
+    "created_at": "2026-03-12T03:33:25.600638"
+  },
+  "136e046c_38fee96e": {
+    "video_id": "136e046c",
+    "sha256": "38fee96e0b4c926baae3deac54f46dcf6833bc6584bd00c38ef7219957c2a510",
+    "phash": "827560eac46884a2",
+    "source": "user_submission",
+    "created_at": "2026-03-12T03:39:37.024271"
+  },
+  "d559a650_3eb11224": {
+    "video_id": "d559a650",
+    "sha256": "3eb11224d82576f2e0b570ae46ef3f72fbab1792fe54259f08f861d085983895",
+    "phash": "b30c0db1c92c0c02",
+    "source": "user_submission",
+    "created_at": "2026-03-12T03:52:19.544095"
+  },
+  "420a32c9_ed353f5e": {
+    "video_id": "420a32c9",
+    "sha256": "ed353f5e2dfe8e5d138dabd5afa47b3816b2c2e9688bdfe535f54aa49136feac",
+    "phash": "8c3f30c2db616e8a",
+    "source": "user_submission",
+    "created_at": "2026-03-12T03:53:40.468247"
+  },
+  "afed696f_ea507f54": {
+    "video_id": "afed696f",
+    "sha256": "ea507f54a4a501a094c81a2f253aea6502d21cc6ef75609a95c2ff1907c42955",
+    "phash": "b4588284e0f08484",
+    "source": "user_submission",
+    "created_at": "2026-03-14T04:31:52.543217"
+  },
+  "1f44c074_7aa94750": {
+    "video_id": "1f44c074",
+    "sha256": "7aa94750afcd81cf91885e62e3349b2f3c4d951ad8dc73a214f7d4fde4040d8b",
+    "phash": "9d75460833dacc34",
+    "source": "user_submission",
+    "created_at": "2026-03-14T05:11:50.731438"
+  },
+  "b9acb400_969eb9bf": {
+    "video_id": "b9acb400",
+    "sha256": "969eb9bf9934ce086ea4c21c3c8b886caf286f39c5b349f27a32c582f11d18fb",
+    "phash": "b450493b2417d838",
+    "source": "user_submission",
+    "created_at": "2026-03-14T05:15:42.350938"
+  },
+  "bd2f35b5_6baf0550": {
+    "video_id": "bd2f35b5",
+    "sha256": "6baf05504e3d1b7526c922c858d718018dc941653538004dadcee036c7f729a9",
+    "phash": "b3055c18000480b8",
+    "source": "user_submission",
+    "created_at": "2026-03-14T05:37:07.794272"
+  },
+  "4e756e38_5fbd164f": {
+    "video_id": "4e756e38",
+    "sha256": "5fbd164f9b4604a53f15ff6ade67aa5b28d579d4b9a9d5e8dcb00269857c608b",
+    "phash": "ff20126bf00c0631",
+    "source": "user_submission",
+    "created_at": "2026-03-14T05:48:49.152526"
+  },
+  "02978072_65247681": {
+    "video_id": "02978072",
+    "sha256": "652476819120b6211ceabe4b2e56c0bf51aa48d860325824bc829601724c577e",
+    "phash": "84260a5199f8bb26",
+    "source": "user_submission",
+    "created_at": "2026-03-15T05:29:44.353685"
+  },
+  "f96c92b7_8ee4f9ea": {
+    "video_id": "f96c92b7",
+    "sha256": "8ee4f9ea7c46363f385370bfb6addb030ab346d568fdba62bac593ac2ddfada8",
+    "phash": "f4069860a0428d00",
+    "source": "user_submission",
+    "created_at": "2026-03-16T03:52:13.990929"
+  },
+  "cf3e583f_bbdeeed6": {
+    "video_id": "cf3e583f",
+    "sha256": "bbdeeed64b72e25e16bc0e8449032ac6e1acec0465d6a6592d3ae85a5f5575cb",
+    "phash": "b040c120300c0400",
+    "source": "user_submission",
+    "created_at": "2026-04-18T11:01:10.898894"
+  },
+  "b98a6ba2_d61e7274": {
+    "video_id": "b98a6ba2",
+    "sha256": "d61e727440748cee271d36884a2e7e90eaee795bcf922b3594b8aa6a1e34bd53",
+    "phash": "fc84129088082484",
+    "source": "user_submission",
+    "created_at": "2026-03-16T03:55:25.556348"
+  },
+  "7a44e38f_2a84b655": {
+    "video_id": "7a44e38f",
+    "sha256": "2a84b6551cc4a769da3437ffa57adfd7e3c644a305ed3024c90ef2fc302e2975",
+    "phash": "a10648242289a0a4",
+    "source": "user_submission",
+    "created_at": "2026-03-16T03:56:02.878226"
+  },
+  "6a789056_1d9144e4": {
+    "video_id": "6a789056",
+    "sha256": "1d9144e437729254c5b2d60189fca387623fa9cb5c29b6a9efcabe92789b39db",
+    "phash": "f15c8ce40200a800",
+    "source": "user_submission",
+    "created_at": "2026-03-16T04:26:48.687073"
+  },
+  "f4c09525_55770c3a": {
+    "video_id": "f4c09525",
+    "sha256": "55770c3aae841ae978b3ada65f1254f35fff6a422bc1f5b6fc9dee957829a323",
+    "phash": "c830298534e0ce4c",
+    "source": "user_submission",
+    "created_at": "2026-03-16T04:27:02.188235"
+  },
+  "bd60e8bd_40504fe6": {
+    "video_id": "bd60e8bd",
+    "sha256": "40504fe6b6bf86152829194af2ed33668a3b63d4059dc0de2f51407e45087d5f",
+    "phash": "90e8021cce800cc6",
+    "source": "user_submission",
+    "created_at": "2026-03-16T05:08:34.565909"
+  },
+  "336b993a_e655ce4a": {
+    "video_id": "336b993a",
+    "sha256": "e655ce4ac7604667eab4c32dbaf729a40b59de578661ceb4202357fb3fcd79c0",
+    "phash": "96302048ca81c031",
+    "source": "user_submission",
+    "created_at": "2026-03-16T06:04:16.536884"
+  },
+  "6e23902b_509c0914": {
+    "video_id": "6e23902b",
+    "sha256": "509c09144df87d86f810bfc5ceef759598c60804e0544c7dd293a7f9bb2a1298",
+    "phash": "9c88a3c040000030",
+    "source": "user_submission",
+    "created_at": "2026-03-16T06:11:37.346198"
+  },
+  "9d8ebc02_291db421": {
+    "video_id": "9d8ebc02",
+    "sha256": "291db4215120bff90e5eaa6578fc801e658e704bc688d8fa8cae5fc0c0fdfc28",
+    "phash": "af403cdaa1169669",
+    "source": "user_submission",
+    "created_at": "2026-03-16T06:23:49.718896"
+  },
+  "22853ceb_b3731bb8": {
+    "video_id": "22853ceb",
+    "sha256": "b3731bb8ecca5887e733490cbf7454d9e8dc18a3e8eea4d1d1fd0522e7f89d45",
+    "phash": "b0218c1011a18080",
+    "source": "user_submission",
+    "created_at": "2026-03-16T06:52:18.880727"
+  },
+  "b5ace6d6_247ed449": {
+    "video_id": "b5ace6d6",
+    "sha256": "247ed449ead655e5cdfbd5e137b921d1af06525440442266cc9147f7a2302ace",
+    "phash": "e0c8e2c00a802080",
+    "source": "user_submission",
+    "created_at": "2026-03-16T09:11:53.957180"
+  },
+  "a1ac6c8d_3ce8faa4": {
+    "video_id": "a1ac6c8d",
+    "sha256": "3ce8faa4a80ab86d98646c0bdc39553ed9ceed119fadd22e0fa286f325974d5f",
+    "phash": "a85a74225381482c",
+    "source": "user_submission",
+    "created_at": "2026-03-16T16:07:44.028252"
+  },
+  "1f0f49be_97f5ce54": {
+    "video_id": "1f0f49be",
+    "sha256": "97f5ce542676d26ecb29a0992b252dc111efa8b453c8e964c3b4a46d2b95c251",
+    "phash": "be000f5d4b08783a",
+    "source": "user_submission",
+    "created_at": "2026-03-16T14:16:36.804267"
+  },
+  "c6b2398c_0bab4646": {
+    "video_id": "c6b2398c",
+    "sha256": "0bab4646139a180f77bd0972dd1fc466d1e07e6013bd5b982da0d24048df14e1",
+    "phash": "b94000210b205288",
+    "source": "user_submission",
+    "created_at": "2026-03-16T16:08:02.079755"
+  },
+  "6ad825e2_f5c11ba5": {
+    "video_id": "6ad825e2",
+    "sha256": "f5c11ba51d4046234005f8397c9046df454817227fcdbf63ba110501b0c517b7",
+    "phash": "8678733c61337586",
+    "source": "user_submission",
+    "created_at": "2026-03-16T16:29:46.839308"
+  },
+  "9fa54826_fee266be": {
+    "video_id": "9fa54826",
+    "sha256": "fee266be2a6dca644c46cbe5703e46b736f3965e97d64f9e85347a82224ef120",
+    "phash": "f0260aa42208484a",
+    "source": "user_submission",
+    "created_at": "2026-03-16T17:34:20.119849"
+  },
+  "d1473fbc_cfea914d": {
+    "video_id": "d1473fbc",
+    "sha256": "cfea914d094efdcf52818568334ff5561e087dbd37aa54947cd909774b0da384",
+    "phash": "c0173e62818a4458",
+    "source": "user_submission",
+    "created_at": "2026-03-16T17:37:02.087124"
+  },
+  "51a55184_1785260c": {
+    "video_id": "51a55184",
+    "sha256": "1785260cd3ba3f5e582b49ebc7970f8cc5948811f97c6f35222cfda4f8ba7149",
+    "phash": "99582b0c72a44623",
+    "source": "user_submission",
+    "created_at": "2026-03-16T18:17:59.802115"
+  },
+  "1af7218a_39ae4ebc": {
+    "video_id": "1af7218a",
+    "sha256": "39ae4ebc64369a8187e4e2b2f8d9cfac1b45c691123b919720edf3e598b482a1",
+    "phash": "82382d80bc6b28c9",
+    "source": "user_submission",
+    "created_at": "2026-03-16T21:07:08.432803"
+  },
+  "5d3afb3e_e94cb041": {
+    "video_id": "5d3afb3e",
+    "sha256": "e94cb041919e2aa88c722b74e95312f1795809d7a56aba64d899ced076e58190",
+    "phash": "add830c399326091",
+    "source": "user_submission",
+    "created_at": "2026-03-16T21:14:43.613879"
+  },
+  "ff5561c9_488dec7a": {
+    "video_id": "ff5561c9",
+    "sha256": "488dec7aaf1cae873d3fb920160bf02e3aac313c3d72aeef173ac875e8b5531a",
+    "phash": "9909e55334e63390",
+    "source": "user_submission",
+    "created_at": "2026-03-17T20:37:00.090656"
+  },
+  "497ca442_f003db51": {
+    "video_id": "497ca442",
+    "sha256": "f003db51fde388d25be14703e2be0139cdc82af379bcf1501da408c9face06f1",
+    "phash": "e094c0a8180280c0",
+    "source": "user_submission",
+    "created_at": "2026-03-16T21:31:01.436450"
+  },
+  "c733685a_b917e7e0": {
+    "video_id": "c733685a",
+    "sha256": "b917e7e077cc083f357d13cbe2fe1ba6311414d21a868fc9b2fdc9a333512528",
+    "phash": "a150ac0cc2f2d288",
+    "source": "user_submission",
+    "created_at": "2026-03-17T12:27:32.870427"
+  },
+  "c7c55e61_98d4cf2d": {
+    "video_id": "c7c55e61",
+    "sha256": "98d4cf2de749772005489e28a7eeccc9f1b38930ed9ba6f4f51083796f850796",
+    "phash": "9c40a430a610008c",
+    "source": "user_submission",
+    "created_at": "2026-03-17T12:29:08.399966"
+  },
+  "859a1281_5c85450c": {
+    "video_id": "859a1281",
+    "sha256": "5c85450ccbd95a6c7cca4351bf0b0d0bff12c8954e153c3d897e1eaf4afe3c31",
+    "phash": "e83425959430c1b6",
+    "source": "user_submission",
+    "created_at": "2026-03-17T12:29:52.893396"
+  },
+  "708fa77f_8da91cc3": {
+    "video_id": "708fa77f",
+    "sha256": "8da91cc388794dde2598dbe2f384b117290c38fedb1bcd2bbe7eee7d59a00341",
+    "phash": "f8322c0980948200",
+    "source": "user_submission",
+    "created_at": "2026-03-17T20:01:24.591354"
+  },
+  "8a63c6ef_2ff17871": {
+    "video_id": "8a63c6ef",
+    "sha256": "2ff17871fdde2e0a521a832461a2f112cb729f4d885c46e864d98693e1e06850",
+    "phash": "b607605c9819131c",
+    "source": "user_submission",
+    "created_at": "2026-03-17T12:38:47.449753"
+  },
+  "b53159f6_20cd32f0": {
+    "video_id": "b53159f6",
+    "sha256": "20cd32f0d609a369fc9a2390b0ba4f86aad282544028656876c3f58582437c53",
+    "phash": "c73a3c6801911686",
+    "source": "user_submission",
+    "created_at": "2026-03-17T12:40:11.274251"
+  },
+  "d77aa7d9_0f4213ab": {
+    "video_id": "d77aa7d9",
+    "sha256": "0f4213ab2a62fd9af560f97511edbcbe4b851517a8802dc576662a826d0bd5c2",
+    "phash": "c032661824028088",
+    "source": "user_submission",
+    "created_at": "2026-03-17T20:01:51.749088"
+  },
+  "22824416_f9749ea6": {
+    "video_id": "22824416",
+    "sha256": "f9749ea6be786b8c193935feff740200064b560fd9e9392bdfccbe6a24f1f628",
+    "phash": "b280080000000080",
+    "source": "user_submission",
+    "created_at": "2026-03-17T21:04:20.590046"
+  },
+  "6d909ddd_304c49df": {
+    "video_id": "6d909ddd",
+    "sha256": "304c49dfe54ee91d63df6644b556ea40d148c5bef65c2354b64c65b9c0079e94",
+    "phash": "b08810e0e1000000",
+    "source": "user_submission",
+    "created_at": "2026-03-17T21:05:28.094364"
+  },
+  "4a8dcce4_203df478": {
+    "video_id": "4a8dcce4",
+    "sha256": "203df478831e915045ce7f8e9a698a80f7460f147ff224657fafb93565c962ca",
+    "phash": "e4408089c0201100",
+    "source": "user_submission",
+    "created_at": "2026-03-17T22:43:40.413489"
+  },
+  "e423d953_c0e2c6a4": {
+    "video_id": "e423d953",
+    "sha256": "c0e2c6a4d2b5b0889eb50ed6356c5e14544bb0e149fcafbb52e14dbfaac4432c",
+    "phash": "9d22519f78871151",
+    "source": "user_submission",
+    "created_at": "2026-03-17T21:11:28.816242"
+  },
+  "418c7ddf_20654019": {
+    "video_id": "418c7ddf",
+    "sha256": "20654019a3eb94fb682b11ab851b403478013df748b9a0bb2f0d671e27cb731f",
+    "phash": "e1935a602c948418",
+    "source": "user_submission",
+    "created_at": "2026-03-17T21:53:12.177757"
+  },
+  "cf7ebdd7_0b418528": {
+    "video_id": "cf7ebdd7",
+    "sha256": "0b418528272f8c19f1b60cf379bfc7c79c3aa02dee1a7b856fe7d913da0f8e53",
+    "phash": "c83434d2c1011289",
+    "source": "user_submission",
+    "created_at": "2026-03-17T22:20:07.031083"
+  },
+  "0bc959d8_bd27a12a": {
+    "video_id": "0bc959d8",
+    "sha256": "bd27a12aebc9b82f55cd5e534c98518fbf12e507fceaf69741b1ebb75283dd38",
+    "phash": "e9839498d0001818",
+    "source": "user_submission",
+    "created_at": "2026-03-17T22:35:57.456634"
+  },
+  "170069e7_fe7e318e": {
+    "video_id": "170069e7",
+    "sha256": "fe7e318eab766b81d214a43919f9b03f228f0ce19f6b00e78d3cd73f6f71cef9",
+    "phash": "946db29264b24980",
+    "source": "user_submission",
+    "created_at": "2026-03-17T22:44:55.385980"
+  },
+  "30c3adef_7c7b242c": {
+    "video_id": "30c3adef",
+    "sha256": "7c7b242c7718dcce8de8e705e21649621486e7b73edcba17eb9c3c0d5c2e5896",
+    "phash": "916b64946b933ca1",
+    "source": "user_submission",
+    "created_at": "2026-03-17T22:46:42.055070"
+  },
+  "c12df638_1b3a19cf": {
+    "video_id": "c12df638",
+    "sha256": "1b3a19cf60478845f9560b6301bf9095da661830e0a1530a933c0f3085e764de",
+    "phash": "a4685a93f02da732",
+    "source": "user_submission",
+    "created_at": "2026-03-17T22:48:28.687838"
+  },
+  "c27cf2a7_65f4f72b": {
+    "video_id": "c27cf2a7",
+    "sha256": "65f4f72be723298ccc2d9ecb27ad8c91d6458a167da523f9834d5b77dadc1dc2",
+    "phash": "dfb8304444de8ea0",
+    "source": "user_submission",
+    "created_at": "2026-03-17T22:49:31.495043"
+  },
+  "b19ed7c9_0ca9a08d": {
+    "video_id": "b19ed7c9",
+    "sha256": "0ca9a08d2ffbf2e830d03012c7745d8cd98fc1b800131ac89014fb7b027dd6c6",
+    "phash": "82c4b4c988d83842",
+    "source": "user_submission",
+    "created_at": "2026-03-17T22:50:41.737059"
+  },
+  "09bc768c_882e2569": {
+    "video_id": "09bc768c",
+    "sha256": "882e256944e750a68d08c4b62e4c908bc341ea3aaf290b1637ddf27e10e6dfb2",
+    "phash": "9a672002c17066b0",
+    "source": "user_submission",
+    "created_at": "2026-03-18T00:03:15.766236"
+  },
+  "9b785420_74bcff68": {
+    "video_id": "9b785420",
+    "sha256": "74bcff68e28ec8aae5f3f474195d4ee603a82d3409e3adaa12c5d547dcbc2ea2",
+    "phash": "dc31624831b532da",
+    "source": "user_submission",
+    "created_at": "2026-03-18T00:58:26.294192"
+  },
+  "7897b493_be6cdeb0": {
+    "video_id": "7897b493",
+    "sha256": "be6cdeb02e0f91bb5deaea541ce77c867648a4de86e315b1c2c55b5d341e4c01",
+    "phash": "8350a4334ca6d958",
+    "source": "user_submission",
+    "created_at": "2026-03-18T01:03:10.411150"
+  },
+  "75fb5c71_b5470741": {
+    "video_id": "75fb5c71",
+    "sha256": "b54707419bc970e20f2e2caa14d57c8371416fadfba1d001ce96442ea618790a",
+    "phash": "f073249c5f420f85",
+    "source": "user_submission",
+    "created_at": "2026-03-18T01:24:33.412860"
+  },
+  "c3b1d021_f99e0550": {
+    "video_id": "c3b1d021",
+    "sha256": "f99e05503b31f55792fbe753204f3a5979efefe2384f0b01d1a2e3f8f3cd82ea",
+    "phash": "c73c63e6b1194827",
+    "source": "user_submission",
+    "created_at": "2026-03-18T01:29:31.893187"
+  },
+  "724de610_8e6f42f9": {
+    "video_id": "724de610",
+    "sha256": "8e6f42f9b9430521138f27ba53c883c7a8b130e283460f64017027864497e00c",
+    "phash": "98986b50e4616344",
+    "source": "user_submission",
+    "created_at": "2026-03-18T01:31:10.865187"
+  },
+  "3de2192b_2c2287a2": {
+    "video_id": "3de2192b",
+    "sha256": "2c2287a227073dffbc46fa837b32d64b0f5a9819cbce39a0822bf661fd008c0c",
+    "phash": "986a84a420904080",
+    "source": "user_submission",
+    "created_at": "2026-03-18T01:32:59.745305"
+  },
+  "459a749c_df31319d": {
+    "video_id": "459a749c",
+    "sha256": "df31319db66ab03c7fd4f0d2b4a521533d4704b83f2c44ac6e5a3dfd5e6ddef3",
+    "phash": "8000d06020800400",
+    "source": "user_submission",
+    "created_at": "2026-03-18T03:06:04.096332"
+  },
+  "bd40ee56_01ac6d45": {
+    "video_id": "bd40ee56",
+    "sha256": "01ac6d45921069b0b3f3466a8b7ce9600362b5fc7bf10e1751a2b643d3d0e60c",
+    "phash": "8688082033088020",
+    "source": "user_submission",
+    "created_at": "2026-03-18T03:15:39.982994"
+  },
+  "05767ebd_92a64d29": {
+    "video_id": "05767ebd",
+    "sha256": "92a64d297ae3afdf7928ceeb7377d1502b9af271e2aa9df8e9e58a9d99053910",
+    "phash": "8142e4a09022b8e4",
+    "source": "user_submission",
+    "created_at": "2026-03-18T03:17:24.706953"
+  },
+  "85a225ea_df800527": {
+    "video_id": "85a225ea",
+    "sha256": "df8005273ecb18344a5711c83c75073cedb5927a84372c9094b0e1b0799d2d13",
+    "phash": "a688190000228080",
+    "source": "user_submission",
+    "created_at": "2026-03-18T03:18:43.079892"
+  },
+  "8278cb60_da7052f6": {
+    "video_id": "8278cb60",
+    "sha256": "da7052f6e73209c399c140f43e5f2c932062358d39596fea752062311bb6c6a2",
+    "phash": "e858a56320004000",
+    "source": "user_submission",
+    "created_at": "2026-03-18T03:19:08.927882"
+  },
+  "a6b333e9_8fd69769": {
+    "video_id": "a6b333e9",
+    "sha256": "8fd697699c6bee75ccc005d4f4199169218870e7a3503344be3ec05328fd3408",
+    "phash": "87406a18381b1ee0",
+    "source": "user_submission",
+    "created_at": "2026-03-18T04:51:59.830768"
+  },
+  "ed8e5950_4fb20591": {
+    "video_id": "ed8e5950",
+    "sha256": "4fb2059108e11566cb704591d1aa1cd4078133c5f21f1d95456209bce3f52e97",
+    "phash": "c15d612420869062",
+    "source": "user_submission",
+    "created_at": "2026-03-18T04:53:36.812856"
+  },
+  "3313a1d6_4d195b2e": {
+    "video_id": "3313a1d6",
+    "sha256": "4d195b2e2b9d6cf35008e034744c3a029ec5d8ba27cc188a5f18e12492e61733",
+    "phash": "c844e5c182850420",
+    "source": "user_submission",
+    "created_at": "2026-03-18T05:04:02.842965"
+  },
+  "e47431a3_0e3cfb6e": {
+    "video_id": "e47431a3",
+    "sha256": "0e3cfb6e4a769bdf05f1df825152896a463445a047785cdf9e6d3e9c9723e967",
+    "phash": "88e5b2c245081480",
+    "source": "user_submission",
+    "created_at": "2026-03-18T05:05:30.348262"
+  },
+  "3118e884_e07794f2": {
+    "video_id": "3118e884",
+    "sha256": "e07794f2cd9b3be1990c52087dbc2f01a7ff6205f1df1d47c67d9fddb2b49c58",
+    "phash": "a9e4d0820e980024",
+    "source": "user_submission",
+    "created_at": "2026-03-18T05:06:04.662286"
+  },
+  "1ec5ccc9_92a7adaf": {
+    "video_id": "1ec5ccc9",
+    "sha256": "92a7adafc55d8aff4f1210c27251be355d41fe0c2d476ee2fc71df73b43e0682",
+    "phash": "81cd3120189c4842",
+    "source": "user_submission",
+    "created_at": "2026-03-18T21:58:38.400941"
+  },
+  "3531410f_5c83043a": {
+    "video_id": "3531410f",
+    "sha256": "5c83043ad46c92bd0c6486c49051bb2d65ca3aacc28860ec5570e447c1ac231d",
+    "phash": "ab0a89800c0094c0",
+    "source": "user_submission",
+    "created_at": "2026-03-18T19:13:43.589348"
+  },
+  "6ac64b9e_295836b6": {
+    "video_id": "6ac64b9e",
+    "sha256": "295836b62a7eb04e4f043e8d67f76d1c4eb9bdeca6ca0654f648c89632905a9b",
+    "phash": "84c49414a060a460",
+    "source": "user_submission",
+    "created_at": "2026-03-18T20:43:03.194295"
+  },
+  "046409cd_14bbde14": {
+    "video_id": "046409cd",
+    "sha256": "14bbde14b74e09a17770803a6754ac411839dd856321eed726b6c7e21f2a42f2",
+    "phash": "e0a2909410900000",
+    "source": "user_submission",
+    "created_at": "2026-03-18T21:25:54.904274"
+  },
+  "bb3a992c_75128751": {
+    "video_id": "bb3a992c",
+    "sha256": "75128751ede9d443eb14fc178b4735ecf0b5478d308ecf3ac3276f91220c3606",
+    "phash": "802b6c10e29c1768",
+    "source": "user_submission",
+    "created_at": "2026-03-18T21:01:33.724796"
+  },
+  "38fa1d19_5d703bc8": {
+    "video_id": "38fa1d19",
+    "sha256": "5d703bc8190dfd430dd3ee989908efa9c392731575ff97bc554337c4fd8a3696",
+    "phash": "841850e40dac4088",
+    "source": "user_submission",
+    "created_at": "2026-03-18T21:49:57.050724"
+  },
+  "7d9d2a27_703589d1": {
+    "video_id": "7d9d2a27",
+    "sha256": "703589d17f5e84319a574236583bec94620da3e748edf0c83a1f8940359f5048",
+    "phash": "d529e00580c76849",
+    "source": "user_submission",
+    "created_at": "2026-03-18T22:08:17.220984"
+  },
+  "14a723d3_498252ee": {
+    "video_id": "14a723d3",
+    "sha256": "498252eeb69d828ffbe3d98e21520510b3364dc75de79ec8489249aa45fd39d5",
+    "phash": "8831724ec0c1261a",
+    "source": "user_submission",
+    "created_at": "2026-03-18T22:09:15.126028"
+  },
+  "c39d904e_de96b372": {
+    "video_id": "c39d904e",
+    "sha256": "de96b3722ca3785450c3ef4222313df3756d56861a5e419eae12ddb3a006ca80",
+    "phash": "be90040820808420",
+    "source": "user_submission",
+    "created_at": "2026-03-18T22:19:31.569330"
+  },
+  "ce3370a4_75128751": {
+    "video_id": "ce3370a4",
+    "sha256": "75128751ede9d443eb14fc178b4735ecf0b5478d308ecf3ac3276f91220c3606",
+    "phash": "802b6c10e29c1768",
+    "source": "user_submission",
+    "created_at": "2026-03-18T22:31:42.625925"
+  },
+  "3b40233d_26e6c767": {
+    "video_id": "3b40233d",
+    "sha256": "26e6c76793ff792c10d39ed615b1d81c40e929af510028802722ac1f3286ed12",
+    "phash": "ae5522d344ae8230",
+    "source": "user_submission",
+    "created_at": "2026-03-18T22:35:12.781937"
+  },
+  "a49bb275_8815d2c9": {
+    "video_id": "a49bb275",
+    "sha256": "8815d2c97c4883a8c87cde11b5ce636b459b063379470668ccb37dec8e03ed5e",
+    "phash": "e5e0001680808018",
+    "source": "user_submission",
+    "created_at": "2026-03-18T22:35:59.684177"
+  },
+  "364d81aa_84d7a6b6": {
+    "video_id": "364d81aa",
+    "sha256": "84d7a6b663f93e2ee44498e3cf4ba021dc7ae038fd44bb721486a01470df4d31",
+    "phash": "86c8d04188840420",
+    "source": "user_submission",
+    "created_at": "2026-03-18T23:01:32.180375"
+  },
+  "61e432da_52824615": {
+    "video_id": "61e432da",
+    "sha256": "52824615d578bde4587f0941a3350afbb04b04a0bf770644e5b1bdc072113b0e",
+    "phash": "a4281a7124606400",
+    "source": "user_submission",
+    "created_at": "2026-03-18T23:29:40.414477"
+  },
+  "a63fc809_f67d52cd": {
+    "video_id": "a63fc809",
+    "sha256": "f67d52cdbc44c5f88b82f03ef48a71abd1bfb032b66d4fd85d7209f5b55a5ab4",
+    "phash": "e4981062a4009000",
+    "source": "user_submission",
+    "created_at": "2026-03-19T05:19:52.016668"
+  },
+  "459ffe30_0c34f05b": {
+    "video_id": "459ffe30",
+    "sha256": "0c34f05b9bef9c35dac7327857aacdbd871c6671613ff4f97c29565f22e448c3",
+    "phash": "9b2836a645289e10",
+    "source": "user_submission",
+    "created_at": "2026-03-19T05:28:54.809581"
+  },
+  "ccb172c0_e94cb041": {
+    "video_id": "ccb172c0",
+    "sha256": "e94cb041919e2aa88c722b74e95312f1795809d7a56aba64d899ced076e58190",
+    "phash": "add830c399326091",
+    "source": "user_submission",
+    "created_at": "2026-03-19T05:40:49.140997"
+  },
+  "fabdbe95_f4438148": {
+    "video_id": "fabdbe95",
+    "sha256": "f4438148fc9ff1b56251b65d81660e9e68b8a058e5d3c7416208231f1fe7d061",
+    "phash": "e8c1028630008018",
+    "source": "user_submission",
+    "created_at": "2026-03-19T05:48:11.491313"
+  },
+  "18eb3f37_36830a65": {
+    "video_id": "18eb3f37",
+    "sha256": "36830a6578efc19175280651eae7f00624adf6f728b4a84eec1223eb9cd12eb7",
+    "phash": "cc1e327111761938",
+    "source": "user_submission",
+    "created_at": "2026-03-19T05:48:57.760287"
+  },
+  "dd471777_c50bce9a": {
+    "video_id": "dd471777",
+    "sha256": "c50bce9adfdc9d743e7a3efe3ec171c498424364f2e0b948c7a78a4360222052",
+    "phash": "c00f1f7031c797cc",
+    "source": "user_submission",
+    "created_at": "2026-03-19T05:49:56.634063"
+  },
+  "82ccfc8a_976b68fe": {
+    "video_id": "82ccfc8a",
+    "sha256": "976b68fef478fd8c710130b721d187ba29bca0ca0dd67ca589a665b519c07ecb",
+    "phash": "884a24bc5fd57193",
+    "source": "user_submission",
+    "created_at": "2026-03-19T07:47:53.574270"
+  },
+  "63960aba_4f78464b": {
+    "video_id": "63960aba",
+    "sha256": "4f78464ba9c1c8a491fbf23d3fdfd5b3cb41abcde1f1efdcba50f9bda990db86",
+    "phash": "a0a00b9210a4a148",
+    "source": "user_submission",
+    "created_at": "2026-03-19T07:50:49.381058"
+  },
+  "f649a34a_fc01eb04": {
+    "video_id": "f649a34a",
+    "sha256": "fc01eb04869b0396257d08ed6f0ac5952ba7fd2ca37e604bf8ba2e297d0ff992",
+    "phash": "d40aa56c08904821",
+    "source": "user_submission",
+    "created_at": "2026-03-19T10:11:44.231548"
+  },
+  "2d9e7d33_aab6bfba": {
+    "video_id": "2d9e7d33",
+    "sha256": "aab6bfba93d70f24b7d4c5d613fc5188ebd459c466808f31e8475307c7a55b08",
+    "phash": "ca1031347d8dc587",
+    "source": "user_submission",
+    "created_at": "2026-03-19T10:21:13.366013"
+  },
+  "6526f4fb_77c9b1d5": {
+    "video_id": "6526f4fb",
+    "sha256": "77c9b1d514482da61af3c32c76a59a8a97631f8b239a54901fecfc470ac4c8ed",
+    "phash": "a98084d040002510",
+    "source": "user_submission",
+    "created_at": "2026-03-19T10:38:59.800717"
+  },
+  "80bdbb00_6dab01bd": {
+    "video_id": "80bdbb00",
+    "sha256": "6dab01bd5fe33f1e419497b059821364e7adf3dfbb6f6a3cd5ce999afb0f5a44",
+    "phash": "a82850188134000a",
+    "source": "user_submission",
+    "created_at": "2026-03-19T14:22:27.662659"
+  },
+  "ce4b040e_820138b5": {
+    "video_id": "ce4b040e",
+    "sha256": "820138b58801f591ff964e35b1dd79653d98df9bb093f54bfaabf3c9bd6c5d31",
+    "phash": "8b2030ce83a1a944",
+    "source": "user_submission",
+    "created_at": "2026-03-20T17:49:14.686557"
+  },
+  "362037ed_1e669caf": {
+    "video_id": "362037ed",
+    "sha256": "1e669caf55a0409f2d16e7bb204908d0bb441816cf480a9a59d51efb6fdff16a",
+    "phash": "a163c790942c52d3",
+    "source": "user_submission",
+    "created_at": "2026-03-20T21:36:22.106907"
+  },
+  "bca1f1a1_e26413b0": {
+    "video_id": "bca1f1a1",
+    "sha256": "e26413b022a73fddebe126704aa1ae98b2708d76eecde813f768c69d5cbea7e3",
+    "phash": "e04a2590180cc006",
+    "source": "user_submission",
+    "created_at": "2026-03-20T18:41:24.563799"
+  },
+  "17b61963_ab22dc45": {
+    "video_id": "17b61963",
+    "sha256": "ab22dc45a9f22fc921d571ac6a8b7a39b3ee577604fc4eedc8f9c64c1a80d24d",
+    "phash": "adfc02c0a0098141",
+    "source": "user_submission",
+    "created_at": "2026-03-20T18:48:53.105805"
+  },
+  "3c80ee50_23392da0": {
+    "video_id": "3c80ee50",
+    "sha256": "23392da07d073c2e52599d8ab6e47e6f6bdcf33f3f017390e1d2457749405778",
+    "phash": "9d1c684810018180",
+    "source": "user_submission",
+    "created_at": "2026-03-20T19:33:25.703283"
+  },
+  "25be1154_628c093d": {
+    "video_id": "25be1154",
+    "sha256": "628c093d9a8c55650c3c6e7f93e16d8db823f4f93cb33413f6f176921e127b70",
+    "phash": "e06a278060c08402",
+    "source": "user_submission",
+    "created_at": "2026-03-20T18:54:33.721702"
+  },
+  "1442489d_5c83043a": {
+    "video_id": "1442489d",
+    "sha256": "5c83043ad46c92bd0c6486c49051bb2d65ca3aacc28860ec5570e447c1ac231d",
+    "phash": "ab0a89800c0094c0",
+    "source": "user_submission",
+    "created_at": "2026-03-20T20:18:32.489423"
+  },
+  "12bddd05_609e8777": {
+    "video_id": "12bddd05",
+    "sha256": "609e87774fae56a1366a79df88bae00727f121a29f260ed121951a0242112e16",
+    "phash": "c368948d84d86060",
+    "source": "user_submission",
+    "created_at": "2026-03-20T20:34:25.391101"
+  },
+  "77cc39f3_6c1ceb3b": {
+    "video_id": "77cc39f3",
+    "sha256": "6c1ceb3bd31f65996ba93fb0d1354433946a99f7dc940761418b9a7ac506521a",
+    "phash": "8e0039d22114526b",
+    "source": "user_submission",
+    "created_at": "2026-03-20T20:36:32.503995"
+  },
+  "12224af3_003a0e74": {
+    "video_id": "12224af3",
+    "sha256": "003a0e74065052103a78fc9bc3581f7a6ad04901483d978c03e3064c11a4b0a8",
+    "phash": "e89c2d20a2e0b630",
+    "source": "user_submission",
+    "created_at": "2026-03-20T20:37:43.365709"
+  },
+  "9a21f309_527726a0": {
+    "video_id": "9a21f309",
+    "sha256": "527726a0b7751462d196b4948c7effacb9a80fe51a9f99a019f439297fb082ba",
+    "phash": "b460807850806540",
+    "source": "user_submission",
+    "created_at": "2026-03-20T21:05:51.603078"
+  },
+  "c50da0cc_22cd1f96": {
+    "video_id": "c50da0cc",
+    "sha256": "22cd1f96c3da0f2e4e9a73c7f85be5a08fb56d25345a99cfea1fdc85375115f9",
+    "phash": "cc90264922c09184",
+    "source": "user_submission",
+    "created_at": "2026-03-20T21:10:29.573807"
+  },
+  "a69fb00a_b77b8524": {
+    "video_id": "a69fb00a",
+    "sha256": "b77b85241c7b968c300c127b2b35ed623d8468c2a3e2e635600577920f71a1d3",
+    "phash": "b00089eea8103010",
+    "source": "user_submission",
+    "created_at": "2026-03-20T22:17:58.491947"
+  },
+  "75c79333_dafba12c": {
+    "video_id": "75c79333",
+    "sha256": "dafba12c8602f9abdde0ec5c15d159dccde223e5a2375181aa6bd4000519f9b7",
+    "phash": "ac80b282c340040e",
+    "source": "user_submission",
+    "created_at": "2026-03-20T22:24:34.459250"
+  },
+  "b3889bc1_4db7531c": {
+    "video_id": "b3889bc1",
+    "sha256": "4db7531cce51ca8932a95575329889f796b3e511eb2666ec7b4af135271df90a",
+    "phash": "9e9a1c84c040186a",
+    "source": "user_submission",
+    "created_at": "2026-03-20T22:30:44.184402"
+  },
+  "a8b3dde5_72114f56": {
+    "video_id": "a8b3dde5",
+    "sha256": "72114f561fd1bb5c3bd227e89e072719bd3671e6f6161aef1ab76645cfb2db38",
+    "phash": "803c73c044059099",
+    "source": "user_submission",
+    "created_at": "2026-03-20T22:31:25.441255"
+  },
+  "d5b1c60c_8e11689c": {
+    "video_id": "d5b1c60c",
+    "sha256": "8e11689c923202a84cbb3ba34118f752e634ad263587abcfb339784edc8069f0",
+    "phash": "e20b916490049020",
+    "source": "user_submission",
+    "created_at": "2026-03-20T22:51:25.763754"
+  },
+  "b56d98e3_89cbb49f": {
+    "video_id": "b56d98e3",
+    "sha256": "89cbb49f5bbaea7207ea5c690eaec304439ac88cfc60df53fd73d3f926c2fa35",
+    "phash": "e8a8a09042808283",
+    "source": "user_submission",
+    "created_at": "2026-03-20T22:56:44.644299"
+  },
+  "a1ca0f35_72736f93": {
+    "video_id": "a1ca0f35",
+    "sha256": "72736f937c388c37e4f74fcb7f4a5494116b9d48e04121b3a09d38ab63058581",
+    "phash": "a24f846008900030",
+    "source": "user_submission",
+    "created_at": "2026-03-21T02:04:29.026054"
+  },
+  "a051d447_f61124b7": {
+    "video_id": "a051d447",
+    "sha256": "f61124b7a5c186e16bf95e2fab4f02e7c1ed83a211d03f256dd64569729a9518",
+    "phash": "942c61a1103f60c9",
+    "source": "user_submission",
+    "created_at": "2026-03-21T02:14:53.740461"
+  },
+  "be6a6122_beb8eff3": {
+    "video_id": "be6a6122",
+    "sha256": "beb8eff3534093886e3104e3e3e4c4f408ca9081fa9f50b492c4d896a519e762",
+    "phash": "c42e3da1935e2dcc",
+    "source": "user_submission",
+    "created_at": "2026-03-21T04:50:45.073048"
+  },
+  "d5ba254e_07640cc5": {
+    "video_id": "d5ba254e",
+    "sha256": "07640cc586c4bbefa2b2afedb3f0563c82f9ca6bb97c4037034f2ec86408800f",
+    "phash": "92d04c222000c0c6",
+    "source": "user_submission",
+    "created_at": "2026-03-21T05:16:45.181452"
+  },
+  "018a1935_0205c1ff": {
+    "video_id": "018a1935",
+    "sha256": "0205c1ff7c7e691d34c1ac720a09b030d8bb72e3475aaeb4c602c8f2e005aaf1",
+    "phash": "e28499a1cc008000",
+    "source": "user_submission",
+    "created_at": "2026-03-21T05:33:30.319365"
+  },
+  "c0d8ad5f_d507ca77": {
+    "video_id": "c0d8ad5f",
+    "sha256": "d507ca77acbd1702976a0dd957bdcb7f42984d37d7c8fbd11c49146204b50267",
+    "phash": "eb1d2466cc426132",
+    "source": "user_submission",
+    "created_at": "2026-03-21T05:58:56.830912"
+  },
+  "331f6a19_a2d9257e": {
+    "video_id": "331f6a19",
+    "sha256": "a2d9257e11058609123c57a040b303e4b5ea7f5598162a57658d1e5e3b39af07",
+    "phash": "a0c0c06002308100",
+    "source": "user_submission",
+    "created_at": "2026-03-21T05:59:39.260781"
+  },
+  "6752ca2b_8e11689c": {
+    "video_id": "6752ca2b",
+    "sha256": "8e11689c923202a84cbb3ba34118f752e634ad263587abcfb339784edc8069f0",
+    "phash": "e20b916490049020",
+    "source": "user_submission",
+    "created_at": "2026-03-21T06:03:09.235370"
+  },
+  "6307c162_53c8a8b2": {
+    "video_id": "6307c162",
+    "sha256": "53c8a8b2e76e48f101c03fa801be60aedfa736978a0d2a285eca079bde985d62",
+    "phash": "e208983208800002",
+    "source": "user_submission",
+    "created_at": "2026-03-21T06:30:08.842503"
+  },
+  "1fa391da_3d911c6a": {
+    "video_id": "1fa391da",
+    "sha256": "3d911c6a48b43e43b5bf3065b58492e2c75fcc9603f8bec1b62f7b20fad56210",
+    "phash": "a40a1aa6693194a6",
+    "source": "user_submission",
+    "created_at": "2026-03-21T06:31:01.641512"
+  },
+  "715d2362_5aab910b": {
+    "video_id": "715d2362",
+    "sha256": "5aab910b057d99f393dda6b9cfd87061947deac477430f7b38e6ee15d16c05c4",
+    "phash": "f0409c98a1324164",
+    "source": "user_submission",
+    "created_at": "2026-03-21T06:41:40.132086"
+  },
+  "deed4a8a_59d8903e": {
+    "video_id": "deed4a8a",
+    "sha256": "59d8903e47dcd73224daa215eebc804f48a3ad46b56329d88a0c093da056dc4e",
+    "phash": "9ad025cac830008d",
+    "source": "user_submission",
+    "created_at": "2026-03-21T07:28:58.005235"
+  },
+  "9f340689_678d3bae": {
+    "video_id": "9f340689",
+    "sha256": "678d3bae9a7cfb703b723ff543df806d24b0394dff50719492a6a8bc7e879a32",
+    "phash": "9c4a94630d120916",
+    "source": "user_submission",
+    "created_at": "2026-03-21T07:29:57.220270"
+  },
+  "129f08e8_4068171c": {
+    "video_id": "129f08e8",
+    "sha256": "4068171cd7fbc4162fe312e38a2b5411c201f349e55a11fda61f1fdc9b22decb",
+    "phash": "e54cfaf219161111",
+    "source": "user_submission",
+    "created_at": "2026-03-21T07:56:29.067382"
+  },
+  "9e05ecff_b76744bd": {
+    "video_id": "9e05ecff",
+    "sha256": "b76744bd65c44e977346a9388ccfb4d6071a05a3494da3c5bfb24824890b0c3a",
+    "phash": "8ddc20d0a0018141",
+    "source": "user_submission",
+    "created_at": "2026-03-21T07:57:07.074721"
+  },
+  "42f03a5c_cb27de11": {
+    "video_id": "42f03a5c",
+    "sha256": "cb27de1138aaf45cc19c5a3764732748744613371bccb6b15b833de9749a617c",
+    "phash": "8f5e618b1d40ae96",
+    "source": "user_submission",
+    "created_at": "2026-03-21T07:57:39.594566"
+  },
+  "6bc1563a_1f8e172b": {
+    "video_id": "6bc1563a",
+    "sha256": "1f8e172bf640b7f362eb13dfa4cfb8328648360490df1a8887d7fcb9ae3f9c1b",
+    "phash": "a4d860c002888c00",
+    "source": "user_submission",
+    "created_at": "2026-03-21T07:58:06.203045"
+  },
+  "d5933328_cbf93aad": {
+    "video_id": "d5933328",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-21T21:28:49.542768"
+  },
+  "c4f5da88_cbf93aad": {
+    "video_id": "c4f5da88",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-21T21:54:25.796008"
+  },
+  "b9bd4a4d_e5ed4ee2": {
+    "video_id": "b9bd4a4d",
+    "sha256": "e5ed4ee2ca52752c43f97f85264ab6278fc967a1e9a81732b0aa0dcbd8998797",
+    "phash": "8c6058678cb07331",
+    "source": "user_submission",
+    "created_at": "2026-03-22T01:12:54.927584"
+  },
+  "ed091292_d70af316": {
+    "video_id": "ed091292",
+    "sha256": "d70af316d9f4cbe104e0c9de3a66b0cbbb7b4c946a79808855f779d682820849",
+    "phash": "898c2463122359c0",
+    "source": "user_submission",
+    "created_at": "2026-03-22T01:56:44.594073"
+  },
+  "deb6f59d_cbf93aad": {
+    "video_id": "deb6f59d",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-22T02:02:36.784835"
+  },
+  "4a5710f2_5de3d69e": {
+    "video_id": "4a5710f2",
+    "sha256": "5de3d69e54731a8964682685e762ba79d462ee9fe45cab3fb20883b4c73aad98",
+    "phash": "85212894d0900961",
+    "source": "user_submission",
+    "created_at": "2026-03-22T02:24:15.933000"
+  },
+  "7d9f9469_16885fbc": {
+    "video_id": "7d9f9469",
+    "sha256": "16885fbc64829434c978896e83569a12dee974a90f0a7cb6d90db567791c76d3",
+    "phash": "abc5582102209498",
+    "source": "user_submission",
+    "created_at": "2026-03-22T02:32:06.605215"
+  },
+  "7ad36cf4_debb8ace": {
+    "video_id": "7ad36cf4",
+    "sha256": "debb8ace3b461b4bd64a085a1e30a638b7a9f80614da79c4fabaa0fa5f20bee8",
+    "phash": "ace1016882d02294",
+    "source": "user_submission",
+    "created_at": "2026-03-22T02:36:13.374756"
+  },
+  "c6505d3c_352897b2": {
+    "video_id": "c6505d3c",
+    "sha256": "352897b23296df06921f92064d6dd3403ba3d9937e28252a2a7fcc7d8a484321",
+    "phash": "bc944880c0c00c05",
+    "source": "user_submission",
+    "created_at": "2026-03-22T03:25:39.882169"
+  },
+  "93742e0c_cbf93aad": {
+    "video_id": "93742e0c",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-22T04:12:27.264522"
+  },
+  "1156743b_b8ee23fe": {
+    "video_id": "1156743b",
+    "sha256": "b8ee23fe8082fb7b1d988547ee3af45eec4be7e4ff4e61da0411d81edcae73ba",
+    "phash": "9460698aa0840080",
+    "source": "user_submission",
+    "created_at": "2026-03-22T05:11:59.243303"
+  },
+  "4ade1f47_6d489247": {
+    "video_id": "4ade1f47",
+    "sha256": "6d48924765b8db2b23aa2230fe2eae4198d98125c620a7fa327ef7f305b5a384",
+    "phash": "946bd62cd926df34",
+    "source": "user_submission",
+    "created_at": "2026-03-22T06:25:07.692007"
+  },
+  "2e58479b_22ac0db4": {
+    "video_id": "2e58479b",
+    "sha256": "22ac0db4485bcfd8637f277b5970f011d199c01a81c2e2cd0c100add53455b04",
+    "phash": "ca1c4633a370c017",
+    "source": "user_submission",
+    "created_at": "2026-03-23T01:32:34.907682"
+  },
+  "86885d80_cbf93aad": {
+    "video_id": "86885d80",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T05:05:27.712423"
+  },
+  "7a1aef48_cbf93aad": {
+    "video_id": "7a1aef48",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T05:21:58.176967"
+  },
+  "609ec209_cbf93aad": {
+    "video_id": "609ec209",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T06:33:56.771055"
+  },
+  "0e06f668_cbf93aad": {
+    "video_id": "0e06f668",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T08:07:26.627149"
+  },
+  "eb819684_cbf93aad": {
+    "video_id": "eb819684",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T09:02:05.233674"
+  },
+  "79bd9e0e_d0e2e92c": {
+    "video_id": "79bd9e0e",
+    "sha256": "d0e2e92c62916975a50eaf85665c3f4512c33e6f79f2e1b81e9eccf696e50150",
+    "phash": "80222ea0909ea081",
+    "source": "user_submission",
+    "created_at": "2026-03-23T09:27:22.723967"
+  },
+  "3530fb0a_b10f4c81": {
+    "video_id": "3530fb0a",
+    "sha256": "b10f4c8127c3774b67bc7d8ed94490b0cd3f52e9b08d3779e2007d089de449ee",
+    "phash": "a4f060830980c028",
+    "source": "user_submission",
+    "created_at": "2026-03-23T09:40:33.541030"
+  },
+  "87d9daae_cbf93aad": {
+    "video_id": "87d9daae",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T09:47:23.595695"
+  },
+  "32870f3a_cbf93aad": {
+    "video_id": "32870f3a",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T09:48:43.935312"
+  },
+  "9cdc220e_cbf93aad": {
+    "video_id": "9cdc220e",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T10:13:34.723727"
+  },
+  "e1bcb274_ef2df5c2": {
+    "video_id": "e1bcb274",
+    "sha256": "ef2df5c220bb6f5ade81ed8b9f190c7998203191629cf557de4b9829ff10a9dd",
+    "phash": "9d906965d7903671",
+    "source": "user_submission",
+    "created_at": "2026-03-23T11:18:26.787119"
+  },
+  "979afef6_c48f3eb6": {
+    "video_id": "979afef6",
+    "sha256": "c48f3eb6bf0443c49fd25e0d9901fbd749e0ef16af7d5a173f2c1d81869b15d1",
+    "phash": "8095aac4283808c0",
+    "source": "user_submission",
+    "created_at": "2026-03-23T11:45:15.189082"
+  },
+  "4fb75a9d_cbf93aad": {
+    "video_id": "4fb75a9d",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T12:35:14.021722"
+  },
+  "3a17cc63_cbf93aad": {
+    "video_id": "3a17cc63",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T12:46:36.964446"
+  },
+  "05423774_cbf93aad": {
+    "video_id": "05423774",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T13:24:36.316130"
+  },
+  "cd655f69_cbf93aad": {
+    "video_id": "cd655f69",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T13:32:01.086204"
+  },
+  "d7d359c4_cbf93aad": {
+    "video_id": "d7d359c4",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T17:54:15.953437"
+  },
+  "65ec77f2_cbf93aad": {
+    "video_id": "65ec77f2",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T18:44:11.888162"
+  },
+  "b64181ee_cbf93aad": {
+    "video_id": "b64181ee",
+    "sha256": "cbf93aad446f8b208cf8a4b25e20241643d5d8fc4d7d67b3c23aecd9f01f636f",
+    "phash": "ad89a1ac5080004c",
+    "source": "user_submission",
+    "created_at": "2026-03-23T20:09:19.915851"
+  },
+  "5c8dffb8_95bda1bc": {
+    "video_id": "5c8dffb8",
+    "sha256": "95bda1bc1536a969e172b1aa878418d422537f2cf93b4f9b402b8004e4059a89",
+    "phash": "970468074d9b1246",
+    "source": "user_submission",
+    "created_at": "2026-03-23T22:29:33.873877"
+  },
+  "f5d46379_3349f1c8": {
+    "video_id": "f5d46379",
+    "sha256": "3349f1c8a59e382aa1eae3f0f17be3083f19487a21e5ffc7a7d1a8d54846ea80",
+    "phash": "d80e61a104944788",
+    "source": "user_submission",
+    "created_at": "2026-03-23T22:44:51.945766"
+  },
+  "37be4b13_20a488a8": {
+    "video_id": "37be4b13",
+    "sha256": "20a488a8762d682de59989ca9d03b7f55592e31c49f5cc7dcd27531ff332236f",
+    "phash": "f030408408080000",
+    "source": "user_submission",
+    "created_at": "2026-03-24T02:01:29.276273"
+  },
+  "3e27f7fa_9ddd8489": {
+    "video_id": "3e27f7fa",
+    "sha256": "9ddd8489fdcb66df5dfc1dd44769d9f942a72d8db992bf7e04a02a8c3ba6eef7",
+    "phash": "a4f8c00872222100",
+    "source": "user_submission",
+    "created_at": "2026-03-24T03:27:24.180291"
+  },
+  "500380e2_b0991785": {
+    "video_id": "500380e2",
+    "sha256": "b09917857c8ac3b30dc49bfac78bc06596c786a7b3199ee9df80980a6377b7a4",
+    "phash": "d0816b24a4ca4010",
+    "source": "user_submission",
+    "created_at": "2026-03-24T03:32:54.108880"
+  },
+  "abc4bf63_9b674949": {
+    "video_id": "abc4bf63",
+    "sha256": "9b67494985e45c9c262858e71cb435481ab65e397cee921b0c913b8bc0f83150",
+    "phash": "e5811e5213492112",
+    "source": "user_submission",
+    "created_at": "2026-03-24T06:21:36.105092"
+  },
+  "6b7f84fc_41353849": {
+    "video_id": "6b7f84fc",
+    "sha256": "41353849bbb9e47afa6dee3a5a87f0356c644b7566a0db2c99ca61b1e6aa2b6d",
+    "phash": "a9e4d0820e980024",
+    "source": "user_submission",
+    "created_at": "2026-03-24T06:22:21.327124"
+  },
+  "55a792b2_5dd9430e": {
+    "video_id": "55a792b2",
+    "sha256": "5dd9430ef9242aedc9759e972f1d61177fcedd9ad0ed1f093275a8403e470f13",
+    "phash": "bcb401d1460d6404",
+    "source": "user_submission",
+    "created_at": "2026-03-24T06:27:46.056581"
+  },
+  "aa1bbc61_669f39f5": {
+    "video_id": "aa1bbc61",
+    "sha256": "669f39f59068c7531835cd553fa8c375cc50e9a4dfaf156755f83ab560a5bab8",
+    "phash": "f0e0818d18002200",
+    "source": "user_submission",
+    "created_at": "2026-03-24T06:36:36.901966"
+  },
+  "cc8cd8a4_ccbf4d5e": {
+    "video_id": "cc8cd8a4",
+    "sha256": "ccbf4d5e7daffd39a932c2fec69a4e2c9a7938f7a8fda39d621f1ed28796d0b1",
+    "phash": "80c2c85822242062",
+    "source": "user_submission",
+    "created_at": "2026-03-24T07:06:29.758713"
+  },
+  "c4af24ef_1e88e6a4": {
+    "video_id": "c4af24ef",
+    "sha256": "1e88e6a4653d73eacec9ff67a0dc96cd2bc4efed9638cd9bcced60672095b596",
+    "phash": "a19028089482c62c",
+    "source": "user_submission",
+    "created_at": "2026-03-24T07:40:47.721561"
+  },
+  "e2baf749_91b64c6b": {
+    "video_id": "e2baf749",
+    "sha256": "91b64c6b41313a90761192c2488ba3493fdad5044b1aa3b7452a7e8452e6bbe2",
+    "phash": "a8a00282400080c8",
+    "source": "user_submission",
+    "created_at": "2026-03-24T20:15:06.111267"
+  },
+  "32484015_ff4af003": {
+    "video_id": "32484015",
+    "sha256": "ff4af003f5872b3b22f58d04a9e251ce478be19eaad5973449c0db3bb7b1df64",
+    "phash": "b8b081c342800080",
+    "source": "user_submission",
+    "created_at": "2026-03-24T20:25:03.559403"
+  },
+  "aa354f7a_59140aaf": {
+    "video_id": "aa354f7a",
+    "sha256": "59140aaf4f0ebac135a93c4d60d32a1bcd598bce3268c65034fa0dbed2acfd9a",
+    "phash": "9a6134124b5968a5",
+    "source": "user_submission",
+    "created_at": "2026-03-25T07:28:41.654987"
+  },
+  "e438e231_59140aaf": {
+    "video_id": "e438e231",
+    "sha256": "59140aaf4f0ebac135a93c4d60d32a1bcd598bce3268c65034fa0dbed2acfd9a",
+    "phash": "9a6134124b5968a5",
+    "source": "user_submission",
+    "created_at": "2026-03-25T09:21:12.881948"
+  },
+  "8845ff17_50eba0e6": {
+    "video_id": "8845ff17",
+    "sha256": "50eba0e63a8a0908c47813bc5ca5d17d35f36b80329c660ff592aa578239eb66",
+    "phash": "b0c0581321440073",
+    "source": "user_submission",
+    "created_at": "2026-03-27T05:50:51.975005"
+  },
+  "2c017b3e_adf20d53": {
+    "video_id": "2c017b3e",
+    "sha256": "adf20d532dc5dfbde027c466abafeff27878cfe53a93009d9e179888dc943aeb",
+    "phash": "d662448800148221",
+    "source": "user_submission",
+    "created_at": "2026-03-27T06:01:47.108628"
+  },
+  "9cc5c81d_27f3532a": {
+    "video_id": "9cc5c81d",
+    "sha256": "27f3532aa047158a8c480f1b3519b91a78b761ac5f28b25e65c612120759d802",
+    "phash": "a991101bcece0000",
+    "source": "user_submission",
+    "created_at": "2026-03-27T06:04:38.324745"
+  },
+  "68fc9dcb_f631d763": {
+    "video_id": "68fc9dcb",
+    "sha256": "f631d7631881d1bfb96e96940966d3b8d97f72c6e921982dc4e113b2963eae0a",
+    "phash": "9034e48011948416",
+    "source": "user_submission",
+    "created_at": "2026-03-27T12:33:28.464915"
+  },
+  "b6ab702a_62951a80": {
+    "video_id": "b6ab702a",
+    "sha256": "62951a80e8668aa65da83c6dacc1d5e85421a6431d27558db4c6278c95bdbaad",
+    "phash": "cb29518180802c45",
+    "source": "user_submission",
+    "created_at": "2026-03-30T06:22:12.165899"
+  },
+  "17802fa1_7eee2c96": {
+    "video_id": "17802fa1",
+    "sha256": "7eee2c9612680e15082d382a1443491f2bf3c06abe836818520fef6b656928e4",
+    "phash": "9c9c50413078cfc4",
+    "source": "user_submission",
+    "created_at": "2026-03-27T22:23:26.703157"
+  },
+  "531e09ab_48bcf35f": {
+    "video_id": "531e09ab",
+    "sha256": "48bcf35fa4d42e59e91a5483c08b6f0f84f35063954e92783b57213269867060",
+    "phash": "d45a2985233332e4",
+    "source": "user_submission",
+    "created_at": "2026-03-27T22:26:02.374355"
+  },
+  "e569a832_2b1c68e8": {
+    "video_id": "e569a832",
+    "sha256": "2b1c68e82d4792ec240602e0743000843a4d7b7dc99a8ae804081be163fb1b81",
+    "phash": "c90d7a82077894c4",
+    "source": "user_submission",
+    "created_at": "2026-03-27T22:31:49.176990"
+  },
+  "77d94829_7202b3ba": {
+    "video_id": "77d94829",
+    "sha256": "7202b3ba6383e07ca4bb0c8ea3519c67ce16395b52c07ecfc47b2e5621b8f139",
+    "phash": "af04503352cd5027",
+    "source": "user_submission",
+    "created_at": "2026-03-27T22:34:06.190166"
+  },
+  "60111ec1_3d7560bd": {
+    "video_id": "60111ec1",
+    "sha256": "3d7560bd050e4994f4a0be98864b8a8c3e4053733722fe528f7e2e1beff16c56",
+    "phash": "94a4206a8a943488",
+    "source": "user_submission",
+    "created_at": "2026-03-28T00:41:48.412422"
+  },
+  "8f787eb5_5d822378": {
+    "video_id": "8f787eb5",
+    "sha256": "5d822378ec057fe75b4091020dd16c56eed4bf7b5617725f938ad2d237ed8c7e",
+    "phash": "d48020f4d02228b9",
+    "source": "user_submission",
+    "created_at": "2026-03-28T00:42:39.496878"
+  },
+  "e62aadc5_fc4928f5": {
+    "video_id": "e62aadc5",
+    "sha256": "fc4928f50052f1bf240b008722769b47c04e69d843d4957bd11da15217508ed3",
+    "phash": "b2b020ccc80000c0",
+    "source": "user_submission",
+    "created_at": "2026-03-28T00:46:30.718944"
+  },
+  "e5d3061c_bf08c166": {
+    "video_id": "e5d3061c",
+    "sha256": "bf08c16693c41a490339320f79d65fa16ccce3cd5eebe7ef2d773416fd912423",
+    "phash": "b0b46460c0800000",
+    "source": "user_submission",
+    "created_at": "2026-03-28T01:15:46.098620"
+  },
+  "e0ed6222_a18cc675": {
+    "video_id": "e0ed6222",
+    "sha256": "a18cc67529608092c6e9613955d8401224d9991276aef201e7a41b72da6c7eb7",
+    "phash": "d48020f4d02228b9",
+    "source": "user_submission",
+    "created_at": "2026-03-28T01:16:58.615818"
+  },
+  "4f4399ab_ebe38a7d": {
+    "video_id": "4f4399ab",
+    "sha256": "ebe38a7d435fa0ae45a695eb8d55b21ba523f9ee6d559a08703bc5487f15f928",
+    "phash": "c98000028aa21945",
+    "source": "user_submission",
+    "created_at": "2026-03-28T01:17:33.734555"
+  },
+  "afef0a24_f3be88a4": {
+    "video_id": "afef0a24",
+    "sha256": "f3be88a48f1f5ea44f5ecc9d0bcaccdaefb7f65af97391e1e7152a5ac0371a3c",
+    "phash": "ea4a809490421680",
+    "source": "user_submission",
+    "created_at": "2026-03-28T02:36:42.166293"
+  },
+  "debedfb7_d0f5d6a9": {
+    "video_id": "debedfb7",
+    "sha256": "d0f5d6a9c85a5ba2e5f747d932c1aef3ffc8cb6c5672f9026ad45c57f77c92a8",
+    "phash": "c0c8440584810240",
+    "source": "user_submission",
+    "created_at": "2026-03-28T02:51:26.486571"
+  },
+  "a774fae0_deee2c88": {
+    "video_id": "a774fae0",
+    "sha256": "deee2c88b15a9b40de7d32d5f17861dcd16e09bd22ddbdc62895aa9585e88bb4",
+    "phash": "88810600c0385080",
+    "source": "user_submission",
+    "created_at": "2026-03-28T02:52:27.026071"
+  },
+  "a8f86f2e_d69ccce4": {
+    "video_id": "a8f86f2e",
+    "sha256": "d69ccce4a0d68c6c22741cd805f246324eaea3c22195a1f28795aaf4caac1546",
+    "phash": "978e527020890c4a",
+    "source": "user_submission",
+    "created_at": "2026-03-28T02:56:03.776214"
+  },
+  "fd8251b2_4b8510fc": {
+    "video_id": "fd8251b2",
+    "sha256": "4b8510fc97d5e33ee6d82df73fa48caf21851b17e3df0a711a05625c5fa75050",
+    "phash": "959060a894508200",
+    "source": "user_submission",
+    "created_at": "2026-03-28T03:31:44.122490"
+  },
+  "4528993f_ca37b990": {
+    "video_id": "4528993f",
+    "sha256": "ca37b990492b29b9a56ad5741d7fd06de5c2316495fb7f2fdfd7054692d1d77f",
+    "phash": "e9e3d1180822420c",
+    "source": "user_submission",
+    "created_at": "2026-03-28T03:32:56.088387"
+  },
+  "591238ae_f2e461f9": {
+    "video_id": "591238ae",
+    "sha256": "f2e461f99f06db154d8946579a109397495225289675d0ee5635b0af5f4bae50",
+    "phash": "80ca0c2d63905221",
+    "source": "user_submission",
+    "created_at": "2026-03-28T03:33:46.101659"
+  },
+  "37587eb5_3621dde8": {
+    "video_id": "37587eb5",
+    "sha256": "3621dde8a0d08b0a8d39eca18482836f6c2df2306e4a84cb9b050de98519a499",
+    "phash": "a1a16f5b541463eb",
+    "source": "user_submission",
+    "created_at": "2026-03-28T03:38:49.153036"
+  },
+  "ab7f4e74_3e0e1a1e": {
+    "video_id": "ab7f4e74",
+    "sha256": "3e0e1a1e251e3fadc7e57187ea3093e4ad4ef1c2f55113bfed75f0be629b3d44",
+    "phash": "c8a88520d0ca320c",
+    "source": "user_submission",
+    "created_at": "2026-03-28T05:35:51.186473"
+  },
+  "40567552_c4275f97": {
+    "video_id": "40567552",
+    "sha256": "c4275f97df41048788e28b695438eea19e8f08d0cae6f9ffd48e0fe45013dfb2",
+    "phash": "a87a2ba6f8c00300",
+    "source": "user_submission",
+    "created_at": "2026-03-28T05:36:18.036569"
+  },
+  "9a4908ad_0adfb443": {
+    "video_id": "9a4908ad",
+    "sha256": "0adfb4432b6981377161dfce7bc041eac53631e713a288fef4701dd06027399e",
+    "phash": "c5e1920a86c65cda",
+    "source": "user_submission",
+    "created_at": "2026-03-28T05:49:28.958733"
+  },
+  "de5b4674_b8a7ccb3": {
+    "video_id": "de5b4674",
+    "sha256": "b8a7ccb3bbd5d03141d433869e0c5bb174f6dfabfeec91dd3a9f3165ee410dbf",
+    "phash": "c96d34623e9209dd",
+    "source": "user_submission",
+    "created_at": "2026-03-28T06:09:26.192805"
+  },
+  "7f0967b2_3e86c407": {
+    "video_id": "7f0967b2",
+    "sha256": "3e86c4073937075d3ce83742af19ccb2f7fd4645cea1cbe470305492d96120e2",
+    "phash": "cac090800c208300",
+    "source": "user_submission",
+    "created_at": "2026-03-28T18:50:59.261313"
+  },
+  "0a8df0c2_87f9082e": {
+    "video_id": "0a8df0c2",
+    "sha256": "87f9082e0c6c90fb9655afeb817983a6c4eac6edd6092657641f8a4b3938af7b",
+    "phash": "e180d870a00048a4",
+    "source": "user_submission",
+    "created_at": "2026-03-28T18:59:55.832173"
+  },
+  "da211449_f0896994": {
+    "video_id": "da211449",
+    "sha256": "f0896994d9fefee0376f1e822b07cf2a163c3c91ef5d420419d576db575d28c3",
+    "phash": "95a0009c3c4b1580",
+    "source": "user_submission",
+    "created_at": "2026-03-28T19:00:25.771272"
+  },
+  "31c47f69_6d0eb1c8": {
+    "video_id": "31c47f69",
+    "sha256": "6d0eb1c8c8f9721fabf74bd178aee7160e44199c95c70f455061b9ede09e5993",
+    "phash": "9be0e08280006100",
+    "source": "user_submission",
+    "created_at": "2026-03-28T19:03:24.271668"
+  },
+  "62d01cd5_c406f744": {
+    "video_id": "62d01cd5",
+    "sha256": "c406f744fbcc3bb641b9247b4cb0e643d70599200eaf422c3de5138e69419423",
+    "phash": "8895e800a102d808",
+    "source": "user_submission",
+    "created_at": "2026-03-28T19:08:03.914647"
+  },
+  "59ab098d_435354a0": {
+    "video_id": "59ab098d",
+    "sha256": "435354a08a85f9fd14051672730f4c24871a73d7fdd708467c18b47cb6b29dcd",
+    "phash": "c44a5b2d0616d83c",
+    "source": "user_submission",
+    "created_at": "2026-03-28T19:21:04.715448"
+  },
+  "79e99465_e647c31a": {
+    "video_id": "79e99465",
+    "sha256": "e647c31a1fd5d0633949d3f5ef87b57f138376e7af5942fc0363aca34f6913ab",
+    "phash": "acc0030800240211",
+    "source": "user_submission",
+    "created_at": "2026-03-28T19:39:57.209532"
+  },
+  "ff91f205_bd418008": {
+    "video_id": "ff91f205",
+    "sha256": "bd41800813c7f7706f3177c45bb95c6a8345d093d63eb761eeda2e829a644292",
+    "phash": "e0e0000080c00000",
+    "source": "user_submission",
+    "created_at": "2026-03-28T19:47:19.528439"
+  },
+  "d8326b14_1fe21819": {
+    "video_id": "d8326b14",
+    "sha256": "1fe218194c104c1796c9f67be6d4d466c60859fe2ebc5349bcb0c34376e5c986",
+    "phash": "9a6228b4611825ca",
+    "source": "user_submission",
+    "created_at": "2026-03-28T20:08:24.990495"
+  },
+  "4aa7d216_b041404b": {
+    "video_id": "4aa7d216",
+    "sha256": "b041404b3cc4c8b58eb4ca6db6e89e0c29f60ff493e53083ff3e94fe6b9623ea",
+    "phash": "e529105010880091",
+    "source": "user_submission",
+    "created_at": "2026-03-28T20:14:13.109468"
+  },
+  "ed2816dc_a26a7d10": {
+    "video_id": "ed2816dc",
+    "sha256": "a26a7d101c227688dbc9ff2033e31bdbf48efd9e3a4e265e5da1b819d5726d0e",
+    "phash": "c64c25c498632510",
+    "source": "user_submission",
+    "created_at": "2026-03-28T20:20:52.351483"
+  },
+  "51572e7f_1da23dbd": {
+    "video_id": "51572e7f",
+    "sha256": "1da23dbd992f302e170cbc6370a1cdab40f7a284f783c7d55377507641b941f4",
+    "phash": "9a61063ca5ec6304",
+    "source": "user_submission",
+    "created_at": "2026-03-29T00:20:57.639256"
+  },
+  "aaeb99d2_1c5608bc": {
+    "video_id": "aaeb99d2",
+    "sha256": "1c5608bcd128b467a78b009686b3dd5e39697735be1a5d247df359efe5142b88",
+    "phash": "e2c10e98820810c8",
+    "source": "user_submission",
+    "created_at": "2026-03-29T01:32:17.170440"
+  },
+  "8a8c2bf6_4347ef34": {
+    "video_id": "8a8c2bf6",
+    "sha256": "4347ef3463f94a8d4fa39d8b69251ec2883459cfc01666b9a2beb09167eb2736",
+    "phash": "a681d88c40f0c068",
+    "source": "user_submission",
+    "created_at": "2026-03-29T02:12:39.774896"
+  },
+  "888ae8f9_577e5083": {
+    "video_id": "888ae8f9",
+    "sha256": "577e508394cfe7010f6bb29ff05ab3e0a6d19d752b280dc45e3fb85aad983b96",
+    "phash": "85019298f2212831",
+    "source": "user_submission",
+    "created_at": "2026-03-29T02:13:38.771287"
+  },
+  "3b0ba9f4_6717add5": {
+    "video_id": "3b0ba9f4",
+    "sha256": "6717add5116ebf3779709a8e94eaaf71f6f5c534be126b2f4ae45098dc2a6a4d",
+    "phash": "8140e4a09022b8e4",
+    "source": "user_submission",
+    "created_at": "2026-03-29T02:23:30.052743"
+  },
+  "129c26e8_a777a3cc": {
+    "video_id": "129c26e8",
+    "sha256": "a777a3cc52be3afa010ee099096ac013a33144e21fa3fce48539ab640fa01e18",
+    "phash": "9a28b0c180488024",
+    "source": "user_submission",
+    "created_at": "2026-03-29T02:25:48.183527"
+  },
+  "2519a695_c045cffb": {
+    "video_id": "2519a695",
+    "sha256": "c045cffb1e00accd4dc3c84b7b1c95e00e53aca1a1745488d87d3bb236f155b1",
+    "phash": "ad40228c60218820",
+    "source": "user_submission",
+    "created_at": "2026-03-29T02:27:15.353245"
+  },
+  "1e4cbe82_08d52436": {
+    "video_id": "1e4cbe82",
+    "sha256": "08d52436641f083ba870e2c45884ae349a5c95a238863a4b6e6c72c7a9a83bad",
+    "phash": "a89260c2c006c608",
+    "source": "user_submission",
+    "created_at": "2026-03-29T02:29:31.661860"
+  },
+  "94bd0a15_7155ab1f": {
+    "video_id": "94bd0a15",
+    "sha256": "7155ab1fc9663ce84082c40f508d9450f9b677a2bc8878dcb2dc7b2187e18790",
+    "phash": "87cbda2127303867",
+    "source": "user_submission",
+    "created_at": "2026-03-29T18:16:18.433349"
+  },
+  "af4818b8_575fbaf9": {
+    "video_id": "af4818b8",
+    "sha256": "575fbaf995637a9fe22d482ad49dd52077e62bda70460b10aaeee9f16d7041d0",
+    "phash": "94a24b5c2183f220",
+    "source": "user_submission",
+    "created_at": "2026-03-29T18:52:34.618384"
+  },
+  "e38fcc65_d5b843af": {
+    "video_id": "e38fcc65",
+    "sha256": "d5b843af1474aa414c38c7f6e4c6e4c788ccdf925be79e00b2f9f052b04d8f08",
+    "phash": "9abb2a10c569600a",
+    "source": "user_submission",
+    "created_at": "2026-03-29T19:09:37.859907"
+  },
+  "1743fbde_24a3e0cf": {
+    "video_id": "1743fbde",
+    "sha256": "24a3e0cf9b305d788ee04a8ed7543c61b031c547a4162a6b2e825f85fb31af4e",
+    "phash": "971358f86c6c2c2c",
+    "source": "user_submission",
+    "created_at": "2026-03-29T19:12:28.870649"
+  },
+  "203f9d12_b6095a44": {
+    "video_id": "203f9d12",
+    "sha256": "b6095a446073b078214be873634b43e7eb9c495b419b49fee21166218d936a87",
+    "phash": "9b44448b0814b34d",
+    "source": "user_submission",
+    "created_at": "2026-03-29T19:27:25.462351"
+  },
+  "513ee1a9_661b1c4b": {
+    "video_id": "513ee1a9",
+    "sha256": "661b1c4bd6f076af884f984b4d2f85545fed25722e870ee02b3ef736fa367a4d",
+    "phash": "857860851a328568",
+    "source": "user_submission",
+    "created_at": "2026-03-29T19:29:10.395765"
+  },
+  "c96fcc23_c511e6aa": {
+    "video_id": "c96fcc23",
+    "sha256": "c511e6aa50cb33b47e0f325a67f0a2d0eb4ab1a99ee39938b89a4d116066740e",
+    "phash": "a38644e1231eb044",
+    "source": "user_submission",
+    "created_at": "2026-03-29T19:30:19.162133"
+  },
+  "6ba4a5bb_4a4cfd49": {
+    "video_id": "6ba4a5bb",
+    "sha256": "4a4cfd49cbafa3924b5a7dfffa4a09f655eb016678b2391399369e5d0e45b004",
+    "phash": "9318ea82394d45a8",
+    "source": "user_submission",
+    "created_at": "2026-03-29T19:58:16.632004"
+  },
+  "c71f209a_43c5fc44": {
+    "video_id": "c71f209a",
+    "sha256": "43c5fc44c1a7abfcadf4024a5d0ff5d393bbf8e01031ee183641e088962d073b",
+    "phash": "fc3c20a492002008",
+    "source": "user_submission",
+    "created_at": "2026-03-30T05:20:55.365355"
+  },
+  "883fc444_6a3a21c0": {
+    "video_id": "883fc444",
+    "sha256": "6a3a21c01c96b1784739c58ba5a7c7d0c9ea746c035683a4b4d527fe1d9665c2",
+    "phash": "d0c82922260f8f1e",
+    "source": "user_submission",
+    "created_at": "2026-03-29T21:24:00.541185"
+  },
+  "61a031a1_cb93ad4c": {
+    "video_id": "61a031a1",
+    "sha256": "cb93ad4c45800c17ee1fc324e22c297f5af6e3d1bfbdb8c95c7b78af42031b45",
+    "phash": "801828a9e1809c99",
+    "source": "user_submission",
+    "created_at": "2026-03-29T21:24:27.973419"
+  },
+  "d0938bd0_357bdcff": {
+    "video_id": "d0938bd0",
+    "sha256": "357bdcff29eef879073bc2d3879b01d939dac2b840ae0d6be1a6c6601077c49d",
+    "phash": "ce6e3e3ddcc00000",
+    "source": "user_submission",
+    "created_at": "2026-03-29T21:26:06.604155"
+  },
+  "fb75a50e_19fcfc1a": {
+    "video_id": "fb75a50e",
+    "sha256": "19fcfc1af6f952b3a342c96ad508bc25b68a45fd4ca584cf484e8405ae17917a",
+    "phash": "fb8134045c984032",
+    "source": "user_submission",
+    "created_at": "2026-03-29T21:27:17.745518"
+  },
+  "cbd2e39f_f3a822fc": {
+    "video_id": "cbd2e39f",
+    "sha256": "f3a822fc433284f6699e891603872f8ae9ba90de26eff332fb64100a3ce2d5ee",
+    "phash": "c8303639c06636dc",
+    "source": "user_submission",
+    "created_at": "2026-03-29T21:28:27.696579"
+  },
+  "edd259bf_dbaea012": {
+    "video_id": "edd259bf",
+    "sha256": "dbaea012601bd3f0003a5eb69cff0506d9568f65a9bc6846607116ce7dc99d97",
+    "phash": "984476e480b0184d",
+    "source": "user_submission",
+    "created_at": "2026-04-15T09:01:25.244853"
+  },
+  "6dab9245_57ce0346": {
+    "video_id": "6dab9245",
+    "sha256": "57ce0346896e9da3402635970980f67f817119e0721dc55dda22be88d9cf9f8e",
+    "phash": "b3281280f0d0009c",
+    "source": "user_submission",
+    "created_at": "2026-03-30T05:19:08.128825"
+  },
+  "6317939a_cb46ffab": {
+    "video_id": "6317939a",
+    "sha256": "cb46ffabc3f4e9a5c3670b29afedcb4e84c07e5234e145852ad53601aeb2d834",
+    "phash": "a04810248c681be0",
+    "source": "user_submission",
+    "created_at": "2026-03-30T05:36:48.301811"
+  },
+  "5f978d2f_1bad3b40": {
+    "video_id": "5f978d2f",
+    "sha256": "1bad3b4034d3678a01a873727995cb13c8baa3601181d9dfae75e9ab29ddf7c3",
+    "phash": "acc01052d8c09088",
+    "source": "user_submission",
+    "created_at": "2026-03-30T05:38:02.208412"
+  },
+  "50d1021f_68854237": {
+    "video_id": "50d1021f",
+    "sha256": "68854237cfb0c9061fd159a2fd0353bb1fac02e430a365f6c2e47710c951badc",
+    "phash": "a911103bcece0100",
+    "source": "user_submission",
+    "created_at": "2026-03-30T06:48:02.666186"
+  },
+  "567f413d_c9916ac6": {
+    "video_id": "567f413d",
+    "sha256": "c9916ac69084e90e423a305bb454931f625356cb1501e282519d12d22088b610",
+    "phash": "daa020830c948401",
+    "source": "user_submission",
+    "created_at": "2026-03-30T06:53:26.117228"
+  },
+  "4220ca17_c7042025": {
+    "video_id": "4220ca17",
+    "sha256": "c7042025ac721d9adf2a4d56f97d278b0b8d9b15c8009e6d04007bfcbb32889d",
+    "phash": "a0e3109c80109088",
+    "source": "user_submission",
+    "created_at": "2026-03-30T08:14:11.110158"
+  },
+  "34de224e_fae7235f": {
+    "video_id": "34de224e",
+    "sha256": "fae7235fee53e309244229537e3a708134721ad562fd744c227fa3a87f21641f",
+    "phash": "dada2080508000d8",
+    "source": "user_submission",
+    "created_at": "2026-03-30T07:08:36.911122"
+  },
+  "ccade940_acc26ff1": {
+    "video_id": "ccade940",
+    "sha256": "acc26ff1dada47f12f5e6126945095d5811e9f72feb1954ada0f6679e900c743",
+    "phash": "8b6f352eaa53413b",
+    "source": "user_submission",
+    "created_at": "2026-03-30T07:38:04.427799"
+  },
+  "0eff419c_b6fee473": {
+    "video_id": "0eff419c",
+    "sha256": "b6fee4738d58481b6bd1d22deb5e1284f4ac25e9c620ebf4816e758fcb342dfb",
+    "phash": "d46a68e0f082070b",
+    "source": "user_submission",
+    "created_at": "2026-03-30T20:14:29.032361"
+  },
+  "966707ee_14936a93": {
+    "video_id": "966707ee",
+    "sha256": "14936a935ede053add3c85bc36e3b0aac41f81c14f026eb0323249c296645337",
+    "phash": "9b65649b9b644936",
+    "source": "user_submission",
+    "created_at": "2026-03-30T07:45:16.806151"
+  },
+  "44b6b1cc_5fdd6be3": {
+    "video_id": "44b6b1cc",
+    "sha256": "5fdd6be3f5e07a30eb240ff6b376ef4943f5d78354e24227a427640995d20097",
+    "phash": "e9e094047080019a",
+    "source": "user_submission",
+    "created_at": "2026-03-30T19:12:33.113410"
+  },
+  "ce7877f1_65d3a7e6": {
+    "video_id": "ce7877f1",
+    "sha256": "65d3a7e68cf9498f3efc072c3389d0740e2dfa4df7e6386bdcf23fcd8453aa59",
+    "phash": "e88027d3821a8080",
+    "source": "user_submission",
+    "created_at": "2026-03-30T19:50:46.150083"
+  },
+  "961219ae_cd697872": {
+    "video_id": "961219ae",
+    "sha256": "cd69787220ab29b3c1010c1da14605baa06d41a71576af8ea0dbf6c734ecced8",
+    "phash": "c09390e002de02d4",
+    "source": "user_submission",
+    "created_at": "2026-03-30T19:53:51.222423"
+  },
+  "316df174_2da01dae": {
+    "video_id": "316df174",
+    "sha256": "2da01dae2b30aef6ee363c7372f59e977cee122faa7bb435f993a38e6c56203c",
+    "phash": "8446ca5148c82483",
+    "source": "user_submission",
+    "created_at": "2026-03-31T07:20:01.511479"
+  },
+  "8309c6a2_22082e54": {
+    "video_id": "8309c6a2",
+    "sha256": "22082e5403b1b9c6934c8b684729280c0b05900da35c52e8b03d80ef5c16085f",
+    "phash": "d42a6ea49894a580",
+    "source": "user_submission",
+    "created_at": "2026-03-30T21:44:06.585666"
+  },
+  "a4a48f59_e13ff4a9": {
+    "video_id": "a4a48f59",
+    "sha256": "e13ff4a91202b18276053b7806e2ab36a459a151e5150e3416ef74fb31ab62a3",
+    "phash": "fae874080e110208",
+    "source": "user_submission",
+    "created_at": "2026-03-30T22:16:53.904513"
+  },
+  "f9e2a5cd_0f2c69fc": {
+    "video_id": "f9e2a5cd",
+    "sha256": "0f2c69fcfc8452c0a3cb9b13e50c831e6f3cfb458141759d3a040ee78c1641d9",
+    "phash": "a58002183870a206",
+    "source": "user_submission",
+    "created_at": "2026-03-30T22:50:00.352975"
+  },
+  "d24c7189_e63aff30": {
+    "video_id": "d24c7189",
+    "sha256": "e63aff304bd937bfbeb563d87147c8e3428acc3aaa8530e2ce162652b64fccca",
+    "phash": "c81432653881cc00",
+    "source": "user_submission",
+    "created_at": "2026-03-30T22:53:15.744540"
+  },
+  "1001351f_080ed9d2": {
+    "video_id": "1001351f",
+    "sha256": "080ed9d29d087925258c6ed6c93ef8090fb2a1fb79067d17793392a24e7eeeaf",
+    "phash": "84a9a429a4803089",
+    "source": "user_submission",
+    "created_at": "2026-03-30T23:19:08.242953"
+  },
+  "135cf339_5204d57d": {
+    "video_id": "135cf339",
+    "sha256": "5204d57d591f75a52bf78b10cd11932fc97eb3f964386c4a76e7134766736617",
+    "phash": "c0e41a1961000080",
+    "source": "user_submission",
+    "created_at": "2026-03-30T23:22:52.833733"
+  },
+  "9f451641_8205aad1": {
+    "video_id": "9f451641",
+    "sha256": "8205aad1d269e79f909c6424d51963b78c4d8815cf67c0eddde888f24cdaf95e",
+    "phash": "a683c058e0008000",
+    "source": "user_submission",
+    "created_at": "2026-03-30T23:43:20.963945"
+  },
+  "91defdbb_17076775": {
+    "video_id": "91defdbb",
+    "sha256": "170767757d95d0821cb15b7b993ddbe101f7fa51274125eabe31d229bf24b156",
+    "phash": "a098ea3144120191",
+    "source": "user_submission",
+    "created_at": "2026-03-31T01:49:13.635192"
+  },
+  "824173e6_894d3e72": {
+    "video_id": "824173e6",
+    "sha256": "894d3e72b9d13bfcec174a5aca8ed453d088ca07306e260edcd8f27163c65f27",
+    "phash": "d1e0658412250408",
+    "source": "user_submission",
+    "created_at": "2026-03-31T04:33:11.470699"
+  },
+  "1258de2c_f61ed91b": {
+    "video_id": "1258de2c",
+    "sha256": "f61ed91bd9e074dbf6070ab91ab1e6382200b8d96d245e7fcfd5c602dec59887",
+    "phash": "f0a88c0090500020",
+    "source": "user_submission",
+    "created_at": "2026-03-31T04:35:52.861068"
+  },
+  "bfeab5fe_bd698b40": {
+    "video_id": "bfeab5fe",
+    "sha256": "bd698b4003029496bfe2ce7e717fee17ccffd0a87596cae831ce20eedb5d4bed",
+    "phash": "8aad7050c4495a33",
+    "source": "user_submission",
+    "created_at": "2026-03-31T06:15:46.553533"
+  },
+  "89de5622_976fb353": {
+    "video_id": "89de5622",
+    "sha256": "976fb3530909ab4dbc44177155518b8379a9d97a0a24b1fda2f8517ac5093039",
+    "phash": "d982c63490244401",
+    "source": "user_submission",
+    "created_at": "2026-03-31T07:37:48.274387"
+  },
+  "d9fb5551_780b960c": {
+    "video_id": "d9fb5551",
+    "sha256": "780b960c43688d9f0ec5da182b4bd26c576fa4a127a2765ce260392de5fc5dd7",
+    "phash": "f4434b9c0b7108b7",
+    "source": "user_submission",
+    "created_at": "2026-03-31T07:47:12.265126"
+  },
+  "ce51dff9_48dcc3f1": {
+    "video_id": "ce51dff9",
+    "sha256": "48dcc3f1e3bb10204bc5970d5b6d9882512ed2b20f147b5fdb499a0c26c977d5",
+    "phash": "fb8114045c984032",
+    "source": "user_submission",
+    "created_at": "2026-03-31T07:50:58.335140"
+  },
+  "4c515ad6_cac0a4f4": {
+    "video_id": "4c515ad6",
+    "sha256": "cac0a4f4e2f720dc79121425d824f08dfb7f3ae64a9103f2b6d5ccccb65202f5",
+    "phash": "e09c1ad819c42e63",
+    "source": "user_submission",
+    "created_at": "2026-03-31T08:04:18.644319"
+  },
+  "3941133a_97649335": {
+    "video_id": "3941133a",
+    "sha256": "97649335bc4bdd7ba3ef4c1eda059e66275ab4d1c472d2f53c581a03a1112139",
+    "phash": "eb98a540061b1862",
+    "source": "user_submission",
+    "created_at": "2026-03-31T08:25:49.377660"
+  },
+  "945886a3_137dcfbd": {
+    "video_id": "945886a3",
+    "sha256": "137dcfbd66fef838d19cf110c89d8cb44ce038e5474fda1d301311b59a7e70ed",
+    "phash": "84a93594c0321622",
+    "source": "user_submission",
+    "created_at": "2026-03-31T09:30:24.316324"
+  },
+  "2df6ce7c_2026cd48": {
+    "video_id": "2df6ce7c",
+    "sha256": "2026cd4838cefb0606a655ab04d8090b678b7268bcc3193344bc0313f631eb40",
+    "phash": "a89470c09100c101",
+    "source": "user_submission",
+    "created_at": "2026-03-31T09:36:32.704796"
+  },
+  "82891f1a_0c39a2e5": {
+    "video_id": "82891f1a",
+    "sha256": "0c39a2e58a96b8e6d5ca787e115ef3c113af751a406e2cad23ddc135a5795eb8",
+    "phash": "a19ec0e1080402c3",
+    "source": "user_submission",
+    "created_at": "2026-03-31T09:51:56.445445"
+  },
+  "af68ff9f_4dbd114b": {
+    "video_id": "af68ff9f",
+    "sha256": "4dbd114b7fb382d98458329b5a0ec9532fe0eadabd32495d3e166ec583a05a1c",
+    "phash": "c2e0272510c60098",
+    "source": "user_submission",
+    "created_at": "2026-03-31T10:08:23.808446"
+  },
+  "b8fbfa75_5939b7be": {
+    "video_id": "b8fbfa75",
+    "sha256": "5939b7bee273d3b81e1de00a7ce5d1c99f67ce6dc76d4d56e70917c6944017bb",
+    "phash": "b1b5989200888001",
+    "source": "user_submission",
+    "created_at": "2026-03-31T10:31:18.031878"
+  },
+  "6842bee5_9d342d03": {
+    "video_id": "6842bee5",
+    "sha256": "9d342d0381dd137dda6cf8668fe2538e0df90d68694a127024c852bbbf502d59",
+    "phash": "86186c49a3328612",
+    "source": "user_submission",
+    "created_at": "2026-03-31T10:36:06.404988"
+  },
+  "85c07719_6c4c7dec": {
+    "video_id": "85c07719",
+    "sha256": "6c4c7decb49b906f0e21cf619c966ec417761fa4c94aafd8ab3e66683415d0cf",
+    "phash": "a8242052016003c0",
+    "source": "user_submission",
+    "created_at": "2026-03-31T11:19:50.556932"
+  },
+  "4d5ebdca_a32be061": {
+    "video_id": "4d5ebdca",
+    "sha256": "a32be0618d2d092fc1d2425860ed84450351b7edd3aa822d81c3d8c490cf2599",
+    "phash": "83734a043504d0a8",
+    "source": "user_submission",
+    "created_at": "2026-03-31T11:19:18.462074"
+  },
+  "80ab542d_b6af1181": {
+    "video_id": "80ab542d",
+    "sha256": "b6af118126fef4c3d02e4df1f5487e212c9bf4ec429a5473ecedb7804ea76896",
+    "phash": "e0e2090c00004810",
+    "source": "user_submission",
+    "created_at": "2026-03-31T20:42:47.318865"
+  },
+  "83a0a256_7ebf5237": {
+    "video_id": "83a0a256",
+    "sha256": "7ebf5237ddc54e918c41ffb3b8b1b5f1f68f66d5419d83f438f4534425f8907c",
+    "phash": "dd70210e420c8090",
+    "source": "user_submission",
+    "created_at": "2026-03-31T21:18:00.916670"
+  },
+  "aaab004b_eb683031": {
+    "video_id": "aaab004b",
+    "sha256": "eb683031bf2ea19dae5e7f5a170b72e5abf419df1403378426a4bbafda208dde",
+    "phash": "a8e8c00112828690",
+    "source": "user_submission",
+    "created_at": "2026-03-31T23:07:33.557775"
+  },
+  "85373dc1_2b3302e9": {
+    "video_id": "85373dc1",
+    "sha256": "2b3302e926679e831ffc6f459f52188d5e6dbcc04431ac82fa8fbaad6863be3e",
+    "phash": "dce122122090e090",
+    "source": "user_submission",
+    "created_at": "2026-03-31T23:51:19.194725"
+  },
+  "7bc41d05_a2b4aa9f": {
+    "video_id": "7bc41d05",
+    "sha256": "a2b4aa9ff34cf7c29591891540c6027c0714a2f1d198d9e8b712c8d24a8f5e86",
+    "phash": "df61402084ac4040",
+    "source": "user_submission",
+    "created_at": "2026-04-01T00:21:39.097132"
+  },
+  "d6287c0a_aa353df8": {
+    "video_id": "d6287c0a",
+    "sha256": "aa353df82477777263587ec0ddbba18be60cc620dde8a13f5724515b2ccca15b",
+    "phash": "e39014e084082488",
+    "source": "user_submission",
+    "created_at": "2026-04-01T00:37:18.711679"
+  },
+  "f3b72ba9_0b85ddb8": {
+    "video_id": "f3b72ba9",
+    "sha256": "0b85ddb823b9c30cf74a4d55e2ede4f1cffb586fcc35c9445114ce2af176dde8",
+    "phash": "8580100104200881",
+    "source": "user_submission",
+    "created_at": "2026-04-01T00:39:33.513231"
+  },
+  "7411c9f0_37a10bd2": {
+    "video_id": "7411c9f0",
+    "sha256": "37a10bd2348ccf73ec6a8ff3550b584910093929fc58e76143abc47a7f749bb5",
+    "phash": "cc3ab34fccb221e8",
+    "source": "user_submission",
+    "created_at": "2026-04-01T00:40:34.695907"
+  },
+  "f772b883_3f204f26": {
+    "video_id": "f772b883",
+    "sha256": "3f204f2604daffc295c8257bc522ddb99e2bfae7d9cb536574a008dc4d5d905d",
+    "phash": "eaa0801490083808",
+    "source": "user_submission",
+    "created_at": "2026-04-01T04:00:11.455563"
+  },
+  "5b4dfc91_0e03a03c": {
+    "video_id": "5b4dfc91",
+    "sha256": "0e03a03c413af75320a7075bdd6bfe7b412ccef62aa6a6f6556fcc86e14a107c",
+    "phash": "9d82c029c45c3238",
+    "source": "user_submission",
+    "created_at": "2026-04-01T04:05:01.758842"
+  },
+  "6291fc17_7879575c": {
+    "video_id": "6291fc17",
+    "sha256": "7879575c3bce8fa01475e675af0afe268ff069cb8942d254c4c69264941d617c",
+    "phash": "8590e03448801800",
+    "source": "user_submission",
+    "created_at": "2026-04-01T05:23:47.908095"
+  },
+  "b5f507c4_1fd9e24b": {
+    "video_id": "b5f507c4",
+    "sha256": "1fd9e24ba68b8a98183882c2d59a7fb246c9b5e61f60bd37ae5d6d41e3541053",
+    "phash": "be20c03080004000",
+    "source": "user_submission",
+    "created_at": "2026-04-01T05:26:45.767746"
+  },
+  "93bad68b_19b20de4": {
+    "video_id": "93bad68b",
+    "sha256": "19b20de4430933cc56879d35c7fe6bffd5bb06b86f137077a6cb8514d21dcb25",
+    "phash": "a8a18594a78c9c56",
+    "source": "user_submission",
+    "created_at": "2026-04-01T05:29:02.105887"
+  },
+  "311f8c07_a2f4585d": {
+    "video_id": "311f8c07",
+    "sha256": "a2f4585d99d6aa0e5ca89f33543aa254441f8f2686bf0a0cd28044b0cae1035f",
+    "phash": "98e833920444c044",
+    "source": "user_submission",
+    "created_at": "2026-04-01T07:20:02.123264"
+  },
+  "65126959_8a673474": {
+    "video_id": "65126959",
+    "sha256": "8a67347473a6eb0cdccf92484df3e2832eb4473c12f66dd39962e403efcf2719",
+    "phash": "94804000120c0000",
+    "source": "user_submission",
+    "created_at": "2026-04-01T07:26:34.353810"
+  },
+  "7f6c05e5_63406876": {
+    "video_id": "7f6c05e5",
+    "sha256": "63406876b4f9ae0d6160af023206156f2ed0d7f18d02864ce09d9f3ecf88d29c",
+    "phash": "a2320c0c4390686d",
+    "source": "user_submission",
+    "created_at": "2026-04-01T08:25:52.665194"
+  },
+  "c71f209a_b6af1181": {
+    "video_id": "c71f209a",
+    "sha256": "b6af118126fef4c3d02e4df1f5487e212c9bf4ec429a5473ecedb7804ea76896",
+    "phash": "e0e2090c00004810",
+    "source": "user_submission",
+    "created_at": "2026-04-01T09:02:47.434598"
+  },
+  "b0410323_b85bde8d": {
+    "video_id": "b0410323",
+    "sha256": "b85bde8d4a73d2a00eae08014d5abf62b9571552fc7af0e359a6d220076f9e4d",
+    "phash": "a58030d0cc621230",
+    "source": "user_submission",
+    "created_at": "2026-04-01T11:07:13.713419"
+  },
+  "faefbb77_4f08623d": {
+    "video_id": "faefbb77",
+    "sha256": "4f08623df9e9032ce65bdc1407d3f7b4b2a48fd84e5754b3a21b705ca449cfd1",
+    "phash": "aa273002138902a0",
+    "source": "user_submission",
+    "created_at": "2026-04-01T13:17:14.957118"
+  },
+  "46ef4c69_6dab01bd": {
+    "video_id": "46ef4c69",
+    "sha256": "6dab01bd5fe33f1e419497b059821364e7adf3dfbb6f6a3cd5ce999afb0f5a44",
+    "phash": "a82850188134000a",
+    "source": "user_submission",
+    "created_at": "2026-04-01T14:49:24.068079"
+  },
+  "31d6f22e_465942bd": {
+    "video_id": "31d6f22e",
+    "sha256": "465942bdc9539e7c1938e36e70a0824692ef2f74910add111dc08cce1fe66fb2",
+    "phash": "8c0192c200995820",
+    "source": "user_submission",
+    "created_at": "2026-04-03T01:23:19.004984"
+  },
+  "62bbdb2e_bee42b1b": {
+    "video_id": "62bbdb2e",
+    "sha256": "bee42b1b6f6acb2b1d49a084c58e85e189c3e18f55c6b0a0bdfdbfa4daf1f6bf",
+    "phash": "b8a0c2aa0444004c",
+    "source": "user_submission",
+    "created_at": "2026-04-02T05:41:10.170987"
+  },
+  "8f92c07f_3229cc61": {
+    "video_id": "8f92c07f",
+    "sha256": "3229cc61eb0a386ef8b7782ac5104f30991dbfc8badd18eaee1880c46d2da557",
+    "phash": "8ce0c00c00108080",
+    "source": "user_submission",
+    "created_at": "2026-04-03T04:41:39.018380"
+  },
+  "db09c653_b329cceb": {
+    "video_id": "db09c653",
+    "sha256": "b329cceb81d6a4ed140b9dba1c55d6e25448c585e37250017b0643df53e56292",
+    "phash": "986f3610541252e8",
+    "source": "user_submission",
+    "created_at": "2026-04-03T04:45:28.026758"
+  },
+  "d163958b_94df2b5b": {
+    "video_id": "d163958b",
+    "sha256": "94df2b5b219f3775a0f9583a2e2819b7f6fd02788ffa32827e145c9e0c5bf0ad",
+    "phash": "a9b932544a7400c0",
+    "source": "user_submission",
+    "created_at": "2026-04-03T06:53:11.312745"
+  },
+  "4cb9dec0_a150b07d": {
+    "video_id": "4cb9dec0",
+    "sha256": "a150b07df292f9f4e46c29c64850633cb021e65851c3856d8c8c686a11111c01",
+    "phash": "95c5080125980822",
+    "source": "user_submission",
+    "created_at": "2026-04-03T07:15:34.160077"
+  },
+  "b706c9cb_764905d7": {
+    "video_id": "b706c9cb",
+    "sha256": "764905d7dc6dd234fea53fa0e6ebc55c76d68a19aeac5466ab2ead062ae715d0",
+    "phash": "ec24829a18038490",
+    "source": "user_submission",
+    "created_at": "2026-04-03T07:22:44.679797"
+  },
+  "def05234_34868bbf": {
+    "video_id": "def05234",
+    "sha256": "34868bbf31696d8a62432326b94ba222a768a199fcc73a760cd394a05fcbeae0",
+    "phash": "f9a0a4c05a1c5121",
+    "source": "user_submission",
+    "created_at": "2026-04-03T18:29:21.502828"
+  },
+  "37482085_4fe2bad8": {
+    "video_id": "37482085",
+    "sha256": "4fe2bad80415a200ff5830135485af59bc349454ea829684d39ec2135b785ec1",
+    "phash": "ac8edcf04ba5d49a",
+    "source": "user_submission",
+    "created_at": "2026-04-03T20:37:43.013769"
+  },
+  "e851955b_7a5ae4d8": {
+    "video_id": "e851955b",
+    "sha256": "7a5ae4d8f438e0297b2065bcfaa8902a153d2fa434d89dccec04b7186620968a",
+    "phash": "b0804c4910868608",
+    "source": "user_submission",
+    "created_at": "2026-04-03T20:39:05.854865"
+  },
+  "331a4caa_80fa20c6": {
+    "video_id": "331a4caa",
+    "sha256": "80fa20c6140ed723c2f19d0abc6495c5b354332cb69c33b47e76ec91a6121e8a",
+    "phash": "9964669158c66619",
+    "source": "user_submission",
+    "created_at": "2026-04-03T20:40:39.737274"
+  },
+  "0f6828a1_63172bee": {
+    "video_id": "0f6828a1",
+    "sha256": "63172bee4fa9da24b164f46e226611058e5b2722bb6f0d22a0f309347b50b11a",
+    "phash": "816896600f522912",
+    "source": "user_submission",
+    "created_at": "2026-04-04T07:35:11.189988"
+  },
+  "cfce7cfb_dcc10e5f": {
+    "video_id": "cfce7cfb",
+    "sha256": "dcc10e5f8919e4ffab5b895d542dfd87f42d5964232bc0814fc4a0a27aed945a",
+    "phash": "cd0c3679b1268946",
+    "source": "user_submission",
+    "created_at": "2026-04-04T07:41:52.074690"
+  },
+  "d7904eec_96ce689c": {
+    "video_id": "d7904eec",
+    "sha256": "96ce689c73acd40313a13838d066da0cb49d639709fc41dd4b2d1352e7755062",
+    "phash": "d0a99448944a0068",
+    "source": "user_submission",
+    "created_at": "2026-04-04T07:56:39.637341"
+  },
+  "f63c439e_5688dcd0": {
+    "video_id": "f63c439e",
+    "sha256": "5688dcd032e72977ee71e2f27658de9a834d470cd59145bf94ebfb88e83bb40c",
+    "phash": "b9b91090e0000040",
+    "source": "user_submission",
+    "created_at": "2026-04-04T08:25:12.780558"
+  },
+  "a9bc5793_54ea2304": {
+    "video_id": "a9bc5793",
+    "sha256": "54ea23041af68bcdaf236aa4588cb248ead66086941c116e6990600977fb6a2e",
+    "phash": "d86824c264826783",
+    "source": "user_submission",
+    "created_at": "2026-04-04T08:38:37.936409"
+  },
+  "152b219e_07ea587b": {
+    "video_id": "152b219e",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-04T22:41:21.714690"
+  },
+  "d746d7b6_07ea587b": {
+    "video_id": "d746d7b6",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-04T22:42:56.061548"
+  },
+  "91ea4cab_07ea587b": {
+    "video_id": "91ea4cab",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T03:02:56.444223"
+  },
+  "8925eba8_07ea587b": {
+    "video_id": "8925eba8",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T03:03:06.419532"
+  },
+  "e44383f2_07ea587b": {
+    "video_id": "e44383f2",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T03:03:20.040730"
+  },
+  "2c8f2a6e_07ea587b": {
+    "video_id": "2c8f2a6e",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T03:15:09.424175"
+  },
+  "92e50f74_07ea587b": {
+    "video_id": "92e50f74",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T03:15:18.441194"
+  },
+  "6e8487fb_07ea587b": {
+    "video_id": "6e8487fb",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T03:16:54.159361"
+  },
+  "10c2a853_07ea587b": {
+    "video_id": "10c2a853",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T03:34:40.120925"
+  },
+  "ec1cbcc6_07ea587b": {
+    "video_id": "ec1cbcc6",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T03:34:50.808159"
+  },
+  "9b551a14_07ea587b": {
+    "video_id": "9b551a14",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T03:35:00.892919"
+  },
+  "1caeffbb_3d2ecd3d": {
+    "video_id": "1caeffbb",
+    "sha256": "3d2ecd3d3075fbc576d0a2fd0380d11892802a902e86b2149237b699199f76ea",
+    "phash": "85583e64e14b6938",
+    "source": "user_submission",
+    "created_at": "2026-04-05T06:02:36.116433"
+  },
+  "0c38c33b_07ea587b": {
+    "video_id": "0c38c33b",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T06:02:43.781897"
+  },
+  "46598560_07ea587b": {
+    "video_id": "46598560",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T06:02:54.621900"
+  },
+  "c07a74cd_07ea587b": {
+    "video_id": "c07a74cd",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-05T06:03:03.792778"
+  },
+  "ba028763_e42f9fce": {
+    "video_id": "ba028763",
+    "sha256": "e42f9fceaed008d9c2f7ca9adee1f3b5eaa3d69e28197efc49d9da6d63e3fb3c",
+    "phash": "b9e0861ae8610124",
+    "source": "user_submission",
+    "created_at": "2026-04-06T14:48:51.893682"
+  },
+  "203bae40_42ce6a45": {
+    "video_id": "203bae40",
+    "sha256": "42ce6a45a614758a44669f9a9456f23a49710813a401ce8b4ad43faab1db30d5",
+    "phash": "8c677318249373c9",
+    "source": "user_submission",
+    "created_at": "2026-04-06T15:11:46.119231"
+  },
+  "37a851f1_a55e8f85": {
+    "video_id": "37a851f1",
+    "sha256": "a55e8f85220f1c633f086b7b49dd11400b545a93b777f92df5606ec8b49f164d",
+    "phash": "c1b4409280890820",
+    "source": "user_submission",
+    "created_at": "2026-04-06T15:51:11.253647"
+  },
+  "10bef77d_be2d50fb": {
+    "video_id": "10bef77d",
+    "sha256": "be2d50fb014d898a790ff8d7c4c57a4fce443926bc95cc0dfc44c9f490fa4cb5",
+    "phash": "92692972a79c588a",
+    "source": "user_submission",
+    "created_at": "2026-04-06T16:27:43.066956"
+  },
+  "7e244adf_596b0d34": {
+    "video_id": "7e244adf",
+    "sha256": "596b0d34e72156124272586581ea01a481b116453a45c037e8cbe4416c9efc86",
+    "phash": "80686084872a1600",
+    "source": "user_submission",
+    "created_at": "2026-04-06T17:52:10.990795"
+  },
+  "a0d7ebe6_07ea587b": {
+    "video_id": "a0d7ebe6",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-06T18:05:00.580406"
+  },
+  "5c05e527_07ea587b": {
+    "video_id": "5c05e527",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-07T03:02:14.669734"
+  },
+  "fd5c770b_962ead41": {
+    "video_id": "fd5c770b",
+    "sha256": "962ead41100e22d8e444a8b98f98a0b9eca14d624a135c1f99a4056ad2e7225e",
+    "phash": "8128acda42c2f045",
+    "source": "user_submission",
+    "created_at": "2026-04-07T03:02:33.926229"
+  },
+  "b9d33735_c4cb035e": {
+    "video_id": "b9d33735",
+    "sha256": "c4cb035e70776dc1386c3146ce17b8a732b1f86f817f5a9dd49f4e2ec5b8a6fa",
+    "phash": "900279c5090f5fe8",
+    "source": "user_submission",
+    "created_at": "2026-04-07T10:18:03.751699"
+  },
+  "61ebe380_9cd4332a": {
+    "video_id": "61ebe380",
+    "sha256": "9cd4332a329636b697c4f014aabd5c0404ecfb387d2b117db89ec8bfde353163",
+    "phash": "e9341215d80ce022",
+    "source": "user_submission",
+    "created_at": "2026-04-07T10:05:27.855642"
+  },
+  "9341adbb_b004fa85": {
+    "video_id": "9341adbb",
+    "sha256": "b004fa851b6d13cdfb0b97c799311e6e479460db9868ba490bd0645e0a00b609",
+    "phash": "89687e6f25c29696",
+    "source": "user_submission",
+    "created_at": "2026-04-07T10:47:53.178565"
+  },
+  "66733863_14038fa2": {
+    "video_id": "66733863",
+    "sha256": "14038fa27795b57452a7b37c0fad857cfe3c45c7f2fa012885af70f12f1d7a70",
+    "phash": "8d6af0f015adaa0e",
+    "source": "user_submission",
+    "created_at": "2026-04-07T11:36:07.830923"
+  },
+  "4b058b51_cb3dd84c": {
+    "video_id": "4b058b51",
+    "sha256": "cb3dd84c46ba6097ee2140905c32f920c2f7cd9c2964d73fcb8d7478b5013fc2",
+    "phash": "d8637c5800808000",
+    "source": "user_submission",
+    "created_at": "2026-04-08T07:37:10.582838"
+  },
+  "359fb6c3_1fc3e004": {
+    "video_id": "359fb6c3",
+    "sha256": "1fc3e004412435d5823fe85f1dba4a3915d9318673ab11105ed83a2d00f71273",
+    "phash": "c65173e438503cf0",
+    "source": "user_submission",
+    "created_at": "2026-04-08T17:30:32.570744"
+  },
+  "96809b2b_666cb867": {
+    "video_id": "96809b2b",
+    "sha256": "666cb867ba632c9e33fce9641cad4b2c7da6d1d4f995b1ea633ab3daf3200af0",
+    "phash": "f94464081ef224a5",
+    "source": "user_submission",
+    "created_at": "2026-04-08T18:22:56.255853"
+  },
+  "55ac9480_07ea587b": {
+    "video_id": "55ac9480",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-08T19:22:27.257432"
+  },
+  "88e1a1ab_07ea587b": {
+    "video_id": "88e1a1ab",
+    "sha256": "07ea587b68161a2f0ba6fae5357c2d7ba1c10f3ef52a841b5658c4353ce7da81",
+    "phash": "a419860b09810986",
+    "source": "user_submission",
+    "created_at": "2026-04-08T19:28:57.597465"
+  },
+  "46b7bdc6_5f2f8d9a": {
+    "video_id": "46b7bdc6",
+    "sha256": "5f2f8d9a34cc8a44e3336a64d4f6a7096bdc3e9a6e2a7239022f218da05a7007",
+    "phash": "838031113300a948",
+    "source": "user_submission",
+    "created_at": "2026-04-08T20:13:56.800356"
+  },
+  "304b6f41_55ced89a": {
+    "video_id": "304b6f41",
+    "sha256": "55ced89ad686cb5b990328d8e6c703975bac932a4aceb6e663a033a0bccf2e89",
+    "phash": "ec482421800a0040",
+    "source": "user_submission",
+    "created_at": "2026-04-08T20:44:38.269960"
+  },
+  "60b4e9eb_e5344a27": {
+    "video_id": "60b4e9eb",
+    "sha256": "e5344a279c92106449d462e477c7827566667e2c6f0bbb1b00ba6784e98436d1",
+    "phash": "88e926880907d049",
+    "source": "user_submission",
+    "created_at": "2026-04-08T21:40:21.169014"
+  },
+  "fdc756b5_66fb377e": {
+    "video_id": "fdc756b5",
+    "sha256": "66fb377e64857eee400dda4d4bc15a06991c053433112be1ca00548f590fbf2a",
+    "phash": "d3c2600004261e99",
+    "source": "user_submission",
+    "created_at": "2026-04-08T22:23:06.184835"
+  },
+  "aaea2eb3_c00ecfdf": {
+    "video_id": "aaea2eb3",
+    "sha256": "c00ecfdf3877ac3a331e032ff502111cb9bf41abb3e4297927fb8c4d0f27267b",
+    "phash": "803c54c3a8c81c50",
+    "source": "user_submission",
+    "created_at": "2026-04-08T22:44:52.189010"
+  },
+  "8cca4d31_8daea389": {
+    "video_id": "8cca4d31",
+    "sha256": "8daea389de45d20b87f4f3cecf941d41c4e795d24c83aea45fd12e28009164f0",
+    "phash": "983c9450c0404260",
+    "source": "user_submission",
+    "created_at": "2026-04-08T23:16:21.381582"
+  },
+  "45057b55_609fd93b": {
+    "video_id": "45057b55",
+    "sha256": "609fd93bdb8c86a36cabda0879043326e36a5c132a58819a6ef96da6dedf3f4b",
+    "phash": "e1945a1a18693476",
+    "source": "user_submission",
+    "created_at": "2026-04-08T23:53:08.351710"
+  },
+  "777f774d_8ca7e8a5": {
+    "video_id": "777f774d",
+    "sha256": "8ca7e8a599ff2de7fcbab52a51fba91294b46892a64cf46f655a01f9f921fbc0",
+    "phash": "9465676a8952764c",
+    "source": "user_submission",
+    "created_at": "2026-04-09T00:06:50.395571"
+  },
+  "6053e693_88658382": {
+    "video_id": "6053e693",
+    "sha256": "886583828700ec8f0b660fb0c5d591511c08980af723d43431f4124382502bd3",
+    "phash": "9a2c6162e39696ca",
+    "source": "user_submission",
+    "created_at": "2026-04-09T07:06:40.856158"
+  },
+  "ef26da1f_6b7f6cb9": {
+    "video_id": "ef26da1f",
+    "sha256": "6b7f6cb90328b467429aae99e82e7adb2428812682c3650c683a992ebf69eb17",
+    "phash": "e5590c22a0301191",
+    "source": "user_submission",
+    "created_at": "2026-04-09T07:53:37.198316"
+  },
+  "4f2f9766_221d1ab6": {
+    "video_id": "4f2f9766",
+    "sha256": "221d1ab6fd305471883f02144b52d3e10b300d6e22f20aa51a30dd0e26d3105a",
+    "phash": "ce21dcc22426c030",
+    "source": "user_submission",
+    "created_at": "2026-04-09T08:27:36.434071"
+  },
+  "b9794077_c1216fe0": {
+    "video_id": "b9794077",
+    "sha256": "c1216fe0c099773734431161905177d966c051e5de5e4b8085bf07291966cbc0",
+    "phash": "c5b8c2c6c0008000",
+    "source": "user_submission",
+    "created_at": "2026-04-09T13:47:03.267628"
+  },
+  "bdb1cab3_1aa441ac": {
+    "video_id": "bdb1cab3",
+    "sha256": "1aa441ac2ff7c0b9526cef13eba70636832e7f5de27a734d9eac9203cfa846aa",
+    "phash": "807f50981f4740a1",
+    "source": "user_submission",
+    "created_at": "2026-04-09T14:32:12.244017"
+  },
+  "99647513_1eb3fc8b": {
+    "video_id": "99647513",
+    "sha256": "1eb3fc8bf6d885cf0e39711b503b27029f536639227ab8545f6c412b0d7306ee",
+    "phash": "daa52040810800f0",
+    "source": "user_submission",
+    "created_at": "2026-04-09T14:56:53.563521"
+  },
+  "dd219ee5_2d2d9dc5": {
+    "video_id": "dd219ee5",
+    "sha256": "2d2d9dc59894ced504c70a55c8b37411429a849b5ca4d79a93c0896a954c6903",
+    "phash": "e6c0059890011080",
+    "source": "user_submission",
+    "created_at": "2026-04-09T16:39:36.923024"
+  },
+  "0b5d1bc2_0aa28b8e": {
+    "video_id": "0b5d1bc2",
+    "sha256": "0aa28b8ec7ce5319e340ec766b365033d26c976399b8230c644f241fe1d179b6",
+    "phash": "b8a3e6d609a88480",
+    "source": "user_submission",
+    "created_at": "2026-04-09T17:34:46.013533"
+  },
+  "234b7dfc_0829ba84": {
+    "video_id": "234b7dfc",
+    "sha256": "0829ba842ec316df7b4ad9abac64957be0ee07ccc4dd7527c9fb2965d39c7888",
+    "phash": "882d120b04901b0a",
+    "source": "user_submission",
+    "created_at": "2026-04-09T18:11:48.314895"
+  },
+  "eae07e69_00d72235": {
+    "video_id": "eae07e69",
+    "sha256": "00d72235851861c2578de6d5c80bc304c450db4bea2cf62ba3dacc2b9d4d0e6d",
+    "phash": "b0c8c020c0021e30",
+    "source": "user_submission",
+    "created_at": "2026-04-09T18:47:38.795899"
+  },
+  "0997c605_073e7aeb": {
+    "video_id": "0997c605",
+    "sha256": "073e7aeb8458edfbb93e6a4516fc0b38a32caeb45283ea1c261db16ceaaff186",
+    "phash": "92716fe11a14b2e0",
+    "source": "user_submission",
+    "created_at": "2026-04-09T18:53:59.837958"
+  },
+  "cfe9ffb6_b8645fd5": {
+    "video_id": "cfe9ffb6",
+    "sha256": "b8645fd53f9abc399496d6f20cfe686ec8bf2cab1af6249ca12e825a7b4684ab",
+    "phash": "9a692680c09c6365",
+    "source": "user_submission",
+    "created_at": "2026-04-09T19:18:12.135675"
+  },
+  "04620f18_1cc28394": {
+    "video_id": "04620f18",
+    "sha256": "1cc2839404103197c258237ecd498313200bedcbebdefbedcf1d08b6b472d6ac",
+    "phash": "881de57193d02d46",
+    "source": "user_submission",
+    "created_at": "2026-04-09T19:35:47.188639"
+  },
+  "adef684a_a74267bc": {
+    "video_id": "adef684a",
+    "sha256": "a74267bc7b9055d3d486b754e1cad080d0a601f23064801fbec6a1fca87c6003",
+    "phash": "83a0311533288949",
+    "source": "user_submission",
+    "created_at": "2026-04-09T19:59:58.122122"
+  },
+  "14f7964f_0c30fbe1": {
+    "video_id": "14f7964f",
+    "sha256": "0c30fbe1397aa404bf654178f6dfa572ee7f95c168bf336262c760ba430c2e1f",
+    "phash": "809081878e243000",
+    "source": "user_submission",
+    "created_at": "2026-04-10T06:08:00.341417"
+  },
+  "8dcf05c4_3a53bb6f": {
+    "video_id": "8dcf05c4",
+    "sha256": "3a53bb6f11bd5d56e21deefd9cc2376487f922106012e0a2a48c41da3b07d8cb",
+    "phash": "931258e56c6c4df1",
+    "source": "user_submission",
+    "created_at": "2026-04-10T06:38:13.641358"
+  },
+  "75a1872b_662b04b0": {
+    "video_id": "75a1872b",
+    "sha256": "662b04b0604c431108383444428d2d8463dc117fe81fa089dae0fea151374d10",
+    "phash": "c9e0260c00802288",
+    "source": "user_submission",
+    "created_at": "2026-04-10T07:33:26.853907"
+  },
+  "0d1f660e_d3d537ec": {
+    "video_id": "0d1f660e",
+    "sha256": "d3d537ecb2e53109509d1f4de2f62711797715d0252e248fb479581910f960e1",
+    "phash": "d00a008000202000",
+    "source": "user_submission",
+    "created_at": "2026-04-10T08:11:28.639874"
+  },
+  "840d6b52_0be5e9dc": {
+    "video_id": "840d6b52",
+    "sha256": "0be5e9dc622d70bf0791ee71eb378b8a989b218596054050cef6d706ca523b75",
+    "phash": "a00606d21b095309",
+    "source": "user_submission",
+    "created_at": "2026-04-10T08:50:05.834291"
+  },
+  "80bc7ce5_81089f55": {
+    "video_id": "80bc7ce5",
+    "sha256": "81089f5581791b9959c718d86fadd4ff0d7086b768bc534aaf715114d87dd70a",
+    "phash": "9465671a7b79a448",
+    "source": "user_submission",
+    "created_at": "2026-04-10T10:23:25.013516"
+  },
+  "46523493_043fa8d4": {
+    "video_id": "46523493",
+    "sha256": "043fa8d428a9a3f53aac9014cf93f7e892da16620d8f9d83659cde09e31b9c21",
+    "phash": "c49a6b421ae54e8a",
+    "source": "user_submission",
+    "created_at": "2026-04-12T13:34:10.668158"
+  },
+  "64d8537e_ba965bc6": {
+    "video_id": "64d8537e",
+    "sha256": "ba965bc66a155bf73bce5cfbbdddd2a2fc443eddbc9bdfb43d1bad8a44c828f9",
+    "phash": "a0a8822082820022",
+    "source": "user_submission",
+    "created_at": "2026-04-12T13:57:58.564100"
+  },
+  "5bf19e93_e260dec0": {
+    "video_id": "5bf19e93",
+    "sha256": "e260dec0fac233ed9a956cfd9d1a94855f1be5e5b667f662188e513d2112ed66",
+    "phash": "929a20621895f489",
+    "source": "user_submission",
+    "created_at": "2026-04-14T18:14:42.196166"
+  },
+  "31c7f981_faf71da9": {
+    "video_id": "31c7f981",
+    "sha256": "faf71da9e9e82fd064149c9bd54d3f5017151c8729ced3312c88bb92b929f1f6",
+    "phash": "888027cf7830c080",
+    "source": "user_submission",
+    "created_at": "2026-04-14T18:36:06.849196"
+  },
+  "11202199_3a44f10f": {
+    "video_id": "11202199",
+    "sha256": "3a44f10fa93985ee2a66b90006d5b4454dfc401c991b46615859e320150771c5",
+    "phash": "d036108140242486",
+    "source": "user_submission",
+    "created_at": "2026-04-14T19:38:18.793822"
+  },
+  "fc5e75aa_f4d9653b": {
+    "video_id": "fc5e75aa",
+    "sha256": "f4d9653bc62c8bd94b951b0c99c4a672c113e7e97dd729761f94aa4ddddb14ea",
+    "phash": "b45a3861f11529c0",
+    "source": "user_submission",
+    "created_at": "2026-04-14T20:39:40.162207"
+  },
+  "18873534_a01e98c1": {
+    "video_id": "18873534",
+    "sha256": "a01e98c1b8bccf038537caa8d2ee687620ba3b05c55c6cdc67e1e9a70925f89a",
+    "phash": "8d3031e77649c1c6",
+    "source": "user_submission",
+    "created_at": "2026-04-15T08:34:02.997246"
+  },
+  "94ebf35b_b09e02ec": {
+    "video_id": "94ebf35b",
+    "sha256": "b09e02ec8c9012ac7871d8f0a2af9e92214b4575bc1cdc37f2f311a0ba0f1cf2",
+    "phash": "dc3c842182083000",
+    "source": "user_submission",
+    "created_at": "2026-04-15T12:07:28.613796"
+  },
+  "1bb4c269_fb9ec4fe": {
+    "video_id": "1bb4c269",
+    "sha256": "fb9ec4fe3b32842de6bdb36ceeec01f21d0108faa2ff81183df94de414f5dc6a",
+    "phash": "8481bb8040320094",
+    "source": "user_submission",
+    "created_at": "2026-04-15T12:21:20.507424"
+  },
+  "2b1c04ac_3ccb54c4": {
+    "video_id": "2b1c04ac",
+    "sha256": "3ccb54c419a9ad2b8a79d0f8ca94afc44d9c6249404fd8ea5ef5e3f979ab81af",
+    "phash": "82c0849410526324",
+    "source": "user_submission",
+    "created_at": "2026-04-15T12:41:13.531955"
+  },
+  "30d10d0f_91885ac2": {
+    "video_id": "30d10d0f",
+    "sha256": "91885ac28bdb80822b301e9472321bb42ce538f62618c85d3995d36e5e9217e5",
+    "phash": "da3401cb2ea1a454",
+    "source": "user_submission",
+    "created_at": "2026-04-15T13:06:29.541652"
+  },
+  "9f4b3ad5_f73fb376": {
+    "video_id": "9f4b3ad5",
+    "sha256": "f73fb3764a6aed9d86b29bd4a93298186a3a76b1f4b4e1f4d2f909aae9467885",
+    "phash": "da632432120e8dec",
+    "source": "user_submission",
+    "created_at": "2026-04-15T14:53:51.285943"
+  },
+  "16a48d51_e07a4517": {
+    "video_id": "16a48d51",
+    "sha256": "e07a4517bdaee443adee8bf8de4925da92f5cf11fbb3f4746a26ef78a60b4e4b",
+    "phash": "cc4c103bc0e00230",
+    "source": "user_submission",
+    "created_at": "2026-04-15T20:28:30.439364"
+  },
+  "98268319_353483ce": {
+    "video_id": "98268319",
+    "sha256": "353483ce0672f016e98787b14f0678501d9a2dec5e7b0da5af2f3734122a51be",
+    "phash": "8d31604a86488000",
+    "source": "user_submission",
+    "created_at": "2026-04-15T18:16:45.996807"
+  },
+  "437a2b51_e5885c19": {
+    "video_id": "437a2b51",
+    "sha256": "e5885c195bf384456837c6b786b0358cc8bd4d44fd1841c855dafbc1ac35f0d5",
+    "phash": "c47068b31d810210",
+    "source": "user_submission",
+    "created_at": "2026-04-15T19:40:54.261265"
+  },
+  "26ea6839_ab7db848": {
+    "video_id": "26ea6839",
+    "sha256": "ab7db848c86832e3304e3479efd8f8d182c986f1166d64ed4b725f20beadb6fa",
+    "phash": "a2e1cc908c040080",
+    "source": "user_submission",
+    "created_at": "2026-04-15T19:59:16.820097"
+  },
+  "707dee8d_2103ca7c": {
+    "video_id": "707dee8d",
+    "sha256": "2103ca7cc396e8db05e5ae0460861fa2b8da1a5e0fd754ae644e1f2cacf8089e",
+    "phash": "c385b688c13e1c30",
+    "source": "user_submission",
+    "created_at": "2026-04-15T20:55:50.244223"
+  },
+  "27402314_98fbe606": {
+    "video_id": "27402314",
+    "sha256": "98fbe60666fa9b710464144f32030fd8716adb3a30384e2ec7acf62534370058",
+    "phash": "c9a423c12692c618",
+    "source": "user_submission",
+    "created_at": "2026-04-15T21:15:26.169275"
+  },
+  "737e162c_68ecffd1": {
+    "video_id": "737e162c",
+    "sha256": "68ecffd1cfed0b29e77dce2a89ea37b9067cd320a93fc2db6ebad1cea5310396",
+    "phash": "844c42a290b12984",
+    "source": "user_submission",
+    "created_at": "2026-04-15T22:04:45.680137"
+  },
+  "06c17a78_65da1ca7": {
+    "video_id": "06c17a78",
+    "sha256": "65da1ca716f628578183b4a59b4562a242f62b27e6d52e118fed36d50d78a874",
+    "phash": "9730e62a784fadd9",
+    "source": "user_submission",
+    "created_at": "2026-04-16T05:07:19.598892"
+  },
+  "8341229b_077a79ca": {
+    "video_id": "8341229b",
+    "sha256": "077a79caa467fa0f60b32d6694959022255cfcc6de9824f3b2eb589d860440a8",
+    "phash": "8ec462e19e2c305a",
+    "source": "user_submission",
+    "created_at": "2026-04-16T05:46:25.702125"
+  },
+  "744c986e_cf150704": {
+    "video_id": "744c986e",
+    "sha256": "cf1507043eb3a2c7122975a85528a1b69acbc5bc9ea513cc485d60219d177082",
+    "phash": "d904274184888089",
+    "source": "user_submission",
+    "created_at": "2026-04-16T06:10:23.750489"
+  },
+  "feeb5012_5ca42809": {
+    "video_id": "feeb5012",
+    "sha256": "5ca4280952370219ce50e2213a5fc686114e5aeb6639745aa4ffcdc583a5e617",
+    "phash": "a4a813708712491a",
+    "source": "user_submission",
+    "created_at": "2026-04-16T06:23:38.837137"
+  },
+  "b67827b8_f3c749ee": {
+    "video_id": "b67827b8",
+    "sha256": "f3c749ee76ebabbe9f23c1e7592ee6a7b06e2477330b1a0fed45ac0032a31b36",
+    "phash": "a681484077000098",
+    "source": "user_submission",
+    "created_at": "2026-04-16T06:59:59.290482"
+  },
+  "cf34c939_49d3ccf5": {
+    "video_id": "cf34c939",
+    "sha256": "49d3ccf5322632505df6d05e29577dfccf39581ee3965bdc6c25b28f5c15dab9",
+    "phash": "e01699f18482a2c0",
+    "source": "user_submission",
+    "created_at": "2026-04-17T22:10:32.934261"
+  },
+  "fea2aa20_7cb2a3de": {
+    "video_id": "fea2aa20",
+    "sha256": "7cb2a3de5b0b891bcedb771d70f524383d53bda323283efda4c540e806c4efea",
+    "phash": "ce3e31812ec1328b",
+    "source": "user_submission",
+    "created_at": "2026-04-18T10:05:29.098904"
+  },
+  "17874fa9_1e769745": {
+    "video_id": "17874fa9",
+    "sha256": "1e7697452471076b630e5b23a79ef4c4d4ef2be2d7e5fa04cc8fb0a81353b058",
+    "phash": "8f602a30f042011c",
+    "source": "user_submission",
+    "created_at": "2026-04-18T10:29:38.250294"
+  },
+  "b3944239_1e219c70": {
+    "video_id": "b3944239",
+    "sha256": "1e219c7010372950d114b70d7140a33105f67ca9cb35ea27fd739d39c3db3dd7",
+    "phash": "c3c32e284927b098",
+    "source": "user_submission",
+    "created_at": "2026-04-18T12:05:02.420734"
+  },
+  "4a0c22db_a5e75d74": {
+    "video_id": "4a0c22db",
+    "sha256": "a5e75d74e2496e801546deb9e718fdcd19f60cec190259eda989187fce60fb62",
+    "phash": "902b34a69970956b",
+    "source": "user_submission",
+    "created_at": "2026-04-18T12:23:54.011801"
+  },
+  "0e15d5fa_9c03d611": {
+    "video_id": "0e15d5fa",
+    "sha256": "9c03d611a069dac197610f6f24d2c424e0de7500f5d370d921ca055fc5f2ea6b",
+    "phash": "bc004924c8b49049",
+    "source": "user_submission",
+    "created_at": "2026-04-18T12:39:20.751188"
+  },
+  "30179694_30102800": {
+    "video_id": "30179694",
+    "sha256": "30102800000794dee765e813c346a0738c92e0f92760af55bc320a131b822352",
+    "phash": "b0c630c8b0308340",
+    "source": "user_submission",
+    "created_at": "2026-04-18T13:12:22.774068"
+  },
+  "0869c108_49d3ccf5": {
+    "video_id": "0869c108",
+    "sha256": "49d3ccf5322632505df6d05e29577dfccf39581ee3965bdc6c25b28f5c15dab9",
+    "phash": "e01699f18482a2c0",
+    "source": "user_submission",
+    "created_at": "2026-04-18T15:16:51.717462"
+  },
+  "57ac5d53_a66c4760": {
+    "video_id": "57ac5d53",
+    "sha256": "a66c4760ce6feb178f765dce3b4e250cd64876e7a1caef6f44a18c1bb90cb1f0",
+    "phash": "e91f2aa1602c9ae1",
+    "source": "user_submission",
+    "created_at": "2026-04-18T18:45:21.389298"
+  },
+  "7aaceb97_f1b4d26b": {
+    "video_id": "7aaceb97",
+    "sha256": "f1b4d26b5236a33087f20585a4043af5880cd630e0f40f5bfa5005f683fdeac9",
+    "phash": "9e21248ee1b41045",
+    "source": "user_submission",
+    "created_at": "2026-04-18T19:49:08.254023"
+  },
+  "c9168dc4_072efc63": {
+    "video_id": "c9168dc4",
+    "sha256": "072efc637911c53d43b35b4bee804be33bbcab74569df1606e867c0ba0132598",
+    "phash": "e094dfc0c028280c",
+    "source": "user_submission",
+    "created_at": "2026-04-18T21:08:01.664164"
+  },
+  "a4bb501e_cf0d9987": {
+    "video_id": "a4bb501e",
+    "sha256": "cf0d9987c301a4e0cb1bd18cb42b53abad10e90d191c3f7ebfad25bf4332b2ee",
+    "phash": "e118048930701244",
+    "source": "user_submission",
+    "created_at": "2026-04-18T22:59:34.983187"
+  },
+  "719a3c8b_9b57d43b": {
+    "video_id": "719a3c8b",
+    "sha256": "9b57d43bbb943391d61d8c680ba687cebf3936d91f4d6c8b9c94b8270e378ba2",
+    "phash": "966bedb2c92ae512",
+    "source": "user_submission",
+    "created_at": "2026-04-18T23:34:49.893974"
+  },
+  "f02700b3_a572fcfd": {
+    "video_id": "f02700b3",
+    "sha256": "a572fcfd391150242de071a3ab2f3027c0c5c0b08cdc2050748f66e0adb2912e",
+    "phash": "841a73e8c941249c",
+    "source": "user_submission",
+    "created_at": "2026-04-19T11:08:17.640614"
+  },
+  "a765ab18_9b8948fb": {
+    "video_id": "a765ab18",
+    "sha256": "9b8948fb88e4a4d9fbcd013ad1f2d212b464f2d06070aaac6cd22129111bad2a",
+    "phash": "a060000020601000",
+    "source": "user_submission",
+    "created_at": "2026-04-19T13:36:59.130082"
+  },
+  "cb255356_fd24b962": {
+    "video_id": "cb255356",
+    "sha256": "fd24b96216530e76c5afd007aea4ca528e157a810580914097d0e1261421fd22",
+    "phash": "cf30c00c83132044",
+    "source": "user_submission",
+    "created_at": "2026-04-19T16:40:37.985381"
+  },
+  "4405ff54_c6ddbd37": {
+    "video_id": "4405ff54",
+    "sha256": "c6ddbd371900fff83e9048a3ac8e71ab30e8a2a098580d970d077d4f824631f4",
+    "phash": "8e8426143e728312",
+    "source": "user_submission",
+    "created_at": "2026-04-19T22:43:05.556113"
+  },
+  "732096ad_e5b4d966": {
+    "video_id": "732096ad",
+    "sha256": "e5b4d966420a93809239bb0e6e179f44081871596aa6c05a4988ece7e86235f9",
+    "phash": "b08d62c000087620",
+    "source": "user_submission",
+    "created_at": "2026-04-19T23:37:44.731665"
+  },
+  "8680d4dd_dce67161": {
+    "video_id": "8680d4dd",
+    "sha256": "dce6716129856528c6ba2bf7b555d5eb8e5f6eb68613c8e4c4253b143c9da093",
+    "phash": "8c6a908160901fe2",
+    "source": "user_submission",
+    "created_at": "2026-04-20T00:31:06.663950"
+  },
+  "c13a3807_8bb4bcde": {
+    "video_id": "c13a3807",
+    "sha256": "8bb4bcde8579513c3349ceb8bd178b68fb0a1a3f7bd39bf17fbe55f2c861375e",
+    "phash": "b82784b0624c0080",
+    "source": "user_submission",
+    "created_at": "2026-04-20T00:43:51.324946"
+  },
+  "0f14be69_375a55b7": {
+    "video_id": "0f14be69",
+    "sha256": "375a55b7610333e8e7e63c6053a7a6b4cc54a3924c28b4a94f15bcb2c80706c4",
+    "phash": "e9e18624902a8220",
+    "source": "user_submission",
+    "created_at": "2026-04-20T03:19:44.033360"
+  },
+  "63a47bca_a0fa1bcc": {
+    "video_id": "63a47bca",
+    "sha256": "a0fa1bcc6e54cfe0862d7c539fbdbac03358c975131159e396a3a4470e192eda",
+    "phash": "e040c880c2100024",
+    "source": "user_submission",
+    "created_at": "2026-04-20T03:42:05.114262"
+  },
+  "e24b44ea_0ba529bd": {
+    "video_id": "e24b44ea",
+    "sha256": "0ba529bdc2982d0bb6ef2ba0c4fbe3e9c2b96793db3ad82bb6c3453eb181cdd2",
+    "phash": "f91209c09cb02244",
+    "source": "user_submission",
+    "created_at": "2026-04-20T03:49:21.144536"
+  },
+  "a66907a2_5a44c374": {
+    "video_id": "a66907a2",
+    "sha256": "5a44c37470133accf508b2bae8fc5b3a9f99eff048216c0cfe0ff67e0272323e",
+    "phash": "b030c0c000260000",
+    "source": "user_submission",
+    "created_at": "2026-04-20T09:20:02.252087"
+  },
+  "83d88924_dee0e50c": {
+    "video_id": "83d88924",
+    "sha256": "dee0e50c3225e440d44f421db82d6d85a88d9e48083acb4a0e98a3fe66044505",
+    "phash": "b8a80084c2000880",
+    "source": "user_submission",
+    "created_at": "2026-04-20T09:52:37.889710"
+  },
+  "36876986_59fd21ff": {
+    "video_id": "36876986",
+    "sha256": "59fd21ff583b8677e75991b8cfc8988144efe81b3fee1e9f30006635af9033cc",
+    "phash": "80682f3ee3b772e1",
+    "source": "user_submission",
+    "created_at": "2026-04-20T10:09:14.193431"
+  },
+  "d5a5d48f_1e9c48a8": {
+    "video_id": "d5a5d48f",
+    "sha256": "1e9c48a829b49ec2b8eef47178debb2026b8483499f6b58425b6c3c1fe171207",
+    "phash": "a84c50c09476c0d0",
+    "source": "user_submission",
+    "created_at": "2026-04-20T11:14:56.155692"
+  },
+  "130a3b25_483e536b": {
+    "video_id": "130a3b25",
+    "sha256": "483e536b9a309985d92fcf3037f5d597a903bb92ee711a8e7b91f205082ea30f",
+    "phash": "f030488408080000",
+    "source": "user_submission",
+    "created_at": "2026-04-20T11:39:14.746590"
+  },
+  "01bc7b63_4c1a2793": {
+    "video_id": "01bc7b63",
+    "sha256": "4c1a2793ab3e8e357833549067aed22cb3497dba286ed163aa72e821088c4fbe",
+    "phash": "d89060c080e4c098",
+    "source": "user_submission",
+    "created_at": "2026-04-20T12:04:52.362951"
+  },
+  "7f8a3967_4be8218b": {
+    "video_id": "7f8a3967",
+    "sha256": "4be8218bcdbec1c01e9cbcbfe2722d372f904b9304d4313b7a5e9319babf2010",
+    "phash": "872091e828c2102d",
+    "source": "user_submission",
+    "created_at": "2026-04-20T13:06:44.186704"
+  },
+  "b64fd948_7e9e7a25": {
+    "video_id": "b64fd948",
+    "sha256": "7e9e7a2511fe408feba48800860b8c65a3136f6433f41d7730949f6af046b45b",
+    "phash": "d878208716a02120",
+    "source": "user_submission",
+    "created_at": "2026-04-20T14:27:17.558321"
+  },
+  "6bf213c9_a5db85a4": {
+    "video_id": "6bf213c9",
+    "sha256": "a5db85a4110b848536d2e1f744c76af22b95eaf29eb4720c63e231e42396c04b",
+    "phash": "d4e0208042108800",
+    "source": "user_submission",
+    "created_at": "2026-04-20T17:14:13.265179"
+  },
+  "c7280596_4fbba216": {
+    "video_id": "c7280596",
+    "sha256": "4fbba2169e98f2dff23fd20c79f1828d0430b385ae63961605f4ac14c2e4f8ff",
+    "phash": "ee40518e80200080",
+    "source": "user_submission",
+    "created_at": "2026-04-20T18:56:32.381447"
+  },
+  "0b70a424_13ef9eb5": {
+    "video_id": "0b70a424",
+    "sha256": "13ef9eb539ee26360bbd896bf39af882a72c2de8b4c38c86567e1f78f81d2a95",
+    "phash": "ca23f024c50294c9",
+    "source": "user_submission",
+    "created_at": "2026-04-20T20:56:15.038378"
+  },
+  "ca62f35f_25994ff1": {
+    "video_id": "ca62f35f",
+    "sha256": "25994ff12b7456876f2775b750932380f8067d6cad6b0e2fe68804bd73759246",
+    "phash": "92402e7d400b26b5",
+    "source": "user_submission",
+    "created_at": "2026-04-21T08:42:03.055000"
+  },
+  "2f0d5a6a_fa0a7910": {
+    "video_id": "2f0d5a6a",
+    "sha256": "fa0a7910437d97bad0bca9194123bf2e7b77c2135dd4b93ddedea470fe1199e7",
+    "phash": "9d483826c412220e",
+    "source": "user_submission",
+    "created_at": "2026-04-21T13:59:30.236328"
+  },
+  "bc5b88ac_cbcc15f6": {
+    "video_id": "bc5b88ac",
+    "sha256": "cbcc15f62f6184b6e0b1cbd15b390e6b3b660e343452244377d0f182c990e7a1",
+    "phash": "ccf6ccb111486331",
+    "source": "user_submission",
+    "created_at": "2026-04-22T05:41:02.135855"
+  },
+  "740f3bbf_4505c007": {
+    "video_id": "740f3bbf",
+    "sha256": "4505c007b09c2924cc21bfbd12bf7e4f80a82b67c2d366216fa831bf32fcc400",
+    "phash": "9b2a38e2979a6038",
+    "source": "user_submission",
+    "created_at": "2026-04-22T06:42:33.826696"
+  },
+  "d8d361f4_ffeade4e": {
+    "video_id": "d8d361f4",
+    "sha256": "ffeade4e552f225859c3bb886e69130f809c35c502124686a3db5193337c5438",
+    "phash": "ea0ac52069200080",
+    "source": "user_submission",
+    "created_at": "2026-04-22T08:17:01.189675"
+  },
+  "21c2fb72_bb18906d": {
+    "video_id": "21c2fb72",
+    "sha256": "bb18906d8190a6ac82451d4d1503c3d18680ad9922f0b276c9e2d26759d3060e",
+    "phash": "acb498e1e0080240",
+    "source": "user_submission",
+    "created_at": "2026-04-22T09:46:06.195019"
+  },
+  "5016fcd5_20ce4e7f": {
+    "video_id": "5016fcd5",
+    "sha256": "20ce4e7fc6c00d19e40963c6ed04114306bddfc57f7be3ca18a39ab371aaafc8",
+    "phash": "8c0d7880940e5460",
+    "source": "user_submission",
+    "created_at": "2026-04-22T14:30:14.919691"
+  },
+  "fa7d6171_7b467ea2": {
+    "video_id": "fa7d6171",
+    "sha256": "7b467ea25648b9bdeb620ced95fea6af9382eaeacd1ee397f3e2b10597cee3d6",
+    "phash": "ecc4322280810a20",
+    "source": "user_submission",
+    "created_at": "2026-04-22T23:39:09.319327"
+  },
+  "a39bd734_b9e83010": {
+    "video_id": "a39bd734",
+    "sha256": "b9e83010e5049c2464daf1a832d399df8bc0b9c9a700efc5679dc32b43c658f5",
+    "phash": "cc4630b31db0d028",
+    "source": "user_submission",
+    "created_at": "2026-04-23T00:59:47.877420"
+  },
+  "857a8730_db477827": {
+    "video_id": "857a8730",
+    "sha256": "db4778272cde166fdf56ef588deeb2223b1c8c80993ae36940bc041705617b2e",
+    "phash": "e09008c402200090",
+    "source": "user_submission",
+    "created_at": "2026-04-23T09:12:53.701317"
+  },
+  "33f9f47b_060babb0": {
+    "video_id": "33f9f47b",
+    "sha256": "060babb02b4960fd927aeb2716f8ced7e51d94aa4ee8bc788eeebfe089d19903",
+    "phash": "d09f8a1338846526",
+    "source": "user_submission",
+    "created_at": "2026-04-23T11:01:22.453246"
+  },
+  "7355b24d_8ae5b694": {
+    "video_id": "7355b24d",
+    "sha256": "8ae5b69488818dac0ba88c5f6143ec7772d97a77508769fc622e2398d30443ae",
+    "phash": "9f21404227584948",
+    "source": "user_submission",
+    "created_at": "2026-04-23T11:14:41.455037"
+  },
+  "01698717_26a87142": {
+    "video_id": "01698717",
+    "sha256": "26a87142effb340bccdc00b9cc9d9c907f8cbfc83f2cb44e33c89d9f75f4f18c",
+    "phash": "f482830382b088d8",
+    "source": "user_submission",
+    "created_at": "2026-04-23T13:18:45.967672"
+  },
+  "b6ea65c5_abdd3173": {
+    "video_id": "b6ea65c5",
+    "sha256": "abdd317369cc18aee50e60b6dbe5cd0847c5185935ec17b93fa21bdb5560b1a0",
+    "phash": "c2f0f0c400000010",
+    "source": "user_submission",
+    "created_at": "2026-04-23T15:08:55.748973"
+  },
+  "d234bfa0_ce515dfc": {
+    "video_id": "d234bfa0",
+    "sha256": "ce515dfc4d7bf99ec4d8d4e62a0e9d55da365d48b2cd733ee1cc4c40ba60abeb",
+    "phash": "a3ca8a0829002048",
+    "source": "user_submission",
+    "created_at": "2026-04-23T17:10:07.933290"
+  },
+  "f42c20f2_20ce4e7f": {
+    "video_id": "f42c20f2",
+    "sha256": "20ce4e7fc6c00d19e40963c6ed04114306bddfc57f7be3ca18a39ab371aaafc8",
+    "phash": "8c0d7880940e5460",
+    "source": "user_submission",
+    "created_at": "2026-04-23T20:54:17.916406"
+  },
+  "1d26180c_ce35aa9e": {
+    "video_id": "1d26180c",
+    "sha256": "ce35aa9e3a494aa733b25af9a30b3720bdfd18f089e71b10f49acc3f0f8a0e2d",
+    "phash": "86d0e1c2c8810020",
+    "source": "user_submission",
+    "created_at": "2026-04-23T23:27:49.725492"
+  },
+  "f6d23b11_677673c1": {
+    "video_id": "f6d23b11",
+    "sha256": "677673c12ea7ef2581d53513557ab026f3d1ede2a378eb8eaef04897a5974385",
+    "phash": "8a89f46192380808",
+    "source": "user_submission",
+    "created_at": "2026-04-24T00:31:20.966631"
+  },
+  "8fdd1627_f1aab4aa": {
+    "video_id": "8fdd1627",
+    "sha256": "f1aab4aa34281098a48717c7b9c936a7a9c09c2a353c65fcae8c23dedd469590",
+    "phash": "8089807a86a08230",
+    "source": "user_submission",
+    "created_at": "2026-04-24T01:02:16.366585"
+  },
+  "ad0a9cc0_849f9314": {
+    "video_id": "ad0a9cc0",
+    "sha256": "849f931461c4136b660583e83f8f4d549c92419412b161b3d343871386bab508",
+    "phash": "94e4ca0992018010",
+    "source": "user_submission",
+    "created_at": "2026-04-24T01:15:45.321802"
+  },
+  "fcc6d7db_f49556e5": {
+    "video_id": "fcc6d7db",
+    "sha256": "f49556e5f5a43e217c9bce791a51f70e95f4ef69c880e905a0d54fe3688bfb6a",
+    "phash": "9010c2618988b8c6",
+    "source": "user_submission",
+    "created_at": "2026-04-24T02:09:52.379925"
+  },
+  "a1cc4d0f_b7c7b4c3": {
+    "video_id": "a1cc4d0f",
+    "sha256": "b7c7b4c3d775c003b92ba795d56b2be56a5b21058f70250374dce3bbaf0d9962",
+    "phash": "8798a3c4823012c0",
+    "source": "user_submission",
+    "created_at": "2026-04-24T02:28:41.778380"
+  },
+  "75c4e91c_671cb63f": {
+    "video_id": "75c4e91c",
+    "sha256": "671cb63faf27c1d11bdaccb8dc14dac9df7508b446dd60c61d2d435f260ffd66",
+    "phash": "f0e0f06006049060",
+    "source": "user_submission",
+    "created_at": "2026-04-24T02:40:02.166734"
+  },
+  "f06559a5_ab676470": {
+    "video_id": "f06559a5",
+    "sha256": "ab67647065eb9bed531e1b468dfb1cde58827728cdc79bb481c0229d4b194f65",
+    "phash": "a20c4a08b02080c2",
+    "source": "user_submission",
+    "created_at": "2026-04-24T02:51:53.855249"
+  },
+  "4decd083_a4acd950": {
+    "video_id": "4decd083",
+    "sha256": "a4acd9508dba7df220811032f61a4296550a23c41736f4559ed1c2e70821fb2f",
+    "phash": "a1f1c28e0c309001",
+    "source": "user_submission",
+    "created_at": "2026-04-24T10:16:56.826513"
+  },
+  "f9c80a7e_942f0f47": {
+    "video_id": "f9c80a7e",
+    "sha256": "942f0f4701fcd1586eb37c083350c8451582240597fa26867fea0eea0443efd4",
+    "phash": "842f5f509024239b",
+    "source": "user_submission",
+    "created_at": "2026-04-24T11:35:23.159768"
+  },
+  "9310ad8f_22601191": {
+    "video_id": "9310ad8f",
+    "sha256": "22601191088a98a22564a01fffb54766d28767646aeb3852f750ea3297a403cf",
+    "phash": "9e8ece65650094a6",
+    "source": "user_submission",
+    "created_at": "2026-04-24T12:02:30.286202"
+  },
+  "d3c2179a_548dd060": {
+    "video_id": "d3c2179a",
+    "sha256": "548dd06008898bfcf5615359abe97b8eda0ed35eb8a9e84542af0490ed87f996",
+    "phash": "80c0e0000c028040",
+    "source": "user_submission",
+    "created_at": "2026-04-24T12:14:00.391114"
+  },
+  "b8a29d11_2cdb03f4": {
+    "video_id": "b8a29d11",
+    "sha256": "2cdb03f40c36e7d018d6b0ac6248867a1441e66904a9065b5db4cc3065d97c7e",
+    "phash": "8c88f1c8266089c0",
+    "source": "user_submission",
+    "created_at": "2026-04-24T21:39:15.976178"
+  },
+  "c3e3b846_e307154e": {
+    "video_id": "c3e3b846",
+    "sha256": "e307154edfa23eb2306bf82f9138865f91d12a02388a3844cc1c415bc9bf0ca2",
+    "phash": "9162098572c39840",
+    "source": "user_submission",
+    "created_at": "2026-04-24T21:58:10.433775"
+  },
+  "eab38172_3a672abb": {
+    "video_id": "eab38172",
+    "sha256": "3a672abb24050845265235360ca97eeebc043caee2baaef7a4485c894a2efeda",
+    "phash": "e088a51096c28001",
+    "source": "user_submission",
+    "created_at": "2026-04-24T22:03:09.640441"
+  },
+  "538ff4a7_a74561e0": {
+    "video_id": "538ff4a7",
+    "sha256": "a74561e0e1d93771ac31abe0de31397e0b0b418de327a33659d63dc3fdcec98f",
+    "phash": "e188807008a82010",
+    "source": "user_submission",
+    "created_at": "2026-04-24T22:37:18.745387"
+  },
+  "c0f527f6_31eed911": {
+    "video_id": "c0f527f6",
+    "sha256": "31eed911fa2bcd196a8dc8e73390976eb0adb7787104fb5f487cf3ac9f602cb3",
+    "phash": "cf58e13926021150",
+    "source": "user_submission",
+    "created_at": "2026-04-25T16:51:34.374434"
+  },
+  "80413f7a_1f993581": {
+    "video_id": "80413f7a",
+    "sha256": "1f99358198119d379ff08c2316158992b7f8f554288dffc24d1650eb4416f709",
+    "phash": "fc482d200482003c",
+    "source": "user_submission",
+    "created_at": "2026-04-25T19:37:52.251039"
+  },
+  "133e9dd7_c0b8b042": {
+    "video_id": "133e9dd7",
+    "sha256": "c0b8b0426a145c7788fb43ab31dda87959b5181bb5c2432b27b596e91d0cd2a1",
+    "phash": "a5b2704844058a35",
+    "source": "user_submission",
+    "created_at": "2026-04-25T20:56:08.335888"
+  },
+  "608d9b4b_0106a8f0": {
+    "video_id": "608d9b4b",
+    "sha256": "0106a8f028e6ebad786ba38552dd6179f74d256fc02dcef5a1f9cbcda9ad994b",
+    "phash": "a8686121028087db",
+    "source": "user_submission",
+    "created_at": "2026-04-25T23:35:51.008795"
+  },
+  "bb843a56_6f5fb4f2": {
+    "video_id": "bb843a56",
+    "sha256": "6f5fb4f2b60ffe175077685cf3a1138ae288647b6c40e23a1d28f71c66f5dda4",
+    "phash": "e829d20210040010",
+    "source": "user_submission",
+    "created_at": "2026-04-27T16:02:00.560630"
+  },
+  "383a2cac_fe05cf27": {
+    "video_id": "383a2cac",
+    "sha256": "fe05cf279b888022123914259a340f747b9521b2da79677a37dae725a5f085cd",
+    "phash": "c5c2bc80411e0343",
+    "source": "user_submission",
+    "created_at": "2026-04-27T17:19:18.200824"
+  },
+  "aa3b43d1_b6183655": {
+    "video_id": "aa3b43d1",
+    "sha256": "b6183655b7bf0ed977fbac81b8a0e74cbda11660fd78ff8d7c7d555db73df277",
+    "phash": "e946188006190364",
+    "source": "user_submission",
+    "created_at": "2026-04-27T17:38:09.835664"
+  },
+  "d756198a_633a3220": {
+    "video_id": "d756198a",
+    "sha256": "633a322089905c95650668b12eb668b5733dec53659d36fc625a27fcc108282d",
+    "phash": "8104e46080088890",
+    "source": "user_submission",
+    "created_at": "2026-04-27T19:56:10.376777"
+  },
+  "2b2639b5_a30f0e7a": {
+    "video_id": "2b2639b5",
+    "sha256": "a30f0e7aafc023a9c0780caa3ce76661fda0f01e2345adbda183ed34baa0b1e8",
+    "phash": "a0483280cce180d2",
+    "source": "user_submission",
+    "created_at": "2026-04-27T21:40:03.724433"
+  },
+  "2c4a1722_4272fb5f": {
+    "video_id": "2c4a1722",
+    "sha256": "4272fb5fd8d9d746236c8598c577cefeb9497950386dfddcd4525a4adafce2a2",
+    "phash": "9070620e8e888161",
+    "source": "user_submission",
+    "created_at": "2026-04-27T23:07:22.861824"
+  },
+  "2a68be25_9e7bb42a": {
+    "video_id": "2a68be25",
+    "sha256": "9e7bb42a21a0d591c0f13e0adb486c6988db8bac6306e0b9276aabd0c6dc768d",
+    "phash": "b9103a462424402b",
+    "source": "user_submission",
+    "created_at": "2026-04-28T12:14:25.846707"
+  },
+  "023be68d_8c954881": {
+    "video_id": "023be68d",
+    "sha256": "8c9548814be97b70c7ff68ac8b378d5c041b6f2975bcf3fa9e00134b49142fda",
+    "phash": "8c2872b207479554",
+    "source": "user_submission",
+    "created_at": "2026-04-28T08:55:11.846137"
+  },
+  "ec72d280_11d48261": {
+    "video_id": "ec72d280",
+    "sha256": "11d48261ec7b6a522cc3820326eb8d1f71910ee5df706efcb06c3cc2a3000d6f",
+    "phash": "d84a616908005019",
+    "source": "user_submission",
+    "created_at": "2026-04-28T12:00:26.200068"
+  },
+  "853b58ef_2078da55": {
+    "video_id": "853b58ef",
+    "sha256": "2078da5510d0bd9765f3677642214d7270387606946020159b214ce5799096f9",
+    "phash": "ace09238022021c2",
+    "source": "user_submission",
+    "created_at": "2026-04-28T12:26:38.005969"
+  },
+  "8cee616e_a4eb79ca": {
+    "video_id": "8cee616e",
+    "sha256": "a4eb79caac5957949b1aba40b464473ac4cd445dab8696d8ad6683ce06e31625",
+    "phash": "c50618184e58c000",
+    "source": "user_submission",
+    "created_at": "2026-04-28T15:14:04.569263"
+  },
+  "6502e1ed_ac13ea3e": {
+    "video_id": "6502e1ed",
+    "sha256": "ac13ea3ee4b6a5f42e50a843ccdd2ddc5932d36cfa2b7115ffacf8704236d095",
+    "phash": "b3c04c9464252121",
+    "source": "user_submission",
+    "created_at": "2026-04-28T19:29:01.715754"
+  },
+  "502a081a_264eb8fd": {
+    "video_id": "502a081a",
+    "sha256": "264eb8fd03a7f72de08962e4c176b706a785a6e2eb05d43d139eae1a8be50c86",
+    "phash": "c90866329ae72618",
+    "source": "user_submission",
+    "created_at": "2026-04-28T21:17:29.586732"
+  },
+  "e46ca954_f417dbcd": {
+    "video_id": "e46ca954",
+    "sha256": "f417dbcd460f0fc813f71338534e62405cac9713f53ec14cdec5c4b5107de81d",
+    "phash": "90e4a0000d848c00",
+    "source": "user_submission",
+    "created_at": "2026-04-28T22:37:08.415848"
+  },
+  "7a4a56ad_35eeab20": {
+    "video_id": "7a4a56ad",
+    "sha256": "35eeab200320f8e5bedceeb25f0eac0dd66189471b88efef54a12d6524fb92c0",
+    "phash": "e81a0642a0d8b000",
+    "source": "user_submission",
+    "created_at": "2026-04-28T22:56:11.653964"
+  },
+  "2a79f8f3_c8779cf4": {
+    "video_id": "2a79f8f3",
+    "sha256": "c8779cf47cc5fc7ad9f764e084161034a8891020b5ec741ee145e18706c1425d",
+    "phash": "9c06e4c390808080",
+    "source": "user_submission",
+    "created_at": "2026-04-29T10:49:50.614933"
+  },
+  "f35a794f_e1a01464": {
+    "video_id": "f35a794f",
+    "sha256": "e1a01464df96782e8e5207326fabebe2272c30eeb83919692de58bdab866cdb7",
+    "phash": "b084889000202093",
+    "source": "user_submission",
+    "created_at": "2026-04-29T11:49:45.921221"
+  },
+  "ad08dfae_659a6bb8": {
+    "video_id": "ad08dfae",
+    "sha256": "659a6bb84a875b0770441b56761159dbe5d889e079b4486bb5a6fe11d92381f7",
+    "phash": "b020001041400000",
+    "source": "user_submission",
+    "created_at": "2026-04-29T13:07:06.099285"
+  },
+  "293bb22f_b8269d4c": {
+    "video_id": "293bb22f",
+    "sha256": "b8269d4cba4993bc89e557ee29b98c9b837b4838ab8f6793af35bac83847ac86",
+    "phash": "9a133d30e0476ea0",
+    "source": "user_submission",
+    "created_at": "2026-04-29T16:04:52.221671"
+  },
+  "fb642109_d8e4bc62": {
+    "video_id": "fb642109",
+    "sha256": "d8e4bc62bbae399b7b17c22ca4831d251529c1ffaf91d6381830a6d156cfa345",
+    "phash": "9f2020c0201008a4",
+    "source": "user_submission",
+    "created_at": "2026-04-29T16:22:21.779319"
+  },
+  "5b96581e_9b07817b": {
+    "video_id": "5b96581e",
+    "sha256": "9b07817bdec64d62bc4d44b6aec6cf6635842fad7d63d3d720c83eab7e128efb",
+    "phash": "8e2c464291903821",
+    "source": "user_submission",
+    "created_at": "2026-04-29T17:09:43.757243"
+  },
+  "6f49fd5d_12ed2b1e": {
+    "video_id": "6f49fd5d",
+    "sha256": "12ed2b1ee65b93816198542e4ae4c51010b0c550f5e6467fa0c3be212cc26ad4",
+    "phash": "b782197c64431960",
+    "source": "user_submission",
+    "created_at": "2026-04-29T17:46:04.640181"
+  },
+  "6426bbeb_3499847b": {
+    "video_id": "6426bbeb",
+    "sha256": "3499847bfbe496c08d0497a2dc20ea8b1f4de0c295e157b5c2f10041b6f7d46b",
+    "phash": "e481f30372080811",
+    "source": "user_submission",
+    "created_at": "2026-04-29T18:02:45.794048"
+  },
+  "fe18361a_27846959": {
+    "video_id": "fe18361a",
+    "sha256": "27846959883c90124afe1b3b3e165f0f582dae9b310534636dddfe639a6adbb0",
+    "phash": "e0580e8228904aa0",
+    "source": "user_submission",
+    "created_at": "2026-04-29T20:50:11.223791"
+  },
+  "8e97c0b2_c608d41a": {
+    "video_id": "8e97c0b2",
+    "sha256": "c608d41a23376fe885e410a37e905cec8cba52afa61b7ff2932aee32f9e1adb2",
+    "phash": "c1b5b0404f093600",
+    "source": "user_submission",
+    "created_at": "2026-04-29T20:21:38.080825"
+  },
+  "e890d92b_7cfdfef1": {
+    "video_id": "e890d92b",
+    "sha256": "7cfdfef16822bb74e3f795c0473d3cb927cfe33a391b84576e99aca17a67d1d6",
+    "phash": "a31c8ac008384012",
+    "source": "user_submission",
+    "created_at": "2026-04-29T22:50:07.066625"
+  },
+  "da1b13e5_686dfb22": {
+    "video_id": "da1b13e5",
+    "sha256": "686dfb223f29a152288c76090c791cd9dd345c8ef1c80c2f8318eebb18db46b8",
+    "phash": "e464308063400c88",
+    "source": "user_submission",
+    "created_at": "2026-04-29T23:37:33.480777"
+  },
+  "02dbc002_b84ef25c": {
+    "video_id": "02dbc002",
+    "sha256": "b84ef25c0dcc70a9f84322082d3292c0fb2fab4cc6a7a4c5fb60dbda5b1be2c8",
+    "phash": "9b7bc2300c200042",
+    "source": "user_submission",
+    "created_at": "2026-04-30T01:18:59.254489"
+  },
+  "8c5b4629_a0874d7f": {
+    "video_id": "8c5b4629",
+    "sha256": "a0874d7fecbe1536abaa39d1686a86df7cced76508377096f311296fe3989f18",
+    "phash": "ef2a121009a33010",
+    "source": "user_submission",
+    "created_at": "2026-04-30T02:00:10.492686"
+  },
+  "38a90948_ce58371b": {
+    "video_id": "38a90948",
+    "sha256": "ce58371bd70311c0f479d521d1ca74ac5fee79c3d0a79e66786b5a5dfda5cb41",
+    "phash": "c06098e3241800a4",
+    "source": "user_submission",
+    "created_at": "2026-04-30T02:02:03.823497"
+  },
+  "b89a97ed_949a8e63": {
+    "video_id": "b89a97ed",
+    "sha256": "949a8e639f10a4662f0a2f7fc5c6861f0889070463cb8c279b3daabdf7aa4f8c",
+    "phash": "d9f866829b464098",
+    "source": "user_submission",
+    "created_at": "2026-04-30T02:38:37.400740"
+  },
+  "09114c8b_45e02776": {
+    "video_id": "09114c8b",
+    "sha256": "45e02776400b3534b547709b966d9ff8184410864d0ebc297ec3fef8273b6ac7",
+    "phash": "e438281800020020",
+    "source": "user_submission",
+    "created_at": "2026-04-30T05:04:40.201825"
+  },
+  "c97a26ad_61f57140": {
+    "video_id": "c97a26ad",
+    "sha256": "61f571401e32ce65459b5e4a13408f197b50fcced845387c9af9997ef0f15816",
+    "phash": "eae282048c188000",
+    "source": "user_submission",
+    "created_at": "2026-04-30T11:31:47.136721"
+  },
+  "8318bd7a_454d6cbd": {
+    "video_id": "8318bd7a",
+    "sha256": "454d6cbdfaaf12ceb65bd8831df4c71d7741ce8805005863eaca768e7541cd48",
+    "phash": "f98cc0300d8a1045",
+    "source": "user_submission",
+    "created_at": "2026-04-30T13:42:43.386949"
+  },
+  "7bc1e696_00bb3b54": {
+    "video_id": "7bc1e696",
+    "sha256": "00bb3b5405081a6ac814586c37c08f079f89ec9ec901c5c83494a12c7c0f779f",
+    "phash": "f00c1230090044c0",
+    "source": "user_submission",
+    "created_at": "2026-04-30T15:36:06.959335"
+  },
+  "aa33314b_1d7df141": {
+    "video_id": "aa33314b",
+    "sha256": "1d7df141312136514e928d869f4b8a91e1a3c7209babd2cd42ed19b110ddd69d",
+    "phash": "a19f7a282484c662",
+    "source": "user_submission",
+    "created_at": "2026-04-30T18:06:42.170403"
+  },
+  "ea9c406a_6da9d617": {
+    "video_id": "ea9c406a",
+    "sha256": "6da9d6174d5f6afed2ff1229355a9562f4d2d7e8681824fa83bb44f9795a3d6c",
+    "phash": "e98585c646c41830",
+    "source": "user_submission",
+    "created_at": "2026-04-30T19:58:47.599188"
+  },
+  "ba98a3af_50b17c0d": {
+    "video_id": "ba98a3af",
+    "sha256": "50b17c0d7d51e0f9c1c60a09010869eb7de2deb1b4d1f98f962243bf986c1ecd",
+    "phash": "b5ca8204c9510624",
+    "source": "user_submission",
+    "created_at": "2026-04-30T20:13:38.065770"
+  },
+  "27abe291_08f3efc6": {
+    "video_id": "27abe291",
+    "sha256": "08f3efc6dc68772d539d29c517cbccc7e84ab762e7f1e40da3fd4e4d423a6503",
+    "phash": "b190c00686808000",
+    "source": "user_submission",
+    "created_at": "2026-04-30T21:00:04.035754"
+  },
+  "87c74114_6557dc31": {
+    "video_id": "87c74114",
+    "sha256": "6557dc31d3788685841618f611fec35a03681444d66bf5a6c0e5d5ac86416171",
+    "phash": "8784a19a81800840",
+    "source": "user_submission",
+    "created_at": "2026-04-30T21:14:39.812499"
+  },
+  "5b1317f3_e90afae9": {
+    "video_id": "5b1317f3",
+    "sha256": "e90afae9c78ffe2ae51d6875f129bfe9d0a084ac7767cc60a3133504b5e9292f",
+    "phash": "e438281800020020",
+    "source": "user_submission",
+    "created_at": "2026-04-30T21:46:38.832495"
+  },
+  "7efca72e_6237a187": {
+    "video_id": "7efca72e",
+    "sha256": "6237a1876da0a6f2b2a46df169a98805be2dadcd9dc63234cf2fab34105a4fb2",
+    "phash": "e28e49a18e5813a2",
+    "source": "user_submission",
+    "created_at": "2026-04-30T22:09:17.981278"
+  },
+  "96577fb4_f7adf3b7": {
+    "video_id": "96577fb4",
+    "sha256": "f7adf3b700870510c810f260a531d357646976c154ade67240f1a971af16d18c",
+    "phash": "c22db0d03000c141",
+    "source": "user_submission",
+    "created_at": "2026-04-30T23:09:08.154294"
+  },
+  "343a0805_a0fd98cd": {
+    "video_id": "343a0805",
+    "sha256": "a0fd98cd732c7c7cc4ee1c798dcfb5dcc8352ebe64ee50ba376eb6fce007899a",
+    "phash": "b042c360c0c04042",
+    "source": "user_submission",
+    "created_at": "2026-04-30T23:28:58.573182"
+  },
+  "ca97ce5a_c45594e3": {
+    "video_id": "ca97ce5a",
+    "sha256": "c45594e387ac4aee12eb8e1aa12fc6687be327350198e10f0744400bf5079cf1",
+    "phash": "9808d02b24c6c44c",
+    "source": "user_submission",
+    "created_at": "2026-05-01T10:52:33.014738"
+  },
+  "c1f7569c_44279713": {
+    "video_id": "c1f7569c",
+    "sha256": "442797130d1cb334f640bc1604271a0831d1a79ce72d8cb625a7dc5ae6e91647",
+    "phash": "8e213290cd081080",
+    "source": "user_submission",
+    "created_at": "2026-05-01T16:02:01.863754"
+  },
+  "da4f3bc9_20682044": {
+    "video_id": "da4f3bc9",
+    "sha256": "20682044b9d984538b6858f074f661caa2753cbc222d54e8793ed9328f9bc299",
+    "phash": "8c0f0762869128c1",
+    "source": "user_submission",
+    "created_at": "2026-05-01T21:57:57.164382"
+  },
+  "290e3eb1_1e8f7d9e": {
+    "video_id": "290e3eb1",
+    "sha256": "1e8f7d9e01530f9d9c07f443f3175630cf877b0dfef80d3d8bbe23f15675a60a",
+    "phash": "e34828b28ca0a242",
+    "source": "user_submission",
+    "created_at": "2026-05-01T20:54:28.594983"
+  },
+  "c493f5d2_f9c34ff1": {
+    "video_id": "c493f5d2",
+    "sha256": "f9c34ff1ffd1ff6b6cb465ed04ad1d5627ee9e0b8038768a6a2ec2b88989fea3",
+    "phash": "b006a2714f08930d",
+    "source": "user_submission",
+    "created_at": "2026-05-01T22:12:56.086463"
+  },
+  "95e18356_c5b98afa": {
+    "video_id": "95e18356",
+    "sha256": "c5b98afa8ca5dc9de4bfd0ed1a2506bf7cd0e868b3d10f77c8f2abf33409ca13",
+    "phash": "e4e4008800808844",
+    "source": "user_submission",
+    "created_at": "2026-05-01T22:35:33.532367"
+  },
+  "b2603077_a72fb9cb": {
+    "video_id": "b2603077",
+    "sha256": "a72fb9cb4d5de2fc7b3f2e86308be6429865bd1da3ec1b71b1c18d7639e1faba",
+    "phash": "bbdc60c4804282c1",
+    "source": "user_submission",
+    "created_at": "2026-05-01T23:36:11.112485"
+  },
+  "2adb122a_d51fb85f": {
+    "video_id": "2adb122a",
+    "sha256": "d51fb85f7b3cf6d153b06a37a281ce5207d6b340e3f372901861d3148d0995d6",
+    "phash": "a1909a070e491880",
+    "source": "user_submission",
+    "created_at": "2026-05-02T00:23:29.236505"
+  },
+  "29a2f0b2_30e8e213": {
+    "video_id": "29a2f0b2",
+    "sha256": "30e8e213cae7e169f2cb830544da637f29be3972e8b51e6b8561f6e1622006c8",
+    "phash": "ca75482832910c08",
+    "source": "user_submission",
+    "created_at": "2026-05-02T02:11:21.692502"
+  },
+  "53182172_da473342": {
+    "video_id": "53182172",
+    "sha256": "da4733425775683834053a949101e91482b6e6aa809209082872ce22cb059443",
+    "phash": "d6d53968c00410e0",
+    "source": "user_submission",
+    "created_at": "2026-05-02T02:36:52.201722"
+  },
+  "c44a91e0_3f8c4a73": {
+    "video_id": "c44a91e0",
+    "sha256": "3f8c4a730e51707c2fba45272743b23dcb7f14a6ae3d9acb9516f58a9f252440",
+    "phash": "ea24004010ccc880",
+    "source": "user_submission",
+    "created_at": "2026-05-02T17:40:38.368742"
+  },
+  "d3db1f31_fa044e96": {
+    "video_id": "d3db1f31",
+    "sha256": "fa044e96f15b420d14d83f0a8341468bf5efce28457cc9cf06cc99192cdbe588",
+    "phash": "e9f244a4ac0d3080",
+    "source": "user_submission",
+    "created_at": "2026-05-02T19:59:56.275661"
+  },
+  "90f321fb_9104fb84": {
+    "video_id": "90f321fb",
+    "sha256": "9104fb84c14f4f5015009a531c9dea7990ca080aff2f7830ed96b71822df7e6e",
+    "phash": "a0d2980389484c04",
+    "source": "user_submission",
+    "created_at": "2026-05-02T20:37:26.601787"
+  },
+  "fe4ee4e0_aca7f1a9": {
+    "video_id": "fe4ee4e0",
+    "sha256": "aca7f1a9280e2c1e7ae252e9660da7c80dcc268a80822a9ac92cbb0e418dc8b9",
+    "phash": "cea8a4b0edc08120",
+    "source": "user_submission",
+    "created_at": "2026-05-03T10:53:59.671083"
+  },
+  "26d5e301_18fbed50": {
+    "video_id": "26d5e301",
+    "sha256": "18fbed50b00f50500dd8c507ed1adb08152db93197b5153e89f3cad6fe594933",
+    "phash": "90a08890c0206020",
+    "source": "user_submission",
+    "created_at": "2026-05-03T21:06:18.964339"
+  },
+  "95284501_e714f5ba": {
+    "video_id": "95284501",
+    "sha256": "e714f5bab98569ac9ea101a7e33e090df0c49d59dc607cc4e01c0d5c1dbf3b9f",
+    "phash": "c168821e98944821",
+    "source": "user_submission",
+    "created_at": "2026-05-03T23:08:39.871726"
+  },
+  "64a08565_6a016611": {
+    "video_id": "64a08565",
+    "sha256": "6a016611ec58d7fb1638c4236bc9bd0756200485e65a4e536a5a1481ee0c939d",
+    "phash": "d834c20ac142d083",
+    "source": "user_submission",
+    "created_at": "2026-05-03T23:21:39.349522"
+  },
+  "cb3b9a95_84d7a6b6": {
+    "video_id": "cb3b9a95",
+    "sha256": "84d7a6b663f93e2ee44498e3cf4ba021dc7ae038fd44bb721486a01470df4d31",
+    "phash": "86c8d04188840420",
+    "source": "user_submission",
+    "created_at": "2026-05-03T23:43:27.871974"
+  },
+  "90133059_c90e4de9": {
+    "video_id": "90133059",
+    "sha256": "c90e4de9832159ecbf50de3aaec043904c0e1dedd5f25b67c484fbdfe0bdff54",
+    "phash": "d808a4e070920601",
+    "source": "user_submission",
+    "created_at": "2026-05-03T23:50:26.741165"
+  },
+  "2cbf9089_9fee5bb3": {
+    "video_id": "2cbf9089",
+    "sha256": "9fee5bb39b2bc517a9a734375a97808513c6b02145b253609f81756f7c574cc9",
+    "phash": "b41b60c108042660",
+    "source": "user_submission",
+    "created_at": "2026-05-04T00:06:28.942058"
+  },
+  "4b0f3f3f_102bc15f": {
+    "video_id": "4b0f3f3f",
+    "sha256": "102bc15f459f8cd15b51395e71fe3874d1355fb6dcf8c060140f824165a2bfbd",
+    "phash": "c95c2ab1722704e2",
+    "source": "user_submission",
+    "created_at": "2026-05-04T00:20:01.959163"
+  },
+  "3b482dd9_b59f9d17": {
+    "video_id": "3b482dd9",
+    "sha256": "b59f9d173ef6415d86a81eb5b5a38e2382ef56689ff82fa0e4f9f697e646f8c6",
+    "phash": "94e6c0c000062418",
+    "source": "user_submission",
+    "created_at": "2026-05-04T01:06:55.775214"
+  },
+  "ff25a323_f2c67ce9": {
+    "video_id": "ff25a323",
+    "sha256": "f2c67ce9b74c6ea1a378a12bfca5f156671d28651f1c63b2f381b579900e290b",
+    "phash": "bb50812844dd2002",
+    "source": "user_submission",
+    "created_at": "2026-05-04T01:27:50.908934"
+  },
+  "f0679c46_ebdda5af": {
+    "video_id": "f0679c46",
+    "sha256": "ebdda5af0566a5fbf2d7d4e58df2d44ebbf4119f16d4d9620b206593aeda38e3",
+    "phash": "cacc1f3234293c64",
+    "source": "user_submission",
+    "created_at": "2026-05-04T02:24:46.326114"
+  },
+  "857c0a72_41a5d34e": {
+    "video_id": "857c0a72",
+    "sha256": "41a5d34e585fc3a0e5ba0aa339bd8c64af0527679f8701821e5dca27c80d96eb",
+    "phash": "f712d2a54aca0808",
+    "source": "user_submission",
+    "created_at": "2026-05-04T14:14:00.816176"
+  },
+  "915e271e_a13bd371": {
+    "video_id": "915e271e",
+    "sha256": "a13bd37142956a91da2844f5c4cce2a07bfdd229f3b0e606c8d47fd9227aea52",
+    "phash": "d86d9283028f429c",
+    "source": "user_submission",
+    "created_at": "2026-05-04T17:21:11.005562"
+  },
+  "bc6f5c0e_33e15959": {
+    "video_id": "bc6f5c0e",
+    "sha256": "33e159591d13328b051f74e291ed98be8029817aabfb8f477dbfc1681b296612",
+    "phash": "b404246b2ac81000",
+    "source": "user_submission",
+    "created_at": "2026-05-04T18:39:29.049843"
+  },
+  "32bbc6f8_06a8e58d": {
+    "video_id": "32bbc6f8",
+    "sha256": "06a8e58db11feaae17d99df28a39ec15fd30aa69a135945392fc7073a0717a9a",
+    "phash": "81d372242cdc9a51",
+    "source": "user_submission",
+    "created_at": "2026-05-04T19:27:37.465425"
+  },
+  "088ea851_9bdbe3bc": {
+    "video_id": "088ea851",
+    "sha256": "9bdbe3bcefffeb2b34b3b4b3dc0b7c54f3a5142a2add246aaaa0c18abbd1bc80",
+    "phash": "bca09202c6590924",
+    "source": "user_submission",
+    "created_at": "2026-05-04T19:33:31.936725"
+  },
+  "e8803f98_f15d5321": {
+    "video_id": "e8803f98",
+    "sha256": "f15d53210f630e8847ba83bfa2c543dc8ad034676ddeb174a1c5727a7caa6418",
+    "phash": "fbe0848004181010",
+    "source": "user_submission",
+    "created_at": "2026-05-05T18:26:54.363465"
+  },
+  "4c387822_68cfbbc9": {
+    "video_id": "4c387822",
+    "sha256": "68cfbbc950e1b146de3bf91b43ed00ebdde900caa001bd57a804dd2892d04d5e",
+    "phash": "d858456a996420c1",
+    "source": "user_submission",
+    "created_at": "2026-05-05T19:41:50.546181"
+  },
+  "b2e57654_e033343a": {
+    "video_id": "b2e57654",
+    "sha256": "e033343a1551d1177e7f2dfb4e4c7e107844d542a9a2cf358e285ec98d78df5a",
+    "phash": "d6d8276161806223",
+    "source": "user_submission",
+    "created_at": "2026-05-05T20:14:09.138711"
+  },
+  "f2544fac_5c37b778": {
+    "video_id": "f2544fac",
+    "sha256": "5c37b778dbed4a278b1d7560767ed043425aaa49c456eefffaf6057f21a826a5",
+    "phash": "f0f0612020201000",
+    "source": "user_submission",
+    "created_at": "2026-05-05T23:57:17.678020"
+  },
+  "e3abd6b5_5250103a": {
+    "video_id": "e3abd6b5",
+    "sha256": "5250103a605b5f683e40d2d01175f678e6b96d77d5158e06c79852b6e3d336b2",
+    "phash": "cc1833e3251ccae0",
+    "source": "user_submission",
+    "created_at": "2026-05-08T20:27:21.523521"
+  },
+  "bd098f88_6c002cde": {
+    "video_id": "bd098f88",
+    "sha256": "6c002cde6e3f1d28185514bb9d6ce66ded4f0f58724b39a77467b13fc7458d17",
+    "phash": "b482c1550c080980",
+    "source": "user_submission",
+    "created_at": "2026-05-08T20:45:50.473614"
+  },
+  "177f4eda_44fc58ef": {
+    "video_id": "177f4eda",
+    "sha256": "44fc58ef84c1a8ab36f558411eba8568963a394afb8ec340c667a2d7db449e23",
+    "phash": "9a652611981926c4",
+    "source": "user_submission",
+    "created_at": "2026-05-08T21:51:59.177171"
+  },
+  "c5666ba6_38a13e27": {
+    "video_id": "c5666ba6",
+    "sha256": "38a13e27768b3d01586be12d9694a20f6e8ecfef8e7da207c54a60b5d32f7e9b",
+    "phash": "f841a0600093c000",
+    "source": "user_submission",
+    "created_at": "2026-05-08T22:20:34.881629"
+  },
+  "847758b8_d250f807": {
+    "video_id": "847758b8",
+    "sha256": "d250f807e0bdf147c9df524ce6219a279d0476deca880ec24a4345b8ca71245a",
+    "phash": "90602726b0814804",
+    "source": "user_submission",
+    "created_at": "2026-05-09T14:27:51.527292"
+  },
+  "7e0f6fbc_faf950af": {
+    "video_id": "7e0f6fbc",
+    "sha256": "faf950afdee55f760cc16df8aca566cd86539113aef8e2545fbaef21638aacd7",
+    "phash": "a230884048b04810",
+    "source": "user_submission",
+    "created_at": "2026-05-09T15:11:59.185171"
+  },
+  "bc12f9ac_0c55ba22": {
+    "video_id": "bc12f9ac",
+    "sha256": "0c55ba224454899b8b5c4082f4bc02ae45196cf6b73fcbec50a1d4f84591a4a6",
+    "phash": "bdace04c84000020",
+    "source": "user_submission",
+    "created_at": "2026-05-09T16:08:37.630566"
+  },
+  "549f85f0_ec5e4cf8": {
+    "video_id": "549f85f0",
+    "sha256": "ec5e4cf830e8e41759ee3c068c5b94554656b7ba67e78801579aae58f96b515b",
+    "phash": "c22738c4203d1d30",
+    "source": "user_submission",
+    "created_at": "2026-05-09T22:46:04.633165"
+  },
+  "9e4d38a9_876e704f": {
+    "video_id": "9e4d38a9",
+    "sha256": "876e704f58332dda267af5c2ace13687c6ff66727d77e8800b97dfda46bce168",
+    "phash": "c0a9168421ca0d25",
+    "source": "user_submission",
+    "created_at": "2026-05-09T23:13:09.381210"
+  },
+  "f31acbde_79f01c57": {
+    "video_id": "f31acbde",
+    "sha256": "79f01c576f584dd423e6c12b2642cf6bb35ac6ffb26c70d0c509bd2a18bafc6d",
+    "phash": "c021283ccce363a0",
+    "source": "user_submission",
+    "created_at": "2026-05-10T05:04:11.551463"
+  },
+  "d8695a62_a255622d": {
+    "video_id": "d8695a62",
+    "sha256": "a255622d52055945044893e146912c01211f20fd85b11e207b9be83f4d56ed64",
+    "phash": "a88060a087a08040",
+    "source": "user_submission",
+    "created_at": "2026-05-10T06:31:04.447263"
+  },
+  "833c8c66_ba9684de": {
+    "video_id": "833c8c66",
+    "sha256": "ba9684de03f2430b6aa5f11e8da4bb06a5ca67ece9da5d97a5081127161f3cff",
+    "phash": "a8b5c04284900000",
+    "source": "user_submission",
+    "created_at": "2026-05-10T12:45:32.406797"
+  },
+  "19255ffe_d0432c70": {
+    "video_id": "19255ffe",
+    "sha256": "d0432c7018054f29207456eec306c5693b5b12cc2d81a1649668313e03a37f2e",
+    "phash": "da4192286c089000",
+    "source": "user_submission",
+    "created_at": "2026-05-10T22:23:02.398735"
+  },
+  "1e5d5fc1_3f2601d3": {
+    "video_id": "1e5d5fc1",
+    "sha256": "3f2601d3ec387a2c9d35957abaae0e02713003b14f5de7b94899d049804d3975",
+    "phash": "f45863c141a0c000",
+    "source": "user_submission",
+    "created_at": "2026-05-11T21:14:12.739792"
+  },
+  "4f736e9a_f337175d": {
+    "video_id": "4f736e9a",
+    "sha256": "f337175de03287c6b67572250ddc9c24cfaaef201f8645e3470c29ecb0a75614",
+    "phash": "e0208a8684080808",
+    "source": "user_submission",
+    "created_at": "2026-05-11T21:48:12.220192"
+  },
+  "a9962fd5_5d4b2c84": {
+    "video_id": "a9962fd5",
+    "sha256": "5d4b2c84c2852087c0a326267298d3e81390ce2615b4e632b9199a2af033341c",
+    "phash": "f0895cd042402c20",
+    "source": "user_submission",
+    "created_at": "2026-05-11T22:06:58.135137"
+  },
+  "4bb6146c_5d4b2c84": {
+    "video_id": "4bb6146c",
+    "sha256": "5d4b2c84c2852087c0a326267298d3e81390ce2615b4e632b9199a2af033341c",
+    "phash": "f0895cd042402c20",
+    "source": "user_submission",
+    "created_at": "2026-05-12T00:04:17.858981"
+  },
+  "003bbf97_681f87b9": {
+    "video_id": "003bbf97",
+    "sha256": "681f87b9ac07d5b99ebc8088f4baa0424817a5eb77dca06f71045994e3dd80a2",
+    "phash": "b1604c0e06806090",
+    "source": "user_submission",
+    "created_at": "2026-05-12T15:40:16.945892"
+  },
+  "c90c6058_0c5958e3": {
+    "video_id": "c90c6058",
+    "sha256": "0c5958e3f0e1ce39954de52ef549c943ff3402f3f4d856a22e8ae223bd99a08b",
+    "phash": "901482c0900006a0",
+    "source": "user_submission",
+    "created_at": "2026-05-12T17:37:49.733260"
+  },
+  "d62d7ab2_8a42fc1d": {
+    "video_id": "d62d7ab2",
+    "sha256": "8a42fc1d18dd59e296d3f9a03a999aaa7fedb8aa393ab6728a4bea04278b4644",
+    "phash": "f15c218804610820",
+    "source": "user_submission",
+    "created_at": "2026-05-12T20:59:21.957485"
+  },
+  "c1b24ee8_dbe97a01": {
+    "video_id": "c1b24ee8",
+    "sha256": "dbe97a01f445d86b007a893d4d8462996676d82e4293583ab7c4bc30e51c78d9",
+    "phash": "dd49088a00416800",
+    "source": "user_submission",
+    "created_at": "2026-05-12T23:17:27.972329"
+  },
+  "bed44345_6c2c1a5f": {
+    "video_id": "bed44345",
+    "sha256": "6c2c1a5f5c5fa4b3e51119eee4dd111c337c279e9babe86d487926c65358e65e",
+    "phash": "80218850a1809944",
+    "source": "user_submission",
+    "created_at": "2026-05-13T00:57:45.887958"
+  },
+  "d214bc90_bd7af118": {
+    "video_id": "d214bc90",
+    "sha256": "bd7af1181479535ff7fc97d90d88b598d4ffc10d891b86afe0b8da60f5304c48",
+    "phash": "a824268c0843b194",
+    "source": "user_submission",
+    "created_at": "2026-05-13T01:27:25.246286"
+  },
+  "4888f38b_fe009c84": {
+    "video_id": "4888f38b",
+    "sha256": "fe009c841a3ab8c34f466f6e80db4f17534ce4cf69ea10aa04f1f5698c924b7c",
+    "phash": "d084708060806018",
+    "source": "user_submission",
+    "created_at": "2026-05-13T01:57:07.451080"
+  },
+  "3872e7a4_fe009c84": {
+    "video_id": "3872e7a4",
+    "sha256": "fe009c841a3ab8c34f466f6e80db4f17534ce4cf69ea10aa04f1f5698c924b7c",
+    "phash": "d084708060806018",
+    "source": "user_submission",
+    "created_at": "2026-05-14T19:52:54.534454"
+  },
+  "2dbb5e2c_4048093e": {
+    "video_id": "2dbb5e2c",
+    "sha256": "4048093ec31ae96aac97525f0ec4c8ff0b2f12b5684fb9022a8a59f558482578",
+    "phash": "98492da435244460",
+    "source": "user_submission",
+    "created_at": "2026-05-14T20:49:13.749840"
+  },
+  "b0fbec7a_b9fa1b1f": {
+    "video_id": "b0fbec7a",
+    "sha256": "b9fa1b1f6e10f8d13b35275bd4d8ac2e26900e0c3c8a6fbd107c156218232a7c",
+    "phash": "c4a0a00088112080",
+    "source": "user_submission",
+    "created_at": "2026-05-14T22:28:13.394715"
+  },
+  "fb81e957_5f7af3be": {
+    "video_id": "fb81e957",
+    "sha256": "5f7af3be841d5cd59e9f593622fbf0c9f58c5d8899b388e3cb633b87417e211e",
+    "phash": "80e0908650402420",
+    "source": "user_submission",
+    "created_at": "2026-05-15T03:42:23.496011"
+  },
+  "00dff04e_499033f2": {
+    "video_id": "00dff04e",
+    "sha256": "499033f2160b5b541cf9ec4b9b4074ec78713e9f82060c0670e9ef53be62ea86",
+    "phash": "aa2a84f480089090",
+    "source": "user_submission",
+    "created_at": "2026-05-15T04:12:11.528339"
+  },
+  "a49e7926_9aeaea86": {
+    "video_id": "a49e7926",
+    "sha256": "9aeaea8695583567263d1d2effe530f0e65a34190265d53c1a6dbf5382683691",
+    "phash": "de803b2b7d30c2c3",
+    "source": "user_submission",
+    "created_at": "2026-05-15T12:19:15.087322"
+  },
+  "e9b5ae93_d8366cc9": {
+    "video_id": "e9b5ae93",
+    "sha256": "d8366cc9114e8066879baf9a061717fa73ee4d8b2595987c022e1ef3b1033f66",
+    "phash": "9cb339580d054b6a",
+    "source": "user_submission",
+    "created_at": "2026-05-15T14:18:15.633963"
+  },
+  "81e3170d_f0fa72cb": {
+    "video_id": "81e3170d",
+    "sha256": "f0fa72cb23abb8411051eb9655a7b5cae41b2f423739048ec79380fdd2cb89b8",
+    "phash": "c8bc54c20e06ce0c",
+    "source": "user_submission",
+    "created_at": "2026-05-15T14:51:34.719890"
+  },
+  "7b1c81f5_1957f67b": {
+    "video_id": "7b1c81f5",
+    "sha256": "1957f67b9447f603421297a3a82cf0c528823a180b18864a6fcbe91a71779135",
+    "phash": "94f0b000cf710483",
+    "source": "user_submission",
+    "created_at": "2026-05-15T15:44:45.887668"
+  },
+  "fbc39c9c_de9ceae1": {
+    "video_id": "fbc39c9c",
+    "sha256": "de9ceae151cff780c4749cde073535655c1ecf581ed7298fe3db5e8b3e937146",
+    "phash": "8c273a73618cb4a7",
+    "source": "user_submission",
+    "created_at": "2026-05-15T16:36:36.647336"
+  },
+  "6e8083da_202986ee": {
+    "video_id": "6e8083da",
+    "sha256": "202986eeb45c35579bffac0cd46179e0226664e68032c026461996efd1394757",
+    "phash": "94940088181821a5",
+    "source": "user_submission",
+    "created_at": "2026-05-16T01:20:29.522266"
+  },
+  "7de0748c_ca1db5fa": {
+    "video_id": "7de0748c",
+    "sha256": "ca1db5fa66540c8c51578f3ca08a9f2a44fc1319ce32438e21427b9da604ae0d",
+    "phash": "924a6d12a6b44949",
+    "source": "user_submission",
+    "created_at": "2026-05-16T01:22:09.509374"
+  },
+  "44f563ea_91528d3b": {
+    "video_id": "44f563ea",
+    "sha256": "91528d3b24f20816ae26d96c8a261d20a5d34640d7d25471840cab4cd5bb276d",
+    "phash": "cc04a6040848f021",
+    "source": "user_submission",
+    "created_at": "2026-05-16T01:23:39.740986"
+  },
+  "42c19dbe_a927b1ce": {
+    "video_id": "42c19dbe",
+    "sha256": "a927b1ce1b9bd1a49536a84834580b8537abae8b0fae85128240416ec512acad",
+    "phash": "c04890409062a519",
+    "source": "user_submission",
+    "created_at": "2026-05-16T05:25:27.690516"
+  },
+  "eeffa7a1_a6284c98": {
+    "video_id": "eeffa7a1",
+    "sha256": "a6284c98eb63a8ebec2435eb7a2bc6df1d1a7771058780764da9addb14375e83",
+    "phash": "ad8412eac0081804",
+    "source": "user_submission",
+    "created_at": "2026-05-16T05:43:48.393859"
+  },
+  "3ee2eb3d_18ff6cbf": {
+    "video_id": "3ee2eb3d",
+    "sha256": "18ff6cbfd8749cf8763392a88d23a9b863a73e2675feb854c8f809a955ad47bf",
+    "phash": "d4f0311968000240",
+    "source": "user_submission",
+    "created_at": "2026-05-16T06:38:14.046133"
+  },
+  "255e9673_04fe257b": {
+    "video_id": "255e9673",
+    "sha256": "04fe257b2aba0623bdb5ee8cedecf285ddc410e6247a17a6cc5b7fe874887224",
+    "phash": "820c6c9032b1c000",
+    "source": "user_submission",
+    "created_at": "2026-05-16T08:27:13.616158"
+  },
+  "335dc22a_204223a6": {
+    "video_id": "335dc22a",
+    "sha256": "204223a64098617157ab1eddc4873e5a4ad5e622a26a8b2865387273c65bacdc",
+    "phash": "e88083a0a0281640",
+    "source": "user_submission",
+    "created_at": "2026-05-16T19:29:14.661876"
+  },
+  "ee098bf5_4fdf1229": {
+    "video_id": "ee098bf5",
+    "sha256": "4fdf1229f00367255fa2051c389bda325ac82b2bf56e9ee51a6e0e9de761aca6",
+    "phash": "b88266928179084d",
+    "source": "user_submission",
+    "created_at": "2026-05-17T02:02:15.270122"
+  },
+  "841c88f3_c90200c7": {
+    "video_id": "841c88f3",
+    "sha256": "c90200c785a931286d2e920200e331a8f09da3473b92018db8cbb4b70debbc00",
+    "phash": "8f40392546a23ec8",
+    "source": "user_submission",
+    "created_at": "2026-05-17T02:22:23.546342"
+  },
+  "073de275_68546ded": {
+    "video_id": "073de275",
+    "sha256": "68546dedc84e923d7109ed55237c73ae33a22d9ca3a2f5669582e9c3cfc0b024",
+    "phash": "a4c0101a5b218084",
+    "source": "user_submission",
+    "created_at": "2026-05-17T13:01:08.080634"
+  },
+  "04442c11_5fd32f8c": {
+    "video_id": "04442c11",
+    "sha256": "5fd32f8c2892ec6580d8c94c2d7fdf77ffd0d94210aab7dc4e3ffbb7a9762105",
+    "phash": "e58882c498910080",
+    "source": "user_submission",
+    "created_at": "2026-05-17T13:23:37.560769"
+  },
+  "45b870a0_02b2125f": {
+    "video_id": "45b870a0",
+    "sha256": "02b2125fe8651cf5da8d91a66de68570f63b05af2d0543ac0bc1ce7dc59e7fa6",
+    "phash": "b0128f36d6909442",
+    "source": "user_submission",
+    "created_at": "2026-05-17T13:33:01.989515"
+  },
+  "f116f158_dc1cd36b": {
+    "video_id": "f116f158",
+    "sha256": "dc1cd36bc60ade3516ff56c517ea5f36e07730b87e56d0f580587acfcbd58e06",
+    "phash": "e8c0840692a08008",
+    "source": "user_submission",
+    "created_at": "2026-05-17T14:02:38.893607"
+  },
+  "86b40bc5_4d4bb028": {
+    "video_id": "86b40bc5",
+    "sha256": "4d4bb0280a3b69930300887cde44ec2187c46dc88658ec99be12f954e96f1882",
+    "phash": "fc4e04a020880c18",
+    "source": "user_submission",
+    "created_at": "2026-05-17T14:28:23.887168"
+  },
+  "99b72c6f_3c83c065": {
+    "video_id": "99b72c6f",
+    "sha256": "3c83c065e6f5aaeb74921f83809c564d928ef1f469381ae29e55020cfa2b6e3c",
+    "phash": "98a8a98688607043",
+    "source": "user_submission",
+    "created_at": "2026-05-17T15:09:25.363670"
+  },
+  "5caeefd7_14a5b3bb": {
+    "video_id": "5caeefd7",
+    "sha256": "14a5b3bb07c27bdfcb3e29592087e023a15541bba36f0dba5704fd2c29a12033",
+    "phash": "a1e0c04898882958",
+    "source": "user_submission",
+    "created_at": "2026-05-17T16:18:09.570300"
+  },
+  "04c30bd0_2ab8a84d": {
+    "video_id": "04c30bd0",
+    "sha256": "2ab8a84d6a763d4c6ff1f46ac6fe5477234e3ea5e4a024ab33d064e945dd4ec0",
+    "phash": "a0a04cf480909800",
+    "source": "user_submission",
+    "created_at": "2026-05-17T17:23:44.796851"
+  },
+  "8f486010_8e4e7815": {
+    "video_id": "8f486010",
+    "sha256": "8e4e781580bb622102a80ca24c6152f131a888d4a627d75d0026dbb54ac3b362",
+    "phash": "f88093c2ccd80008",
+    "source": "user_submission",
+    "created_at": "2026-05-17T17:42:05.616455"
+  },
+  "8dfef284_54b84e22": {
+    "video_id": "8dfef284",
+    "sha256": "54b84e22d9970994f4664fe7088c7394851c305680ee55a9182420313df14188",
+    "phash": "91a5e4530aca6a90",
+    "source": "user_submission",
+    "created_at": "2026-05-17T19:56:52.225874"
+  },
+  "03368e95_f7a31b4f": {
+    "video_id": "03368e95",
+    "sha256": "f7a31b4ff9e2633a47305b3bc18b04bf7f32dd4d5b2a41aef50b483a9da78b8f",
+    "phash": "a0a1321580142025",
+    "source": "user_submission",
+    "created_at": "2026-05-17T23:42:59.448441"
+  },
+  "e492d76d_650842d1": {
+    "video_id": "e492d76d",
+    "sha256": "650842d1db47ee1eef091371b792a3431dfbe277048eb438eb69414fd6c13194",
+    "phash": "c96c11062485828b",
+    "source": "user_submission",
+    "created_at": "2026-05-18T00:50:15.601429"
+  },
+  "114d71c4_5fe27479": {
+    "video_id": "114d71c4",
+    "sha256": "5fe27479920295dd0e7e3b7982cc0cc624bd6ecb55883390d549a2322cbf0ce7",
+    "phash": "db30305a01842812",
+    "source": "user_submission",
+    "created_at": "2026-05-18T04:01:29.778487"
+  },
+  "628ce0bc_152f2b19": {
+    "video_id": "628ce0bc",
+    "sha256": "152f2b19031ab3b233a732a0f79e2c9656ca0fc174f8c6418efa656aabcc28e2",
+    "phash": "b448cb6441c1c800",
+    "source": "user_submission",
+    "created_at": "2026-05-18T15:29:44.265336"
+  },
+  "8db7f5c5_80c52b11": {
+    "video_id": "8db7f5c5",
+    "sha256": "80c52b11f1123f5e3ea103d23c6864fac0418557ebca2cde0cb1348c0f978ab5",
+    "phash": "dd602af780845010",
+    "source": "user_submission",
+    "created_at": "2026-05-18T16:35:57.248907"
+  },
+  "b2d48afa_506eb271": {
+    "video_id": "b2d48afa",
+    "sha256": "506eb2712bb3e1539bc2c843660d89c36a24301a5a4511af1edba6ef3b5f1a24",
+    "phash": "f8017bd2c6823460",
+    "source": "user_submission",
+    "created_at": "2026-05-18T17:42:51.188487"
+  },
+  "e9c8540e_6bc6a4b1": {
+    "video_id": "e9c8540e",
+    "sha256": "6bc6a4b1cbf7f1ad8dc4239653c00341fd2a31baa56f30b052906a28db1d55b6",
+    "phash": "bfe204191b428c20",
+    "source": "user_submission",
+    "created_at": "2026-05-18T23:35:34.406256"
+  },
+  "f8b8ff9b_a0a38837": {
+    "video_id": "f8b8ff9b",
+    "sha256": "a0a3883733cec8be14b5a960ac3732a97aa8e1889b4a3165f27a31c9f1ed706f",
+    "phash": "e0c0208016480800",
+    "source": "user_submission",
+    "created_at": "2026-05-18T23:51:43.950906"
+  },
+  "8c2f9021_e0b3e7af": {
+    "video_id": "8c2f9021",
+    "sha256": "e0b3e7af70ddb5a21fb1dad5308944d7107fadf67b787aa1ddd109bcad25d6af",
+    "phash": "c3b89c43c200a148",
+    "source": "user_submission",
+    "created_at": "2026-05-19T00:50:03.025530"
+  },
+  "2c5c49cf_dc853b0a": {
+    "video_id": "2c5c49cf",
+    "sha256": "dc853b0ad4d4757af4a2b00be252a1b496e5bed8989f30b803f56621492b4a92",
+    "phash": "a1d084828c485522",
+    "source": "user_submission",
+    "created_at": "2026-05-19T16:43:25.368709"
+  },
+  "e6f3c760_2d5925c0": {
+    "video_id": "e6f3c760",
+    "sha256": "2d5925c09b687debfefb7631531e5125e712a2e473ea03b899c66da3ae6f179f",
+    "phash": "b890438448341018",
+    "source": "user_submission",
+    "created_at": "2026-05-19T21:16:24.637438"
+  },
+  "78cf5cc2_ef092cd5": {
+    "video_id": "78cf5cc2",
+    "sha256": "ef092cd59be9a1bdb05bf4bb786b758b273cf108e8804cf9fd2df59947b6260f",
+    "phash": "90602726f0814804",
+    "source": "user_submission",
+    "created_at": "2026-05-19T21:32:45.035436"
+  },
+  "40846767_28f80ab2": {
+    "video_id": "40846767",
+    "sha256": "28f80ab2d2c7a1a7cbb68475c4c81c8f85b8626a914026bb498d438c640dfa02",
+    "phash": "e88784d858e00164",
+    "source": "user_submission",
+    "created_at": "2026-05-20T04:50:23.810677"
+  },
+  "104bdf98_c2207384": {
+    "video_id": "104bdf98",
+    "sha256": "c2207384a75d4d0cf0074ff0bc0e81dee695359f5ba92ed57d00ce4a0a68f20a",
+    "phash": "cc2031066c309a24",
+    "source": "user_submission",
+    "created_at": "2026-05-20T09:08:11.676266"
+  },
+  "ef596871_685cb1bd": {
+    "video_id": "ef596871",
+    "sha256": "685cb1bdeb83921d5e013641669264e654cdb7972e4ddb87bdf01ce1ab4fab5b",
+    "phash": "a0a0808001048c08",
+    "source": "user_submission",
+    "created_at": "2026-05-20T09:33:13.647831"
+  },
+  "6c56431e_cf125f10": {
+    "video_id": "6c56431e",
+    "sha256": "cf125f102bfd84cdac6d5d046ba020bffed9c38b4b4c61a400b765e8eb26e489",
+    "phash": "9c0b63e48e3b908c",
+    "source": "user_submission",
+    "created_at": "2026-05-20T10:02:14.684203"
+  },
+  "ded84591_2d5925c0": {
+    "video_id": "ded84591",
+    "sha256": "2d5925c09b687debfefb7631531e5125e712a2e473ea03b899c66da3ae6f179f",
+    "phash": "b890438448341018",
+    "source": "user_submission",
+    "created_at": "2026-05-20T12:47:17.065114"
+  },
+  "a631b813_27891291": {
+    "video_id": "a631b813",
+    "sha256": "278912913d11357a2082a3a4fadc4e1cf83194e19d404bae0edb230399cc37f9",
+    "phash": "a5c092443820c400",
+    "source": "user_submission",
+    "created_at": "2026-05-20T13:03:40.097087"
+  },
+  "9afffd2e_58aa68d7": {
+    "video_id": "9afffd2e",
+    "sha256": "58aa68d7d068874695b1a6d60a2173603862366303f71c0c9594d83d44f6fdc8",
+    "phash": "b188a59540080c66",
+    "source": "user_submission",
+    "created_at": "2026-05-20T13:23:24.305308"
+  },
+  "68385fe0_731d060f": {
+    "video_id": "68385fe0",
+    "sha256": "731d060f1bdba1280aca146e43b02fb41326ce0245236c5368778031573c83d6",
+    "phash": "89035929b160a411",
+    "source": "user_submission",
+    "created_at": "2026-05-20T20:46:57.558486"
+  },
+  "3a5ad7ea_cec39e22": {
+    "video_id": "3a5ad7ea",
+    "sha256": "cec39e22c0b32be65334fe83811dbbde7408c7e0be84ad5c77a54725261b83aa",
+    "phash": "90c0a6c301246030",
+    "source": "user_submission",
+    "created_at": "2026-05-20T21:23:10.870338"
+  },
+  "fb5cb565_97963202": {
+    "video_id": "fb5cb565",
+    "sha256": "979632024d66c27582484b4e0c614d3da0918044b75d6906551bceb61c165a5d",
+    "phash": "e0389a5902403c80",
+    "source": "user_submission",
+    "created_at": "2026-05-20T21:45:14.442779"
+  },
+  "2b68b732_f83979c8": {
+    "video_id": "2b68b732",
+    "sha256": "f83979c833bc577718d8ac7deee39a7484e4608df8d09ce85f93f48e1a66968e",
+    "phash": "90108b5082b80982",
+    "source": "user_submission",
+    "created_at": "2026-05-21T00:20:34.929524"
+  },
+  "52a3c630_d945c28a": {
+    "video_id": "52a3c630",
+    "sha256": "d945c28a3eb054a1efdf4083b84a46d8fcb751c7faa43f36a5e975fb35a6d64e",
+    "phash": "8c433489f0e40b5e",
+    "source": "user_submission",
+    "created_at": "2026-05-25T16:47:30.541850"
   }
 }

@@ -113,7 +113,7 @@ def check_integration(quick=False):
     logger.info("🚀 [3/3] Running full pipeline integration check...")
     try:
         sys.path.insert(0, SRC)
-        import compiler
+        from Compiler_Modules import compiler
 
         # Use a dummy path — verify that import + function signature works
         # (actual render only happens if a real video file exists)
@@ -144,6 +144,23 @@ def check_integration(quick=False):
         return False
 
 
+def check_fonts():
+    """Verify and download required fonts."""
+    logger.info("🔤 [X/X] Verifying required fonts (Montserrat)...")
+    try:
+        sys.path.insert(0, SRC)
+        import Text_Modules.font_manager as fm
+        font_path = fm.ensure_montserrat_font()
+        if font_path:
+            logger.info(f"✅ Font Manager: Verified at {font_path}")
+            return True
+        else:
+            logger.warning("⚠️  Font Manager: Download or validation failed.")
+            return False
+    except Exception as e:
+        logger.warning(f"⚠️  Font Manager check failed: {e}")
+        return False
+
 def run_setup(quick=False, force=False):
     """
     Main entry. Runs all checks, writes sentinel on success.
@@ -160,6 +177,7 @@ def run_setup(quick=False, force=False):
 
     results = {
         "dnn": check_dnn(),
+        "fonts": check_fonts(),
         "features": check_features(),
         "integration": check_integration(quick=quick),
     }

@@ -9,7 +9,7 @@ import threading
 
 logger = logging.getLogger("gemini_status")
 STATUS_FILE = "The_json/gemini_status.json"
-BAN_DURATION = 2 * 60 * 60  # 2 Hours in seconds
+BAN_DURATION = 30 * 60  # 30 Minutes in seconds (Reduced from 2h based on 429 reset times)
 
 class GeminiStatusManager:
     def __init__(self):

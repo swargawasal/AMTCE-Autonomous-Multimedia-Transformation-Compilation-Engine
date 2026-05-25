@@ -1,0 +1,90 @@
+main.py:1360 (real_mrp): "2"                               → title_index=2,  affiliate_link=None,  link_type=None, real_mrp=None
+main.py:1361 (real_mrp): "2 https://amzn.to/xyz"           → title_index=2,  affiliate_link=URL,   link_type='exact', real_mrp=None
+main.py:1362 (real_mrp): "2  https://amzn.to/xyz"          → title_index=2,  affiliate_link=URL,   link_type='alternative', real_mrp=None
+main.py:1363 (real_mrp): "2 https://amzn.to/xyz 25300"     → title_index=2,  affiliate_link=URL,   link_type='exact', real_mrp=25300
+main.py:1364 (real_mrp): "2  https://amzn.to/xyz 25300"    → title_index=2,  affiliate_link=URL,   link_type='alternative', real_mrp=25300
+main.py:1365 (real_mrp): "/skip"                           → title_index=None, affiliate_link=None, link_type=None, real_mrp=None
+main.py:1366 (real_mrp): "/skip https://amzn.to/x 25300"  → title_index=None, affiliate_link=URL, link_type='exact', real_mrp=25300
+main.py:1374 (real_mrp): - Example: "2 https://amzn.to/xyz 25300"  → real_mrp=25300
+main.py:1378 (real_mrp): (title_index: int|None, affiliate_link: str|None, link_type: str|None, real_mrp: int|None)
+main.py:1385 (real_mrp): real_mrp = None
+main.py:1421 (real_mrp): real_mrp = int(_price_nums[0])
+main.py:1422 (real_mrp): logger.info(f"[AFFILIATE_PARSE] real_mrp=₹{real_mrp:,} parsed from input")
+main.py:1426 (real_mrp): return title_index, affiliate_link, link_type, real_mrp
+main.py:1923 (real_mrp): real_mrp: int = None,              # ← real Amazon MRP (optional, user-supplied)
+main.py:1970 (real_mrp): if real_mrp and real_mrp > 0:
+main.py:1972 (real_mrp): _price_hook = f"MRP: ₹{real_mrp:,}\n🔥 Big discount on Amazon 👇"
+main.py:1973 (real_mrp): logger.info(f"[PRICE_HOOK] compilation real_mrp=₹{real_mrp:,}")
+main.py:3793 (real_mrp): # ── [REAL_MRP SEED] ─────────────────────────────────────────────────────
+main.py:3794 (real_mrp): # Seed user-supplied real MRP into PIPELINE_REAL_MRP env var so the
+main.py:3797 (real_mrp): _session_real_mrp = user_sessions.get(user_id, {}).get("real_mrp")
+main.py:3798 (real_mrp): if _session_real_mrp and int(_session_real_mrp) > 0:
+main.py:3799 (real_mrp): os.environ["PIPELINE_REAL_MRP"] = str(int(_session_real_mrp))
+main.py:3800 (real_mrp): logger.info(f"💰 [REAL_MRP_SEED] Seeded real_mrp=₹{int(_session_real_mrp):,} into pipeline env.")
+main.py:3802 (real_mrp): os.environ.pop("PIPELINE_REAL_MRP", None)
+main.py:3823 (real_mrp): # Clear real_mrp env var — must not bleed into the next job
+main.py:3824 (real_mrp): os.environ.pop("PIPELINE_REAL_MRP", None)
+main.py:4480 (real_mrp): #   0. User-supplied real_mrp (from Telegram title expansion) ← HIGHEST PRIORITY
+main.py:4481 (price_data): #   1. Precomputed price_data from orchestrator's Gemini estimator
+main.py:4484 (price_data): _price_data = None
+main.py:4495 (real_mrp): _user_real_mrp = session.get("real_mrp")
+main.py:4496 (real_mrp): if not _user_real_mrp:
+main.py:4498 (real_mrp): _user_real_mrp = profile_data.get("real_mrp")
+main.py:4500 (real_mrp): if _user_real_mrp and int(_user_real_mrp) > 0:
+main.py:4501 (real_mrp): _user_mrp_int = int(_user_real_mrp)
+main.py:4502 (real_mrp): # ── real_mrp = actual Amazon selling price = clone_price (gold "deal" number) ──
+main.py:4510 (real_mrp): "source":          "user_real_mrp",
+main.py:4512 (price_data): _price_data = get_price_display(_item_category, precomputed=_user_precomputed)
+main.py:4513 (real_mrp): _price_source_tag = "user_real_mrp"  # ← Real, authoritative price
+main.py:4520 (price_data): # ── Priority 1: Precomputed price_data from orchestrator ──────────
+main.py:4521 (price_data): _precomputed = profile_data.get("price_data")
+main.py:4523 (price_data): _precomputed = mon_meta.get("price_data")
+main.py:4525 (price_data): _price_data = get_price_display(_item_category, precomputed=_precomputed)
+main.py:4535 (price_data): if _price_data and _item_category.lower() not in ("luxury", "jewellery", "designer"):
+main.py:4536 (price_data): _cel_raw = _price_data.get("celebrity_price", 0)
+main.py:4541 (price_data): _price_data["celebrity_price"]           = _cel_c2
+main.py:4542 (price_data): _price_data["clone_price"]               = _clone_c2
+main.py:4543 (price_data): _price_data["celebrity_price_formatted"] = f"\u20b9{_cel_c2:,}+"
+main.py:4544 (price_data): _price_data["clone_price_formatted"]     = f"\u20b9{_clone_c2:,}"
+main.py:4546 (price_data): _price_data["savings_pct"] = f"{_savings2}%"
+main.py:4570 (price_data): _price_data = get_price_display(_item_category, _gemini_price)
+main.py:4572 (price_data): "[PRICE_SYNC] No user MRP or precomputed price_data — using random estimate. "
+main.py:4579 (price_data): if _price_data and _item_category.lower() not in ("luxury", "jewellery", "designer"):
+main.py:4580 (price_data): _cel_raw = _price_data.get("celebrity_price", 0)
+main.py:4585 (price_data): _price_data["celebrity_price"]           = _cel_clamped
+main.py:4586 (price_data): _price_data["clone_price"]               = _clone_clamped
+main.py:4587 (price_data): _price_data["celebrity_price_formatted"] = f"\u20b9{_cel_clamped:,}+"
+main.py:4588 (price_data): _price_data["clone_price_formatted"]     = f"\u20b9{_clone_clamped:,}"
+main.py:4590 (price_data): _price_data["savings_pct"] = f"{_savings}%"
+main.py:4638 (real_mrp): # If the user supplied a real_mrp via title expansion, Gemini's hook may
+main.py:4641 (real_mrp): _real_mrp_known = _user_real_mrp and int(_user_real_mrp or 0) > 0
+main.py:4642 (real_mrp): if _tg_hook_text and _real_mrp_known:
+main.py:4654 (real_mrp): "(real_mrp=%s is authoritative).", _user_real_mrp
+main.py:4704 (price_data): if _price_data:
+main.py:4705 (price_data): _cel_fmt   = _price_data['celebrity_price_formatted']   # e.g. "₹18,330+"
+main.py:4706 (price_data): _clone_fmt = _price_data['clone_price_formatted']        # e.g. "₹10,176"
+main.py:4709 (real_mrp): if _price_source_tag == 'user_real_mrp':   # ← matches line 4499 assignment
+main.py:4817 (price_data): if _price_data:
+main.py:4819 (price_data): _price_orig_str   = str(_price_data.get("celebrity_price_formatted", "")).replace("₹", "").strip()
+main.py:4820 (price_data): _price_sale_str   = str(_price_data.get("clone_price_formatted", "")).replace("₹", "").strip()
+main.py:4821 (price_data): _discount_pct_str = str(_price_data.get("savings_pct", ""))
+main.py:5309 (real_mrp): title_index, user_affiliate_link, _aff_link_type, _real_mrp = parsed_res
+main.py:5312 (real_mrp): _aff_link_type, _real_mrp = None, None
+main.py:5330 (real_mrp): real_mrp=_real_mrp,
+main.py:5382 (real_mrp): real_mrp=_real_mrp,
+main.py:5398 (real_mrp): title_index, user_affiliate_link, _aff_link_type, _real_mrp = parsed_res
+main.py:5401 (real_mrp): _aff_link_type, _real_mrp = None, None
+main.py:5413 (real_mrp): if _real_mrp:
+main.py:5414 (real_mrp): user_sessions[user_id]["real_mrp"] = _real_mrp
+main.py:5434 (real_mrp): if _real_mrp:
+main.py:5435 (real_mrp): user_sessions[user_id]["real_mrp"] = _real_mrp
+main.py:5870 (real_mrp): _real_mrp = session.get("real_mrp")
+main.py:5954 (real_mrp): # If real_mrp supplied: show MRP + AI-estimated offer price → compute discount %
+main.py:5957 (real_mrp): if _real_mrp and _real_mrp > 0:
+main.py:5968 (real_mrp): if _offer_price > 0 and _offer_price < _real_mrp:
+main.py:5969 (real_mrp): _pct = int(((_real_mrp - _offer_price) / _real_mrp) * 100)
+main.py:5970 (real_mrp): _price_hook = f"MRP: ₹{_real_mrp:,}\n🔥 {_pct}% off — Check Amazon 👇"
+main.py:5973 (real_mrp): _price_hook = f"MRP: ₹{_real_mrp:,}\n🔥 Big discount on Amazon 👇"
+main.py:5974 (real_mrp): logger.info(f"[PRICE_HOOK] real_mrp=₹{_real_mrp:,} → {_price_hook!r}")
+main.py:5979 (real_mrp): logger.info(f"[BRANDING] link_type='{_session_link_type}' mrp={_real_mrp} → CTA built")
+main.py:6582 (outfit_description): outfit_description = (_scout_tg or {}).get("outfit_description", ""),

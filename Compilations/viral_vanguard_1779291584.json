@@ -1,0 +1,516 @@
+{
+  "pipeline": "audit_passed",
+  "verdict": "unknown",
+  "editorial_title": null,
+  "caption_data": {
+    "caption": "Gold Link Necklace VIRAL: CLI: Process 'Kiara Advani, guaranteeing a visual impact that lingers long after you've left the space, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+    "editorial_script": "Gold Link Necklace VIRAL: CLI: Process 'Kiara Advani, guaranteeing a visual impact that lingers long after you've left the space, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you."
+  },
+  "metadata": {
+    "hook_score": 0.4494,
+    "quality_score": 0.5,
+    "transformation_score": 0.0,
+    "item_name": "Gold Link Necklace",
+    "price_tag": "",
+    "gemini_total_calls": 1,
+    "gemini_call_log": [
+      "MASTER_INTELLIGENCE"
+    ],
+    "editing_diagnostics": {
+      "scene_count": 25,
+      "segments_created": 9,
+      "concat_used": false,
+      "editing_effective": false,
+      "non_chronological": false,
+      "avg_score": 0.112
+    },
+    "feature_flags": {
+      "scene_detection": true,
+      "smart_crop": true,
+      "caption_generation": true,
+      "music_engine": true,
+      "voiceover_generation": true,
+      "beat_detection": false,
+      "price_tag_engine": true,
+      "subject_tracking": false,
+      "scene_reconstruction": true,
+      "watermark_detection": true,
+      "watermark_inpaint": true
+    }
+  },
+  "pipeline_metrics": {
+    "monetization": {
+      "editorial_script": "Gold Link Necklace VIRAL: CLI: Process 'Kiara Advani, guaranteeing a visual impact that lingers long after you've left the space, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+      "final_caption": "Gold Link Necklace VIRAL: CLI: Process 'Kiara Advani, guaranteeing a visual impact that lingers long after you've left the space, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+      "caption": "Gold Link Necklace VIRAL: CLI: Process 'Kiara Advani, guaranteeing a visual impact that lingers long after you've left the space, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+      "cta": null,
+      "monetization_cta": null,
+      "ypp_safe": true,
+      "risk_level": "UNKNOWN",
+      "risk_reason": "Analysis pending or not performed.",
+      "reason": "Analysis pending or not performed.",
+      "transformation_score": 0.0,
+      "policy_citation": "Significant Original Commentary",
+      "fashion_scout": {},
+      "item_name": "Gold Link Necklace",
+      "improvement_tips": [],
+      "overlay_data": {},
+      "price_data": {
+        "celebrity_price": 26681,
+        "clone_price": 12192,
+        "source": "premium_tier"
+      },
+      "telegram_hook": null,
+      "instagram_hook": null,
+      "youtube_hook": null,
+      "hashtags": null
+    }
+  },
+  "editing_timeline": [
+    {
+      "clip_id": 0,
+      "start": 0.24,
+      "end": 3.24,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.02). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.017,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "setup",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.0,
+      "importance": 0.0
+    },
+    {
+      "clip_id": 0,
+      "start": 18.725,
+      "end": 19.723,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.02). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.015,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.2254,
+      "importance": 0.2254,
+      "bbox": {
+        "x": 768,
+        "y": 178,
+        "w": 141,
+        "h": 198
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 33.172,
+      "end": 34.062,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.02). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.02,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.253,
+      "importance": 0.253,
+      "bbox": {
+        "x": 347,
+        "y": 185,
+        "w": 141,
+        "h": 195
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 12.79,
+      "end": 15.278,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.00). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.002,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.95,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.3639,
+      "importance": 0.3639,
+      "bbox": {
+        "x": 789,
+        "y": 162,
+        "w": 129,
+        "h": 173
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 21.117,
+      "end": 22.542,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.01). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.01,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.3068,
+      "importance": 0.3068,
+      "bbox": {
+        "x": 664,
+        "y": 160,
+        "w": 146,
+        "h": 212
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 40.506,
+      "end": 42.306,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.03). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.027,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.4265,
+      "importance": 0.4265,
+      "bbox": {
+        "x": 492,
+        "y": 193,
+        "w": 70,
+        "h": 77
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 46.011,
+      "end": 47.436,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.02). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.021,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 1.0,
+      "importance": 1.0
+    },
+    {
+      "clip_id": 0,
+      "start": 48.544,
+      "end": 49.564,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.01). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.012,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.6809,
+      "importance": 0.6809,
+      "bbox": {
+        "x": 492,
+        "y": 292,
+        "w": 115,
+        "h": 115
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 38.369,
+      "end": 39.169,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.04,
+      "transition_intensity": 0.0,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": null,
+      "reason": "STIE:last_segment @ 40ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "climax",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.034,
+      "importance": 0.034,
+      "bbox": {
+        "x": 301,
+        "y": 107,
+        "w": 152,
+        "h": 206
+      }
+    }
+  ],
+  "monetization": {
+    "editorial_script": "Gold Link Necklace VIRAL: CLI: Process 'Kiara Advani, guaranteeing a visual impact that lingers long after you've left the space, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+    "final_caption": "Gold Link Necklace VIRAL: CLI: Process 'Kiara Advani, guaranteeing a visual impact that lingers long after you've left the space, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+    "caption": "Gold Link Necklace VIRAL: CLI: Process 'Kiara Advani, guaranteeing a visual impact that lingers long after you've left the space, providing an immediate aesthetic reward that transforms your silhouette, delivering an instant confidence boost that's visible to everyone around you.",
+    "cta": null,
+    "monetization_cta": null,
+    "ypp_safe": true,
+    "risk_level": "UNKNOWN",
+    "risk_reason": "Analysis pending or not performed.",
+    "reason": "Analysis pending or not performed.",
+    "transformation_score": 0.0,
+    "policy_citation": "Significant Original Commentary",
+    "fashion_scout": {},
+    "item_name": "Gold Link Necklace",
+    "improvement_tips": [],
+    "overlay_data": {},
+    "price_data": {
+      "celebrity_price": 26681,
+      "clone_price": 12192,
+      "source": "premium_tier"
+    },
+    "telegram_hook": null,
+    "instagram_hook": null,
+    "youtube_hook": null,
+    "hashtags": null
+  },
+  "processed_only_path": "Compilations/viral_vanguard_1779291584.mp4",
+  "audit": {
+    "verdict": "ACTIVE",
+    "creative_score": 1.0,
+    "silent_failures": [],
+    "health_report": {
+      "modules_connected": 22,
+      "modules_total": 22,
+      "modules_disconnected": [],
+      "signals": {
+        "beats": 15,
+        "retention_peaks": 13,
+        "emotional_spikes": 3,
+        "fused_moments": 1,
+        "candidate_moments": 21
+      },
+      "segments_generated": 9,
+      "diversity_score": 1.0,
+      "creative_edit_score": 1.0,
+      "creative_pipeline_integrity": true
+    }
+  }
+}

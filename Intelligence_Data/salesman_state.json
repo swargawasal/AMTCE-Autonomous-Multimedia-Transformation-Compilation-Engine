@@ -1,0 +1,32 @@
+{
+  "harvest": {
+    "last_run_date": "2026-05-25",
+    "slots_completed_today": [
+      "01:45 [catchup]",
+      "03:00 [catchup]"
+    ],
+    "catchup_fired_today": true,
+    "total_runs_all_time": 8
+  },
+  "publisher": {
+    "last_check_date": "2026-05-25",
+    "slots_published_today": [
+      "22:31[catchup]"
+    ],
+    "slots_missed_today": [
+      "07:30",
+      "4:02",
+      "19:30"
+    ],
+    "catchup_slots_today": [
+      "22:31"
+    ],
+    "deficit_videos": 4
+  },
+  "apify": {
+    "quota_date": "2026-05-25",
+    "quota_used": 27,
+    "quota_limit": 50,
+    "total_calls_all_time": 81
+  }
+}

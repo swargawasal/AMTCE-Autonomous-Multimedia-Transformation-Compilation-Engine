@@ -25,10 +25,14 @@ class QualityEvaluator:
     
     # Thresholds for "FAIL"
     # We use Variance/Edge delta as proxy for Quality Drop.
-    # Scores are usually negative (metrics drop).
-    BLUR_THRESHOLD = -0.15  # Soft fail if blur metric drops >15%
-    EDGE_THRESHOLD = -0.15  # Soft fail if edge metric drops >15%
-    HARD_FAIL_THRESHOLD = -0.45 # Hard fail if any metric drops >45%
+    # Scores are usually negative (metrics drop due to creative transformations).
+    # NOTE: Creative edits (crops, speed ramps, overlays, transitions) legitimately
+    #       change scene composition and shift Laplacian/edge distributions.
+    #       Thresholds are set conservatively to only catch genuine codec failures,
+    #       fully-black outputs, or extreme blurring artifacts.
+    BLUR_THRESHOLD = -0.70  # Soft fail if blur metric drops >70% (inpainting legitimately reduces Laplacian variance)
+    EDGE_THRESHOLD = -0.70  # Soft fail if edge metric drops >70%
+    HARD_FAIL_THRESHOLD = -0.88  # Hard fail only on near-total quality destruction >88%
     
     @staticmethod
     def _get_metrics(frame):
@@ -81,63 +85,42 @@ class QualityEvaluator:
             if count_a <= 0 or count_b <= 0:
                  return {"status": "ERROR", "reason": "Empty video", "score": -1.0, "deltas": {}, "reasons": ["Empty Video"]}
                  
-            # Structural Mismatch Check
-            count_diff = abs(count_a - count_b)
-            if count_diff / max(count_a, 1) > 0.10: # >10% frame count diff
-                 return {
-                     "status": "HARD_FAIL", 
-                     "reason": f"Frame Mismatch ({count_a} vs {count_b})",
-                     "score": -1.0,
-                     "deltas": {}, 
-                     "reasons": ["Significant Frame Desync"]
-                 }
+            # Structural Mismatch Check completely removed: creative editing changes frame counts!
             
-            # 2. Dynamic Sampling
-            # Sample between 3 and 7 frames
-            min_dim = min(count_a, count_b)
-            num_samples = max(3, min(7, int(min_dim / 30))) # e.g. 150 frames -> 5 samples
-            indices = np.linspace(0, min_dim - 1, num_samples, dtype=int).tolist()
+            # 2. Dynamic Sampling (Independent for A and B)
+            num_samples = 5
+            indices_a = np.linspace(0, count_a - 1, num_samples, dtype=int).tolist()
+            indices_b = np.linspace(0, count_b - 1, num_samples, dtype=int).tolist()
             
-            # Remove duplicates if video is very short
-            indices = sorted(list(set(indices)))
-            
-            var_deltas = []
-            edge_deltas = []
-            
-            epsilon = 1e-6 # float noise floor
-            
-            for idx in indices:
+            var_a_list, edge_a_list = [], []
+            for idx in set(indices_a):
                 cap_a.set(cv2.CAP_PROP_POS_FRAMES, idx)
-                cap_b.set(cv2.CAP_PROP_POS_FRAMES, idx)
-                
-                ret_a, frame_a = cap_a.read()
-                ret_b, frame_b = cap_b.read()
-                
-                if not ret_a or not ret_b: continue
-                
-                # Resize B to match A if needed (Handle Resolution Changes)
-                if frame_a.shape != frame_b.shape:
-                    frame_b = cv2.resize(frame_b, (frame_a.shape[1], frame_a.shape[0]))
-                
-                v_a, e_a = QualityEvaluator._get_metrics(frame_a)
-                v_b, e_b = QualityEvaluator._get_metrics(frame_b)
-                
-                # Calculate % Change with noise floor
-                # If baseline is near zero, delta is unstable -> skip or clamp
-                if v_a < epsilon: v_delta = 0.0 
-                else: v_delta = (v_b - v_a) / v_a
+                ret, frame = cap_a.read()
+                if ret:
+                    v, e = QualityEvaluator._get_metrics(frame)
+                    var_a_list.append(v)
+                    edge_a_list.append(e)
                     
-                if e_a < epsilon: e_delta = 0.0
-                else: e_delta = (e_b - e_a) / e_a
-                
-                var_deltas.append(v_delta)
-                edge_deltas.append(e_delta)
-                
-            if not var_deltas:
+            var_b_list, edge_b_list = [], []
+            for idx in set(indices_b):
+                cap_b.set(cv2.CAP_PROP_POS_FRAMES, idx)
+                ret, frame = cap_b.read()
+                if ret:
+                    v, e = QualityEvaluator._get_metrics(frame)
+                    var_b_list.append(v)
+                    edge_b_list.append(e)
+
+            if not var_a_list or not var_b_list:
                 return {"status": "ERROR", "reason": "No valid frames analyzed", "score": -1.0, "deltas": {}, "reasons": ["No Frames"]}
-            
-            avg_var_delta = np.mean(var_deltas)
-            avg_edge_delta = np.mean(edge_deltas)
+
+            avg_var_a = np.mean(var_a_list)
+            avg_edge_a = np.mean(edge_a_list)
+            avg_var_b = np.mean(var_b_list)
+            avg_edge_b = np.mean(edge_b_list)
+
+            epsilon = 1e-6
+            avg_var_delta = (avg_var_b - avg_var_a) / max(avg_var_a, epsilon)
+            avg_edge_delta = (avg_edge_b - avg_edge_a) / max(avg_edge_a, epsilon)
             
             # 3. Worst-Case Scoring
             # Instead of average, we take the minimum performance

@@ -19,7 +19,8 @@ class TestMetaUploader(unittest.TestCase):
             "META_PAGE_TOKEN": "token",
             "IG_BUSINESS_ID": "456",
             "IG_BUSINESS_TOKEN": "token",
-            "META_UPLOAD_TYPE": "Reels"
+            "META_UPLOAD_TYPE": "Reels",
+            "SEND_TO_FACEBOOK": "on"
         })
         self.patcher.start()
         
@@ -32,7 +33,7 @@ class TestMetaUploader(unittest.TestCase):
         if os.path.exists("test_video.mp4"):
             os.remove("test_video.mp4")
 
-    @patch('meta_uploader.httpx.AsyncClient')
+    @patch('Uploader_Modules.meta_uploader.httpx.AsyncClient')
     def test_upload_success(self, mock_client_cls):
         # Setup Mock Client
         mock_client = mock_client_cls.return_value
@@ -66,7 +67,7 @@ class TestMetaUploader(unittest.TestCase):
             create_resp({"success": True}), # IG Upload
             create_resp({"id": "ig_media_1"}), # IG Publish
             
-            create_resp({"upload_session_id": "fb_sess_1"}), # FB Init
+            create_resp({"video_id": "fb_vid_1", "upload_session_id": "fb_sess_1"}), # FB Init
             create_resp({"success": True}), # FB Upload
             create_resp({"video_id": "fb_vid_1"}) # FB Finish
         ]
@@ -83,10 +84,10 @@ class TestMetaUploader(unittest.TestCase):
             loop.close()
         
         print(f"Results: {results}")
-        self.assertEqual(results['instagram'], 'success')
-        self.assertEqual(results['facebook'], 'success')
+        self.assertEqual(results['instagram']['status'], 'success')
+        self.assertEqual(results['facebook']['status'], 'success')
 
-    @patch('meta_uploader.httpx.AsyncClient')
+    @patch('Uploader_Modules.meta_uploader.httpx.AsyncClient')
     def test_upload_failure_retry(self, mock_client_cls):
         mock_client = mock_client_cls.return_value
         mock_client.__aenter__.return_value = mock_client
@@ -109,7 +110,7 @@ class TestMetaUploader(unittest.TestCase):
             create_resp({"success": True}), # IG Upload
             create_resp({"id": "ig_media_1"}), # IG Publish
             
-            create_resp({"upload_session_id": "fb_sess_1"}), # FB Init
+            create_resp({"video_id": "fb_vid_1", "upload_session_id": "fb_sess_1"}), # FB Init
             create_resp({"success": True}), # FB Upload
             create_resp({"video_id": "fb_vid_1"}) # FB Finish
         ]
@@ -124,7 +125,7 @@ class TestMetaUploader(unittest.TestCase):
             loop.close()
             
         print(f"Retry Results: {results}")
-        self.assertEqual(results['instagram'], 'success')
+        self.assertEqual(results['instagram']['status'], 'success')
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,0 +1,2036 @@
+"""
+fashion_scout.py
+================
+Hierarchical Fashion Intelligence Pipeline
+- Visual Dominance Detection (Step 0) anchors all analysis to the most prominent garment
+- Multi-attempt retry loop with combined AI + local confidence scoring
+- 3-tier query fallback: local builder → Gemini → SEO keywords
+- Affiliate link fuzzy-match injection
+- Money Flow CTA integration
+
+Author  : Fashion Scout Engine
+Version : 2.0.0  (Visual Dominance Edition)
+"""
+
+from __future__ import annotations
+
+import json
+import logging
+import os
+import re
+from datetime import datetime
+from typing import Dict, List, Optional
+
+import google.generativeai as genai  # noqa: F401  (side-effect: SDK init)
+from PIL import Image
+
+from Intelligence_Modules.gemini_governor import gemini_router
+from Intelligence_Modules.money_flow_logic import engine as money_engine  # type: ignore
+
+logger = logging.getLogger("fashion_scout")
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CONFIDENCE THRESHOLDS & RETRY CONFIG
+# ─────────────────────────────────────────────────────────────────────────────
+HIGH_CONFIDENCE: float = 0.85
+MID_CONFIDENCE:  float = 0.65
+MAX_RETRIES:     int   = 3
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AFFILIATE LINK STORE PATH
+# ─────────────────────────────────────────────────────────────────────────────
+_AFFILIATE_FILE = "Monetization_Metrics/Amazon_affliate_link.json"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# KEYWORD BANKS  (used by local scorer — cannot be hallucinated)
+# ─────────────────────────────────────────────────────────────────────────────
+_CATEGORY_KEYWORDS: frozenset = frozenset({
+    "dress", "saree", "lehenga", "kurti", "kurta", "top", "blouse", "shirt",
+    "t-shirt", "polo", "hoodie", "sweatshirt", "jacket", "blazer", "coat",
+    "jeans", "trousers", "shorts", "skirt", "leggings", "joggers", "cargo",
+    "jumpsuit", "romper", "co-ord", "set", "anarkali", "sharara", "dupatta",
+    "shawl", "scarf", "swimwear", "activewear", "vest",
+})
+
+_COLOR_KEYWORDS: frozenset = frozenset({
+    "black", "white", "ivory", "cream", "beige", "grey", "gray", "navy",
+    "blue", "cobalt", "red", "maroon", "burgundy", "pink", "dusty", "rose",
+    "green", "olive", "emerald", "yellow", "mustard", "orange", "purple",
+    "lavender", "brown", "tan", "camel", "gold", "silver", "multicolor",
+})
+
+_FABRIC_KEYWORDS: frozenset = frozenset({
+    "cotton", "silk", "chiffon", "georgette", "satin", "velvet", "linen",
+    "denim", "lycra", "polyester", "rayon", "crepe", "organza", "net",
+    "modal", "fleece", "knit", "ribbed", "jersey", "tweed", "wool",
+})
+
+_BANNED_ADJECTIVES: frozenset = frozenset({
+    "stylish", "trendy", "nice", "beautiful", "elegant",
+    "chic", "modern", "classic",
+})
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PRIMARY ANALYSIS PROMPT  — v2.0 (Visual Dominance Edition)
+# ─────────────────────────────────────────────────────────────────────────────
+TREND_CONTEXT_PROMPT = """
+YOU ARE A TRIPLE-EXPERT SYSTEM OPERATING IN PARALLEL:
+ 
+  [EXPERT 1] SENIOR FASHION FORENSIC ANALYST
+  15+ years across luxury couture, Indian ethnic wear, streetwear, and activewear.
+  You see what others miss: the dart that creates an hourglass, the French seam that
+  signals premium construction, the difference between georgette and chiffon under
+  studio lighting, the zari thread count that separates ₹8,000 sarees from ₹80,000 ones.
+ 
+  [EXPERT 2] AMAZON.IN / MYNTRA SEARCH OPTIMIZATION EXPERT
+  You know exactly which search terms convert at scale on Indian e-commerce.
+  You think in filter combinations: not "blue dress" but "cobalt blue georgette
+  flared midi dress party women". Every word in your query is a live filter term.
+ 
+  [EXPERT 3] SENIOR RETAIL PRODUCT BUYER — MYNTRA / ASOS / AJIO / ZARA
+  You name products the way product catalogues do. You know that buyers search
+  "Asymmetric One-Shoulder Sequin Bodycon Mini Dress" not "sparkly dress".
+  You have written thousands of product titles that drove clicks and conversions.
+ 
+YOUR JOB: All three experts analyse the SAME dominant garment simultaneously.
+Each expert's output feeds the others. The result is the most complete, specific,
+commercially actionable garment identification possible.
+ 
+Execute in this EXACT ORDER — never skip, never reorder:
+ 
+  PHASE 0  → Multimodal Exploitation
+  PHASE 1  → Visual Dominance Detection
+  PHASE 2  → Fabric Fingerprinting
+  PHASE 3  → Silhouette Architecture
+  PHASE 4  → Ethnic Garment Deep-Dive (fire only if garment is Indian ethnic)
+  PHASE 5  → Full Attribute Forensics
+  PHASE 6  → Retail Product Naming Engine  ← THE MOST CRITICAL PHASE
+  PHASE 7  → Amazon Search Query Builder
+  PHASE 8  → SEO Keyword Expansion
+  PHASE 9  → Confidence Scoring
+ 
+════════════════════════════════════════════════════════════════
+PHASE 0 — MULTIMODAL EXPLOITATION PROTOCOL
+════════════════════════════════════════════════════════════════
+You are receiving 1–4 frames. EXTRACT MAXIMUM SIGNAL from ALL of them.
+Do not skim. Every frame is a new angle of evidence.
+ 
+TECHNIQUE 1 — TEMPORAL DRAPE READING (multi-frame):
+  If multiple frames exist, compare the garment across frames.
+  Fabric that FLOWS between frames = chiffon / georgette / crepe / rayon
+  Fabric that HOLDS SHAPE between frames = cotton / denim / linen / structured knit
+  Fabric that CLINGS and MOVES WITH the body = jersey / lycra / ribbed knit
+  Fabric that STIFFENS at the hem = organza / net / taffeta / brocade
+ 
+TECHNIQUE 2 — HIGHLIGHT TOPOLOGY:
+  WHERE light hits brightest and HOW WIDE the highlight is reveals sheen:
+  Sharp pinpoint highlight + colour depth = high-sheen (satin, liquid satin, wet-look)
+  Broad soft highlight + slight glow = mid-sheen (silk, georgette, crepe-satin)
+  Flat even lit surface, no hotspot = matte (cotton, linen, denim, matte jersey)
+  Scattered tiny highlights across surface = metallic / sequin / glitter fabric
+ 
+TECHNIQUE 3 — SHADOW EDGE READING:
+  How shadows fall at the hem, sleeve, and waist tells you FABRIC WEIGHT:
+  Sharp clean shadow edge, fabric holds its shape mid-air = heavy/structured (denim, brocade, velvet, heavy silk)
+  Soft shadow, fabric drapes in folds = medium weight (georgette, crepe, rayon, satin)
+  Almost no shadow, fabric collapses flat = very lightweight (chiffon, organza, net, tissue silk)
+ 
+TECHNIQUE 4 — DRAPE WAVE PATTERN:
+  The shape of folds in the fabric reveals its HAND (how it feels):
+  Angular / geometric folds = crisp fabric (cotton, linen, taffeta)
+  Soft rounded S-curves = fluid fabric (chiffon, georgette, satin)
+  Tight rippled folds = clingy/stretch (jersey, lycra, ribbed knit)
+  Heavy hanging folds with weight = dense fabric (velvet, heavy silk, brocade)
+ 
+TECHNIQUE 5 — TEXTURE GRAIN ZOOM (mentally zoom into fabric surface):
+  Can you see a visible weave or texture pattern? Describe it precisely:
+  Visible ribs running horizontally = ribbed knit
+  Diagonal twill lines = denim or tweed
+  Fine uniform surface with slight sheen = silk or polyester satin
+  Bumpy pebbled surface = crepe or textured georgette
+  Open weave you can almost see through = net or organza
+  Dense pile that catches light differently at angles = velvet
+ 
+TECHNIQUE 6 — CONSTRUCTION ARCHAEOLOGY:
+  Look for hidden garment-making signals:
+  Visible seam at the waist = separate bodice and skirt (dress or lehenga)
+  Diagonal bias cut (fabric hangs differently than expected) = bias-cut dress or saree drape
+  Visible boning or structure in the bodice = corset-style construction
+  Pleating or gathering at specific points = shirred, smocked, or ruched construction
+  Overlapping panels = wrap construction or asymmetric cut
+  Visible zipper or hook placement = back-zip, side-zip, or hook-and-eye closure
+ 
+TECHNIQUE 7 — EMBELLISHMENT FORENSICS (mentally zoom to borders, neckline, hem):
+  Do not just say "embroidered". Name EXACTLY what you see:
+  Thread work: resham / zari / gota / mirror / sequin / bead / stone
+  Placement: all-over / border-only / neckline only / hem only / scattered
+  Density: sparse / medium / heavy / encrusted
+  Colour contrast: tonal (same as base) / contrasting / multicolour
+ 
+════════════════════════════════════════════════════════════════
+TECHNIQUE 8 — CONTENT INTENT READING [CRITICAL FOR ACCURACY]:
+  This is fashion CONTENT created for social media. The subject or creator has
+  DELIBERATELY chosen to wear, style, and film ONE hero garment. Your job is to
+  identify what they are intentionally SHOWCASING — not what’s accidentally in frame.
+ 
+  SIGNALS THAT REVEAL THE HERO GARMENT:
+  1. REPETITION ACROSS FRAMES: The garment that appears in the MOST frames is the
+     one being featured. A creator shooting a dress will show it from multiple angles.
+     Track which garment is visible in Frame 1, Frame 2, Frame 3, Frame 4. The one
+     present in the most frames = the hero garment.
+  2. POSE INTENT: When the subject faces the camera front-on, extends their body,
+     pulls back their hair, or creates clear lines to the garment — they are directing
+     attention TO that garment.
+  3. STYLING CLARITY: The hero garment is usually the most carefully styled item.
+     It is properly fitted, pressed, and the subject is not covering it with hands
+     or body language.
+  4. CAMERA FRAMING: If a specific garment is centred in the frame, in sharp focus,
+     and lit well — the cinematographer is showcasing it.
+  5. FULL-BODY REVEAL: Frames that show the complete garment from neckline to hem
+     are hero shots. Favour identifying garments from these frames.
+ 
+  WHAT TO REJECT:
+  ✗ A garment that appears in only 1 out of 4 frames (random, not featured)
+  ✗ Background clothing on other people
+  ✗ Garments that are partially hidden by hands, bags, or other objects
+  ✗ Garments visible only in transition/movement frames (blurred, mid-spin)
+ 
+════════════════════════════════════════════════════════════════
+PHASE 1 — HERO GARMENT IDENTIFICATION [MANDATORY]
+════════════════════════════════════════════════════════════════
+This is social media fashion content. One garment is being INTENTIONALLY featured.
+Your mission: identify the HERO GARMENT — what the creator wants the viewer to notice,
+remember, and search for after watching.
+ 
+SCORE EACH CANDIDATE GARMENT on these 5 dimensions (1–5 each), pick the HIGHEST total:
+ 
+  DIMENSION 1 — FRAME CONSISTENCY (most important, max 5 pts):
+    5 pts → Garment visible in ALL frames (4/4 or 3/3)
+    4 pts → Visible in majority of frames (3/4)
+    3 pts → Visible in half the frames (2/4)
+    1 pt  → Visible in only 1 frame out of many (random/incidental)
+ 
+  DIMENSION 2 — CREATOR INTENT (max 5 pts):
+    5 pts → Subject poses to clearly display the garment; full-body front-facing reveal
+    4 pts → Clear styling effort on this item; it is pressed/fitted/coordinated
+    3 pts → Garment is visible but no special posing toward it
+    1 pt  → Garment appears incidental; not emphasised by subject
+ 
+  DIMENSION 3 — VISUAL PROMINENCE (max 5 pts):
+    5 pts → Garment occupies the largest surface area in the frame AND is in sharp focus
+    4 pts → Largest area OR sharpest focus (not both)
+    3 pts → Visible but not the dominant visual element
+    1 pt  → Background element or partially occluded
+ 
+  DIMENSION 4 — CAMERA QUALITY (max 5 pts):
+    5 pts → Garment is centred, well-lit, sharp focus, complete view (neck to hem)
+    4 pts → Well-lit and sharp but not complete view
+    3 pts → Reasonable view, minor blur or partial occlusion
+    1 pt  → Dark, blurred, cut off, or side/back view only
+ 
+  DIMENSION 5 — COLOUR SIGNAL (max 5 pts):
+    5 pts → Garment has the highest colour saturation in the scene
+    3 pts → Moderate colour presence
+    1 pt  → Low saturation, blends into background
+ 
+
+  DIMENSION 6 — VISUAL ATTRACTIVENESS & HIGHLIGHT DOMINANCE (max 5 pts + bonus):
+  Ask: "What is the FIRST garment the viewer’s eye snaps to?"
+  The MOST eye-catching, most highlighted garment must always win.
+     5 pts → Undisputed visual centrepiece: heavily embellished (sequins / mirror work /
+             zari / gota / feathers / stones) OR bold saturated colour that pops against
+             background OR dramatic silhouette (flared lehenga / ballgown / tiered ruffle
+             maxi) — AND placed in sharp focus at frame centre.
+     4 pts → Clearly more attractive than other garments in frame — one signal above present
+     3 pts → Moderately decorative — some embellishment or colour pop but not flashiest
+     2 pts → Plain garment, minimal visual interest
+     1 pt  → Dull, muted, partially covered, or visually suppressed
+
+  ATTRACTIVENESS BOOST RULE:
+  A garment scoring 5 on Dimension 6 receives a +3 bonus to its raw total score.
+  This guarantees the most stunning / most highlighted garment wins even if another
+  garment appears in more frames (e.g. a plain jeans-top vs a sequin lehenga centrepiece).
+
+DOMINANCE RULE:
+  The garment with the HIGHEST total score across all 6 dimensions = hero garment.
+  In a tie: prefer the garment with the higher Frame Consistency score.
+  If still tied: prefer the garment with higher Visual Attractiveness (Dimension 6) score.
+  If still tied: prefer the UPPER-BODY garment (dress / top / blouse > trousers).
+ 
+  dominance_score in the JSON = (total_score / 28) to produce a 0.0–1.0 value.
+  (Max raw score = 25 base + 3 attractiveness bonus = 28)
+ 
+Everything from Phase 2 onwards analyses THIS garment ONLY.
+ 
+MANDATORY EXCLUSION LIST — these items can NEVER be the hero garment.
+Always place them in "ignored_items". Look PAST them to find the clothing:
+  ✗ Sunglasses / eyeglasses / shades / spectacles / goggles
+  ✗ Hats / caps / headbands / hair accessories
+  ✗ Jewellery (earrings / necklaces / rings / bracelets / anklets)
+  ✗ Scarves / stoles used as head coverings (unless it IS the garment e.g. saree)
+  ✗ Handbags / purses / clutches / belts / watches
+  ✗ Shoes / heels / sandals / boots / footwear
+ 
+The hero garment MUST be a clothing item that covers the body:
+dress / top / blouse / skirt / trousers / saree / lehenga / kurta / jumpsuit / co-ord / etc.
+If no body-covering garment is visible, set dominance_score to 0 and confidence.detection to 0.0.
+ 
+Fill "visual_dominance" JSON block completely before proceeding.
+ 
+
+════════════════════════════════════════════════════════════════
+PHASE 2 — FABRIC FINGERPRINTING
+════════════════════════════════════════════════════════════════
+Using the 7 techniques from Phase 0, determine the PRIMARY fabric.
+ 
+STRICT FABRIC IDENTIFICATION HIERARCHY (use the FIRST match that fits):
+  Sequin / glitter fabric   → "sequin fabric" or "glitter mesh"  (not "metallic")
+  Velvet                    → identify pile direction and weight
+  Silk (pure or raw)        → identify weave type: dupion / charmeuse / crepe de chine
+  Satin                     → identify weight: liquid satin / duchess satin / crepe satin
+  Brocade / jacquard        → identify pattern type: floral / geometric / paisley brocade
+  Georgette                 → identify weight: light / heavy georgette
+  Chiffon                   → confirm with drape (collapses flat, very soft)
+  Crepe                     → bumpy texture, matte, slight body
+  Organza                   → stiff, transparent, very light
+  Net                       → open mesh, stiff or soft, used in lehengas / sarees
+  Jersey / ribbed knit      → confirm stretch and rib visibility
+  Denim                     → confirm twill and indigo/colour
+  Cotton                    → confirm flatness and matte, check for embroidery/print
+  Linen                     → confirm slub texture and slight wrinkle tendency
+  Polyester / rayon         → use this ONLY when fabric is genuinely ambiguous
+ 
+FABRIC COMBINATION RULE:
+  If the garment clearly uses two fabrics (e.g. net dupatta + silk lehenga),
+  name BOTH: primary fabric for the main body, secondary for the overlay.
+ 
+════════════════════════════════════════════════════════════════
+PHASE 3 — SILHOUETTE ARCHITECTURE
+════════════════════════════════════════════════════════════════
+Mentally trace the OUTER EDGE of the garment from shoulder to hem.
+ 
+SILHOUETTE IDENTIFICATION:
+  A-line      → fitted at waist, flares gently to hem (like the letter A)
+  Flared      → fitted at waist, dramatic flare (more than A-line)
+  Column/Sheath → minimal flare, follows the body line straight
+  Bodycon     → hugs every curve, maximum body following
+  Ballgown    → full volume skirt from waist, structured
+  Mermaid     → fitted to knee then flares out
+  Wrap        → diagonal front opening that crosses over
+  Asymmetric  → hem or neckline is uneven by design
+  High-Low    → shorter in front, longer at back
+  Tiered      → multiple horizontal layers of fabric
+  Peplum      → flare at the hip/waist over a fitted base
+ 
+GARMENT LENGTH (be precise):
+  Micro  → above mid-thigh
+  Mini   → mid-thigh
+  Midi   → mid-calf to just below knee
+  Maxi   → ankle-length
+  Floor  → touches or drags the floor
+  Cropped → above the natural waist (for tops)
+ 
+════════════════════════════════════════════════════════════════
+PHASE 4 — INDIAN ETHNIC GARMENT DEEP-DIVE
+[FIRE THIS PHASE ONLY IF primary_category is an Indian ethnic garment]
+════════════════════════════════════════════════════════════════
+Indian ethnic wear requires specialist naming that generic Western fashion
+analysis completely misses. Use this phase to get the RIGHT name.
+ 
+SAREE IDENTIFICATION:
+  Fabric type first: Banarasi / Kanjivaram / Chanderi / Paithani / Tussar / Organza / Chiffon / Georgette / Cotton
+  Weave/technique: silk weave / plain weave / tissue weave / digital print
+  Border type: zari border / contrast border / no border / all-over pattern
+  Blouse: sleeveless / half-sleeve / full-sleeve / boat-neck / backless / structured
+  Drape: pre-stitched / traditional / wrapped / concept drape
+  Occasion signal: wedding / festive / office / casual
+  Name formula: "[Fabric] [Technique] Saree with [Border/Embellishment]"
+  Example: "Kanjivaram Pure Silk Saree with Zari Border and Temple Motif"
+ 
+LEHENGA IDENTIFICATION:
+  Skirt shape: A-line / circular / flared / fish-cut / layered
+  Skirt fabric + work: "heavy embroidered velvet" / "sequin net" / "brocade silk"
+  Choli (blouse): off-shoulder / halter / backless / elbow-sleeve / boat-neck
+  Dupatta: net / organza / silk / georgette, with border type
+  Name formula: "[Work] [Fabric] [Silhouette] Lehenga Choli with [Dupatta]"
+  Example: "Mirror Work Embroidered Flared Silk Lehenga Choli with Net Dupatta"
+ 
+ANARKALI IDENTIFICATION:
+  Length: knee / midi / floor / panel-length
+  Silhouette: layered / straight / umbrella flare / high-low
+  Name formula: "[Work/Embellishment] [Fabric] [Length] Anarkali Kurta"
+  Example: "Resham Embroidered Georgette Floor-Length Umbrella Anarkali Kurta"
+ 
+PRINT TECHNIQUE (never just say "printed"):
+  Bandhani / Leheriya / Block print / Screen print / Digital print / Batik /
+  Kalamkari / Phulkari / Ikat / Ajrakh — identify which one from the pattern geometry
+ 
+════════════════════════════════════════════════════════════════
+PHASE 5 — FULL ATTRIBUTE FORENSICS
+════════════════════════════════════════════════════════════════
+Fill ALL attributes for the DOMINANT GARMENT from Phase 1.
+Use Phase 2 (fabric) and Phase 3 (silhouette) results here.
+Be MAXIMALLY SPECIFIC — generic answers will be rejected by the validator.
+ 
+  A. COLOR & FINISH
+     primary      → SPECIFIC hue name, not generic
+                    NOT: "red" / "blue" / "green"
+                    YES: "deep burgundy" / "cobalt blue" / "sage green" / "champagne gold"
+                    YES: "hot pink" / "rust orange" / "dusty rose" / "forest green"
+     tone         → pastel | jewel | earthy | neon | neutral | metallic | dark
+     finish       → matte | satin | glossy | metallic | iridescent | glitter | textured
+ 
+  B. FABRIC & TEXTURE  (use Phase 2 results)
+     primary_material → STRICT ENUM from this list:
+       [ silk | chiffon | georgette | satin | velvet | linen | denim | cotton |
+         polyester | rayon | crepe | organza | net | knit | wool | leather | suede |
+         sequin-fabric | brocade | jacquard | georgette-net | tissue-silk | raw-silk ]
+     weight    → lightweight | mid-weight | heavy
+     texture   → smooth | ribbed | pebbled | fuzzy | crisp | sheer | opaque | textured
+     sheen     → none | subtle | satin-sheen | high-gloss | metallic-sheen | sparkle
+ 
+  C. FIT & CONSTRUCTION  (use Phase 3 results)
+     fit_type    → bodycon | oversized | relaxed | slim | tailored | boxy | cropped | structured
+     silhouette  → [use Phase 3 identification: A-line | flared | column | bodycon | mermaid | wrap | asymmetric | tiered | peplum | ballgown | high-low]
+     length      → [use Phase 3 identification: micro | mini | midi | maxi | floor | cropped]
+     sleeve_type → sleeveless | cap-sleeve | short | 3/4 | full | puff | cold-shoulder | off-shoulder | one-shoulder | balloon | bishop
+     neckline    → crew | V-neck | deep-V | square | cowl | halter | sweetheart | scoop | mock-neck | turtleneck | boat | off-shoulder | one-shoulder | bandeau | asymmetric
+     closure_type → back-zip | side-zip | button | hook-eye | tie | pullover | wrap | corset-lacing
+     construction_notes → [describe any notable construction: ruching / shirring / smocking / boning / bias cut / structured bodice / panelling / cut-out detail]
+ 
+  D. PATTERN & SURFACE DETAIL
+     type        → solid | stripes | checks | plaid | floral | abstract | geometric | animal-print | tie-dye | ombre | colour-block
+     embellishment → [be SPECIFIC]:
+       None → "none"
+       Thread work → "resham embroidery" / "zari embroidery" / "thread embroidery"
+       Applied → "sequin embellishment" / "mirror work" / "bead work" / "stone work" / "gota patti"
+       Surface → "laser-cut detail" / "3D floral appliqué" / "ruffle trim" / "feather trim" / "lace trim" / "fringe detail"
+     placement → all-over | border-only | neckline-accent | hem-accent | scattered | yoke-only
+ 
+  E. CATEGORY & CLASSIFICATION
+     primary_category → STRICT ENUM:
+       [ saree | lehenga | kurta | salwar-kameez | anarkali | dress | top | blouse |
+         shirt | jacket | blazer | jeans | trousers | shorts | skirt | ethnic-set |
+         co-ord-set | jumpsuit | romper | sharara-set | gharara-set ]
+     sub_category → EXACT STRUCTURAL DESCRIPTION using this formula:
+       [neckline] + [sleeve] + [fabric] + [silhouette] + [category]
+       NOT: "dress" / "ethnic outfit" / "party wear"
+       YES: "one-shoulder sequin bodycon mini dress"
+       YES: "cowl neck satin slip midi dress"
+       YES: "puff sleeve floral chiffon A-line midi dress"
+       YES: "off-shoulder ruched satin bodycon mini dress"
+ 
+  F. BRAND DNA ANALYSIS
+     brand_style_match → name the SPECIFIC brand DNA this garment matches:
+       NOT: "luxury brand" / "high street"
+       YES: "Zara structured minimalist" / "H&M casual chic" / "Sabyasachi bridal ethnic"
+             "Manish Malhotra festive" / "Forever21 party" / "Fabindia casual ethnic"
+             "Bebe bodycon party" / "Reformation bohemian" / "ASOS occasionwear"
+     price_tier → budget (under ₹1500) | mid-range (₹1500–5000) | premium (₹5000–15000) | luxury (₹15000+)
+     market     → fast-fashion | mid-market | contemporary | premium | luxury | ethnic-boutique | bridal
+ 
+  G. STYLING CONTEXT
+     styling_notes → ONE hyper-specific actionable styling tip (not generic advice)
+       NOT: "pair with heels for a complete look"
+       YES: "style with strappy gold heeled mules and a sleek low bun — the neckline needs clear shoulder line"
+       YES: "wear with pointed-toe kitten heels in nude — the midi length reads longer with a pointed toe"
+ 
+════════════════════════════════════════════════════════════════
+PHASE 6 — RETAIL PRODUCT NAMING ENGINE  [MOST CRITICAL PHASE]
+════════════════════════════════════════════════════════════════
+THIS IS WHERE wear_name, industry_name AND outfit_description ARE GENERATED.
+ 
+You are now EXPERT 3 (Senior Retail Buyer). Your job: write a product title
+that would appear on Myntra, ASOS, or Ajio's search results page — specific
+enough that a buyer searches for exactly this and finds it immediately.
+ 
+INDUSTRY_NAME GENERATION [MANDATORY NEW FIELD]:
+──────────────────────────────────
+  The industry_name is the OFFICIAL TRADE CATEGORY NAME used by:
+  - Indian fashion buyers at FDCI / Lakme Fashion Week sourcing fairs
+  - Wholesale platforms: Meesho, Glowroad, IndiaMART category listings
+  - Myntra / Nykaa Fashion internal taxonomy
+  - Export houses naming garment classes for international orders
+ 
+  RULES:
+  • 2–4 words maximum — it is a category code, not a product description
+  • MUST correspond to the hero garment from Phase 1 (most attractive / most dominant)
+  • NEVER colour-first. NEVER banned adjectives.
+ 
+  WESTERN WEAR industry names (use EXACT strings):
+    Bodycon Dress | Slip Dress | Shirt Dress | Wrap Dress | Fit-and-Flare Dress
+    Maxi Dress | Midi Dress | Mini Dress | Co-ord Set | Jumpsuit | Playsuit
+    Blazer Dress | Crop Top | Cami Top | Tube Top | Bustier Top | Shirt
+    High-Waist Jeans | Wide-Leg Trousers | Cargo Pants | Biker Shorts
+    Sports Bra | Leggings | Athleisure Set | Bomber Jacket | Trench Coat | Blazer
+ 
+  INDIAN ETHNIC WEAR industry names (use EXACT strings):
+    Saree | Lehenga Choli | Anarkali Kurta | Salwar Kameez | Sharara Set
+    Gharara Set | Palazzo Set | Patiala Set | Kurti | Kaftan
+    Indo-Western Gown | Concept Saree | Pre-Stitched Saree
+    Dhoti Pants Set | Jacket Lehenga | Angrakha Kurta
+ 
+  OCCASION-CODED industry names (use when garment is clearly occasion-specific):
+    Bridal Lehenga | Cocktail Dress | Party Gown | Reception Saree
+    Office Wear Set | Resort Wear Dress | Gym Wear Set | Athleisure Co-ord
+    Mehendi Outfit | Sangeet Co-ord | Fusion Bridesmaid Set
+ 
+  NEVER use: "Indian Outfit" / "Fashion Wear" / "Ethnic Dress" / "Party Dress"
+  These are CONSUMER SPEAK — not industry names.
+ 
+  The industry_name MUST match the hero garment chosen by Dimension 6
+  (Visual Attractiveness). If the most eye-catching item is a lehenga with
+  heavy mirror work, industry_name = "Lehenga Choli", not "Top" or "Skirt".
+ 
+WEAR_NAME GENERATION:
+─────────────────────
+The wear_name MUST follow the retail product naming formula below.
+It MUST be 5–10 words. It MUST NOT contain colour as the first word.
+It MUST NOT use banned adjectives: stylish, trendy, nice, elegant, chic,
+glamorous, gorgeous, beautiful, stunning, amazing, fabulous.
+ 
+FORMULA — WHEN BRAND IS DETECTED (brand_confidence ≥ 0.7):
+  [Brand] + [Product Line if known] + [Key Feature] + [Fabric/Tech] + [Category]
+ 
+  This is the HIGHEST PRIORITY formula — brand-detected names are the most searchable.
+  Examples:
+  ✓ "Nike Dri-FIT High-Waist Running Leggings Women"
+  ✓ "Adidas Ultraboost Running Shorts Three-Stripe"
+  ✓ "Lululemon Align High-Rise Ribbed Yoga Leggings"
+  ✓ "Tommy Hilfiger Slim Fit Striped Polo Shirt"
+  ✓ "Zara Ruched Off-Shoulder Satin Midi Dress"
+  ✓ "H&M Wide-Leg High-Waist Linen Trousers"
+  ✓ "Gymshark Flex High-Waist Seamless Sports Leggings"
+ 
+FORMULA — UNBRANDED WESTERN GARMENTS (brand_confidence < 0.7):
+  [Key Feature / Embellishment] + [Neckline/Collar/Sleeve Detail] + [Fabric] +
+  [Silhouette] + [Category]
+ 
+  Examples of CORRECT wear_names:
+  ✓ "Asymmetric One-Shoulder Sequin Bodycon Mini Dress"
+  ✓ "Cowl Neck Ruched Satin Slip Midi Dress"
+  ✓ "Puff Sleeve Floral Print Chiffon A-line Midi Dress"
+  ✓ "Off-Shoulder Tiered Ruffle Georgette Maxi Dress"
+  ✓ "Deep-V Backless Sequin Co-ord Set"
+  ✓ "Cut-Out Waist Ribbed Knit Bodycon Midi Dress"
+  ✓ "Balloon Sleeve Square Neck Brocade Mini Dress"
+  ✓ "Strappy Backless Satin Bias-Cut Floor-Length Gown"
+  ✓ "Sweetheart Neckline Embroidered Velvet Flared Midi Skirt"
+ 
+  Examples of WRONG wear_names — NEVER produce these:
+  ✗ "Red Metallic Dress"  ← colour-first, not specific enough
+  ✗ "Glamorous Party Outfit"  ← banned adjective, zero specificity
+  ✗ "Sparkly Dress"  ← no structural information
+  ✗ "Elegant Evening Gown"  ← banned adjective, vague category
+  ✗ "Ethnic Outfit"  ← completely useless
+  ✗ "Stylish Co-ord Set"  ← banned adjective
+ 
+FORMULA FOR INDIAN ETHNIC GARMENTS:
+  [Craft/Work] + [Fabric] + [Garment Type] + [Key Silhouette/Feature]
+ 
+  Examples of CORRECT ethnic wear_names:
+  ✓ "Zari Border Kanjivaram Pure Silk Saree"
+  ✓ "Heavy Resham Embroidered Anarkali Kurta with Palazzo"
+  ✓ "Mirror Work Embellished Flared Lehenga Choli Set"
+  ✓ "Bandhani Print Georgette Saree with Contrast Blouse"
+  ✓ "Gota Patti Embroidered Sharara Set with Dupatta"
+  ✓ "Sequin Embellished Net Lehenga with Off-Shoulder Blouse"
+  ✓ "Block Print Cotton Straight Kurta with Palazzo Set"
+  ✓ "Phulkari Embroidered Cotton Dupatta with Salwar Kameez"
+ 
+  Examples of WRONG ethnic wear_names — NEVER produce these:
+  ✗ "Beautiful Saree"
+  ✗ "Embroidered Outfit"
+  ✗ "Indian Dress"
+  ✗ "Traditional Ethnic Wear"
+ 
+OUTFIT_DESCRIPTION GENERATION:
+────────────────────────────────
+The outfit_description is a 2-sentence product listing description.
+Sentence 1: What the garment IS — fabric, construction, key feature.
+Sentence 2: What OCCASION it is for + one styling note.
+ 
+  Example (Western):
+  "A deep-V backless sequin co-ord set featuring a cropped halter-neck top
+  and a high-waist A-line mini skirt in silver metallic sequin fabric with
+  stretch lining. Ideal for cocktail parties and nightout occasions — style
+  with strappy silver heels and minimal jewellery."
+ 
+  Example (Ethnic):
+  "A floor-length Kanjivaram pure silk saree in deep magenta with a
+  contrasting gold zari border featuring traditional temple motifs woven
+  directly into the silk. Perfect for wedding ceremonies and festive
+  occasions — the structured zari pallü drapes best with a sleeveless
+  boat-neck blouse."
+ 
+════════════════════════════════════════════════════════════════
+PHASE 7 — AMAZON SEARCH QUERY BUILDER
+════════════════════════════════════════════════════════════════
+Build from the DOMINANT GARMENT ONLY. No blending with accessories.
+ 
+FORMULA — WHEN BRAND DETECTED (brand_confidence ≥ 0.7):
+  [Brand] + [Product Line] + [Color] + [Sub-Category] + [Gender]
+  REASON: Brand + model searches have 3× higher click-through on Amazon than generic queries.
+ 
+  CORRECT branded query examples:
+  "Nike Dri-FIT high-waist running leggings women"
+  "Adidas Originals track pants black women"
+  "Lululemon Align yoga leggings grey women"
+  "Tommy Hilfiger slim fit polo shirt navy men"
+  "Zara ruched satin midi dress women"
+ 
+FORMULA — UNBRANDED (brand_confidence < 0.7):
+  [Color] + [Fabric] + [Fit/Silhouette] + [Sub-Category] + [Occasion] + [Gender]
+ 
+  CORRECT unbranded query examples:
+  "cobalt blue georgette A-line midi dress party women"
+  "dusty rose sequin bodycon mini dress cocktail women"
+  "ivory zari border silk saree wedding bridal"
+  "emerald green velvet off-shoulder ruched mini dress party"
+  "burgundy satin cowl neck slip dress party women"
+ 
+RULES (BOTH FORMULAS):
+  • 6–10 words only — Amazon's conversion sweet spot
+  • EVERY word must be a real amazon.in / amazon.com search filter term
+  • Include fabric or product tech (Dri-FIT / Align / cotton / georgette)
+  • Include the sub_category structural name (not just "dress")
+  • End with gender term: women / men
+ 
+  WRONG query examples (never produce these):
+  "beautiful party dress" ← banned adjective, no specifics
+  "stylish Indian ethnic wear" ← banned adjective, vague
+  "red metallic evening gown" ← metallic is not a fabric on Amazon
+ 
+ABSOLUTE RULES:
+  • NO banned adjectives in query
+  • The query must uniquely identify THIS garment — not 1000 others
+  • If the garment is ethnic, use ethnic-specific filter terms:
+    (banarasi / kanjivaram / georgette / net / lehenga / anarkali / sharara)
+ 
+════════════════════════════════════════════════════════════════
+PHASE 8 — SEO KEYWORD EXPANSION (exactly 7 keywords)
+════════════════════════════════════════════════════════════════
+All 7 keywords relate to the DOMINANT GARMENT only.
+ 
+  • 2 technical-spec keywords → fabric + construction (e.g. "ribbed knit bodycon dress")
+  • 2 brand-style keywords   → brand aesthetic + category (e.g. "Zara style sequin top")
+  • 2 occasion-fit keywords  → use case + category (e.g. "cocktail party mini dress")
+  • 1 buyer-intent phrase    → the EXACT phrase someone types when hunting THIS item
+    (think: what does a 24-year-old woman in Mumbai type into Myntra at 11pm when
+    she wants this specific item for a Saturday night plan?)
+ 
+════════════════════════════════════════════════════════════════
+PHASE 9 — CONFIDENCE SCORING
+════════════════════════════════════════════════════════════════
+Score 0.0–1.0 per dimension. Be HONEST — overconfidence wastes retry budget.
+ 
+  detection → how clearly the dominant garment is visible
+    Penalise: blur | heavy filter | partial occlusion | back-view only |
+              very dark exposure | garment half out of frame
+    Full score: clear full-body view, garment fully visible, no obstruction
+ 
+  query     → how Amazon-specific and conversion-optimised the search_query is
+    Penalise: generic terms | banned adjectives | fewer than 6 filter words |
+              colour missing | fabric missing | category too broad
+    Full score: 7-9 words, contains colour + fabric + specific sub-category + occasion
+ 
+  overall   → weighted: (detection × 0.35) + (query × 0.65)
+    The query score is weighted MORE because bad queries waste affiliate clicks
+    even when detection is perfect.
+ 
+CONFIDENCE BOOST (+0.05 each, cap 1.0):
+  ✓ wear_name contains 5+ specific structural words (not colour-first)
+  ✓ sub_category is a full structural description (6+ words)
+  ✓ Fabric fingerprinting gave unambiguous result (not polyester/rayon fallback)
+  ✓ Embellishment is named precisely (not just "embroidered")
+  ✓ Multiple frames confirm the same fabric conclusion
+ 
+CONFIDENCE PENALTY (–0.05 each, floor 0.0):
+  ✗ wear_name is colour-first (e.g. "Red Metallic Dress")
+  ✗ wear_name uses any banned adjective
+  ✗ sub_category is generic ("dress", "ethnic outfit", "party wear")
+  ✗ primary_material defaulted to polyester/rayon due to ambiguity
+  ✗ search_query contains banned adjective
+  ✗ Image is blurry, dark, heavily filtered, or shows garment from behind only
+ 
+════════════════════════════════════════════════════════════════
+ABSOLUTE RULES — APPLY TO EVERY FIELD IN EVERY PHASE
+════════════════════════════════════════════════════════════════
+BANNED WORDS (trigger automatic –0.10 confidence penalty if used ANYWHERE):
+  stylish | trendy | nice | beautiful | elegant | chic | modern | classic |
+  glamorous | gorgeous | stunning | amazing | fabulous | lovely | pretty |
+  metallic (as a fabric — use "sequin fabric" / "liquid satin" / "foil fabric" instead)
+ 
+SPECIFICITY LAW: Every field must pass this test —
+  "Could this description apply to 100 different garments?"
+  If YES → it is too generic. Make it more specific.
+  If NO (it uniquely identifies THIS garment) → it passes.
+ 
+════════════════════════════════════════════════════════════════
+OUTPUT — STRICT JSON ONLY. ZERO PREAMBLE. ZERO MARKDOWN.
+════════════════════════════════════════════════════════════════
+{
+  "visual_dominance": {
+    "primary_garment_id": "",
+    "dominance_score": 0,
+    "frame_coverage_pct": 0,
+    "dominance_reason": "",
+    "secondary_garments": [],
+    "ignored_items": []
+  },
+  "brand_detection": {
+    "detected_brand": "",
+    "brand_confidence": 0.0,
+    "product_line": "",
+    "logo_location": ""
+  },
+  "attributes": {
+    "color": {
+      "primary": "",
+      "secondary": "",
+      "tone": "",
+      "finish": ""
+    },
+    "fabric": {
+      "primary_material": "",
+      "weight": "",
+      "texture": "",
+      "sheen": "",
+      "structure": "",
+      "fabric_fingerprint_method": ""
+    },
+    "fit": {
+      "fit_type": "",
+      "silhouette": "",
+      "length": "",
+      "waist_style": "",
+      "sleeve_type": "",
+      "neckline": "",
+      "closure_type": "",
+      "lining": "",
+      "construction_notes": ""
+    },
+    "pattern": {
+      "type": "",
+      "scale": "",
+      "embellishment": "",
+      "placement": ""
+    },
+    "classification": {
+      "primary_category": "",
+      "sub_category": "",
+      "gender_target": "",
+      "age_group": "",
+      "occasion": ""
+    },
+    "brand_dna": {
+      "brand_style_match": "",
+      "price_tier": "",
+      "market": ""
+    },
+    "styling": {
+      "body_coverage": "",
+      "layering_potential": "",
+      "season_suitability": "",
+      "styling_notes": ""
+    }
+  },
+  "outfit_description": "",
+  "search_query": "",
+  "seo_keywords": [],
+  "confidence": {
+    "detection": 0.0,
+    "query": 0.0,
+    "overall": 0.0,
+    "wear_name_quality": 0.0,
+    "fabric_certainty": ""
+  },
+  "vibe": "",
+  "genre": "",
+  "wear_name": "",
+  "industry_name": ""
+}
+"""
+ 
+ 
+# ─────────────────────────────────────────────────────────────────────────────
+# REFINEMENT PROMPT v2.0
+# Fired when attempt 1 scores < MID_CONFIDENCE (0.65).
+# Specifically targets the three most common failure modes:
+#   1. Weak wear_name (colour-first or generic)
+#   2. Wrong or uncertain fabric identification
+#   3. Vague sub_category
+# ─────────────────────────────────────────────────────────────────────────────
+ 
+REFINEMENT_PROMPT = """
+YOUR PREVIOUS ANALYSIS WAS REJECTED. CONFIDENCE TOO LOW.
+ 
+HERE IS WHAT YOU GOT WRONG AND EXACTLY HOW TO FIX IT:
+ 
+PREVIOUS OUTPUT:
+{previous_output}
+ 
+════════════════════════════════════════════════════════════════
+FAILURE MODE DIAGNOSIS — READ EVERY POINT
+════════════════════════════════════════════════════════════════
+ 
+FAILURE 1 — WEAK wear_name (THE MOST COMMON ERROR):
+  Your wear_name was probably colour-first or too generic.
+  A wear_name like "Red Metallic Dress" or "Sequin Outfit" is WORTHLESS.
+  Nobody searches for it on Myntra. Nobody clicks it on Amazon.
+ 
+  The CORRECT wear_name formula is:
+  [Key Structural Feature] + [Neckline/Sleeve Detail] + [Fabric] + [Silhouette] + [Category]
+ 
+  Re-examine the garment RIGHT NOW and ask:
+    → What is the FIRST THING a stylist would say about this garment?
+      (Usually: the neckline OR the most distinctive construction detail)
+    → What FABRIC does this look like based on how light hits it?
+    → What SILHOUETTE is this? (A-line? Bodycon? Flared? Column?)
+    → What is the PRECISE sub-category? (not "dress" — "slip midi dress" / "tiered maxi dress")
+ 
+  Produce a new wear_name that passes this test:
+  "Could a buyer on Myntra search for EXACTLY these words and find THIS item?"
+  If yes → it's correct. If no → too generic, try again.
+ 
+FAILURE 2 — WRONG OR UNCERTAIN FABRIC:
+  If your primary_material was "polyester" or "rayon", that means you
+  gave up on fabric identification too quickly. These are FALLBACK LABELS.
+  Try again using the visual forensics techniques:
+ 
+  → HIGHLIGHT ANALYSIS: Is the highlight sharp (satin) or diffuse (crepe/georgette)?
+  → DRAPE WAVE: Does the fabric fold in soft S-curves (silk/georgette) or angular (cotton)?
+  → SHADOW EDGE: Does the hem hold its shape (structured) or collapse (fluid)?
+  → TEXTURE GRAIN: Can you see any surface texture — ribs, weave, pile, shimmer?
+ 
+  What does the fabric do when the body moves? (Refer to all frames, not just one)
+ 
+FAILURE 3 — VAGUE sub_category:
+  If sub_category was "dress" / "outfit" / "party wear" / "ethnic dress" → WRONG.
+  The sub_category must be the FULL STRUCTURAL DESCRIPTION.
+  Minimum 4 words. Ideally 6–8 words.
+  Formula: [neckline] + [sleeve] + [fabric] + [silhouette] + [category]
+ 
+FAILURE 4 — GENERIC search_query:
+  If your query was under 6 words or contained banned adjectives → WRONG.
+  The query must start with COLOUR, contain FABRIC, contain SUB-CATEGORY, end with OCCASION.
+ 
+════════════════════════════════════════════════════════════════
+YOUR TASK: PRODUCE AN IMPROVED ANALYSIS
+════════════════════════════════════════════════════════════════
+1. RE-RUN Phase 0 (Multimodal Exploitation) — use ALL 7 visual forensics techniques.
+   Do not skip any technique. Each one catches something the previous attempt missed.
+ 
+2. RE-CONFIRM the dominant garment (Phase 1) — make sure you're still analysing the right one.
+ 
+3. RE-DO Fabric Fingerprinting (Phase 2) — use highlight, shadow, drape, and texture analysis.
+   If you still cannot determine fabric exactly, name your top TWO candidates and
+   choose the one that best matches the visual evidence. Never default to polyester.
+ 
+4. RE-DO the Retail Product Naming Engine (Phase 6):
+   → write the new wear_name LAST, after you've confirmed fabric and silhouette
+   → verify it against the formula: not colour-first, not banned adjectives, 5-10 words
+   → self-check: "Does this wear_name appear in Myntra's search results category?"
+ 
+5. IMPROVE SPECIFICITY in at least FOUR attribute fields compared to previous output.
+ 
+6. The overall confidence score MUST be strictly higher than {previous_confidence:.2f}.
+   If you cannot improve confidence, explain WHY in the fabric.structure field.
+ 
+════════════════════════════════════════════════════════════════
+STRICT RULES
+════════════════════════════════════════════════════════════════
+• DO NOT repeat or copy any field from the previous output verbatim
+• Return STRICT JSON ONLY — no markdown, no commentary, no preamble
+• The wear_name field is now worth 20% of your output quality score — treat it as the headline
+ 
+RETURN THE IMPROVED JSON NOW.
+"""
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AFFILIATE LINK UTILITIES
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _fuzzy_match_product(
+    item_name: str,
+    category_data: Dict[str, str],
+    threshold: float = 0.45,
+) -> Optional[str]:
+    """
+    Jaccard word-overlap matcher for product keys within a category bucket.
+
+    Compares item_name against every stored product-name key and returns the
+    affiliate link whose key scores highest — provided the score meets threshold.
+
+    Example
+    -------
+    Stored key : "brown sleeveless dress"
+    Query      : "Sleeveless Brown Mini Dress"
+    Overlap    : {brown, sleeveless, dress} / {brown, sleeveless, mini, dress} = 0.75 ✅
+    """
+    if not item_name or not category_data:
+        return None
+
+    query_words: set = set(item_name.lower().split())
+    best_score  = 0.0
+    best_link: Optional[str] = None
+
+    for stored_key, link in category_data.items():
+        stored_words: set = set(stored_key.lower().split())
+        union = query_words | stored_words
+        if not union:
+            continue
+        score = len(query_words & stored_words) / len(union)
+        if score > best_score:
+            best_score = score
+            best_link  = link
+
+    if best_score >= threshold:
+        logger.debug(
+            "[AFF_MATCH] '%s' → score=%.2f ≥ %.2f → link found",
+            item_name, best_score, threshold,
+        )
+        return best_link
+
+    logger.debug(
+        "[AFF_MATCH] '%s' → best score=%.2f < %.2f → no match",
+        item_name, best_score, threshold,
+    )
+    return None
+
+
+def _get_affiliate_link(item_category: str, item_name: str = "") -> Optional[str]:
+    """
+    Returns the most specific Amazon affiliate link for the detected product.
+
+    Lookup priority (returns None if nothing matches — no generic fallback):
+      1. category bucket → fuzzy item_name match  (most specific — product link)
+      2. category bucket → single-entry shortcut  (only one link saved for that category)
+    """
+    if not item_category:
+        return None
+
+    try:
+        if not os.path.exists(_AFFILIATE_FILE):
+            return None
+
+        with open(_AFFILIATE_FILE, "r", encoding="utf-8") as fh:
+            data: Dict = json.load(fh)
+
+        # Case-insensitive category key resolution
+        cat_lower = item_category.lower().strip()
+        cat_key: Optional[str] = next(
+            (k for k in data if k.lower() == cat_lower
+             or k.lower() in cat_lower
+             or cat_lower in k.lower()),
+            None,
+        )
+
+        if not cat_key:
+            return None
+
+        cat_data = data[cat_key]
+
+        # ── Nested format: {category: {item_name: link}} ──────────────────────
+        if isinstance(cat_data, dict):
+            if not cat_data:
+                return None
+            return _fuzzy_match_product(item_name or item_category, cat_data)
+
+        # ── Legacy flat formats (backward-compat) ─────────────────────────────
+        if isinstance(cat_data, list) and cat_data:
+            return cat_data[0]
+        if isinstance(cat_data, str):
+            return cat_data
+
+    except Exception as exc:
+        logger.warning("[FASHION_SCOUT] Affiliate link lookup failed: %s", exc)
+
+    return None
+
+
+def save_affiliate_link(
+    item_category: str,
+    item_name: str,
+    link: str,
+    video_uid: Optional[str] = None,
+) -> bool:
+    """
+    Persists a user-provided affiliate link using a dual-key strategy.
+
+      1. by_uid[video_uid]   — exact UID lookup (DM bot — no fuzzy matching needed)
+      2. [category][item_name] — legacy fuzzy-match bucket (AI DM fallback)
+
+    video_uid is optional; when absent only the category bucket is written.
+
+    Returns True on success, False on any write failure.
+    """
+    try:
+        data: Dict = {}
+        if os.path.exists(_AFFILIATE_FILE):
+            with open(_AFFILIATE_FILE, "r", encoding="utf-8") as fh:
+                try:
+                    data = json.load(fh)
+                except json.JSONDecodeError:
+                    logger.warning("[FASHION_SCOUT] Corrupt affiliate JSON — starting fresh.")
+
+        # ── 1. Exact UID path ─────────────────────────────────────────────────
+        if video_uid:
+            by_uid: Dict = data.setdefault("by_uid", {})
+            by_uid[video_uid] = {
+                "link":      link,
+                "item_name": item_name.strip() if item_name else "",
+                "category":  item_category.lower().strip() if item_category else "default",
+                "saved_at":  datetime.utcnow().isoformat(),
+            }
+            logger.info("[FASHION_SCOUT] UID link saved: [%s] → %s", video_uid, link)
+
+        # ── 2. Category / item-name bucket ────────────────────────────────────
+        cat_key  = item_category.lower().strip() if item_category else "default"
+        item_key = item_name.strip() if item_name else cat_key
+
+        if cat_key not in data:
+            data[cat_key] = {}
+
+        # Migrate legacy flat schema if needed
+        if not isinstance(data[cat_key], dict):
+            legacy = data[cat_key]
+            data[cat_key] = {}
+            if isinstance(legacy, list) and legacy:
+                data[cat_key]["default"] = legacy[0]
+            elif isinstance(legacy, str):
+                data[cat_key]["default"] = legacy
+
+        data[cat_key][item_key] = link
+
+        os.makedirs(os.path.dirname(_AFFILIATE_FILE), exist_ok=True)
+        with open(_AFFILIATE_FILE, "w", encoding="utf-8") as fh:
+            json.dump(data, fh, indent=4, ensure_ascii=False)
+
+        logger.info(
+            "[FASHION_SCOUT] Saved affiliate link: [%s] '%s' → %s",
+            cat_key, item_key, link,
+        )
+        return True
+
+    except Exception as exc:
+        logger.error("[FASHION_SCOUT] Failed to save affiliate link: %s", exc)
+        return False
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OUTPUT VALIDATION
+# ─────────────────────────────────────────────────────────────────────────────
+
+def validate_output(data: Dict) -> bool:
+    """
+    Hard schema-validation gate. Rejects any result that would produce a bad
+    Amazon search or is structurally incomplete.
+
+    Called inside the retry loop — failed results are discarded, not used.
+    """
+    if not isinstance(data, dict):
+        return False
+
+    # ── Visual Dominance block ────────────────────────────────────────────────
+    vd = data.get("visual_dominance", {})
+    if not isinstance(vd, dict) or not vd.get("primary_garment_id", "").strip():
+        logger.debug("[VALIDATE] Rejected: visual_dominance block missing or primary_garment_id empty")
+        return False
+
+    if vd.get("dominance_score", 0) < 3:
+        logger.debug("[VALIDATE] Rejected: dominance_score < 3 — garment not clearly identified")
+        return False
+
+    # ── search_query: at least 4 real words ──────────────────────────────────
+    query = data.get("search_query", "").strip()
+    if not query or len(query.split()) < 4:
+        logger.debug("[VALIDATE] Rejected: search_query too short or missing")
+        return False
+
+    # ── seo_keywords: at least 5 entries ─────────────────────────────────────
+    if len(data.get("seo_keywords", [])) < 5:
+        logger.debug("[VALIDATE] Rejected: seo_keywords < 5")
+        return False
+
+    # ── attributes block with classification ─────────────────────────────────
+    attrs = data.get("attributes", {})
+    if not isinstance(attrs, dict) or not attrs:
+        logger.debug("[VALIDATE] Rejected: attributes block missing")
+        return False
+
+    classification = attrs.get("classification", {})
+    if not isinstance(classification, dict) or not classification.get("primary_category"):
+        logger.debug("[VALIDATE] Rejected: primary_category empty")
+        return False
+
+    # ── outfit_description ───────────────────────────────────────────────────
+    if not data.get("outfit_description", "").strip():
+        logger.debug("[VALIDATE] Rejected: outfit_description missing")
+        return False
+
+    # ── wear_name quality gate ───────────────────────────────────────────────
+    # Threshold raised from 0.40 → 0.55 so colour-first/generic names ("Black Dress",
+    # "Dark Satin Gown") fail validation and trigger the refinement retry loop
+    # instead of silently passing through as the final output.
+    wear_name = data.get("wear_name", "")
+    if wear_name and score_wear_name_quality(wear_name) < 0.55:
+        logger.debug(
+            "[VALIDATE] Rejected: wear_name '%s' quality score %.2f < 0.55 (needs industry-standard name)",
+            wear_name, score_wear_name_quality(wear_name)
+        )
+        return False
+
+    return True
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# QUERY QUALITY SCORER  (local, deterministic — does NOT trust Gemini's score)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def score_query_quality(query: str) -> float:
+    """
+    Independent query quality scorer. Returns 0.0–1.0.
+
+    Scoring breakdown (each component worth 0.20):
+      • Word count in Amazon sweet spot (5–10 words)
+      • Contains a recognised category keyword
+      • Contains a recognised colour keyword
+      • Contains a recognised fabric/material keyword
+      • Contains NO banned vague adjectives
+    """
+    if not query or not query.strip():
+        return 0.0
+
+    words = query.lower().split()
+    score = 0.0
+
+    # Word count
+    if 5 <= len(words) <= 10:
+        score += 0.20
+    elif 4 <= len(words) <= 12:   # acceptable but not ideal
+        score += 0.10
+
+    if any(w in _CATEGORY_KEYWORDS for w in words):
+        score += 0.20
+
+    if any(w in _COLOR_KEYWORDS for w in words):
+        score += 0.20
+
+    if any(w in _FABRIC_KEYWORDS for w in words):
+        score += 0.20
+
+    if not any(w in _BANNED_ADJECTIVES for w in words):
+        score += 0.20
+
+    return round(score, 2)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# WEAR NAME QUALITY SCORER
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Extended colour-adjacent adjectives that signal a colour-first name ─────
+_COLOUR_ADJECTIVES: frozenset = frozenset({
+    "dark", "deep", "light", "pale", "dusty", "muted", "bright", "neon",
+    "pastel", "rich", "soft", "bold", "warm", "cool", "neutral", "pure",
+})
+
+# ── Structural specificity keywords that signal a retail-grade name ──────────
+# These are neckline, silhouette, construction, and feature words that
+# appear in Myntra/ASOS product titles but NOT in generic descriptions.
+_STRUCTURAL_KEYWORDS: frozenset = frozenset({
+    # Necklines
+    "v-neck", "deep-v", "cowl", "halter", "sweetheart", "scoop", "turtleneck",
+    "mock-neck", "boat", "off-shoulder", "one-shoulder", "bandeau", "asymmetric",
+    "square", "crewneck",
+    # Silhouettes
+    "bodycon", "a-line", "flared", "mermaid", "column", "sheath", "tiered",
+    "peplum", "ballgown", "high-low", "wrap", "fit-and-flare",
+    # Sleeve/construction
+    "puff", "balloon", "bishop", "cold-shoulder", "backless", "cut-out",
+    "ruched", "shirred", "smocked", "boned", "corset", "panelled",
+    "bias-cut", "draped", "pleated", "ruffle", "frill",
+    # Ethnic structural
+    "anarkali", "lehenga", "sharara", "gharara", "kurta", "palazzo",
+    "dupatta", "kanjivaram", "banarasi", "chanderi", "bandhani", "zari",
+    # Length modifiers
+    "midi", "maxi", "mini", "micro", "floor", "cropped",
+    # Feature words that signal specificity
+    "sequin", "embroidered", "embellished", "mirror", "gota", "resham",
+    "lace", "feather", "fringe", "laser-cut", "3d", "applique",
+})
+
+
+def score_wear_name_quality(wear_name: str) -> float:
+    """
+    Evaluates product title (wear_name) for retail-grade (industry-standard) naming.
+    Returns 0.0-1.0.
+
+    Scoring breakdown:
+      +0.25  → Word count 5–10 (matching the prompt spec)
+      +0.25  → Does NOT start with a colour/colour-adjective (feature-first)
+      +0.20  → Contains a garment category keyword
+      +0.20  → Contains a fabric keyword
+      +0.10  → Contains at least one structural specificity keyword
+      -0.60  → Uses any banned adjective (stylish/trendy/etc.)
+      -0.20  → Starts with a colour adjective (dark/deep/light/etc.)
+    """
+    if not wear_name or not wear_name.strip():
+        return 0.0
+
+    words = wear_name.lower().split()
+    score = 0.0
+
+    # ── Length: 5–10 words is the retail sweet spot (matches prompt spec) ────
+    if 5 <= len(words) <= 10:
+        score += 0.25
+    elif 4 <= len(words) <= 12:      # borderline acceptable
+        score += 0.10
+    # ≤3 words: no length bonus ("Black Satin Dress" = 0)
+
+    # ── Colour-first penalty: word[0] is a colour OR a colour adjective ──────
+    first_word = words[0] if words else ""
+    is_colour_first = (
+        first_word in _COLOR_KEYWORDS
+        or first_word in _COLOUR_ADJECTIVES
+        or (len(words) >= 2 and first_word in _COLOUR_ADJECTIVES and words[1] in _COLOR_KEYWORDS)
+    )
+    if not is_colour_first:
+        score += 0.25
+    else:
+        score -= 0.20   # active penalty: colour-first names are retail failures
+
+    # ── Must contain a garment category keyword ───────────────────────────────
+    if any(w in _CATEGORY_KEYWORDS for w in words):
+        score += 0.20
+
+    # ── Must contain a fabric keyword ─────────────────────────────────────────
+    if any(w in _FABRIC_KEYWORDS for w in words):
+        score += 0.20
+
+    # ── Structural specificity bonus ─────────────────────────────────────────
+    # Industry names have neckline / silhouette / construction words.
+    # "Cowl Neck Ruched Satin Slip Midi Dress" passes. "Black Dress" does not.
+    if any(w in _STRUCTURAL_KEYWORDS for w in words):
+        score += 0.10
+
+    # ── Banned adjective hard penalty ────────────────────────────────────────
+    if any(w in _BANNED_ADJECTIVES for w in words):
+        score -= 0.60
+
+    return max(0.0, min(1.0, round(score, 3)))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FASHION SCOUT CLASS
+# ─────────────────────────────────────────────────────────────────────────────
+
+class FashionScout:
+    """
+    Hierarchical Fashion Intelligence Pipeline.
+
+    Public API
+    ----------
+    scout_outfit(image_paths, visual_hint) → Dict | None
+    """
+
+    def __init__(self) -> None:
+        self.font_path: str = os.path.abspath("assets/fonts/Inter-Bold.ttf")
+        # Stores the best result from the most recent scout_outfit call
+        # (used for analytics, learning loops, and upstream caching)
+        self.last_best_result: Optional[Dict] = None
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # INTERNAL: Gemini vision call
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def _run_analysis(
+        self,
+        image_paths: List[str],
+        prompt_override: Optional[str] = None,
+        visual_hint: Optional[Dict] = None,
+    ) -> Optional[Dict]:
+        """
+        Sends image frames + prompt to Gemini Vision and returns a parsed JSON dict.
+
+        Parameters
+        ----------
+        image_paths     : Ordered list of frame file paths (up to 4 are sent).
+        prompt_override : Replaces the default TREND_CONTEXT_PROMPT when provided
+                          (used for refinement passes).
+        visual_hint     : Pre-extracted structured context from monetization_brain.
+                          When present, Gemini is GUIDED rather than running blind,
+                          consistently lifting confidence from ~0.4 → ~0.7–0.9.
+        """
+        try:
+            base_prompt = prompt_override if prompt_override else TREND_CONTEXT_PROMPT
+
+            # ── Hierarchical Intelligence: inject visual_hint as authoritative preamble ──
+            if visual_hint:
+                _hint_instruction = visual_hint.pop("_instruction", None)
+                if _hint_instruction:
+                    # Guidance-only mode: hint provides background context but does NOT
+                    # dictate garment type. Gemini must run all forensic phases independently.
+                    hint_block = (
+                        "BACKGROUND CONTEXT  [SUPPLEMENTARY — DO NOT LET THIS OVERRIDE YOUR VISUAL ANALYSIS]\n"
+                        "────────────────────────────────────────────────────────────\n"
+                        + json.dumps(visual_hint, indent=2)
+                        + "\n\n"
+                        "INSTRUCTIONS:\n"
+                        "  • This context provides colour/occasion background ONLY\n"
+                        "  • Do NOT use this to pre-determine the garment TYPE or STRUCTURE\n"
+                        "  • Run ALL forensic phases (0-9) independently from this context\n"
+                        "  • Your Phase 1 Visual Dominance Detection is the authoritative anchor\n"
+                        "  • The wear_name MUST come from your own Phase 6 Retail Naming Engine\n"
+                        "  • Specific structural details (corset boning, slit, maxi length, etc.)\n"
+                        "    MUST come from your visual analysis — NOT from this hint\n\n"
+                    )
+                else:
+                    # Authoritative mode: upstream provided high-quality structured data
+                    hint_block = (
+                        "KNOWN CONTEXT  [HIGH CONFIDENCE — FROM UPSTREAM ANALYSIS]\n"
+                        "────────────────────────────────────────────────────────────\n"
+                        + json.dumps(visual_hint, indent=2)
+                        + "\n\n"
+                        "INSTRUCTIONS FOR USING THIS CONTEXT:\n"
+                        "  • Treat this as ground truth for the fields it covers\n"
+                        "  • Only REFINE missing or low-specificity attributes\n"
+                        "  • Do NOT override unless the image clearly contradicts it\n"
+                        "  • Your confidence score MUST reflect this structured head-start\n"
+                        "  • Still run Step 0 (Visual Dominance Detection) to confirm anchor garment\n\n"
+                    )
+                full_prompt = hint_block + base_prompt
+                logger.info("[FASHION_SCOUT] visual_hint injected — %s mode active",
+                            "guidance-only" if _hint_instruction else "authoritative")
+
+            else:
+                full_prompt = base_prompt
+
+            # ── Step 5: Inject First Shot Library categories for intro selection ──
+            try:
+                _lib_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "First_Shots", "library_index.json")
+                if os.path.exists(_lib_path):
+                    with open(_lib_path, "r", encoding="utf-8") as _f:
+                        _lib = json.load(_f)
+                        _topics = []
+                        for _k, _v in _lib.items():
+                            if _k == "_meta": continue
+                            _script = _v.get("script", "")
+                            _desc = _v.get("description", "")
+                            _topics.append(f"[{_k}] - Script: '{_script}' | Desc: '{_desc}'")
+                        _topics_str = "\n".join(_topics)
+                        
+                        _lib_info = (
+                            f"\nSTEP 5 — FIRST SHOT (INTRO) CATEGORY MATCHING\n"
+                            f"Available Library Categories:\n{_topics_str}\n\n"
+                            f"RULES:\n"
+                            f"1. If the garment perfectly matches an existing category, set 'genre' to that exact category key.\n"
+                            f"2. If it is a distinct, unlisted product, set 'genre' to 'NEW'.\n"
+                            f"3. Set 'wear_name' using the strict retail naming formula: [Feature] + [Neckline] + [Fabric] + [Silhouette] + [Category]. Do not use color-first or generic names.\n\n"
+                        )
+                        # Insert before the JSON schema block for better adherence
+                        if "OUTPUT — STRICT JSON ONLY" in full_prompt:
+                            full_prompt = full_prompt.replace("OUTPUT — STRICT JSON ONLY", _lib_info + "OUTPUT — STRICT JSON ONLY")
+                        else:
+                            full_prompt += _lib_info
+            except Exception as _e:
+                logger.warning(f"[FASHION_SCOUT] Failed to inject library_index.json: {_e}")
+
+            # ── Assemble vision parts: [prompt_text, frame_0, frame_1, ...] ──
+            vision_parts: List = [full_prompt]
+            for img_path in image_paths[:4]:
+                try:
+                    vision_parts.append(Image.open(img_path).convert("RGB"))
+                except Exception as exc:
+                    logger.warning("[FASHION_SCOUT] Frame load failed (%s): %s", img_path, exc)
+
+            if len(vision_parts) == 1:
+                # No valid frames loaded — cannot proceed
+                logger.warning("[FASHION_SCOUT] No valid frames loaded — skipping Gemini call.")
+                return None
+
+            # ── Gemini call via router ────────────────────────────────────────
+            res_txt: Optional[str] = gemini_router.generate(
+                task_type="vision",
+                prompt=vision_parts,
+                module_name="fashion_scout_metrics",
+                gen_config={
+                    "temperature": 0.4,
+                    "response_mime_type": "application/json",
+                },
+            )
+
+            if not res_txt:
+                logger.warning("[FASHION_SCOUT] Gemini returned empty response.")
+                return None
+
+            # ── Extract JSON from response (handles markdown code fences too) ──
+            match = re.search(r'(\{.*\})', res_txt, re.DOTALL)
+            if not match:
+                logger.warning("[FASHION_SCOUT] No JSON object found in Gemini response.")
+                return None
+
+            parsed: Dict = json.loads(match.group(1))
+
+            # ── Hard validation: attributes block must exist and be non-empty ──
+            if not parsed.get("attributes"):
+                raise ValueError(
+                    "[FASHION_SCOUT] Hard validation failed: "
+                    "'attributes' block missing or empty in Gemini response."
+                )
+
+            # ── Hard validation: visual_dominance block must name a garment ──
+            vd = parsed.get("visual_dominance", {})
+            if not isinstance(vd, dict) or not vd.get("primary_garment_id", "").strip():
+                raise ValueError(
+                    "[FASHION_SCOUT] Hard validation failed: "
+                    "'visual_dominance.primary_garment_id' missing — Step 0 was not executed."
+                )
+
+            return parsed
+
+        except ValueError as ve:
+            logger.error("%s", ve)
+            return None
+        except json.JSONDecodeError as je:
+            logger.error("[FASHION_SCOUT] JSON parse failed: %s", je)
+            return None
+        except Exception as exc:
+            logger.error("[FASHION_SCOUT] _run_analysis unexpected error: %s", exc)
+            return None
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # INTERNAL: Attribute enforcement (Python-layer — cannot be hallucinated)
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def _enforce_attributes(self, data: Dict) -> Dict:
+        """
+        Guarantees no critical attribute field is blank after Gemini's response.
+
+        Inference chain (Python logic only — no LLM involved):
+          • primary_category ← sub_category word[0]
+          • primary_category ← visual_dominance.primary_garment_id  (NEW v2.0)
+          • gender_target    ← "women"  (safe default for Indian fashion content)
+          • age_group        ← "young-adult"
+          • occasion         ← inferred from brand_dna.market signal
+          • color.primary    ← color.tone  (fallback shade)
+          • fit.fit_type     ← fit.silhouette  (fallback fit label)
+        """
+        attrs = data.setdefault("attributes", {})
+        cls   = attrs.setdefault("classification", {})
+        color = attrs.get("color", {})   if isinstance(attrs.get("color"),     dict) else {}
+        fit   = attrs.get("fit",   {})   if isinstance(attrs.get("fit"),       dict) else {}
+        brand = attrs.get("brand_dna", {}) if isinstance(attrs.get("brand_dna"), dict) else {}
+
+        # primary_category — try sub_category, then visual_dominance garment name
+        if not cls.get("primary_category"):
+            sub = cls.get("sub_category", "")
+            if sub:
+                cls["primary_category"] = sub.split()[0].lower()
+                logger.debug(
+                    "[ENFORCE] primary_category inferred from sub_category: '%s'",
+                    cls["primary_category"],
+                )
+            else:
+                # NEW v2.0: fall back to visual_dominance anchor garment
+                vd_garment = (
+                    data.get("visual_dominance", {})
+                        .get("primary_garment_id", "")
+                        .lower()
+                        .strip()
+                )
+                if vd_garment:
+                    # Take the last word (e.g. "cobalt silk saree" → "saree")
+                    cls["primary_category"] = vd_garment.split()[-1]
+                    logger.debug(
+                        "[ENFORCE] primary_category inferred from visual_dominance: '%s'",
+                        cls["primary_category"],
+                    )
+
+        if not cls.get("gender_target"):
+            cls["gender_target"] = "women"
+
+        if not cls.get("age_group"):
+            cls["age_group"] = "young-adult"
+
+        if not cls.get("occasion"):
+            market = brand.get("market", "").lower()
+            if any(k in market for k in ("athleisure", "sports")):
+                cls["occasion"] = "gym"
+            elif "fast-fashion" in market:
+                cls["occasion"] = "casual"
+            elif any(k in market for k in ("luxury", "designer")):
+                cls["occasion"] = "party"
+            else:
+                cls["occasion"] = "casual"
+
+        if isinstance(color, dict) and not color.get("primary"):
+            tone = color.get("tone", "")
+            if tone:
+                color["primary"] = tone
+
+        if isinstance(fit, dict) and not fit.get("fit_type"):
+            silhouette = fit.get("silhouette", "")
+            if silhouette:
+                fit["fit_type"] = silhouette.lower()
+
+        return data
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # INTERNAL: Local deterministic query builder
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def build_query_from_attributes(self, data: Dict) -> str:
+        """
+        Deterministic Amazon query builder — pure Python, zero hallucination risk.
+
+        Formula: [Color] [Fabric] [Fit] [SubCategory|Category] [Occasion] [Gender]
+
+        This is Tier-1 in the 3-tier query priority system and fires when its
+        score_query_quality result ≥ 0.60.
+
+        v2.0: Prioritises the visual_dominance.primary_garment_id as the category
+        anchor when classification.sub_category is absent.
+        """
+        attrs = data.get("attributes", {})
+        color = attrs.get("color",    {}) if isinstance(attrs.get("color"),    dict) else {}
+        fabric= attrs.get("fabric",   {}) if isinstance(attrs.get("fabric"),   dict) else {}
+        fit   = attrs.get("fit",      {}) if isinstance(attrs.get("fit"),      dict) else {}
+        cls   = attrs.get("classification", {}) if isinstance(attrs.get("classification"), dict) else {}
+
+        primary_color  = color.get("primary", "")
+        primary_fabric = fabric.get("primary_material", "")
+        fit_type       = fit.get("fit_type", "")
+        sub_cat        = cls.get("sub_category", "")
+        category       = cls.get("primary_category", "")
+        occasion       = cls.get("occasion", "")
+        gender         = cls.get("gender_target", "women")
+
+        # v2.0: If still no item term, pull from visual_dominance anchor garment
+        vd_garment = (
+            data.get("visual_dominance", {})
+                .get("primary_garment_id", "")
+                .strip()
+        )
+        item_term = sub_cat or category or vd_garment.split()[-1] if vd_garment else ""
+
+        parts = [
+            p.strip() for p in
+            [primary_color, primary_fabric, fit_type, item_term, occasion, gender]
+            if p and p.strip()
+        ]
+
+        # Cap at 8 words for Amazon sweet spot
+        built = " ".join(parts[:8])
+        logger.info("[FASHION_SCOUT] Deterministic query built: '%s'", built)
+        return built
+
+    # ─────────────────────────────────────────────────────────────────────────
+    # PUBLIC: Main pipeline entry point
+    # ─────────────────────────────────────────────────────────────────────────
+
+    def scout_outfit(
+        self,
+        image_paths: List[str],
+        visual_hint: Optional[Dict] = None,
+    ) -> Optional[Dict]:
+        """
+        Hierarchical Fashion Intelligence Pipeline.
+
+        Flow
+        ----
+        1. Up to MAX_RETRIES Gemini vision calls with combined scoring.
+           Early-stop on HIGH_CONFIDENCE; immediate refinement if attempt 1 < MID_CONFIDENCE.
+        2. Best-result selection by _internal_score.
+        3. Attribute enforcement (Python layer — hallucination-proof).
+        4. 3-tier query priority: local builder → Gemini → SEO keyword stitch.
+        5. Affiliate link injection via fuzzy category/item matching.
+        6. Money Flow CTA injection.
+        7. Multi-garment schema normalisation.
+
+        Parameters
+        ----------
+        image_paths : List of frame file paths to analyse.
+        visual_hint : Optional pre-extracted context from monetization_brain.
+                      Passed directly to Gemini as a high-confidence preamble,
+                      lifting detection confidence consistently by ~0.3–0.5.
+
+        Returns
+        -------
+        Enriched result dict on success, None on unrecoverable failure.
+        """
+        if not image_paths:
+            logger.warning("[FASHION_SCOUT] scout_outfit called with empty image_paths.")
+            return None
+
+        # ── Lazy import of money_engine (handles both relative and absolute import paths) ──
+        _money_engine = money_engine
+        if _money_engine is None:
+            try:
+                from Intelligence_Modules.money_flow_logic import engine as _money_engine  # type: ignore
+            except ImportError:
+                logger.warning("[FASHION_SCOUT] money_flow_logic unavailable — CTAs will be skipped.")
+
+        try:
+            results: List[Dict] = []
+
+            # ── RETRY LOOP ────────────────────────────────────────────────────
+            for attempt in range(MAX_RETRIES):
+                if attempt == 0:
+                    # First pass: primary prompt + visual_hint for guided analysis
+                    result = self._run_analysis(image_paths, visual_hint=visual_hint)
+                else:
+                    # Refinement pass: instruct Gemini to beat the previous weak output
+                    prev = results[-1] if results else {}
+                    refine_prompt = REFINEMENT_PROMPT.replace(
+                        "{previous_output}",
+                        json.dumps(prev, indent=2, ensure_ascii=False),
+                    ).replace(
+                        "{previous_confidence:.2f}",
+                        f"{prev.get('_internal_score', 0.0):.2f}"
+                    )
+                    result = self._run_analysis(
+                        image_paths,
+                        prompt_override=refine_prompt,
+                        visual_hint=visual_hint,
+                    )
+
+                if not result:
+                    logger.warning("[FASHION_SCOUT] Attempt %d returned no result.", attempt + 1)
+                    continue
+
+                # ── Schema validation ─────────────────────────────────────────
+                if not validate_output(result):
+                    logger.warning(
+                        "[FASHION_SCOUT] Attempt %d failed schema validation → forcing retry.",
+                        attempt + 1,
+                    )
+                    continue
+
+                # ── Combined scoring (AI self-report + local quality scorer) ──
+                ai_score    = result.get("confidence", {}).get("overall", 0.0)
+                query_score = score_query_quality(result.get("search_query", ""))
+                
+                wear_name   = result.get("wear_name", "")
+                if not wear_name:
+                    cls = result.get("attributes", {}).get("classification", {})
+                    wear_name = cls.get("sub_category") or cls.get("primary_category", "")
+                wear_score  = score_wear_name_quality(wear_name)
+                
+                # AI score weighted 50 % (semantic) + query 25 % + wear_name 25 %
+                final_score = round((ai_score * 0.50) + (query_score * 0.25) + (wear_score * 0.25), 3)
+                
+                # Confidence penalty for generic/poor naming
+                if wear_score < 0.50:
+                    logger.warning("[FASHION_SCOUT] wear_name '%s' quality too low (%.2f) — applying confidence penalty", wear_name, wear_score)
+                    final_score = max(0.0, final_score - 0.15)
+
+                result["_internal_score"] = final_score
+                logger.info(
+                    "[FASHION_SCOUT] Attempt %d → ai=%.2f | query=%.2f | wear=%.2f | final=%.3f | "
+                    "anchor='%s' | hint=%s",
+                    attempt + 1,
+                    ai_score,
+                    query_score,
+                    wear_score,
+                    final_score,
+                    result.get("visual_dominance", {}).get("primary_garment_id", "?"),
+                    "YES" if visual_hint else "NO",
+                )
+
+                results.append(result)
+
+                # ── Early-stop on high confidence ─────────────────────────────
+                if final_score >= HIGH_CONFIDENCE:
+                    logger.info(
+                        "[FASHION_SCOUT] High confidence (%.3f) achieved → stopping retries.",
+                        final_score,
+                    )
+                    break
+
+                # ── Immediate refinement trigger on very low attempt-1 score ──
+                if attempt == 0 and final_score < MID_CONFIDENCE:
+                    logger.warning(
+                        "[FASHION_SCOUT] Attempt 1 score %.3f < %.2f → triggering refinement immediately.",
+                        final_score, MID_CONFIDENCE,
+                    )
+                    continue   # jumps to attempt 1 (refinement path)
+
+                # ── Acceptable confidence — no need to continue ───────────────
+                if final_score >= MID_CONFIDENCE:
+                    logger.info(
+                        "[FASHION_SCOUT] Acceptable confidence (%.3f) → stopping.",
+                        final_score,
+                    )
+                    break
+
+            # ── No valid result across all attempts ───────────────────────────
+            if not results:
+                logger.error("[FASHION_SCOUT] All %d attempts failed.", MAX_RETRIES)
+                return None
+
+            # ── Select best result ────────────────────────────────────────────
+            data: Dict = max(results, key=lambda x: x.get("_internal_score", 0.0))
+            self.last_best_result = data   # persist for analytics / learning loops
+
+            # ── Warn if output is still low-confidence after all retries ──────
+            if data.get("confidence", {}).get("overall", 0.0) < MID_CONFIDENCE:
+                logger.warning(
+                    "⚠️  Low-confidence detection persists after all retries "
+                    "(overall=%.2f) — output may be imprecise.",
+                    data["confidence"]["overall"],
+                )
+
+            # ── Attribute enforcement (Python-layer — hallucination-proof) ────
+            data = self._enforce_attributes(data)
+
+            # ── Affiliate link injection ──────────────────────────────────────
+            classification = data.get("attributes", {}).get("classification", {})
+            item_category  = (
+                classification.get("primary_category")
+                or classification.get("sub_category")
+                or ""
+            )
+            # sub_category is the most descriptive term for fuzzy matching
+            item_name_for_aff = (
+                classification.get("sub_category")
+                or data.get("search_query", "")
+                or item_category
+            )
+
+            affiliate_link = _get_affiliate_link(item_category, item_name=item_name_for_aff)
+            if affiliate_link:
+                data["affiliate_link"] = affiliate_link
+                logger.info(
+                    "[FASHION_SCOUT] Affiliate link matched → category='%s' | item='%s'",
+                    item_category, item_name_for_aff,
+                )
+
+            # [HIERARCHICAL_SYNC] Inject category for downstream SEO and display logic
+            data["item_category"] = item_category
+
+            # ── FINAL WEAR_NAME ENFORCEMENT ──────────────────────────────────
+            # Even after retries, Gemini occasionally returns a colour-first or
+            # generic wear_name ("Dark Satin Dress", "Black Top", "White Outfit").
+            # If the best result's wear_name still scores < 0.55, rebuild it from
+            # the structured attributes Gemini DID return correctly so the video
+            # overlay shows a real industry-standard product label.
+            _final_wear = data.get("wear_name", "")
+            if score_wear_name_quality(_final_wear) < 0.55:
+                attrs_f = data.get("attributes", {})
+                fit_f   = attrs_f.get("fit", {})   if isinstance(attrs_f.get("fit"), dict) else {}
+                fab_f   = attrs_f.get("fabric", {}) if isinstance(attrs_f.get("fabric"), dict) else {}
+                cls_f   = attrs_f.get("classification", {}) if isinstance(attrs_f.get("classification"), dict) else {}
+                pat_f   = attrs_f.get("pattern", {}) if isinstance(attrs_f.get("pattern"), dict) else {}
+
+                _neckline   = fit_f.get("neckline", "")
+                _sleeve     = fit_f.get("sleeve_type", "")
+                _fabric     = fab_f.get("primary_material", "")
+                _silhouette = fit_f.get("silhouette", "")
+                _length     = fit_f.get("length", "")
+                _category   = cls_f.get("primary_category", "") or item_category or ""
+                _sub_cat    = cls_f.get("sub_category", "")
+                _embellish  = pat_f.get("embellishment", "")
+                _constr     = fit_f.get("construction_notes", "")
+
+                # Use sub_category directly if it's specific enough
+                if _sub_cat and len(_sub_cat.split()) >= 5:
+                    _rebuilt = _sub_cat.strip().title()
+                else:
+                    # Build from atoms: [Embellish/Neckline] + [Sleeve] + [Fabric] + [Silhouette/Length] + [Category]
+                    _atoms = []
+                    # Feature/construction first (non-colour)
+                    _feature = (
+                        _embellish if _embellish and _embellish.lower() != "none" else
+                        _constr.split(".")[0] if _constr else ""
+                    )
+                    if _feature and len(_feature) < 30:
+                        _atoms.append(_feature.strip().title())
+                    # Neckline
+                    if _neckline and _neckline.lower() not in ("", "none", "crew"):
+                        _atoms.append(_neckline.strip().title())
+                    # Sleeve (skip if sleeveless for brevity, add if notable)
+                    if _sleeve and _sleeve.lower() not in ("", "none", "sleeveless"):
+                        _atoms.append(_sleeve.strip().title())
+                    # Fabric
+                    if _fabric and _fabric.lower() not in ("", "none", "polyester", "rayon"):
+                        _atoms.append(_fabric.strip().title())
+                    # Silhouette + length
+                    if _silhouette and _silhouette.lower() not in ("", "none"):
+                        _atoms.append(_silhouette.strip().title())
+                    if _length and _length.lower() not in ("", "none"):
+                        _atoms.append(_length.strip().title())
+                    # Category last
+                    if _category:
+                        _atoms.append(_category.strip().title())
+
+                    _rebuilt = " ".join(a for a in _atoms if a)[:80]  # max 80 chars
+
+                if _rebuilt and len(_rebuilt.split()) >= 3:
+                    logger.info(
+                        "🔧 [WEAR_NAME_ENFORCE] Upgraded weak name '%s' → '%s'",
+                        _final_wear, _rebuilt
+                    )
+                    data["wear_name"] = _rebuilt
+                else:
+                    logger.warning(
+                        "⚠️ [WEAR_NAME_ENFORCE] Could not rebuild from attributes — keeping '%s'",
+                        _final_wear
+                    )
+            # ─────────────────────────────────────────────────────────────────
+
+            
+            # ── INDUSTRY_NAME ENFORCEMENT (Python layer) ────────────────────────────
+            # Gemini supplies industry_name in the JSON. If it's missing or blank,
+            # infer it from primary_category so downstream always has a clean label.
+            _ind = data.get("industry_name", "").strip()
+            if not _ind:
+                _cat = (
+                    data.get("attributes", {})
+                        .get("classification", {})
+                        .get("primary_category", "")
+                ).strip().title()
+                _sub = (
+                    data.get("attributes", {})
+                        .get("classification", {})
+                        .get("sub_category", "")
+                ).strip()
+                # Use sub_category first word(s) if it's short, else primary_category
+                if _sub and len(_sub.split()) <= 3:
+                    _ind = _sub.title()
+                elif _cat:
+                    _ind = _cat
+                data["industry_name"] = _ind
+                if _ind:
+                    logger.info("[FASHION_SCOUT] industry_name inferred: '%s'", _ind)
+            else:
+                logger.info("[FASHION_SCOUT] industry_name from Gemini: '%s'", _ind)
+
+            # ── BRAND ENRICHMENT PIPELINE ─────────────────────────────────────
+            # When Gemini reads a brand logo (Nike, Adidas, Zara, etc.) with
+            # confidence >= 0.7, we treat it as authoritative data and inject
+            # it into wear_name and search_query for precise product discovery.
+            _brand_info     = data.get("brand_detection", {}) or {}
+            _detected_brand = (_brand_info.get("detected_brand") or "").strip()
+            _brand_conf     = float(_brand_info.get("brand_confidence") or 0.0)
+            _product_line   = (_brand_info.get("product_line") or "").strip()
+            _logo_location  = (_brand_info.get("logo_location") or "").strip()
+
+            # Expose as flat top-level fields so orchestrator / caption system
+            # can consume them without digging into brand_detection dict.
+            data["detected_brand"]   = _detected_brand
+            data["brand_confidence"] = _brand_conf
+            data["product_line"]     = _product_line
+
+            if _detected_brand and _brand_conf >= 0.7:
+                logger.info(
+                    "👟 [BRAND_DETECT] High-confidence brand detected: '%s' "
+                    "(conf=%.2f, line='%s', loc='%s')",
+                    _detected_brand, _brand_conf, _product_line, _logo_location,
+                )
+
+                # ── 1. Upgrade wear_name to brand-first formula ────────────────
+                _current_wear = data.get("wear_name", "")
+                # Strip brand from wear_name if Gemini already started with it
+                _wear_no_brand = _current_wear
+                if _current_wear.lower().startswith(_detected_brand.lower()):
+                    _wear_no_brand = _current_wear[len(_detected_brand):].strip()
+
+                _brand_prefix = _detected_brand
+                if _product_line:
+                    _brand_prefix = f"{_detected_brand} {_product_line}"
+
+                # Only prepend if not already present
+                if _detected_brand.lower() not in _current_wear.lower():
+                    data["wear_name"] = f"{_brand_prefix} {_wear_no_brand}".strip()
+                    logger.info(
+                        "🔧 [BRAND_INJECT] wear_name upgraded: '%s' → '%s'",
+                        _current_wear, data["wear_name"],
+                    )
+
+                # ── 2. Build brand-first search query ─────────────────────────
+                # Brand queries have 3x higher CTR on Amazon than generic queries.
+                attrs_b = data.get("attributes", {})
+                cls_b   = attrs_b.get("classification", {}) if isinstance(attrs_b.get("classification"), dict) else {}
+                clr_b   = attrs_b.get("color", {}) if isinstance(attrs_b.get("color"), dict) else {}
+                cat_b   = cls_b.get("primary_category", "") or item_category or ""
+                sub_b   = cls_b.get("sub_category", "")
+                clr_val = clr_b.get("primary", "")
+                gender_b = cls_b.get("gender_target", "women")
+
+                _brand_query_parts = [p for p in [
+                    _brand_prefix,
+                    clr_val if clr_val else "",
+                    sub_b if sub_b else cat_b,
+                    gender_b,
+                ] if p]
+                _brand_query = " ".join(_brand_query_parts)[:100]
+                logger.info("🔍 [BRAND_QUERY] Brand-first query: '%s'", _brand_query)
+
+                # Brand query overrides all three tiers — it's most specific
+                data["brand_search_query"] = _brand_query
+
+            elif _detected_brand and _brand_conf >= 0.5:
+                logger.info(
+                    "👟 [BRAND_DETECT] Medium-confidence brand: '%s' (conf=%.2f) "
+                    "— mentioned in description but not injected into wear_name",
+                    _detected_brand, _brand_conf,
+                )
+            # ─────────────────────────────────────────────────────────────────
+
+            # ── Money Flow CTA injection ──────────────────────────────────────
+            if _money_engine:
+                try:
+                    vibe  = data.get("vibe", "GLOBAL")
+                    offer = _money_engine.get_optimized_offer(vibe)
+                    data["imaginative_ctas"] = {
+                        "english":    _money_engine.get_law_bending_cta(offer),
+                        "hinglish":   f"{offer['hook']} (Complete Verification Step check karo)",
+                        "roman_urdu": f"{offer['hook']} (Verification Step complete karein)",
+                        "hindi":      f"{offer['hook']} (Industrial Verification पूरा करें)",
+                    }
+                    data["lead_magnet"] = offer["lead_magnet"]
+                except Exception as cta_exc:
+                    logger.warning("[FASHION_SCOUT] CTA injection failed: %s", cta_exc)
+
+            # ── Multi-garment schema normalisation ────────────────────────────
+            # Ensure primary_item / secondary_items keys always exist so
+            # downstream consumers never need to guard for their absence.
+            if "primary_item" not in data:
+                data["primary_item"] = data.get("attributes", {})
+
+            if "secondary_items" not in data:
+                # Populate from visual_dominance.secondary_garments for richer data
+                data["secondary_items"] = (
+                    data.get("visual_dominance", {}).get("secondary_garments", [])
+                )
+
+            # ── 3-TIER QUERY PRIORITY ─────────────────────────────────────────
+            # Tier 0 — brand-first query        (brand_conf ≥ 0.7)   ← BEST
+            # Tier 1 — local deterministic      (score ≥ 0.60)       ← preferred
+            # Tier 2 — Gemini's search_query    (score ≥ 0.40)       ← acceptable
+            # Tier 3 — SEO keyword stitch        (fallback)           ← last resort
+            if _detected_brand and _brand_conf >= 0.7 and data.get("brand_search_query"):
+                final_query = data["brand_search_query"]
+                logger.info("[FASHION_SCOUT] Tier-0 (brand-first) query: '%s'", final_query)
+            else:
+                gemini_query  = data.get("search_query", "").strip()
+                gemini_score  = score_query_quality(gemini_query)
+                built_query   = self.build_query_from_attributes(data)
+                built_score   = score_query_quality(built_query)
+
+                if built_score >= 0.60:
+                    final_query = built_query
+                    logger.info("[FASHION_SCOUT] Tier-1 (local builder) query: '%s'", final_query)
+                elif gemini_score >= 0.40:
+                    final_query = gemini_query
+                    logger.info("[FASHION_SCOUT] Tier-2 (Gemini direct) query: '%s'", final_query)
+                else:
+                    top_seo     = " ".join(data.get("seo_keywords", [])[:2])
+                    final_query = f"{built_query} {top_seo}".strip() if built_query else top_seo
+                    logger.warning("[FASHION_SCOUT] Tier-3 (SEO fallback) query: '%s'", final_query)
+
+            data["search_query"] = final_query   # canonical field — always the chosen query
+
+            # ── Amazon search links ───────────────────────────────────────────
+            q_encoded = final_query.replace(" ", "+")
+            data["search_links"] = {
+                "amazon_us": f"https://www.amazon.com/s?k={q_encoded}" if q_encoded else None,
+                "amazon_in": f"https://www.amazon.in/s?k={q_encoded}"  if q_encoded else None,
+            }
+
+            # ── Brand-specific direct links (when brand detected) ─────────────
+            # These give users a direct path to the exact brand's product results,
+            # which is far more conversion-optimised than generic search.
+            if _detected_brand and _brand_conf >= 0.7:
+                _brand_q = (data.get("brand_search_query") or final_query).replace(" ", "+")
+                _brand_encoded = _detected_brand.replace(" ", "+")
+                data["brand_store_links"] = {
+                    "amazon_in_brand": (
+                        f"https://www.amazon.in/s?k={_brand_q}"
+                        f"&rh=p_89%3A{_brand_encoded}"
+                    ),
+                    "amazon_us_brand": (
+                        f"https://www.amazon.com/s?k={_brand_q}"
+                        f"&rh=p_89%3A{_brand_encoded}"
+                    ),
+                    "myntra_brand": (
+                        f"https://www.myntra.com/{_detected_brand.lower().replace(' ', '-')}"
+                    ),
+                    "flipkart_search": (
+                        f"https://www.flipkart.com/search?q={_brand_q}"
+                    ),
+                }
+                logger.info(
+                    "🔗 [BRAND_LINKS] Brand store links generated for '%s'",
+                    _detected_brand,
+                )
+
+
+            # ── SEO keyword pass-through + clickable bindings ─────────────────
+            seo_kws: List[str] = data.get("seo_keywords", [])
+            data["seo_search_keywords"] = seo_kws
+            data["seo_binded_links"] = [
+                {
+                    "kw":      kw,
+                    "link_in": f"https://www.amazon.in/s?k={kw.replace(' ', '+').replace(chr(34), '')}",
+                    "link_us": f"https://www.amazon.com/s?k={kw.replace(' ', '+').replace(chr(34), '')}",
+                }
+                for kw in seo_kws[:3]
+            ]
+
+            logger.info(
+                "✅ Fashion Scout complete — "
+                "anchor='%s' | category='%s' | vibe='%s' | score=%.3f",
+                data.get("visual_dominance", {}).get("primary_garment_id", "?"),
+                item_category,
+                data.get("vibe", "?"),
+                data.get("_internal_score", 0.0),
+            )
+            return data
+
+        except Exception as exc:
+            logger.error("❌ Fashion Scout fatal error: %s", exc, exc_info=True)
+            return None
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MODULE SINGLETON
+# ─────────────────────────────────────────────────────────────────────────────
+scout = FashionScout()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UTILITIES & LEGACY SHIMS
+# ─────────────────────────────────────────────────────────────────────────────
+
+def get_fallback_payload() -> Dict[str, Any]:
+    """
+    Returns a safe, neutral fallback payload used when Gemini fails 
+    or confidence is unrecoverably low.
+    """
+    return {
+        "visual_dominance": {
+            "primary_garment_id": "apparel",
+            "dominance_score": 5,
+            "frame_coverage_pct": 30,
+            "dominance_reason": "Fallback due to detection failure",
+            "secondary_garments": [],
+            "ignored_items": []
+        },
+        "attributes": {
+            "classification": {"primary_category": "apparel", "sub_category": "casual wear"}
+        },
+        "outfit_description": "Standard fashion apparel",
+        "search_query": "casual comfortable wear",
+        "seo_keywords": ["fashion", "apparel", "clothing"],
+        "confidence": {"detection": 0.0, "query": 0.0, "overall": 0.0},
+        "vibe": "CASUAL",
+        "fashion": { # Legacy compatibility shim
+            "vibe": "CASUAL",
+            "outfit_description": "Standard fashion apparel",
+            "search_queries": {"amazon": "casual comfortable wear", "general": "casual outfit"}
+        }
+    }

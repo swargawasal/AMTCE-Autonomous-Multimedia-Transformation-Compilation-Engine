@@ -10,7 +10,7 @@ print("--- 🧪 INTEGRATION VERIFICATION (FULL PIPELINE) ---")
 
 try:
     print("1. Importing compiler shim...")
-    import compiler
+    from Compiler_Modules import compiler
     print("   ✅ Compiler imported successfully.")
 except Exception as e:
     print(f"   ❌ Import Failed: {e}")
@@ -18,10 +18,15 @@ except Exception as e:
 
 print("2. Testing compile_with_transitions (Smart Render w/ Brain & Watermark)...")
 
-input_path = "D:\\Autonomous Multimedia Transformation & Compilation Engine (AMTCE)\\downloads\\Urvashi_rautela.mp4"
+input_path = (
+    sys.argv[1] if len(sys.argv) > 1
+    else os.getenv("VERIFY_INPUT_VIDEO", "")
+    or next(iter([f for f in os.listdir("downloads") if f.endswith(".mp4")]), "dummy.mp4")
+    if os.path.isdir("downloads") else "dummy.mp4"
+)
 if not os.path.exists(input_path):
      print(f"⚠️ Warning: {input_path} not found. Using dummy path (Verification might fail on render).")
-     input_path = "dummy.mp4" 
+     input_path = "dummy.mp4"
 
 output_path = "verify_output_restored.mp4"
 print(f"   🚀 Invoking Smart Render on {input_path}...")

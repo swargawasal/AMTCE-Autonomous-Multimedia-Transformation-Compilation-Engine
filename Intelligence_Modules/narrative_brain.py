@@ -10,59 +10,51 @@ Key Features:
 3. Continuity: Passes context between batches to ensure a smooth story.
 """
 
+import glob
 import os
 import json
 import logging
+import os
 import re
-import glob
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
+
 from dotenv import load_dotenv
-import google.generativeai as genai
 from PIL import Image
+
+from Intelligence_Modules.gemini_governor import gemini_router
 
 # Load credentials
 load_dotenv("Credentials/.env", override=True)
 
 logger = logging.getLogger("narrative_brain")
 
-# NARRATIVE PROMPT (Multimodal - Kardashian Style Audit)
-NARRATIVE_PROMPT = """
-STRICT VIBE: "The Fashion Genius Socialite".
-- PERSONA: You are a Kardashian-style influencer, but with a degree in Textile Engineering. You are an INSIDER who knows the technical secrets.
-- LANGUAGE STYLE: Use Kardashian-style slang ("literally", "it's giving", "biblical") but mix it with high-end technical terms from the metadata.
-- MIRROR TECH: Hook them with the drama, anchor them with the "Fashion Science".
-
-NARRATIVE RULES:
-1. THE HOOK: Start with a dramatic socialite opening ("Okay guys, we need to talk about the technical mastery of this look...").
-2. THE ANCHOR: Use a technical fact from the "Journalist Notes" or "Fashion Scout" metadata to explain WHY it's iconic.
-3. FLOW: Transition using high-stakes language. "This isn't just a dress, it's a structural manifesto, period."
-4. LENGTH: ~2 sentences per clip. One for the vibe, one for the technical "secret".
-
-PREVIOUS CONTEXT (If any):
-{prev_context}
-
-OUTPUT FORMAT (JSON):
-{{
-  "script": "Full Kardashian-style narration text here...",
-  "mood": "Iconic/Dramatic/Influencer",
-  "title_suggestion": "The Ultimate Style Evolution"
-}}
-"""
+# NARRATIVE PROMPT loaded dynamically from JSON
 
 class NarrativeDirector:
     def __init__(self):
+        self.router = gemini_router
         self.gemini_key = os.getenv("GEMINI_API_KEY")
-        self.model = None
-        
+        self.model = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+
         if self.gemini_key:
             try:
-                genai.configure(api_key=self.gemini_key)
                 # Use Gemini Model from Env (Default: gemini-2.5-flash)
                 model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
-                self.model = genai.GenerativeModel(model_name)
                 logger.info(f"🎬 Narrative Director: ACTIVE ({model_name})")
             except Exception as e:
                 logger.error(f"❌ Narrative Brain Init Failed: {e}")
+
+        # Load niche-specific prompts
+        self.niche_prompts = {}
+        target_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), "The_json", "niche_prompts.json")
+        try:
+            with open(target_path, "r", encoding="utf-8") as f:
+                self.niche_prompts = json.load(f)
+            logger.info("✅ Loaded niche_prompts.json for narrative_brain")
+        except FileNotFoundError:
+            logger.warning(f"⚠️ niche_prompts.json not found at {target_path}")
+        except json.JSONDecodeError as e:
+            logger.error(f"❌ JSON Decode error in niche_prompts.json: {e}")
 
     def find_associated_assets(self, entity_name: str, limit: int = 10) -> List[Dict]:
         """
@@ -70,40 +62,42 @@ class NarrativeDirector:
         Matches Processed Shorts/{Name}_X.json <-> assets/snapped_thumbs/{Name}_00X.jpg
         """
         assets = []
-        
+
         # 1. Normalize Name for Regex
         # "Avneet Kaur" -> "Avneet_kaur" (loosely)
         base_pattern = entity_name.replace(" ", "_").lower()
-        
+
         json_dir = "Processed Shorts"
         thumb_dir = "assets/snapped_thumbs"
-        
+
         # Scan JSONs first (Source of Truth)
         all_jsons = glob.glob(os.path.join(json_dir, "*.json"))
-        
+
         candidates = []
-        
+
         for j_path in all_jsons:
             fname = os.path.basename(j_path)
             # Filter by entity name (case insensitive partial match)
             if base_pattern in fname.lower() and not fname.endswith(".final.json"):
                 # Extract Numeric ID
                 # regex: .*_(\d+).json
-                match = re.search(r'_(\d+)\.json$', fname)
+                match = re.search(r"_(\d+)\.json$", fname)
                 if match:
                     seq_id = int(match.group(1))
-                    candidates.append({
-                        "id": seq_id,
-                        "json_path": j_path,
-                        "base_name": fname.replace(f"_{match.group(1)}.json", "")
-                    })
-        
+                    candidates.append(
+                        {
+                            "id": seq_id,
+                            "json_path": j_path,
+                            "base_name": fname.replace(f"_{match.group(1)}.json", ""),
+                        }
+                    )
+
         # Sort by ID
         candidates.sort(key=lambda x: x["id"])
-        
+
         # Apply Limit
         candidates = candidates[:limit]
-        
+
         # 2. Find Matching Thumbnails
         final_pairs = []
         for item in candidates:
@@ -111,116 +105,290 @@ class NarrativeDirector:
             # e.g. Avneet_kaur_001.jpg
             thumb_name = f"{item['base_name']}_{item['id']:03d}.jpg"
             thumb_path = os.path.join(thumb_dir, thumb_name)
-            
+
             # Load Metadata (Always required)
             meta = {}
             try:
-                with open(item['json_path'], 'r', encoding='utf-8') as f:
+                with open(item["json_path"], "r", encoding="utf-8") as f:
                     meta = json.load(f)
             except Exception as e:
-                logger.warning(f"⚠️ Failed to read metadata for {item['base_name']}: {e}")
-                continue # Cannot proceed without metadata
+                logger.warning(
+                    f"⚠️ Failed to read metadata for {item['base_name']}: {e}"
+                )
+                continue  # Cannot proceed without metadata
 
             # Check Thumbnail
             final_thumb_path = thumb_path if os.path.exists(thumb_path) else None
-            
-            if not final_thumb_path:
-                logger.warning(f"⚠️ Missing thumbnail for ID {item['id']}: {thumb_path} (Using Metadata Only)")
 
-            final_pairs.append({
-                "id": item["id"],
-                "json": meta,
-                "image_path": final_thumb_path, # Logic handles None
-                "video_path": meta.get("video_path", "")
-            })
-                
+            if not final_thumb_path:
+                logger.warning(
+                    f"⚠️ Missing thumbnail for ID {item['id']}: {thumb_path} (Using Metadata Only)"
+                )
+
+            final_pairs.append(
+                {
+                    "id": item["id"],
+                    "json": meta,
+                    "image_path": final_thumb_path,  # Logic handles None
+                    "video_path": meta.get("video_path", ""),
+                }
+            )
+
         logger.info(f"✅ Found {len(final_pairs)} matched assets for '{entity_name}'")
         return final_pairs
 
-    def generate_compilation_script(self, assets: List[Dict]) -> str:
+    def generate_compilation_script(
+        self, assets: List[Dict], intelligence_cache=None, niche_category: str = "generic",
+        cinematic_plan: dict = None
+    ) -> Dict:
         """
         Generates a continuous script from a list of assets.
         Handles batching if list is long.
+        cinematic_plan: optional dict from CinematicDurationEngine (used in cinematic_story mode).
         """
-        if not assets: return ""
-        if not self.model: return "Narrative generation unavailable (No AI)."
-        
+        if not assets:
+            return {"script": "", "mood": "N/A", "title_suggestion": "No Assets"}
+        if not self.model:
+            return {
+                "script": "Narrative generation unavailable (No AI).",
+                "mood": "Error",
+                "title_suggestion": "AI Error",
+            }
+
         full_script = []
+        all_story_beats = []   # aggregated across batches for rhythm sync
+        batch_mood = None      # first non-null mood wins
         batch_size = 10
         prev_context = "Start of compilation."
-        
+
         for i in range(0, len(assets), batch_size):
             batch = assets[i : i + batch_size]
-            logger.info(f"🧠 Processing Batch {i//batch_size + 1} ({len(batch)} clips)...")
-            
+            logger.info(
+                f"🧠 Processing Batch {i // batch_size + 1} ({len(batch)} clips)..."
+            )
+
             # Prepare Multimodal Payload
             payload = []
+
+            # 1. System Prompt (Text) - Unified Intelligence Migration
+            univ = self.niche_prompts.get("_universal", {})
+            nb_config = self.niche_prompts.get("_narrative_output_format", {})
             
-            # 1. System Prompt (Text)
-            prompt_text = NARRATIVE_PROMPT.format(
-                count=len(batch),
-                prev_context=prev_context
+            active_narrative_prompt = univ.get("narrative_prompt", "You are the Semantic Narration Director.")
+            master_intel = univ.get("master_prompt", "")
+            
+            # Domain-specific constraints (e.g. Fashion Full-Outfit rule)
+            hook_strategies = self.niche_prompts.get("_hook_strategies", {})
+            strategy = hook_strategies.get(niche_category, hook_strategies.get("generic", {}))
+            constraints = strategy.get("domain_constraints", "")
+            
+            # Determine niche configuration
+            _cinematic_constraints = ""
+            _adaptive_mode = os.getenv("CINEMATIC_ADAPTIVE_MODE", "yes").strip().lower() == "yes"
+            if niche_category == "cinematic_story":
+                if not _adaptive_mode:
+                    _cinematic_constraints += "\n\n⚠️ SYSTEM OVERRIDE: ADAPTIVE MODE OFF. Stick to a 'Thriller Documentary' persona ONLY."
+                
+            if niche_category == "cinematic_story" and cinematic_plan:
+                _bp = cinematic_plan.get("beat_plan", [])
+                _bp_str = " | ".join(
+                    f"{b['act'].upper()}: {b['beats']} beats ({b['seconds']}s, ~{b['words']} words)"
+                    for b in _bp
+                )
+                _cinematic_constraints = (
+                    f"\n\n══ DURATION CONTRACT (MANDATORY) ══\n"
+                    f"Target output:   {cinematic_plan.get('output_seconds', 60)}s total\n"
+                    f"Total beats:     {cinematic_plan.get('beat_count', 12)} story beats\n"
+                    f"Total words:     {cinematic_plan.get('word_target', 80)} words MAX\n"
+                    f"Per-act plan:    {_bp_str}\n"
+                    f"RULE: Write EXACTLY {cinematic_plan.get('beat_count', 12)} script entries.\n"
+                    f"══════════════════════════════════════"
+                )
+
+            prompt_text = (
+                f"{master_intel}\n\n"
+                f"DOMAIN_HINT: {niche_category}\n"
+                f"{active_narrative_prompt}\n"
+                f"{constraints}{_cinematic_constraints}\n\n"
+                f"PREVIOUS CONTEXT:\n{prev_context}\n\n"
+                f"OUTPUT FORMAT (JSON ONLY):\n{nb_config.get('json', '{}')}\n"
             )
             payload.append(prompt_text)
-            
+
+
             # 2. Add Images & Metadata (Interleaved)
             for file_idx, item in enumerate(batch):
                 # Image
                 try:
-                    img = Image.open(item['image_path'])
-                    payload.append(f"--- CLIP {file_idx+1} ---")
-                    payload.append(img) # The actual PIL Image
+                    img = Image.open(item["image_path"])
+                    payload.append(f"--- CLIP {file_idx + 1} ---")
+                    payload.append(img)  # The actual PIL Image
                 except:
-                    payload.append(f"[Missing Image for Clip {file_idx+1}]")
-                
+                    payload.append(f"[Missing Image for Clip {file_idx + 1}]")
+
                 # Metadata Summary
                 meta = item.get("json", {})
-                fashion = meta.get("brain_analysis", {}).get("fashion_scout", {}).get("outfit_description", "Fashion details unavailable")
+                fashion = (
+                    meta.get("brain_analysis", {})
+                    .get("fashion_scout", {})
+                    .get("outfit_description", "Fashion details unavailable")
+                )
                 facts = meta.get("brain_analysis", {}).get("visual_facts", [])
                 caption = meta.get("caption", "No caption available")
-                
+
                 # [JOURNALIST CONTEXT] - Injecting the "Ghost" Script
-                journalist_notes = meta.get("brain_analysis", {}).get("editorial_script", "")
+                journalist_notes = meta.get("brain_analysis", {}).get(
+                    "editorial_script", ""
+                )
                 if journalist_notes:
-                    logger.info(f"📰 Injecting Journalist Context ({len(journalist_notes)} chars) for Clip {file_idx+1}")
-                
+                    logger.info(
+                        f"📰 Injecting Journalist Context ({len(journalist_notes)} chars) for Clip {file_idx + 1}"
+                    )
+
+                # [FASHION_ID] — Pull from intelligence cache fashion_identification block
+                fashion_id = meta.get("extensions", {}).get("fashion", {})
+                if not fashion_id:
+                    # Fallback: check brain_analysis for any fashion_identification block
+                    fashion_id = meta.get("brain_analysis", {}).get("fashion_identification", {})
+
+                designer = fashion_id.get("designer_or_brand", "Unknown Designer")
+                outfit_type = fashion_id.get("outfit_type", "")
+                rarity = fashion_id.get("rarity_status", "")
+                technique = fashion_id.get("key_technique", "")
+                event = fashion_id.get("collection_or_event", "")
+                edu_fact = fashion_id.get("educational_fact", "")
+                luxury_tier = fashion_id.get("luxury_tier", "")
+                wearer = fashion_id.get("wearer_name", meta.get("title", "Subject"))
+
                 meta_text = f"""
-                METADATA (Clip {file_idx+1}):
-                - Outfit: {fashion[:300]}...
-                - Key Facts: {', '.join(facts[:3])}
-                - Journalist Notes: {journalist_notes[:500]} 
+                FASHION IDENTIFICATION (Clip {file_idx + 1}):
+                - Wearer: {wearer}
+                - Designer / Brand: {designer}
+                - Outfit Type: {outfit_type}
+                - Collection / Event: {event}
+                - Rarity Status: {rarity}
+                - Key Craft Technique: {technique}
+                - Luxury Tier: {luxury_tier}
+                - Educational Fact: {edu_fact}
+
+                SUPPLEMENTARY CONTEXT:
+                - Outfit Description: {fashion[:300]}
+                - Key Visual Facts: {", ".join(facts[:3])}
+                - Journalist Notes: {journalist_notes[:500]}
                 - Original Caption: {caption[:200]}
                 """
                 payload.append(meta_text)
-            
+
             # 3. Call Gemini — 120s timeout (heavy multimodal: up to 10 images per batch)
             try:
-                response = self.model.generate_content(
-                    payload,
-                    request_options={"timeout": 120}
+                res_txt = self.router.generate(
+                    task_type="master", prompt=payload, module_name="narrative_brain"
                 )
+                if not res_txt:
+                    full_script.append("[Narrative gap]")
+                    continue
+                resp_text = res_txt.strip()
 
-                resp_text = response.text.strip()
-                
+                logger.info("Gemini Raw Response:")
+                logger.info(resp_text)
+
                 # Extract JSON
-                match = re.search(r'(\{.*\})', resp_text, re.DOTALL)
+                match = re.search(r"(\{.*\})", resp_text, re.DOTALL)
                 if match:
                     data = json.loads(match.group(1))
-                    script_part = data.get("script", "")
-                    full_script.append(script_part)
                     
+                    # --- [NEW] ADAPTIVE PARSER FOR SEMANTIC INTELLIGENCE ---
+                    script_data = data.get("script", "")
+                    if isinstance(script_data, list):
+                        # Handle new structured list of objects
+                        script_part = " ".join([item.get("line", "") for item in script_data if isinstance(item, dict)])
+                        
+                        # Map to story_beats format for the rest of the pipeline
+                        beats = []
+                        for i, item in enumerate(script_data):
+                            if isinstance(item, dict):
+                                beats.append({
+                                    "beat": i + 1,
+                                    "text": item.get("line", ""),
+                                    "timestamp": item.get("timestamp_beat", 0.0),
+                                    "style": item.get("caption_style", "bold_center"),
+                                    "role": item.get("story_beat", "build"),
+                                    "emotion": data.get("mood", "Cinematic")
+                                })
+                    else:
+                        # Handle legacy string format
+                        script_part = script_data
+                        beats = data.get("story_beats", [])
+
+                    full_script.append(script_part)
+
+                    # Capture mood from AI response (don't hardcode)
+                    if not batch_mood:
+                        batch_mood = data.get("mood", data.get("genre", "Cinematic"))
+
+                    # Aggregate story_beats across batches
+                    if beats:
+                        # Re-number beats continuously across batches
+                        for b in beats:
+                            b["beat"] = len(all_story_beats) + 1
+                            all_story_beats.append(b)
+
                     # Update context for next batch
                     prev_context = f"Previous batch ended with: {script_part[-100:]}"
                 else:
-                    logger.warning("⚠️ Narrative Brain returned raw text (no JSON). Using raw.")
+                    logger.warning(
+                        "⚠️ Narrative Brain returned raw text (no JSON). Using raw."
+                    )
                     full_script.append(resp_text)
-                    
+
             except Exception as e:
                 logger.error(f"❌ Batch Generation Failed: {e}")
-                full_script.append(f"[Narrative gap for clips {i}-{i+len(batch)}]")
-                
+                full_script.append(f"[Narrative gap for clips {i}-{i + len(batch)}]")
+
         final_narrative = " ".join(full_script)
-        return final_narrative
+        return {
+            "script": final_narrative,
+            "mood": batch_mood or "Cinematic",
+            "story_beats": all_story_beats,
+            "title_suggestion": data.get("title_suggestion", "Visual Story") if 'data' in locals() else "Visual Story",
+            "visual_read": data.get("visual_read", "") if 'data' in locals() else "",
+            "semantic_context": data.get("semantic_context", "") if 'data' in locals() else "",
+            "genre": data.get("genre", "") if 'data' in locals() else "",
+            "tone": data.get("tone", "") if 'data' in locals() else "",
+            "rhythm": data.get("rhythm", "") if 'data' in locals() else "",
+            "voice": data.get("voice", "") if 'data' in locals() else "",
+            "caption_overlay_notes": data.get("caption_overlay_notes", "") if 'data' in locals() else "",
+        }
+
+    def generate(self, input_path, frames):
+        """Standardized legacy entry point."""
+        base_name = (
+            os.path.basename(input_path).rsplit(".", 1)[0].replace("_", " ").title()
+        )
+        assets = []
+        for f in frames:
+            assets.append(
+                {
+                    "image_path": f,
+                    "msg": f"Clip from {base_name}",
+                    "json": {
+                        "caption": f"Visual of {base_name}",
+                        "brain_analysis": {
+                            "editorial_script": f"Focusing on {base_name}'s high-end aesthetic."
+                        },
+                    },
+                }
+            )
+        return self.generate_compilation_script(assets)
+
 
 # Sentinel
-director = NarrativeDirector()
+try:
+    director = NarrativeDirector()
+except Exception as _nd_init_err:
+    import logging as _nl
+
+    _nl.getLogger("narrative_brain").warning(
+        f"NarrativeDirector init failed: {_nd_init_err}"
+    )
+    director = None

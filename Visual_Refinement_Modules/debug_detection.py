@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-import google.generativeai as genai
 try:
     from . import gemini_enhance_for_watermark as gemini_enhance
 except ImportError:
@@ -29,10 +28,11 @@ if not api_key:
     print("❌ No API Key found.")
     exit()
 
-gemini_enhance.init_gemini(api_key)
+# gemini_enhance.init_gemini(api_key) # Deprecated - handled automatically via env
 
 # Load Image
-image_path = "C:/Users/midhunkrishnapv/.gemini/antigravity/brain/14575152-6352-431c-9e53-167244d5881b/uploaded_image_1768691042118.png"
+import sys
+image_path = sys.argv[1] if len(sys.argv) > 1 else "test.png"
 if not os.path.exists(image_path):
     print(f"❌ Image not found: {image_path}")
     exit()
@@ -46,7 +46,7 @@ print(f"📸 Loaded image: {img.shape}")
 
 # Run Detection
 print("🚀 Running Gemini Detection...")
-results = gemini_enhance.detect_watermark([img], keywords="MIRRORED TEXT")
+results, detected_niche = gemini_enhance.detect_watermark([img], keywords="MIRRORED TEXT")
 
 print("\n--- RESULTS ---")
 print(json.dumps(results, indent=2))

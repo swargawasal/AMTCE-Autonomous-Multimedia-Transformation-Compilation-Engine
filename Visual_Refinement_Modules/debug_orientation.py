@@ -1,8 +1,9 @@
 
+import sys
 import cv2
 import os
 
-video_path = r"C:\Users\midhunkrishnapv\AppData\Local\Temp\gradio\3e59423e83ff2e96740d46f63aedee12ea573a6641ff22342404adc2a391043a\Priyanka_Chahar_Chaudhary_1.mp4"
+video_path = sys.argv[1] if len(sys.argv) > 1 else ""
 if not os.path.exists(video_path):
     print("Video not found at that path.")
 else:

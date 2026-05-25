@@ -1,0 +1,141 @@
+{
+  "_comment": "AMTCE Actress Account Config v2 — key=human name, value={id, route}. 'route' is auto-managed by credential_validator.",
+  "_version": "2.0",
+  "account_mode_enabled": false,
+  "primary": {
+    "_comment": "Actress folders exist in social_media/. route auto-set by credential validator.",
+    "Sakshi Malik": {
+      "id": "sakshimalik",
+      "route": "Sakshi Malik"
+    },
+    "Giorgia": {
+      "id": "giorgia.andriani22",
+      "route": "Giorgia"
+    },
+    "Malavika": {
+      "id": "malavika",
+      "route": "Malavika"
+    }
+  },
+  "secondary": {
+    "_comment": "No actress folder yet. route=General_Fallback until folder+creds are created.",
+    "Gima Ashi": {
+      "id": "gima_ashi",
+      "route": "General_Fallback"
+    },
+    "Roshniwalia": {
+      "id": "roshniwaliaa",
+      "route": "General_Fallback"
+    },
+    "Parineeti Chopra": {
+      "id": "parineetichopra",
+      "route": "General_Fallback"
+    },
+    "Avneet Kaur": {
+      "id": "avneetkaur_13",
+      "route": "General_Fallback"
+    },
+    "Urvashi Rautela": {
+      "id": "urvashirautela",
+      "route": "General_Fallback"
+    },
+    "Saiee Manjrekar": {
+      "id": "saieemmanjrekar",
+      "route": "General_Fallback"
+    },
+    "Disha Patani": {
+      "id": "dishapatani",
+      "route": "General_Fallback"
+    },
+    "Kriti Sanon": {
+      "id": "kritisanon",
+      "route": "General_Fallback"
+    },
+    "Neha Sharma": {
+      "id": "nehasharma",
+      "route": "General_Fallback"
+    },
+    "Ruhi Singh": {
+      "id": "ruhisingh12",
+      "route": "General_Fallback"
+    },
+    "Pooja Hedge": {
+      "id": "poojahedge",
+      "route": "General_Fallback"
+    },
+    "Shefali": {
+      "id": "shefali",
+      "route": "General_Fallback"
+    },
+    "Lisa": {
+      "id": "lalalalisa_m",
+      "route": "General_Fallback"
+    },
+    "Ayesha Khan": {
+      "id": "ayeshaakhan_official",
+      "route": "General_Fallback"
+    },
+    "Rakul Preet Singh": {
+      "id": "rakulpreetsingh",
+      "route": "General_Fallback"
+    },
+    "Muskan Karia": {
+      "id": "muskankaria",
+      "route": "General_Fallback"
+    },
+    "Tammanah Bhatia": {
+      "id": "tammanahbhatia",
+      "route": "General_Fallback"
+    },
+    "Kiara Advani": {
+      "id": "kiaraaliaadvani",
+      "route": "General_Fallback"
+    },
+    "Kylie Jenner": {
+      "id": "kyliejenner",
+      "route": "General_Fallback"
+    },
+    "Akanksha Puri": {
+      "id": "akanksha8000",
+      "route": "General_Fallback"
+    },
+    "Kate Sharma": {
+      "id": "katesharma",
+      "route": "General_Fallback"
+    },
+    "Sassy Poonam": {
+      "id": "sassy_poonam",
+      "route": "General_Fallback"
+    },
+    "Ankita Singh": {
+      "id": "ankitasingh_2910",
+      "route": "General_Fallback"
+    }
+  },
+  "nsfw": {
+    "_comment": "NSFW accounts. Real name as key. route auto-managed like primary/secondary.",
+    "Mia Malkova": {
+      "id": "miamalkova",
+      "route": "General_Fallback",
+      "niche": "adult_content"
+    }
+  },
+  "_pending_next_session": {
+    "_comment": "Auto-populated by credential_validator when all primary folders are fully credentialed. These are the secondary names waiting for their folders to be created.",
+    "folders_to_create": [
+      "Parineeti Chopra",
+      "Ruhi Singh",
+      "Sassy Poonam",
+      "Gima Ashi",
+      "Kylie Jenner",
+      "Ankita Singh",
+      "Roshniwalia",
+      "Kriti Sanon",
+      "Kiara Advani",
+      "Saiee Manjrekar",
+      "Lisa",
+      "Muskan Karia",
+      "Ayesha Khan"
+    ]
+  }
+}

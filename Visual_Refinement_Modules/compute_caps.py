@@ -96,7 +96,23 @@ class ComputeCaps:
                  return
 
             # 4. Verify Torch for Heavy AI (>= 6GB)
-            logger.info("   └─ Status: HIGH_VRAM. Verifying Torch for Heavy Dependencies...")
+            logger.info("   └─ Status: HIGH_VRAM. Verifying Heavy Dependencies (Torch, Kokoro)...")
+            try:
+                import torch
+            except ImportError:
+                logger.warning("   └─ Warning: Heavy dependencies (torch) not found. Auto-installing... (this may take a while)")
+                try:
+                    logger.info("      └─ Installing PyTorch with CUDA 12.1...")
+                    subprocess.check_call([sys.executable, "-m", "pip", "install", "torch", "torchvision", "torchaudio", "--index-url", "https://download.pytorch.org/whl/cu121"])
+                    logger.info("      └─ Installing Kokoro and upscale dependencies...")
+                    subprocess.check_call([sys.executable, "-m", "pip", "install", "kokoro", "soundfile", "diffusers", "transformers", "accelerate"])
+                except Exception as e:
+                    logger.error(f"   └─ Error: Auto-install failed: {e}. Falling back to CPU.")
+                    cls._set_cpu_only()
+                    cls._caps["vram_gb"] = vram
+                    cls._initialized = True
+                    return
+
             try:
                 import torch
                 if torch.cuda.is_available():
@@ -111,7 +127,7 @@ class ComputeCaps:
                     cls._caps["vram_gb"] = vram # Preserve info
                     
             except ImportError:
-                logger.warning("   └─ Warning: Heavy dependencies (torch) not found. Falling back to CPU.")
+                logger.warning("   └─ Warning: Heavy dependencies (torch) still not found. Falling back to CPU.")
                 cls._set_cpu_only()
                 cls._caps["vram_gb"] = vram # Preserve info
 

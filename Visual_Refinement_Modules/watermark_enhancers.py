@@ -271,13 +271,11 @@ class BilateralTextureMatcher:
                 mean_s, std_s = cv2.meanStdDev(gray, mask=surround)
                 noise_sigma = std_s[0][0]
                 
-                # If background has texture, re-inject it into the filtered result
+                # --- TEXTURE SYNTHESIS ---
+                # Matches local noise
                 if noise_sigma > 2.0:
-                    # Generate equivalent noise
                     noise = np.random.normal(0, noise_sigma, roi.shape).astype(np.int16)
                     filtered_float = filtered.astype(np.float32)
-                    
-                    # Add noise
                     noised = filtered_float + noise
                     filtered = np.clip(noised, 0, 255).astype(np.uint8)
             

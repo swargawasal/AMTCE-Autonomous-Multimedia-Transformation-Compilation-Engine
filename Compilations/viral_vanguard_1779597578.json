@@ -1,0 +1,372 @@
+{
+  "pipeline": "audit_passed",
+  "verdict": "unknown",
+  "editorial_title": null,
+  "caption_data": {
+    "caption": "Yellow Cotton Shirt VIRAL: CLI: Process 'Kriti Sanon, guaranteeing a visual impact that lingers long after you've left the space, anchoring your visual dominance with a fabric that feels as premium as it looks, providing an immediate aesthetic reward that transforms your silhouette.",
+    "editorial_script": "Yellow Cotton Shirt VIRAL: CLI: Process 'Kriti Sanon, guaranteeing a visual impact that lingers long after you've left the space, anchoring your visual dominance with a fabric that feels as premium as it looks, providing an immediate aesthetic reward that transforms your silhouette."
+  },
+  "metadata": {
+    "hook_score": 0.4595,
+    "quality_score": 0.5,
+    "transformation_score": 0.0,
+    "item_name": "Yellow Cotton Shirt",
+    "price_tag": "",
+    "gemini_total_calls": 1,
+    "gemini_call_log": [
+      "MASTER_INTELLIGENCE"
+    ],
+    "editing_diagnostics": {
+      "scene_count": 18,
+      "segments_created": 6,
+      "concat_used": false,
+      "editing_effective": true,
+      "non_chronological": false,
+      "avg_score": 0.167
+    },
+    "feature_flags": {
+      "scene_detection": true,
+      "smart_crop": true,
+      "caption_generation": true,
+      "music_engine": true,
+      "voiceover_generation": true,
+      "beat_detection": false,
+      "price_tag_engine": true,
+      "subject_tracking": false,
+      "scene_reconstruction": true,
+      "watermark_detection": true,
+      "watermark_inpaint": true
+    }
+  },
+  "pipeline_metrics": {
+    "monetization": {
+      "editorial_script": "Yellow Cotton Shirt VIRAL: CLI: Process 'Kriti Sanon, guaranteeing a visual impact that lingers long after you've left the space, anchoring your visual dominance with a fabric that feels as premium as it looks, providing an immediate aesthetic reward that transforms your silhouette.",
+      "final_caption": "Yellow Cotton Shirt VIRAL: CLI: Process 'Kriti Sanon, guaranteeing a visual impact that lingers long after you've left the space, anchoring your visual dominance with a fabric that feels as premium as it looks, providing an immediate aesthetic reward that transforms your silhouette.",
+      "caption": "Yellow Cotton Shirt VIRAL: CLI: Process 'Kriti Sanon, guaranteeing a visual impact that lingers long after you've left the space, anchoring your visual dominance with a fabric that feels as premium as it looks, providing an immediate aesthetic reward that transforms your silhouette.",
+      "cta": null,
+      "monetization_cta": null,
+      "ypp_safe": true,
+      "risk_level": "UNKNOWN",
+      "risk_reason": "Analysis pending or not performed.",
+      "reason": "Analysis pending or not performed.",
+      "transformation_score": 0.0,
+      "policy_citation": "Significant Original Commentary",
+      "fashion_scout": {},
+      "item_name": "Yellow Cotton Shirt",
+      "improvement_tips": [],
+      "overlay_data": {},
+      "price_data": {
+        "celebrity_price": 28424,
+        "clone_price": 9224,
+        "source": "premium_tier"
+      },
+      "telegram_hook": null,
+      "instagram_hook": null,
+      "youtube_hook": null,
+      "hashtags": null
+    }
+  },
+  "editing_timeline": [
+    {
+      "clip_id": 0,
+      "start": 19.875,
+      "end": 22.375,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.04). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.04,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 1.0,
+      "beat_offset": 0.033,
+      "_pacing_band": "setup",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.1182,
+      "importance": 0.1182,
+      "bbox": {
+        "x": 188,
+        "y": 529,
+        "w": 125,
+        "h": 165
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 1.9,
+      "end": 3.6,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.04). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.037,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 3.15,
+      "beat_offset": 0.033,
+      "_pacing_band": "setup",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.8377,
+      "importance": 0.8377
+    },
+    {
+      "clip_id": 0,
+      "start": 3.6,
+      "end": 5.767,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.05). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.046,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 3.15,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 1.0,
+      "importance": 1.0,
+      "bbox": {
+        "x": 114,
+        "y": 425,
+        "w": 230,
+        "h": 306
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 27.79,
+      "end": 30.38,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.09). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.091,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 1.0,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.3071,
+      "importance": 0.3071
+    },
+    {
+      "clip_id": 0,
+      "start": 23.822,
+      "end": 26.322,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'calm' energy (Δ=-0.03). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.03,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 2.95,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.0,
+      "importance": 0.0,
+      "bbox": {
+        "x": 377,
+        "y": 537,
+        "w": 101,
+        "h": 141
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 9.467,
+      "end": 11.4,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.04,
+      "transition_intensity": 0.0,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": null,
+      "reason": "STIE:last_segment @ 40ms",
+      "beat_interval": 2.85,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.3972,
+      "importance": 0.3972,
+      "bbox": {
+        "x": 196,
+        "y": 282,
+        "w": 417,
+        "h": 607
+      }
+    }
+  ],
+  "monetization": {
+    "editorial_script": "Yellow Cotton Shirt VIRAL: CLI: Process 'Kriti Sanon, guaranteeing a visual impact that lingers long after you've left the space, anchoring your visual dominance with a fabric that feels as premium as it looks, providing an immediate aesthetic reward that transforms your silhouette.",
+    "final_caption": "Yellow Cotton Shirt VIRAL: CLI: Process 'Kriti Sanon, guaranteeing a visual impact that lingers long after you've left the space, anchoring your visual dominance with a fabric that feels as premium as it looks, providing an immediate aesthetic reward that transforms your silhouette.",
+    "caption": "Yellow Cotton Shirt VIRAL: CLI: Process 'Kriti Sanon, guaranteeing a visual impact that lingers long after you've left the space, anchoring your visual dominance with a fabric that feels as premium as it looks, providing an immediate aesthetic reward that transforms your silhouette.",
+    "cta": null,
+    "monetization_cta": null,
+    "ypp_safe": true,
+    "risk_level": "UNKNOWN",
+    "risk_reason": "Analysis pending or not performed.",
+    "reason": "Analysis pending or not performed.",
+    "transformation_score": 0.0,
+    "policy_citation": "Significant Original Commentary",
+    "fashion_scout": {},
+    "item_name": "Yellow Cotton Shirt",
+    "improvement_tips": [],
+    "overlay_data": {},
+    "price_data": {
+      "celebrity_price": 28424,
+      "clone_price": 9224,
+      "source": "premium_tier"
+    },
+    "telegram_hook": null,
+    "instagram_hook": null,
+    "youtube_hook": null,
+    "hashtags": null
+  },
+  "processed_only_path": "Compilations/viral_vanguard_1779597578.mp4",
+  "audit": {
+    "verdict": "ACTIVE",
+    "creative_score": 0.984,
+    "silent_failures": [],
+    "health_report": {
+      "modules_connected": 22,
+      "modules_total": 22,
+      "modules_disconnected": [],
+      "signals": {
+        "beats": 17,
+        "retention_peaks": 9,
+        "emotional_spikes": 6,
+        "fused_moments": 4,
+        "candidate_moments": 24
+      },
+      "segments_generated": 6,
+      "diversity_score": 0.92,
+      "creative_edit_score": 0.984,
+      "creative_pipeline_integrity": true
+    }
+  }
+}

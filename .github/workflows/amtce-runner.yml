@@ -1,19 +1,31 @@
 name: AMTCE Runner
 
 on:
-  workflow_dispatch:  # Allows manual triggering
+  workflow_dispatch:  # Manual trigger anytime
   schedule:
-    # Example: Run every day at midnight UTC
-    - cron: '0 0 * * *'
+    # Run every 6 hours: 00:00, 06:00, 12:00, 18:00 UTC
+    - cron: '0 */6 * * *'
 
 jobs:
   run-amtce:
     runs-on: ubuntu-latest
-    timeout-minutes: 360  # Max limit (6 hours)
+    timeout-minutes: 340  # Slightly under 6 hours to avoid overlap
 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
+
+    # ── Restore publish_queue.json between runs (state persistence) ──────────
+    # Without this, the queue resets every 6 hours and posts are lost.
+    - name: Restore Publish Queue State
+      uses: actions/cache@v4
+      with:
+        path: |
+          The_json/publish_queue.json
+          Actress_Modules/actress_ledger.json
+        key: amtce-state-${{ github.run_id }}
+        restore-keys: |
+          amtce-state-
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -23,7 +35,7 @@ jobs:
 
     - name: Install System Dependencies
       run: |
-        sudo apt-get update
+        sudo apt-get update -qq
         sudo apt-get install -y ffmpeg
 
     - name: Install Python Dependencies
@@ -36,7 +48,19 @@ jobs:
         mkdir -p Credentials
         # Securely inject the .env file from GitHub Secrets
         echo "${{ secrets.ENV_FILE_CONTENT }}" > Credentials/.env
+        # Auto-enable paparazzi mode in CI runs
+        echo "PAPARAZZI_MODE=yes" >> Credentials/.env
 
     - name: Run AMTCE Engine
       run: |
         python main.py
+
+    # ── Save updated queue/ledger after run (so next 6hr run picks up) ───────
+    - name: Save Publish Queue State
+      if: always()   # Save even if the run partially fails
+      uses: actions/cache@v4
+      with:
+        path: |
+          The_json/publish_queue.json
+          Actress_Modules/actress_ledger.json
+        key: amtce-state-${{ github.run_id }}

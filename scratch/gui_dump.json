@@ -1,0 +1,1477 @@
+{
+    "total_findings": 32382,
+    "counts_by_key": {
+        "GEMINI_JITTER_RANGE": 27648,
+        "SESSION_TTL_SECS": 54,
+        "BGM_DIR": 518,
+        "TARGET_RESOLUTION": 25,
+        "MY_WATERMARK_OPACITY": 31,
+        "VOICEOVER_MAX_CHARS": 1565,
+        "ENHANCEMENT_LEVEL": 359,
+        "DEFAULT_HASHTAGS_COMPILATION": 3,
+        "CAPTION_PROMPT_FILE": 5,
+        "FFMPEG_BIN": 373,
+        "FFPROBE_BIN": 68,
+        "COMMENT_KEYWORD": 47,
+        "META_UPLOAD_TYPE": 22,
+        "REACTION_OUTPUT_SUFFIX": 84,
+        "TEXT_REACTION_OUTPUT_SUFFIX": 7,
+        "META_UPLOAD_TYPE_FB": 53,
+        "TG_BTN_PARTNER_LABEL": 3,
+        "REACTION_DUCK_LEVEL": 430,
+        "ACTRESS_ACTIVE_HOURS_START": 5,
+        "ACTRESS_ACTIVE_HOURS_END": 9,
+        "GEMINI_DECAY_RATE": 43,
+        "REACTION_TTS_VOICE": 2,
+        "WATERMARK_TIMEOUT_SEC": 769,
+        "KARAOKE_HIGHLIGHT_COLOR": 4,
+        "KARAOKE_BASE_COLOR": 4,
+        "TEXT_REACTION_MODE": 34,
+        "GEMINI_MODEL": 183,
+        "GROQ_MODEL": 2,
+        "CEREBRAS_MODEL": 4,
+        "MISTRAL_MODEL": 4,
+        "DEEPSEEK_MODEL": 3,
+        "CLIENT_SECRET_FILE": 4,
+        "YOUTUBE_TOKEN_FILE": 4,
+        "LANGFUSE_BASE_URL": 2,
+        "WATERMARK_REPLACE_PATH": 1,
+        "IG_BUSINESS_ID": 1,
+        "META_PAGE_ID": 1,
+        "COOKIES_FILE": 2,
+        "GEMINI_STATE_FILE": 1,
+        "GEMINI_LOG_FILE": 1,
+        "chat_id": 2,
+        "ADMIN_IDS": 2
+    },
+    "sample_findings": [
+        {
+            "file": "anchor_helper.py",
+            "line": 96,
+            "key": "GEMINI_JITTER_RANGE",
+            "val": "0.03"
+        },
+        {
+            "file": "cag_engine.py",
+            "line": 152,
+            "key": "SESSION_TTL_SECS",
+            "val": "86400"
+        },
+        {
+            "file": "data_resolver.py",
+            "line": 30,
+            "key": "BGM_DIR",
+            "val": "music"
+        },
+        {
+            "file": "graph_debug.txt",
+            "line": 1,
+            "key": "TARGET_RESOLUTION",
+            "val": "1080:1920"
+        },
+        {
+            "file": "graph_debug.txt",
+            "line": 1,
+            "key": "MY_WATERMARK_OPACITY",
+            "val": "0.80"
+        },
+        {
+            "file": "main.py",
+            "line": 118,
+            "key": "SESSION_TTL_SECS",
+            "val": "86400"
+        },
+        {
+            "file": "main.py",
+            "line": 157,
+            "key": "BGM_DIR",
+            "val": "music"
+        },
+        {
+            "file": "main.py",
+            "line": 237,
+            "key": "VOICEOVER_MAX_CHARS",
+            "val": "1000"
+        },
+        {
+            "file": "main.py",
+            "line": 693,
+            "key": "ENHANCEMENT_LEVEL",
+            "val": "medium"
+        },
+        {
+            "file": "main.py",
+            "line": 694,
+            "key": "TARGET_RESOLUTION",
+            "val": "1080:1920"
+        },
+        {
+            "file": "main.py",
+            "line": 715,
+            "key": "DEFAULT_HASHTAGS_COMPILATION",
+            "val": "#compilation #funny #viral"
+        },
+        {
+            "file": "main.py",
+            "line": 740,
+            "key": "ENHANCEMENT_LEVEL",
+            "val": "medium"
+        },
+        {
+            "file": "main.py",
+            "line": 750,
+            "key": "SESSION_TTL_SECS",
+            "val": "86400"
+        },
+        {
+            "file": "main.py",
+            "line": 825,
+            "key": "CAPTION_PROMPT_FILE",
+            "val": "The_json/caption_prompt.json"
+        },
+        {
+            "file": "main.py",
+            "line": 1222,
+            "key": "FFMPEG_BIN",
+            "val": "ffmpeg"
+        },
+        {
+            "file": "main.py",
+            "line": 1432,
+            "key": "FFPROBE_BIN",
+            "val": "ffprobe"
+        },
+        {
+            "file": "main.py",
+            "line": 1435,
+            "key": "FFPROBE_BIN",
+            "val": "ffprobe"
+        },
+        {
+            "file": "main.py",
+            "line": 1493,
+            "key": "FFMPEG_BIN",
+            "val": "ffmpeg"
+        },
+        {
+            "file": "main.py",
+            "line": 2002,
+            "key": "DEFAULT_HASHTAGS_COMPILATION",
+            "val": "#compilation #funny #viral"
+        },
+        {
+            "file": "main.py",
+            "line": 2024,
+            "key": "COMMENT_KEYWORD",
+            "val": "LINK"
+        },
+        {
+            "file": "main.py",
+            "line": 2175,
+            "key": "META_UPLOAD_TYPE",
+            "val": "Reels"
+        },
+        {
+            "file": "main.py",
+            "line": 2304,
+            "key": "REACTION_OUTPUT_SUFFIX",
+            "val": "_reaction"
+        },
+        {
+            "file": "main.py",
+            "line": 2308,
+            "key": "REACTION_OUTPUT_SUFFIX",
+            "val": "_reaction"
+        },
+        {
+            "file": "main.py",
+            "line": 2353,
+            "key": "FFMPEG_BIN",
+            "val": "ffmpeg"
+        },
+        {
+            "file": "main.py",
+            "line": 2553,
+            "key": "TEXT_REACTION_OUTPUT_SUFFIX",
+            "val": "_textreaction"
+        },
+        {
+            "file": "main.py",
+            "line": 2553,
+            "key": "REACTION_OUTPUT_SUFFIX",
+            "val": "_reaction"
+        },
+        {
+            "file": "main.py",
+            "line": 2821,
+            "key": "TEXT_REACTION_OUTPUT_SUFFIX",
+            "val": "_textreaction"
+        },
+        {
+            "file": "main.py",
+            "line": 2821,
+            "key": "REACTION_OUTPUT_SUFFIX",
+            "val": "_reaction"
+        },
+        {
+            "file": "main.py",
+            "line": 3090,
+            "key": "BGM_DIR",
+            "val": "music"
+        },
+        {
+            "file": "main.py",
+            "line": 3095,
+            "key": "BGM_DIR",
+            "val": "music"
+        },
+        {
+            "file": "main.py",
+            "line": 3100,
+            "key": "BGM_DIR",
+            "val": "music"
+        },
+        {
+            "file": "main.py",
+            "line": 4686,
+            "key": "COMMENT_KEYWORD",
+            "val": "LINK"
+        },
+        {
+            "file": "main.py",
+            "line": 4824,
+            "key": "COMMENT_KEYWORD",
+            "val": "LINK"
+        },
+        {
+            "file": "main.py",
+            "line": 4989,
+            "key": "COMMENT_KEYWORD",
+            "val": "LINK"
+        },
+        {
+            "file": "main.py",
+            "line": 4990,
+            "key": "COMMENT_KEYWORD",
+            "val": "LINK"
+        },
+        {
+            "file": "main.py",
+            "line": 5211,
+            "key": "COMMENT_KEYWORD",
+            "val": "LINK"
+        },
+        {
+            "file": "main.py",
+            "line": 5253,
+            "key": "META_UPLOAD_TYPE_FB",
+            "val": "Post"
+        },
+        {
+            "file": "main.py",
+            "line": 5257,
+            "key": "META_UPLOAD_TYPE_FB",
+            "val": "Post"
+        },
+        {
+            "file": "main.py",
+            "line": 5258,
+            "key": "META_UPLOAD_TYPE_FB",
+            "val": "Post"
+        },
+        {
+            "file": "main.py",
+            "line": 5540,
+            "key": "META_UPLOAD_TYPE_FB",
+            "val": "Post"
+        },
+        {
+            "file": "main.py",
+            "line": 5551,
+            "key": "META_UPLOAD_TYPE_FB",
+            "val": "Post"
+        },
+        {
+            "file": "main.py",
+            "line": 5645,
+            "key": "META_UPLOAD_TYPE",
+            "val": "Reels"
+        },
+        {
+            "file": "main.py",
+            "line": 5712,
+            "key": "BGM_DIR",
+            "val": "music"
+        },
+        {
+            "file": "main.py",
+            "line": 6103,
+            "key": "META_UPLOAD_TYPE_FB",
+            "val": "Post"
+        },
+        {
+            "file": "main.py",
+            "line": 6248,
+            "key": "BGM_DIR",
+            "val": "music"
+        },
+        {
+            "file": "main.py",
+            "line": 6328,
+            "key": "META_UPLOAD_TYPE",
+            "val": "Reels"
+        },
+        {
+            "file": "main.py",
+            "line": 6511,
+            "key": "TG_BTN_PARTNER_LABEL",
+            "val": "\ud83d\udd25 Find Your Match"
+        },
+        {
+            "file": "main.py",
+            "line": 6532,
+            "key": "COMMENT_KEYWORD",
+            "val": "LINK"
+        },
+        {
+            "file": "main.py",
+            "line": 6715,
+            "key": "META_UPLOAD_TYPE_FB",
+            "val": "Post"
+        },
+        {
+            "file": "main.py",
+            "line": 6926,
+            "key": "META_UPLOAD_TYPE_FB",
+            "val": "Post"
+        },
+        {
+            "file": "main.py",
+            "line": 7273,
+            "key": "VOICEOVER_MAX_CHARS",
+            "val": "1000"
+        },
+        {
+            "file": "main.py",
+            "line": 7339,
+            "key": "FFPROBE_BIN",
+            "val": "ffprobe"
+        },
+        {
+            "file": "main.py",
+            "line": 7343,
+            "key": "FFPROBE_BIN",
+            "val": "ffprobe"
+        },
+        {
+            "file": "main.py",
+            "line": 7352,
+            "key": "FFPROBE_BIN",
+            "val": "ffprobe"
+        },
+        {
+            "file": "main.py",
+            "line": 7356,
+            "key": "FFMPEG_BIN",
+            "val": "ffmpeg"
+        },
+        {
+            "file": "main.py",
+            "line": 8019,
+            "key": "SESSION_TTL_SECS",
+            "val": "86400"
+        },
+        {
+            "file": "main.py",
+            "line": 8029,
+            "key": "SESSION_TTL_SECS",
+            "val": "86400"
+        },
+        {
+            "file": "main.py",
+            "line": 8032,
+            "key": "SESSION_TTL_SECS",
+            "val": "86400"
+        },
+        {
+            "file": "main.py",
+            "line": 8035,
+            "key": "SESSION_TTL_SECS",
+            "val": "86400"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 4,
+            "key": "REACTION_DUCK_LEVEL",
+            "val": "0.25"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 7,
+            "key": "REACTION_DUCK_LEVEL",
+            "val": "0.25"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 100,
+            "key": "GEMINI_JITTER_RANGE",
+            "val": "0.03"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 104,
+            "key": "GEMINI_JITTER_RANGE",
+            "val": "0.03"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 108,
+            "key": "GEMINI_JITTER_RANGE",
+            "val": "0.03"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 112,
+            "key": "GEMINI_JITTER_RANGE",
+            "val": "0.03"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 508,
+            "key": "GEMINI_JITTER_RANGE",
+            "val": "0.03"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 518,
+            "key": "GEMINI_JITTER_RANGE",
+            "val": "0.03"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 528,
+            "key": "GEMINI_JITTER_RANGE",
+            "val": "0.03"
+        },
+        {
+            "file": "retention_curve_debug.json",
+            "line": 538,
+            "key": "GEMINI_JITTER_RANGE",
+            "val": "0.03"
+        },
+        {
+            "file": "segments_debug.json",
+            "line": 25,
+            "key": "ENHANCEMENT_LEVEL",
+            "val": "medium"
+        },
+        {
+            "file": "segments_debug.json",
+            "line": 73,
+            "key": "ENHANCEMENT_LEVEL",
+            "val": "medium"
+        },
+        {
+            "file": "segments_debug.json",
+            "line": 157,
+            "key": "ENHANCEMENT_LEVEL",
+            "val": "medium"
+        },
+        {
+            "file": "segments_debug.json",
+            "line": 205,
+            "key": "ENHANCEMENT_LEVEL",
+            "val": "medium"
+        },
+        {
+            "file": "sig_check.py",
+            "line": 10,
+            "key": "BGM_DIR",
+            "val": "music"
+        },
+        {
+            "file": "strip_editor.py",
+            "line": 30,
+            "key": "BGM_DIR",
+            "val": "music"
+        },
+        {
+            "file": ".pytest_cache\\v\\cache\\nodeids",
+            "line": 75,
+            "key": "FFMPEG_BIN",
+            "val": "ffmpeg"
+        },
+        {
+            "file": ".pytest_cache\\v\\cache\\nodeids",
+            "line": 76,
+            "key": "FFMPEG_BIN",
+            "val": "ffmpeg"
+        },
+        {
+            "file": ".pytest_cache\\v\\cache\\nodeids",
+            "line": 77,
+            "key": "FFMPEG_BIN",
+            "val": "ffmpeg"
+        },
+        {
+            "file": ".pytest_cache\\v\\cache\\nodeids",
+            "line": 78,
+            "key": "FFMPEG_BIN",
+            "val": "ffmpeg"
+        },
+        {
+            "file": ".pytest_cache\\v\\cache\\nodeids",
+            "line": 79,
+            "key": "FFMPEG_BIN",
+            "val": "ffmpeg"
+        },
+        {
+            "file": ".pytest_cache\\v\\cache\\nodeids",
+            "line": 245,
+            "key": "ENHANCEMENT_LEVEL",
+            "val": "medium"
+        },
+        {
+            "file": ".pytest_cache\\v\\cache\\nodeids",
+            "line": 254,
+            "key": "ENHANCEMENT_LEVEL",
+            "val": "medium"
+        },
+        {
+            "file": ".pytest_cache\\v\\cache\\nodeids",
+            "line": 264,
+            "key": "ENHANCEMENT_LEVEL",
+            "val": "medium"
+        },
+        {
+            "file": "Actress_Modules\\actress_config.py",
+            "line": 193,
+            "key": "SESSION_TTL_SECS",
+            "val": "86400"
+        },
+        {
+            "file": "Actress_Modules\\actress_config.py",
+            "line": 272,
+            "key": "SESSION_TTL_SECS",
+            "val": "86400"
+        },
+        {
+            "file": "Actress_Modules\\actress_publisher.py",
+            "line": 202,
+            "key": "ACTRESS_ACTIVE_HOURS_START",
+            "val": "07:00"
+        },
+        {
+            "file": "Actress_Modules\\actress_publisher.py",
+            "line": 203,
+            "key": "ACTRESS_ACTIVE_HOURS_END",
+            "val": "23:00"
+        },
+        {
+            "file": "Actress_Modules\\actress_publisher.py",
+            "line": 250,
+            "key": "ACTRESS_ACTIVE_HOURS_START",
+            "val": "07:00"
+        },
+        {
+            "file": "Actress_Modules\\actress_publisher.py",
+            "line": 251,
+            "key": "ACTRESS_ACTIVE_HOURS_END",
+            "val": "23:00"
+        },
+        {
+            "file": "Actress_Modules\\actress_publisher.py",
+            "line": 337,
+            "key": "ACTRESS_ACTIVE_HOURS_START",
+            "val": "07:00"
+        },
+        {
+            "file": "Actress_Modules\\actress_publisher.py",
+            "line": 338,
+            "key": "ACTRESS_ACTIVE_HOURS_END",
+            "val": "23:00"
+        },
+        {
+            "file": "Actress_Modules\\actress_scheduler.py",
+            "line": 394,
+            "key": "META_UPLOAD_TYPE",
+            "val": "Reels"
+        },
+        {
+            "file": "Actress_Modules\\actress_scheduler.py",
+            "line": 438,
+            "key": "COMMENT_KEYWORD",
+            "val": "LINK"
+        },
+        {
+            "file": "Actress_Modules\\actress_scheduler.py",
+            "line": 447,
+            "key": "TG_BTN_PARTNER_LABEL",
+            "val": "\ud83d\udd25 Find Your Match"
+        },
+        {
+            "file": "Analytics_Modules\\profit_scorer.py",
+            "line": 34,
+            "key": "COMMENT_KEYWORD",
+            "val": "LINK"
+        },
+        {
+            "file": "Audio_Modules\\audio_pool_manager.py",
+            "line": 15,
+            "key": "TEXT_REACTION_OUTPUT_SUFFIX",
+            "val": "_textreaction"
+        },
+        {
+            "file": "Audio_Modules\\audio_pool_manager.py",
+            "line": 15,
+            "key": "REACTION_OUTPUT_SUFFIX",
+            "val": "_reaction"
+        },
+        {
+            "file": "Audio_Modules\\audio_pool_manager.py",
+            "line": 504,
+            "key": "REACTION_DUCK_LEVEL",
+            "val": "0.25"
+        },
+        {
+            "file": "Audio_Modules\\audio_processing.py",
+            "line": 33,
+            "key": "FFPROBE_BIN",
+            "val": "ffprobe"
+        },
+        {
+            "file": "Audio_Modules\\audio_processing.py",
+            "line": 35,
+            "key": "FFPROBE_BIN",
+            "val": "ffprobe"
+        },
+        {
+            "file": "Audio_Modules\\audio_processing.py",
+            "line": 326,
+            "key": "GEMINI_DECAY_RATE",
+            "val": "0.99"
+        },
+        {
+            "file": "Audio_Modules\\audio_processing.py",
+            "line": 400,
+            "key": "FFPROBE_BIN",
+            "val": "ffprobe"
+        },
+        {
+            "file": "Audio_Modules\\audio_processing.py",
+            "line": 404,
+            "key": "FFPROBE_BIN",
+            "val": "ffprobe"
+        },
+        {
+            "file": "Audio_Modules\\beat_engine.py",
+            "line": 156,
+            "key": "VOICEOVER_MAX_CHARS",
+            "val": "1000"
+        },
+        {
+            "file": "Audio_Modules\\beat_engine.py",
+            "line": 202,
+            "key": "META_UPLOAD_TYPE_FB",
+            "val": "Post"
+        },
+        {
+            "file": "Audio_Modules\\beat_engine.py",
+            "line": 376,
+            "key": "VOICEOVER_MAX_CHARS",
+            "val": "1000"
+        },
+        {
+            "file": "Audio_Modules\\voiceover.py",
+            "line": 243,
+            "key": "VOICEOVER_MAX_CHARS",
+            "val": "1000"
+        },
+        {
+            "file": "Audio_Modules\\voiceover.py",
+            "line": 244,
+            "key": "VOICEOVER_MAX_CHARS",
+            "val": "1000"
+        },
+        {
+            "file": "Audio_Modules\\voiceover.py",
+            "line": 286,
+            "key": "REACTION_TTS_VOICE",
+            "val": "en-US-JennyNeural"
+        },
+        {
+            "file": "Audio_Modules\\voiceover.py",
+            "line": 344,
+            "key": "REACTION_DUCK_LEVEL",
+            "val": "0.25"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 19,
+            "key": "VOICEOVER_MAX_CHARS",
+            "val": "1000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 19,
+            "key": "WATERMARK_TIMEOUT_SEC",
+            "val": "10000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 583,
+            "key": "VOICEOVER_MAX_CHARS",
+            "val": "1000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 793,
+            "key": "VOICEOVER_MAX_CHARS",
+            "val": "1000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 1183,
+            "key": "WATERMARK_TIMEOUT_SEC",
+            "val": "10000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 2153,
+            "key": "WATERMARK_TIMEOUT_SEC",
+            "val": "10000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 3748,
+            "key": "WATERMARK_TIMEOUT_SEC",
+            "val": "10000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 3749,
+            "key": "WATERMARK_TIMEOUT_SEC",
+            "val": "10000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 3750,
+            "key": "WATERMARK_TIMEOUT_SEC",
+            "val": "10000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 3751,
+            "key": "WATERMARK_TIMEOUT_SEC",
+            "val": "10000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 3753,
+            "key": "WATERMARK_TIMEOUT_SEC",
+            "val": "10000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 3757,
+            "key": "WATERMARK_TIMEOUT_SEC",
+            "val": "10000"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 35311,
+            "key": "REACTION_DUCK_LEVEL",
+            "val": "0.25"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 38562,
+            "key": "MY_WATERMARK_OPACITY",
+            "val": "0.80"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 78565,
+            "key": "REACTION_DUCK_LEVEL",
+            "val": "0.25"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 104244,
+            "key": "MY_WATERMARK_OPACITY",
+            "val": "0.80"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 137839,
+            "key": "REACTION_DUCK_LEVEL",
+            "val": "0.25"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 194977,
+            "key": "REACTION_DUCK_LEVEL",
+            "val": "0.25"
+        },
+        {
+            "file": "cache\\video_fingerprint_db.json",
+            "line": 209929,
+            "key": "REACTION_DUCK_LEVEL",
+            "val": "0.25"
+        },
+        {
+            "file": "colab\\Colab_Reaction_Engine.ipynb",
+            "line": 160,
+            "key": "REACTION_OUTPUT_SUFFIX",
+            "val": "_reaction"
+        },
+        {
+            "file": "Compiler_Modules\\batch_factory.py",
+            "line": 47,
+            "key": "META_UPLOAD_TYPE",
+            "val": "Reels"
+        },
+        {
+            "file": "Compiler_Modules\\compiler.py",
+            "line": 301,
+            "key": "TARGET_RESOLUTION",
+            "val": "1080:1920"
+        },
+        {
+            "file": "Compiler_Modules\\compiler.py",
+            "line": 302,
+            "key": "TARGET_RESOLUTION",
+            "val": "1080:1920"
+        },
+        {
+            "file": "Compiler_Modules\\compiler.py",
+            "line": 442,
+            "key": "TARGET_RESOLUTION",
+            "val": "1080:1920"
+        },
+        {
+            "file": "Compiler_Modules\\creative_editor_bridge.py",
+            "line": 334,
+            "key": "META_UPLOAD_TYPE",
+            "val": "Reels"
+        },
+        {
+            "file": "Compiler_Modules\\karaoke_subtitle_engine.py",
+            "line": 20,
+            "key": "KARAOKE_HIGHLIGHT_COLOR",
+            "val": "00FFFF"
+        },
+        {
+            "file": "Compiler_Modules\\karaoke_subtitle_engine.py",
+            "line": 21,
+            "key": "KARAOKE_BASE_COLOR",
+            "val": "FFFFFF"
+        },
+        {
+            "file": "Compiler_Modules\\karaoke_subtitle_engine.py",
+            "line": 67,
+            "key": "KARAOKE_HIGHLIGHT_COLOR",
+            "val": "00FFFF"
+        },
+        {
+            "file": "Compiler_Modules\\karaoke_subtitle_engine.py",
+            "line": 68,
+            "key": "KARAOKE_BASE_COLOR",
+            "val": "FFFFFF"
+        },
+        {
+            "file": "Compiler_Modules\\orchestrator.py",
+            "line": 212,
+            "key": "REACTION_OUTPUT_SUFFIX",
+            "val": "_reaction"
+        },
+        {
+            "file": "Compiler_Modules\\orchestrator.py",
+            "line": 213,
+            "key": "REACTION_OUTPUT_SUFFIX",
+            "val": "_reaction"
+        },
+        {
+            "file": "Compiler_Modules\\orchestrator.py",
+            "line": 1238,
+            "key": "TEXT_REACTION_OUTPUT_SUFFIX",
+            "val": "_textreaction"
+        },
+        {
+            "file": "Compiler_Modules\\orchestrator.py",
+            "line": 1238,
+            "key": "REACTION_OUTPUT_SUFFIX",
+            "val": "_reaction"
+        },
+        {
+            "file": "Compiler_Modules\\orchestrator.py",
+            "line": 3405,
+            "key": "TARGET_RESOLUTION",
+            "val": "1080:1920"
+        },
+        {
+            "file": "Compiler_Modules\\orchestrator.py",
+            "line": 5489,
+            "key": "TARGET_RESOLUTION",
+            "val": "1080:1920"
+        },
+        {
+            "file": "Compiler_Modules\\orchestrator.py",
+            "line": 5490,
+            "key": "TARGET_RESOLUTION",
+            "val": "1080:1920"
+        },
+        {
+            "file": "Compiler_Modules\\orchestrator.py",
+            "line": 5541,
+            "key": "TEXT_REACTION_MODE",
+            "val": "emoji"
+        },
+        {
+            "file": "Compiler_Modules\\rhythm_timeline_builder.py",
+            "line": 317,
+            "key": "MY_WATERMARK_OPACITY",
+            "val": "0.80"
+        },
+        {
+            "file": "Compiler_Modules\\rhythm_timeline_builder.py",
+            "line": 319,
+            "key": "MY_WATERMARK_OPACITY",
+            "val": "0.80"
+        },
+        {
+            "file": "Compiler_Modules\\transition_intelligence_engine.py",
+            "line": 54,
+            "key": "MY_WATERMARK_OPACITY",
+            "val": "0.80"
+        },
+        {
+            "file": "Compiler_Modules\\video_pipeline.py",
+            "line": 263,
+            "key": "TARGET_RESOLUTION",
+            "val": "1080:1920"
+        },
+        {
+            "file": "Compiler_Modules\\video_pipeline.py",
+            "line": 1845,
+            "key": "TEXT_REACTION_OUTPUT_SUFFIX",
+            "val": "_textreaction"
+        },
+        {
+            "file": "Compiler_Modules\\video_pipeline.py",
+            "line": 1858,
+            "key": "TEXT_REACTION_OUTPUT_SUFFIX",
+            "val": "_textreaction"
+        },
+        {
+            "file": "Core_Modules\\editor_memory.py",
+            "line": 97,
+            "key": "GEMINI_DECAY_RATE",
+            "val": "0.99"
+        },
+        {
+            "file": "Core_Modules\\salesman_state.py",
+            "line": 318,
+            "key": "ACTRESS_ACTIVE_HOURS_START",
+            "val": "07:00"
+        },
+        {
+            "file": "Core_Modules\\salesman_state.py",
+            "line": 319,
+            "key": "ACTRESS_ACTIVE_HOURS_END",
+            "val": "23:00"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 15,
+            "key": "GEMINI_MODEL",
+            "val": "gemini-2.5-flash-lite"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 19,
+            "key": "GROQ_MODEL",
+            "val": "llama-3.3-70b-versatile"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 19,
+            "key": "CEREBRAS_MODEL",
+            "val": "llama-3.3-70b"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 24,
+            "key": "MISTRAL_MODEL",
+            "val": "mistral-large-latest"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 29,
+            "key": "DEEPSEEK_MODEL",
+            "val": "deepseek-chat"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 33,
+            "key": "CEREBRAS_MODEL",
+            "val": "llama-3.3-70b"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 52,
+            "key": "CLIENT_SECRET_FILE",
+            "val": "Credentials/client_secret.json"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 53,
+            "key": "YOUTUBE_TOKEN_FILE",
+            "val": "Credentials/token.json"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 62,
+            "key": "LANGFUSE_BASE_URL",
+            "val": "https://cloud.langfuse.com"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 85,
+            "key": "WATERMARK_REPLACE_PATH",
+            "val": "assets/watermark.png"
+        },
+        {
+            "file": "Credentials\\.env.example",
+            "line": 101,
+            "key": "DEFAULT_HASHTAGS_COMPILATION",
+            "val": "#compilation #funny #viral"
+        },
+        {
+            "file": "Credentials\\gemini_states.json",
+            "line": 75,
+            "key": "GEMINI_MODEL",
+            "val": "gemini-2.5-flash-lite"
+        },
+        {
+            "file": "Credentials\\social_media\\Sakshi Malik\\meta_config.json",
+            "line": 2,
+            "key": "IG_BUSINESS_ID",
+            "val": "17841474084982238"
+        },
+        {
+            "file": "Credentials\\social_media\\Sakshi Malik\\meta_config.json",
+            "line": 4,
+            "key": "META_PAGE_ID",
+            "val": "984959008025298"
+        },
+        {
+            "file": "data\\dedup_index.json",
+            "line": 1995,
+            "key": "MY_WATERMARK_OPACITY",
+            "val": "0.80"
+        },
+        {
+            "file": "data\\dedup_index.json",
+            "line": 2310,
+            "key": "GEMINI_DECAY_RATE",
+            "val": "0.99"
+        },
+        {
+            "file": "data\\dedup_index.json",
+            "line": 2569,
+            "key": "MY_WATERMARK_OPACITY",
+            "val": "0.80"
+        },
+        {
+            "file": "data\\dedup_index.json",
+            "line": 6524,
+            "key": "MY_WATERMARK_OPACITY",
+            "val": "0.80"
+        },
+        {
+            "file": "data\\dedup_index.json",
+            "line": 6594,
+            "key": "GEMINI_DECAY_RATE",
+            "val": "0.99"
+        },
+        {
+            "file": "Datasets_and_text_files\\debug_log.txt",
+            "line": 163,
+            "key": "GEMINI_DECAY_RATE",
+            "val": "0.99"
+        },
+        {
+            "file": "Datasets_and_text_files\\upload_log.csv",
+            "line": 77,
+            "key": "ACTRESS_ACTIVE_HOURS_END",
+            "val": "23:00"
+        },
+        {
+            "file": "Datasets_and_text_files\\upload_log.csv",
+            "line": 279,
+            "key": "ACTRESS_ACTIVE_HOURS_END",
+            "val": "23:00"
+        },
+        {
+            "file": "Documentation\\Intelligence_Management_Plan.md",
+            "line": 6,
+            "key": "MISTRAL_MODEL",
+            "val": "mistral-large-latest"
+        },
+        {
+            "file": "Documentation\\Intelligence_Management_Plan.md",
+            "line": 11,
+            "key": "GEMINI_MODEL",
+            "val": "gemini-2.5-flash-lite"
+        },
+        {
+            "file": "Download_Modules\\apify_downloader.py",
+            "line": 96,
+            "key": "COOKIES_FILE",
+            "val": "cookies.txt"
+        },
+        {
+            "file": "Download_Modules\\downloader.py",
+            "line": 53,
+            "key": "TEXT_REACTION_MODE",
+            "val": "emoji"
+        },
+        {
+            "file": "Download_Modules\\downloader.py",
+            "line": 59,
+            "key": "TEXT_REACTION_MODE",
+            "val": "emoji"
+        },
+        {
+            "file": "Download_Modules\\downloader.py",
+            "line": 69,
+            "key": "TEXT_REACTION_MODE",
+            "val": "emoji"
+        },
+        {
+            "file": "Download_Modules\\downloader.py",
+            "line": 89,
+            "key": "TEXT_REACTION_MODE",
+            "val": "emoji"
+        },
+        {
+            "file": "Download_Modules\\downloader.py",
+            "line": 165,
+            "key": "COOKIES_FILE",
+            "val": "cookies.txt"
+        },
+        {
+            "file": "Download_Modules\\README.md",
+            "line": 13,
+            "key": "META_UPLOAD_TYPE",
+            "val": "Reels"
+        },
+        {
+            "file": "Download_Modules\\README.md",
+            "line": 14,
+            "key": "META_UPLOAD_TYPE",
+            "val": "Reels"
+        },
+        {
+            "file": "Higgsfield_Modules\\outfit_swap_engine.py",
+            "line": 112,
+            "key": "TEXT_REACTION_MODE",
+            "val": "emoji"
+        },
+        {
+            "file": "Influencer_Modules\\motion_animator.py",
+            "line": 44,
+            "key": "META_UPLOAD_TYPE",
+            "val": "Reels"
+        },
+        {
+            "file": "intelligence_cache\\0c2aee79f97b4de28283d25784b839307aefaa7439a11b2e2ab9290632c7abfb.json",
+            "line": 95,
+            "key": "GEMINI_DECAY_RATE",
+            "val": "0.99"
+        },
+        {
+            "file": "intelligence_cache\\0c2aee79f97b4de28283d25784b839307aefaa7439a11b2e2ab9290632c7abfb.json",
+            "line": 138,
+            "key": "GEMINI_DECAY_RATE",
+            "val": "0.99"
+        },
+        {
+            "file": "intelligence_cache\\2df43e4099daf4a7546e844f6a203b7bbc0eeee78521f15f65671c451baab496.json",
+            "line": 92,
+            "key": "GEMINI_DECAY_RATE",
+            "val": "0.99"
+        },
+        {
+            "file": "intelligence_cache\\2df43e4099daf4a7546e844f6a203b7bbc0eeee78521f15f65671c451baab496.json",
+            "line": 131,
+            "key": "GEMINI_DECAY_RATE",
+            "val": "0.99"
+        },
+        {
+            "file": "Intelligence_Modules\\gemini_governor.py",
+            "line": 212,
+            "key": "LANGFUSE_BASE_URL",
+            "val": "https://cloud.langfuse.com"
+        },
+        {
+            "file": "Intelligence_Modules\\gemini_governor.py",
+            "line": 233,
+            "key": "GEMINI_STATE_FILE",
+            "val": "Credentials/gemini_states.json"
+        },
+        {
+            "file": "Intelligence_Modules\\gemini_governor.py",
+            "line": 235,
+            "key": "GEMINI_LOG_FILE",
+            "val": "logs/gemini_routing.json"
+        },
+        {
+            "file": "Intelligence_Modules\\gemini_governor.py",
+            "line": 465,
+            "key": "GEMINI_MODEL",
+            "val": "gemini-2.5-flash-lite"
+        },
+        {
+            "file": "Intelligence_Modules\\gemini_governor.py",
+            "line": 871,
+            "key": "GEMINI_MODEL",
+            "val": "gemini-2.5-flash-lite"
+        },
+        {
+            "file": "Intelligence_Modules\\gemini_governor.py",
+            "line": 887,
+            "key": "GEMINI_MODEL",
+            "val": "gemini-2.5-flash-lite"
+        },
+        {
+            "file": "Intelligence_Modules\\gemini_governor.py",
+            "line": 900,
+            "key": "GEMINI_MODEL",
+            "val": "gemini-2.5-flash-lite"
+        },
+        {
+            "file": "Intelligence_Modules\\gemini_governor.py",
+            "line": 917,
+            "key": "GEMINI_MODEL",
+            "val": "gemini-2.5-flash-lite"
+        },
+        {
+            "file": "Intelligence_Modules\\gemini_governor.py",
+            "line": 932,
+            "key": "GEMINI_MODEL",
+            "val": "gemini-2.5-flash-lite"
+        },
+        {
+            "file": "Intelligence_Modules\\monetization_brain.py",
+            "line": 199,
+            "key": "TEXT_REACTION_MODE",
+            "val": "emoji"
+        },
+        {
+            "file": "Intelligence_Modules\\monetization_brain.py",
+            "line": 1021,
+            "key": "TEXT_REACTION_MODE",
+            "val": "emoji"
+        },
+        {
+            "file": "Intelligence_Modules\\router_orchestra.py",
+            "line": 297,
+            "key": "GROQ_MODEL",
+            "val": "llama-3.3-70b-versatile"
+        },
+        {
+            "file": "Intelligence_Modules\\router_orchestra.py",
+            "line": 297,
+            "key": "CEREBRAS_MODEL",
+            "val": "llama-3.3-70b"
+        },
+        {
+            "file": "Intelligence_Modules\\router_orchestra.py",
+            "line": 357,
+            "key": "MISTRAL_MODEL",
+            "val": "mistral-large-latest"
+        },
+        {
+            "file": "Intelligence_Modules\\router_orchestra.py",
+            "line": 413,
+            "key": "CEREBRAS_MODEL",
+            "val": "llama-3.3-70b"
+        },
+        {
+            "file": "Intelligence_Modules\\router_orchestra.py",
+            "line": 469,
+            "key": "DEEPSEEK_MODEL",
+            "val": "deepseek-chat"
+        },
+        {
+            "file": "Intelligence_Modules\\router_orchestra.py",
+            "line": 470,
+            "key": "DEEPSEEK_MODEL",
+            "val": "deepseek-chat"
+        },
+        {
+            "file": "logs\\mission_dashboard.json",
+            "line": 1209,
+            "key": "ACTRESS_ACTIVE_HOURS_END",
+            "val": "23:00"
+        },
+        {
+            "file": "logs\\mission_dashboard.json",
+            "line": 3045,
+            "key": "ACTRESS_ACTIVE_HOURS_START",
+            "val": "07:00"
+        },
+        {
+            "file": "Monetization_Metrics\\Amazon_affliate_link.json",
+            "line": 56,
+            "key": "ACTRESS_ACTIVE_HOURS_END",
+            "val": "23:00"
+        },
+        {
+            "file": "Reaction_Engine\\reaction_engine.py",
+            "line": 35,
+            "key": "REACTION_TTS_VOICE",
+            "val": "en-US-JennyNeural"
+        },
+        {
+            "file": "Reaction_Engine\\text_reaction_overlay.py",
+            "line": 5,
+            "key": "TEXT_REACTION_MODE",
+            "val": "emoji"
+        },
+        {
+            "file": "Reaction_Engine\\text_reaction_overlay.py",
+            "line": 231,
+            "key": "TEXT_REACTION_OUTPUT_SUFFIX",
+            "val": "_textreaction"
+        },
+        {
+            "file": "scripts\\auth_youtube.py",
+            "line": 21,
+            "key": "CLIENT_SECRET_FILE",
+            "val": "Credentials/client_secret.json"
+        },
+        {
+            "file": "scripts\\auth_youtube.py",
+            "line": 22,
+            "key": "YOUTUBE_TOKEN_FILE",
+            "val": "Credentials/token.json"
+        },
+        {
+            "file": "Swarm_Orchestration\\multimedia_crew.py",
+            "line": 24,
+            "key": "MISTRAL_MODEL",
+            "val": "mistral-large-latest"
+        },
+        {
+            "file": "tests\\test_caption_diversity_engine.py",
+            "line": 14,
+            "key": "CAPTION_PROMPT_FILE",
+            "val": "The_json/caption_prompt.json"
+        },
+        {
+            "file": "Text_Modules\\caption_sanitizer.py",
+            "line": 14,
+            "key": "CAPTION_PROMPT_FILE",
+            "val": "The_json/caption_prompt.json"
+        },
+        {
+            "file": "Text_Modules\\gemini_captions.py",
+            "line": 166,
+            "key": "CAPTION_PROMPT_FILE",
+            "val": "The_json/caption_prompt.json"
+        },
+        {
+            "file": "Text_Modules\\overlay_engine.py",
+            "line": 70,
+            "key": "CAPTION_PROMPT_FILE",
+            "val": "The_json/caption_prompt.json"
+        },
+        {
+            "file": "tmp\\recent_log.txt",
+            "line": 561,
+            "key": "chat_id",
+            "val": "1363193987"
+        },
+        {
+            "file": "tmp\\recent_log.txt",
+            "line": 561,
+            "key": "ADMIN_IDS",
+            "val": "1363193987"
+        },
+        {
+            "file": "tmp\\recent_log.txt",
+            "line": 565,
+            "key": "chat_id",
+            "val": "1363193987"
+        },
+        {
+            "file": "tmp\\recent_log.txt",
+            "line": 565,
+            "key": "ADMIN_IDS",
+            "val": "1363193987"
+        },
+        {
+            "file": "Uploader_Modules\\community_promoter.py",
+            "line": 250,
+            "key": "TG_BTN_PARTNER_LABEL",
+            "val": "\ud83d\udd25 Find Your Match"
+        },
+        {
+            "file": "Uploader_Modules\\uploader.py",
+            "line": 38,
+            "key": "CLIENT_SECRET_FILE",
+            "val": "Credentials/client_secret.json"
+        },
+        {
+            "file": "Uploader_Modules\\uploader.py",
+            "line": 39,
+            "key": "YOUTUBE_TOKEN_FILE",
+            "val": "Credentials/token.json"
+        },
+        {
+            "file": "Uploader_Modules\\uploader.py",
+            "line": 100,
+            "key": "YOUTUBE_TOKEN_FILE",
+            "val": "Credentials/token.json"
+        },
+        {
+            "file": "Uploader_Modules\\uploader.py",
+            "line": 197,
+            "key": "CLIENT_SECRET_FILE",
+            "val": "Credentials/client_secret.json"
+        },
+        {
+            "file": "video_logs\\uHnJCyDyDoQ.json",
+            "line": 15,
+            "key": "ACTRESS_ACTIVE_HOURS_END",
+            "val": "23:00"
+        },
+        {
+            "file": "Video_Modules\\timeline_cutter.py",
+            "line": 98,
+            "key": "KARAOKE_HIGHLIGHT_COLOR",
+            "val": "00FFFF"
+        },
+        {
+            "file": "Video_Modules\\timeline_cutter.py",
+            "line": 98,
+            "key": "KARAOKE_BASE_COLOR",
+            "val": "FFFFFF"
+        },
+        {
+            "file": "Video_Modules\\timeline_cutter.py",
+            "line": 205,
+            "key": "KARAOKE_HIGHLIGHT_COLOR",
+            "val": "00FFFF"
+        },
+        {
+            "file": "Video_Modules\\timeline_cutter.py",
+            "line": 205,
+            "key": "KARAOKE_BASE_COLOR",
+            "val": "FFFFFF"
+        }
+    ]
+}

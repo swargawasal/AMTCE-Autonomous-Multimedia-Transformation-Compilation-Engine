@@ -1,7 +1,7 @@
 import os
 import sys
 import subprocess
-import pkg_resources
+import importlib.metadata
 import logging
 import urllib.request
 
@@ -24,8 +24,8 @@ def install_missing_dependencies():
         # Simple extraction of package name (handles basic cases)
         pkg_name = req.split('==')[0].split('>=')[0].split('<')[0].strip()
         try:
-            pkg_resources.require(req)
-        except (pkg_resources.DistributionNotFound, pkg_resources.VersionConflict):
+            importlib.metadata.version(pkg_name)
+        except importlib.metadata.PackageNotFoundError:
             missing.append(req)
 
     if missing:

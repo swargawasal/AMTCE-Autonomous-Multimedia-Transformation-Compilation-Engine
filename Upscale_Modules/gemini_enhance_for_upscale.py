@@ -21,82 +21,25 @@ from Intelligence_Modules.quality_evaluator import QualityEvaluator
 
 logger = logging.getLogger("gemini_upscale")
 
-# Try to import Gemini
+from Intelligence_Modules.gemini_governor import gemini_router
+
+HAS_GEMINI = True
 try:
-    import google.generativeai as genai
     from PIL import Image
-    HAS_GEMINI = True
 except ImportError:
-    HAS_GEMINI = False
-    logger.warning("⚠️ google-generativeai not installed. Gemini upscale disabled.")
+    pass
 
 # Configuration
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
 
-class GeminiQuotaManager:
-    """
-    Strictly manages Gemini API quota usage per video.
-    """
-    _instance = None
-    
-    def __new__(cls):
-        if cls._instance is None:
-            cls._instance = super(GeminiQuotaManager, cls).__new__(cls)
-            cls._instance.calls = {"analyze": 0}
-            cls._instance.limits = {
-                "analyze": int(os.getenv("GEMINI_ANALYZE_LIMIT", "5"))
-            }
-        return cls._instance
-        
-    def can_call(self, purpose: str = "analyze") -> bool:
-        current = self.calls.get(purpose, 0)
-        limit = self.limits.get(purpose, 5)
-        if current >= limit: return False
-        return True
-        
-    def increment(self, purpose: str = "analyze"):
-        if purpose in self.calls:
-            self.calls[purpose] += 1
-            logger.info(f"📊 Gemini Quota ({purpose}): {self.calls[purpose]}/{self.limits.get(purpose, '?')}")
-        
-    def reset(self):
-        self.calls = {"analyze": 0}
-        logger.info("🔄 Gemini Quota Reset for new video.")
-
-# Global Quota Manager
-quota_manager = GeminiQuotaManager()
+# Legacy Quota Manager Removed. Using gemini_governor.
 gemini_client = None
 
 def init_gemini(api_key: str, model_name: str = None) -> bool:
-    global gemini_client, GEMINI_MODEL
-    if not HAS_GEMINI or not api_key: return False
-    target_model = model_name or GEMINI_MODEL
-    try:
-        genai.configure(api_key=api_key)
-        gemini_client = genai.GenerativeModel(target_model)
-        GEMINI_MODEL = target_model
-        logger.info(f"✅ Gemini Upscale initialized: {GEMINI_MODEL}")
-        return True
-    except: return False
+    """Compatibility shim."""
+    return True
 
-def _safe_gemini_call(contents, generation_config=None) -> Optional[Any]:
-    global gemini_client, GEMINI_MODEL
-    if not gemini_client: return None
-    models = ["gemini-2.5-flash-lite", "gemini-2.5-flash"]
-    for attempt in range(2):
-        try:
-            return gemini_client.generate_content(contents=contents, generation_config=generation_config)
-        except Exception as e:
-            err_msg = str(e).lower()
-            if "429" in err_msg:
-                try: current_idx = models.index(GEMINI_MODEL)
-                except ValueError: current_idx = 0
-                if current_idx < len(models) - 1:
-                    GEMINI_MODEL = models[current_idx + 1]
-                    gemini_client = genai.GenerativeModel(GEMINI_MODEL)
-                    continue
-            return None
-    return None
+# _safe_gemini_call removed. Using gemini_router.
 
 def frame_to_base64(frame: np.ndarray) -> Optional[str]:
     try:
@@ -128,9 +71,6 @@ Analyze these {n_frames} video frames and generate a JSON recipe for FFmpeg enha
 """
 
 def analyze_frames_batch(frames: List[np.ndarray]) -> List[Dict[str, Any]]:
-    global gemini_client
-    if not gemini_client: return []
-    if not quota_manager.can_call("analyze"): return []
     try:
         request_contents = []
         for f in frames:
@@ -138,15 +78,19 @@ def analyze_frames_batch(frames: List[np.ndarray]) -> List[Dict[str, Any]]:
             if b64: request_contents.append({'mime_type': 'image/jpeg', 'data': b64})
         if not request_contents: return []
         request_contents.append(get_hybrid_prompt(len(request_contents)))
-        quota_manager.increment("analyze")
-        gen_config = genai.types.GenerationConfig(temperature=0.2, response_mime_type="application/json")
-        response = _safe_gemini_call(contents=request_contents, generation_config=gen_config)
-        if not response: return []
-        data = json.loads(re.sub(r"```(json)?", "", response.text).strip())
+        
+        res_txt = gemini_router.generate(
+            task_type="analyzer",
+            prompt=request_contents,
+            module_name="gemini_upscale"
+        )
+        
+        if not res_txt: return []
+        data = json.loads(re.sub(r"```(json)?", "", res_txt).strip())
         return data.get("results", [])
     except: return []
 
-def run(input_video: str, output_video: str) -> str:
+def run(input_video: str, output_video: str, intelligence_cache=None) -> str:
     if not gemini_client: init_gemini(os.getenv("GEMINI_API_KEY"))
     try:
         cap = cv2.VideoCapture(input_video)
@@ -158,7 +102,16 @@ def run(input_video: str, output_video: str) -> str:
             ret, f = cap.read()
             if ret: frames.append(f)
         cap.release()
-        results = analyze_frames_batch(frames)
+        
+        # --- [CONSOLIDATION FIX] Check Intelligence Cache First ---
+        results = []
+        if intelligence_cache and hasattr(intelligence_cache, 'ffmpeg_recipe') and intelligence_cache.ffmpeg_recipe:
+            logger.info("🔬 [Consolidation] Reusing FFmpeg Recipe from Intelligence Cache.")
+            # Wrap recipe in a list to match expected return type of analyze_frames_batch
+            results = [intelligence_cache.ffmpeg_recipe]
+        else:
+            results = analyze_frames_batch(frames)
+            
         if not results: return "GEMINI_FAIL"
         
         sharp = np.median([float(r.get("sharpness", 0)) for r in results])

@@ -53,6 +53,209 @@ except ImportError:
     HAS_KOKORO = False
     logger.info("ℹ️ Kokoro-82M not installed. (Optional premium voice)")
 
+# -------------------- Commentary Refinement Helpers -------------------- #
+
+EDITORIAL_TEMPLATES = [
+    "The room noticed before anyone spoke. This is visual dominance by design.",
+    "Solve your 5-minute ready problem instantly with this high-contrast silhouette.",
+    "This one piece ensures you own the visual space, demanding immediate authority.",
+    "Stop scrolling. This look doesn't just look good—it changes your social standing.",
+    "The perfect aesthetic upgrade for your next big event is right here.",
+    "Notice how the rich texture adds instant premium weight to your presence.",
+    "Instant confidence isn't bought—it's worn. This piece is the proof.",
+    "A rare aesthetic advantage that guarantees you stand out with effortless authority.",
+]
+
+# Regex patterns to detect visual descriptions (case-insensitive)
+VISUAL_PATTERNS = [
+    r"\blooks?\b",
+    r"\blooking\b",
+    r"\bwalks?\b",
+    r"\bwalking\b",
+    r"\bstood\b",
+    r"\bstanding\b",
+    r"\bfaces?\b",
+    r"\bturns?\b",
+    r"\bvideo\b",
+    r"\bclip\b",
+    r"\bscene\b",
+    r"\bcamera\b",
+    r"\bwe see\b",
+    r"\bthe (video|clip|scene) shows\b",
+]
+
+FORBIDDEN_PHRASES = [
+    "looks at the camera",
+    "the video shows",
+    "we see",
+    "this clip shows",
+]
+
+EDITORIAL_EXTENSIONS = [
+    "ensuring you command the room without saying a single word",
+    "solving the eternal struggle of balancing beauty with pure convenience",
+    "providing an immediate aesthetic reward that transforms your silhouette",
+    "guaranteeing a visual impact that lingers long after you've left the space",
+    "giving you the social advantage that only high-intent fashion can provide",
+    "anchoring your visual dominance with a fabric that feels as premium as it looks",
+    "delivering an instant confidence boost that's visible to everyone around you",
+]
+
+IMPACT_WORDS = {
+    # High-Conversion Psychology & Convenience
+    "convenience", "beauty", "advantage", "authority", "dominance", "upgrade", "reward", "solve",
+    "instant", "presence", "command", "transformation", "social", "authority", "effortless",
+    # Specific Fashion Selling Points
+    "fabric", "texture", "silk", "velvet", "silhouette", "detailed", "premium", "rich",
+    "event", "confidence", "standout", "exclusive", "linked", "description", "today",
+}
+
+
+def _split_sentences(text: str) -> list:
+    if not text:
+        return []
+    return re.split(r"(?<=[.!?])\s+", text.strip())
+
+
+def _impact_score(sentence: str) -> float:
+    if not sentence:
+        return 0.0
+    words = sentence.lower().split()
+    strong = sum(1 for w in words if w.strip(".,!?") in IMPACT_WORDS)
+    # shorter but meaningful sentences rank higher; add a small epsilon to avoid div by zero
+    length_penalty = len(words) or 1
+    return strong * 2.0 + (12.0 / length_penalty)
+
+
+def transform_to_editorial(script: str) -> str:
+    """Convert a visual description into editorial commentary with light keyword blending."""
+    template = random.choice(EDITORIAL_TEMPLATES)
+    # Try to blend one strong keyword from the original script if present
+    lower = script.lower()
+    keyword = None
+    for w in IMPACT_WORDS:
+        if w in lower:
+            keyword = w
+            break
+    if keyword and keyword not in template.lower():
+        # insert keyword near the start
+        parts = template.split(" ", 1)
+        if len(parts) == 2:
+            return f"{parts[0]} {keyword} {parts[1]}"
+    return template
+
+
+def refine_commentary(script: str) -> Dict[str, Any]:
+    """
+    Post-process narration to enforce editorial tone.
+    Returns dict with refined text and whether a change occurred.
+    """
+    original = script or ""
+    text = original.strip()
+    changed = False
+
+    # Remove forbidden phrases outright
+    lowered_original = text.lower()
+    for phrase in FORBIDDEN_PHRASES:
+        if phrase in lowered_original:
+            pattern = re.compile(re.escape(phrase), re.IGNORECASE)
+            text = pattern.sub("", text)
+            changed = True
+
+    # Detect visual descriptions via regex patterns
+    lowered = text.lower()
+    if any(re.search(p, lowered) for p in VISUAL_PATTERNS):
+        text = transform_to_editorial(text)
+        changed = True
+
+    # Split and filter visual-description sentences
+    raw_sentences = [s.strip() for s in _split_sentences(text) if s.strip()]
+    filtered = []
+    seen_normalized = set()
+    for s in raw_sentences:
+        s_clean = s.strip(".,! ").lower()
+        if not s_clean: continue
+        
+        # [mkpv-fix] Robust deduplication (catch partial overlaps like hook vs body start)
+        is_dup = False
+        for existing in seen_normalized:
+            # If one is a prefix of the other (likely hook repetition)
+            if s_clean.startswith(existing) or existing.startswith(s_clean):
+                is_dup = True
+                break
+            # If significant substring overlap (min 20 chars)
+            if len(s_clean) > 20 and s_clean[:25] in existing:
+                is_dup = True
+                break
+        
+        if is_dup:
+            changed = True
+            continue
+            
+        seen_normalized.add(s_clean)
+        if any(re.search(p, s_clean) for p in VISUAL_PATTERNS):
+            changed = True
+            continue
+        if any(phrase in s_clean for phrase in FORBIDDEN_PHRASES):
+            changed = True
+            continue
+        filtered.append(s)
+    sentences = filtered
+
+    if not sentences:
+        sentences = [_ for _ in _split_sentences(transform_to_editorial(original or "Style doesn't announce itself.")) if _]
+        changed = True
+
+    # Keep highest-impact 3 sentences max
+    scored = sorted(sentences, key=_impact_score, reverse=True)
+    sentences = scored[:3]
+
+    # Ensure 2–3 sentences
+    if len(sentences) < 2:
+        new_sent = transform_to_editorial(original)
+        if new_sent not in sentences:
+            sentences.append(new_sent)
+            changed = True
+    if len(sentences) < 2:
+        new_sent = random.choice(EDITORIAL_TEMPLATES)
+        if new_sent not in sentences:
+            sentences.append(new_sent)
+            changed = True
+    sentences = sentences[:3]
+
+    # Build and tune length (target 250–800 chars)
+    text = " ".join(sentences).strip()
+    if len(text) < 250:
+        # Elongate last sentence without adding new sentences
+        used_extenders = set()
+        for _ in range(3):
+            if len(text) >= 250:
+                break
+            available = [e for e in EDITORIAL_EXTENSIONS if e not in used_extenders]
+            if not available:
+                break
+            extender = random.choice(available)
+            used_extenders.add(extender)
+            sentences[-1] = sentences[-1].rstrip(".") + f", {extender}."
+            text = " ".join(sentences).strip()
+        changed = True
+
+    if len(text) > 1000:
+        text = text[:1000]
+        if "." in text:
+            text = text.rsplit(".", 1)[0] + "."
+        text = text.strip()
+        changed = True
+
+    # Final guard against visual phrasing
+    lowered_final = text.lower()
+    for phrase in FORBIDDEN_PHRASES:
+        if phrase in lowered_final:
+            text = text.replace(phrase, "").strip()
+            changed = True
+
+    return {"text": text, "changed": changed, "original": original.strip()}
+
 def _get_audio_duration(path):
     """Helper to get duration using ffprobe (since we can't import compiler here easily)."""
     try:
@@ -64,7 +267,7 @@ def _get_audio_duration(path):
         return 0.0
 
 class VoiceoverGenerator:
-    def __init__(self):
+    def __init__(self, voice=None):  # `voice` accepted for backwards compat but ignored — use REACTION_TTS_VOICE in .env
         self.enabled = os.getenv("ENABLE_MICRO_VOICEOVER", "yes").lower() == "yes"
         self.lang = "en"
         
@@ -125,32 +328,25 @@ class VoiceoverGenerator:
         
     def humanize_narration(self, text: str) -> str:
         """
-        Injects human-like pauses, breaths, and emphasis markers.
-        Bypasses AI voice detection by breaking programmatic cadence.
+        Injects human-like cadence variation to bypass AI voice detection.
+        Uses natural punctuation only — never injects literal words or long
+        ellipsis that TTS engines render as multi-second silence gaps.
         """
         if not text: return ""
         
-        # 1. Inject natural pauses (...)
+        # 1. Rebuild sentences with natural punctuation pauses
         segments = text.split(". ")
         humanized = []
         for i, segment in enumerate(segments):
             humanized.append(segment)
             if i < len(segments) - 1:
-                # 30% chance of a deep breath/longer pause
-                if random.random() < 0.3:
-                    humanized.append("... [breath] ...")
+                # 25% chance of a slightly longer pause (semicolon)
+                if random.random() < 0.25:
+                    humanized.append(";")
                 else:
-                    humanized.append("... ")
+                    humanized.append(".")
         
         text = " ".join(humanized)
-        
-        # 2. Inject mid-sentence micro-pauses
-        words = text.split()
-        if len(words) > 10:
-            pivot = random.randint(len(words)//3, 2*len(words)//3)
-            # Add a comma or ellipsis for natural hesitation
-            words[pivot] = words[pivot] + ","
-            text = " ".join(words)
 
         return text
 
@@ -279,6 +475,43 @@ class VoiceoverGenerator:
             }
         raise RuntimeError("EdgeTTS produced invalid file")
 
+    def _generate_kokoro_tts(self, text: str, temp_path: str, voice_name: str = "af_bella") -> Dict:
+        """
+        PREMIUM: Kokoro-82M TTS (Local, High Quality).
+        """
+        if not HAS_KOKORO: raise ImportError("Kokoro not installed")
+        
+        if not hasattr(self, "_kokoro_pipeline"):
+            try:
+                from kokoro import KPipeline
+                self._kokoro_pipeline = KPipeline(lang_code='a')
+            except ImportError:
+                raise RuntimeError("KPipeline not found in Kokoro. Unsupported version.")
+                
+        # Generate Audio
+        generator = self._kokoro_pipeline(text, voice=voice_name, speed=1, split_pattern=r'\n+')
+        audio_chunks = []
+        for i, (gs, ps, audio) in enumerate(generator):
+            import numpy as np
+            if isinstance(audio, torch.Tensor):
+                audio = audio.detach().cpu().numpy()
+            audio_chunks.append(audio)
+            
+        if not audio_chunks:
+            raise RuntimeError("Kokoro generated no audio.")
+            
+        import numpy as np
+        full_audio = np.concatenate(audio_chunks)
+        sf.write(temp_path, full_audio, 24000)
+        
+        if os.path.exists(temp_path) and os.path.getsize(temp_path) > 100:
+            return {
+                "audio_path": temp_path,
+                "duration": _get_audio_duration(temp_path),
+                "word_timestamps": None
+            }
+        raise RuntimeError("Kokoro produced invalid file")
+
     def _generate_google_tts_wrapper(self, text: str, temp_path: str, tld: str = "com") -> Dict:
         """
         FINAL FALLBACK: Google TTS (Robotic).
@@ -299,8 +532,34 @@ class VoiceoverGenerator:
     def _generate_worker(self, text, tld, temp_path, result_container, voice_override=None):
         """
         Worker logic with UNIFIED TTS Failover Chain
-        Priority: Azure → Edge → Google
+        Priority: Kokoro -> Azure -> Edge -> Google
         """
+
+        # ---------- 0️⃣ KOKORO TTS ----------
+        if HAS_KOKORO:
+            try:
+                logger.info("🎙️ Kokoro TTS Attempt...")
+                if not hasattr(self, "kokoro_pool"):
+                    self.kokoro_pool = ["af_bella", "af_nicole", "af_sarah", "af_sky"]
+                k_voice = random.choice(self.kokoro_pool)
+
+                res = self._generate_kokoro_tts(
+                    text=text,
+                    temp_path=temp_path,
+                    voice_name=k_voice
+                )
+
+                result_container.update({
+                    "success": True,
+                    "engine": "kokoro",
+                    "audio_path": res["audio_path"],
+                    "duration": res["duration"],
+                    "word_timestamps": None
+                })
+                return
+
+            except Exception as e_kokoro:
+                logger.warning(f"⚠️ Kokoro failed. Falling back to Azure. Reason: {e_kokoro}")
 
         # ---------- 1️⃣ AZURE TTS ----------
         try:
@@ -381,14 +640,16 @@ class VoiceoverGenerator:
             })
             return
 
-    def generate_voiceover(self, text: str, output_path: str) -> bool:
+    def generate_voiceover(self, script_text: str, output_file: str, force: bool = False) -> bool:
         """
         Public entry point for compiler.
         Must preserve original behavior.
         """
         try:
+            if not self.enabled and not force: return False
+            
             # 1. Sanitize & Humanize
-            safe_text = self._sanitize_text(text)
+            safe_text = self._sanitize_text(script_text)
             safe_text = self.humanize_narration(safe_text)
             
             if len(safe_text) < self.min_chars: return False
@@ -398,7 +659,7 @@ class VoiceoverGenerator:
             if self._is_filler(safe_text): return False
             
             # 3. Setup
-            os.makedirs(os.path.dirname(output_path), exist_ok=True)
+            os.makedirs(os.path.dirname(output_file), exist_ok=True)
             tld = self._get_deterministic_tld(safe_text)
             
             # 4. Generate (Direct Call)
@@ -407,7 +668,7 @@ class VoiceoverGenerator:
             self._generate_worker(
                 text=safe_text,
                 tld=tld,
-                temp_path=output_path,
+                temp_path=output_file,
                 result_container=result_container,
                 voice_override=None
             )
@@ -504,8 +765,8 @@ class VoiceoverGenerator:
 # Global Instance
 voice_engine = VoiceoverGenerator()
 
-def generate_voiceover(text: str, output_path: str) -> bool:
-    return voice_engine.generate_voiceover(text, output_path)
+def generate_voiceover(script_text: str, output_file: str, force: bool = False) -> bool:
+    return voice_engine.generate_voiceover(script_text, output_file, force=force)
 
 def generate_long_form_narration(text: str, output_path: str) -> bool:
     return voice_engine.generate_long_form_narration(text, output_path)

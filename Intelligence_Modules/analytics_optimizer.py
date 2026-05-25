@@ -5,25 +5,19 @@ import logging
 import datetime
 from typing import Optional, Dict, Any
 from googleapiclient.discovery import build
-import google.generativeai as genai
+from Intelligence_Modules.gemini_governor import gemini_router
 from Uploader_Modules.uploader import get_valid_credentials
 
 logger = logging.getLogger("analytics_optimizer")
 
 # Configuration
 CACHE_FILE = "analytics_cache.json"
-CACHE_DURATION_DAYS = 30
+CACHE_DURATION_DAYS = 7  # Weekly refresh cycle for analytics patterns
 
 class AnalyticsOptimizer:
     def __init__(self):
-        self.api_key = os.getenv("GEMINI_API_KEY")
-        if not self.api_key:
-            logger.warning("⚠️ GEMINI_API_KEY not found. Optimization will be disabled.")
-            self.gemini_available = False
-        else:
-            genai.configure(api_key=self.api_key)
-            self.model = genai.GenerativeModel("gemini-2.5-flash")
-            self.gemini_available = True
+        self.router = gemini_router
+        self.gemini_available = True if gemini_router else False
             
         self.cache = self._load_cache()
 
@@ -139,8 +133,9 @@ class AnalyticsOptimizer:
 
         try:
             logger.info("🧠 Sending Analytics data to Gemini for optimization...")
-            response = self.model.generate_content(prompt)
-            text = response.text.strip().replace("```json", "").replace("```", "")
+            res_txt = self.router.generate(task_type="analytics", prompt=prompt, module_name="analytics_optimizer")
+            if not res_txt: return None
+            text = res_txt.strip().replace("```json", "").replace("```", "")
             data = json.loads(text)
             return data
         except Exception as e:

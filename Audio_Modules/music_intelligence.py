@@ -18,13 +18,33 @@ def classify_music(file_path: str) -> tuple[str, float]:
     """
     Analyzes audio file and returns (Genre, Confidence).
     Matches compiler.py expectation: genre, confidence = classify_music(path)
+
+    Priority:
+      0. Pool metadata cache (Gemini-enriched, confidence 0.95) — fastest path
+      1. Filename keyword matching (existing logic, confidence 0.9)
+      2. RMS volume analysis (existing logic, confidence 0.6)
     """
     if not os.path.exists(file_path):
         return "neutral", 0.0
 
-    filename = os.path.basename(file_path).lower()
-    
-    # 1. Keyword Classification
+    filename = os.path.basename(file_path)
+
+    # ── Priority 0: Pool metadata cache (Gemini-enriched) ────────────────────
+    # If the AudioPoolManager has already analyzed this track in the background,
+    # return its result immediately.  Falls through silently on any error.
+    try:
+        from Audio_Modules.audio_pool_manager import pool_manager as _apm
+        _meta = _apm._get_file_metadata(filename)
+        if _meta and _meta.get("gemini_analyzed") and _meta.get("gemini_genre"):
+            _g = _meta["gemini_genre"]
+            logger.debug(f"[MUSIC_INTEL] Pool cache hit: {filename} → {_g}")
+            return _g, 0.95
+    except Exception:
+        pass  # pool manager not available — fall through
+
+    filename_lower = filename.lower()
+
+    # ── Priority 1: Keyword Classification (unchanged) ───────────────────────
     keywords = {
         "lofi": ["lofi", "chill", "relax", "study", "sleep", "dream", "ambient"],
         "mass": ["gym", "workout", "phonk", "sigma", "trap", "bass", "energetic", "motivation", "hard"],
@@ -33,22 +53,22 @@ def classify_music(file_path: str) -> tuple[str, float]:
         "pop": ["pop", "upbeat", "summer", "vlog", "happy", "party"],
         "high_energy": ["rock", "metal", "fast", "run"]
     }
-    
+
     detected_genre = "neutral"
     confidence = 0.5
-    
+
     for g, keys in keywords.items():
-        if any(k in filename for k in keys):
+        if any(k in filename_lower for k in keys):
             detected_genre = g
             confidence = 0.9
             break
-            
-    # 2. RMS / Volume Analysis fallback
+
+    # ── Priority 2: RMS / Volume Analysis fallback (unchanged) ───────────────
     if detected_genre == "neutral":
         try:
             cmd = [
-                FFMPEG_BIN, "-i", file_path, 
-                "-af", "volumedetect", 
+                FFMPEG_BIN, "-i", file_path,
+                "-af", "volumedetect",
                 "-f", "null", "-"
             ]
             result = subprocess.run(cmd, capture_output=True, text=True)
@@ -62,9 +82,9 @@ def classify_music(file_path: str) -> tuple[str, float]:
                 elif mean_vol < -24.0:
                     detected_genre = "lofi"
                     confidence = 0.6
-        except:
+        except Exception:
             pass
-            
+
     return detected_genre, confidence
 
 def get_filter_graph(genre: str, target_duration: float) -> str:

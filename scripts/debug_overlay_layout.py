@@ -13,6 +13,9 @@ When to run:
 
 from PIL import Image, ImageDraw, ImageFont
 import os
+from dotenv import load_dotenv
+load_dotenv("Credentials/.env")
+_BRAND = os.getenv("BRAND_NAME", "YOUR_BRAND")
 
 def create_layout_viz():
     W, H = 1080, 1920
@@ -29,7 +32,7 @@ def create_layout_viz():
     # Define Lanes
     lanes = [
         ("Captions Area (Ends Here)", 0.78, (100, 200, 255)),  # Blue
-        ("Branding: 'Swargawasal'", 0.85, (255, 215, 0)),      # Gold
+        (f"Branding: '{_BRAND}'", 0.85, (255, 215, 0)),      # Gold
         ("Style Analysis: 'Text...'", 0.92, (255, 100, 100))   # Red
     ]
 
@@ -54,7 +57,7 @@ def create_layout_viz():
     draw.text((100, int(H*0.78)-150), "Caption Line 3\nCaption Line 4 (Bottom)", font=font, fill=(200, 200, 200))
     
     # 2. Branding (At 0.85)
-    draw.text((300, int(H*0.85)), "SWARGAWASAL", font=font, fill=(255, 255, 255))
+    draw.text((300, int(H*0.85)), _BRAND.upper(), font=font, fill=(255, 255, 255))
     
     # 3. Analysis (At 0.92)
     draw.text((200, int(H*0.92)), "Style Analysis Text Here", font=font_small, fill=(255, 255, 255))

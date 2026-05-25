@@ -1,0 +1,414 @@
+{
+  "pipeline": "audit_passed",
+  "verdict": "unknown",
+  "editorial_title": null,
+  "caption_data": {
+    "caption": "White Flare Dress VIRAL: CLI: Process 'Parineeti Chopra, guaranteeing a visual impact that lingers long after you've left the space, solving the eternal struggle of balancing beauty with pure convenience, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+    "editorial_script": "White Flare Dress VIRAL: CLI: Process 'Parineeti Chopra, guaranteeing a visual impact that lingers long after you've left the space, solving the eternal struggle of balancing beauty with pure convenience, anchoring your visual dominance with a fabric that feels as premium as it looks."
+  },
+  "metadata": {
+    "hook_score": 0.4663,
+    "quality_score": 0.5,
+    "transformation_score": 0.0,
+    "item_name": "White Flare Dress",
+    "price_tag": "",
+    "gemini_total_calls": 1,
+    "gemini_call_log": [
+      "MASTER_INTELLIGENCE"
+    ],
+    "editing_diagnostics": {
+      "scene_count": 8,
+      "segments_created": 7,
+      "concat_used": false,
+      "editing_effective": true,
+      "non_chronological": false,
+      "avg_score": 0.171
+    },
+    "feature_flags": {
+      "scene_detection": true,
+      "smart_crop": true,
+      "caption_generation": true,
+      "music_engine": true,
+      "voiceover_generation": true,
+      "beat_detection": false,
+      "price_tag_engine": true,
+      "subject_tracking": false,
+      "scene_reconstruction": true,
+      "watermark_detection": true,
+      "watermark_inpaint": true
+    }
+  },
+  "pipeline_metrics": {
+    "monetization": {
+      "editorial_script": "White Flare Dress VIRAL: CLI: Process 'Parineeti Chopra, guaranteeing a visual impact that lingers long after you've left the space, solving the eternal struggle of balancing beauty with pure convenience, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+      "final_caption": "White Flare Dress VIRAL: CLI: Process 'Parineeti Chopra, guaranteeing a visual impact that lingers long after you've left the space, solving the eternal struggle of balancing beauty with pure convenience, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+      "caption": "White Flare Dress VIRAL: CLI: Process 'Parineeti Chopra, guaranteeing a visual impact that lingers long after you've left the space, solving the eternal struggle of balancing beauty with pure convenience, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+      "cta": null,
+      "monetization_cta": null,
+      "ypp_safe": true,
+      "risk_level": "UNKNOWN",
+      "risk_reason": "Analysis pending or not performed.",
+      "reason": "Analysis pending or not performed.",
+      "transformation_score": 0.0,
+      "policy_citation": "Significant Original Commentary",
+      "fashion_scout": {},
+      "item_name": "White Flare Dress",
+      "improvement_tips": [],
+      "overlay_data": {},
+      "price_data": {
+        "celebrity_price": 24675,
+        "clone_price": 11877,
+        "source": "premium_tier"
+      },
+      "telegram_hook": null,
+      "instagram_hook": null,
+      "youtube_hook": null,
+      "hashtags": null
+    }
+  },
+  "editing_timeline": [
+    {
+      "clip_id": 0,
+      "start": 1.828,
+      "end": 4.828,
+      "style": "slow_fade",
+      "transition": "slow_fade",
+      "transition_duration": 0.667,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Moderate energy shift (medium → medium, Δ=+0.16). A blur_cut or zoom_pop will register the change without overdramatizing.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "slow_fade",
+          "rationale": "Calm scene change with low beat energy. A slow_fade acts as a cinematic cross-dissolve — the temporal bridge that signals to the viewer that time or location has shifted gently."
+        },
+        "execution": {
+          "duration_frames": 20,
+          "alignment": "Start",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "J-Cut (Clip B audio leads by 12 frames)"
+        },
+        "_internal": {
+          "duration_s": 0.667,
+          "audio_bleed_frames": 12,
+          "vectors_match": true,
+          "energy_delta": 0.157,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Calm scene change with low beat energy. A slow_fade acts as a cinematic cross-dissolve — the temporal bridge that signals to the viewer that time or location has shifted gently. @ 667ms",
+      "beat_interval": 1.35,
+      "beat_offset": 0.033,
+      "_pacing_band": "setup",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 1.0,
+      "importance": 1.0,
+      "bbox": {
+        "x": 732,
+        "y": 157,
+        "w": 89,
+        "h": 119
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 12.478,
+      "end": 14.428,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.02). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.024,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 1.05,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.1442,
+      "importance": 0.1442,
+      "bbox": {
+        "x": 673,
+        "y": 138,
+        "w": 95,
+        "h": 120
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 19.173,
+      "end": 20.442,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.01). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.012,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.0303,
+      "importance": 0.0303
+    },
+    {
+      "clip_id": 0,
+      "start": 23.602,
+      "end": 25.027,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.01). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.009,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.0,
+      "importance": 0.0
+    },
+    {
+      "clip_id": 0,
+      "start": 16.431,
+      "end": 17.431,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.07). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.074,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.3983,
+      "importance": 0.3983,
+      "bbox": {
+        "x": 636,
+        "y": 146,
+        "w": 94,
+        "h": 129
+      }
+    },
+    {
+      "clip_id": 0,
+      "start": 22.209,
+      "end": 23.223,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=-0.02). No tonal bridge is needed.",
+          "narrative_gap": "Scene change with tonal consistency. The content changes but the emotional world persists. A whip_pan or zoom_pop maintains energy continuity."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": -0.018,
+          "scene_jump": true
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "beat_interval": 0.1,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.4878,
+      "importance": 0.4878
+    },
+    {
+      "clip_id": 0,
+      "start": 7.79,
+      "end": 9.689,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.04,
+      "transition_intensity": 0.0,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": null,
+      "reason": "STIE:last_segment @ 40ms",
+      "beat_interval": 0.75,
+      "beat_offset": 0.033,
+      "_pacing_band": "escalation",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.2113,
+      "importance": 0.2113,
+      "bbox": {
+        "x": 703,
+        "y": 164,
+        "w": 91,
+        "h": 118
+      }
+    }
+  ],
+  "monetization": {
+    "editorial_script": "White Flare Dress VIRAL: CLI: Process 'Parineeti Chopra, guaranteeing a visual impact that lingers long after you've left the space, solving the eternal struggle of balancing beauty with pure convenience, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+    "final_caption": "White Flare Dress VIRAL: CLI: Process 'Parineeti Chopra, guaranteeing a visual impact that lingers long after you've left the space, solving the eternal struggle of balancing beauty with pure convenience, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+    "caption": "White Flare Dress VIRAL: CLI: Process 'Parineeti Chopra, guaranteeing a visual impact that lingers long after you've left the space, solving the eternal struggle of balancing beauty with pure convenience, anchoring your visual dominance with a fabric that feels as premium as it looks.",
+    "cta": null,
+    "monetization_cta": null,
+    "ypp_safe": true,
+    "risk_level": "UNKNOWN",
+    "risk_reason": "Analysis pending or not performed.",
+    "reason": "Analysis pending or not performed.",
+    "transformation_score": 0.0,
+    "policy_citation": "Significant Original Commentary",
+    "fashion_scout": {},
+    "item_name": "White Flare Dress",
+    "improvement_tips": [],
+    "overlay_data": {},
+    "price_data": {
+      "celebrity_price": 24675,
+      "clone_price": 11877,
+      "source": "premium_tier"
+    },
+    "telegram_hook": null,
+    "instagram_hook": null,
+    "youtube_hook": null,
+    "hashtags": null
+  },
+  "processed_only_path": "Compilations/viral_vanguard_1779295576.mp4",
+  "audit": {
+    "verdict": "ACTIVE",
+    "creative_score": 1.0,
+    "silent_failures": [],
+    "health_report": {
+      "modules_connected": 22,
+      "modules_total": 22,
+      "modules_disconnected": [],
+      "signals": {
+        "beats": 13,
+        "retention_peaks": 8,
+        "emotional_spikes": 2,
+        "fused_moments": 1,
+        "candidate_moments": 13
+      },
+      "segments_generated": 7,
+      "diversity_score": 1.0,
+      "creative_edit_score": 1.0,
+      "creative_pipeline_integrity": true
+    }
+  }
+}

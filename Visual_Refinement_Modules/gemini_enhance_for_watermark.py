@@ -1,4 +1,3 @@
-
 """
 Gemini Watermark Detection Module
 ---------------------------------
@@ -14,215 +13,376 @@ import json
 import re
 import numpy as np
 import time
+import math
 from typing import Optional, Dict, Any, List
 
 logger = logging.getLogger("gemini_watermark")
 
-# Try to import Gemini
+from Intelligence_Modules.gemini_governor import gemini_router
+
+HAS_GEMINI = True
 try:
-    import google.generativeai as genai
     from PIL import Image
-    HAS_GEMINI = True
-    
-    try:
-        from Intelligence_Modules.gemini_status_manager import manager as quota_manager
-    except ImportError:
-        quota_manager = None
 except ImportError:
-    HAS_GEMINI = False
-    logger.warning("⚠️ google-generativeai not installed. Gemini watermark detection disabled.")
+    pass
 
 # Configuration
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash-lite")
 GEMINI_FALLBACK_25 = "gemini-2.5-flash"
 GEMINI_FALLBACK_LITE = "gemini-2.5-flash-lite"
 
-# Legacy Quota Manager Removed (Superseded by Intelligence_Modules.gemini_status_manager)
-gemini_client = None
-
-def init_gemini(api_key: str, model_name: str = None) -> bool:
-    global gemini_client, GEMINI_MODEL
-    if not HAS_GEMINI or not api_key: return False
-    target_model = model_name or GEMINI_MODEL
-    try:
-        genai.configure(api_key=api_key)
-        is_banned = quota_manager.is_banned(target_model) if quota_manager else False
-        
-        if is_banned:
-            logger.warning(f"⚠️ Gemini Watermark: {target_model} is BANNED. Will use fallbacks.")
-        else:
-            logger.info(f"✅ Gemini Watermark initialized: {target_model}")
-            
-        gemini_client = genai.GenerativeModel(target_model)
-        GEMINI_MODEL = target_model
-        return True
-    except Exception as e:
-        logger.error(f"❌ Gemini init failed: {e}")
-        return False
-
-def _safe_gemini_call(contents, generation_config=None, safety_settings=None) -> Optional[Any]:
-    global gemini_client, GEMINI_MODEL
-    if not gemini_client: return None
-    
-    # STRICT USER OVERRIDE: Flash & Lite Only
-    models = [GEMINI_FALLBACK_25, GEMINI_FALLBACK_LITE]
-    
-    if quota_manager:
-        models = quota_manager.filter_models(models)
-        if not models:
-            logger.error("❌ All models for Watermark are BANNED. Skipping AI check.")
-            return None
-
-    max_retries = len(models) - 1 # Only retry as many times as we have models
-    
-    for attempt in range(max_retries + 1):
-        try:
-            current_model_name = models[attempt]
-            gemini_client = genai.GenerativeModel(current_model_name)
-            
-            # 60s hard timeout — watermark detection runs every job, can't stall the pipeline
-            response = gemini_client.generate_content(
-                contents=contents,
-                generation_config=generation_config,
-                safety_settings=safety_settings,
-                request_options={"timeout": 60}
-            )
-
-            return response
-        except Exception as e:
-            err_msg = str(e).lower()
-            # IMMEDIATE ROTATION FOR QUOTA/AVAILABILITY ERRORS
-            if any(x in err_msg for x in ["429", "quota", "500", "503", "404", "not found"]):
-                logger.warning(f"⚠️ Issue with {models[attempt]} ({err_msg}). Rotating model immediately...")
-                
-                # PERSISTENT BAN FOR QUOTA hits
-                if "429" in err_msg or "quota" in err_msg:
-                    if quota_manager: quota_manager.mark_banned(models[attempt])
-                
-                if attempt < max_retries:
-                    continue # Try next model NOW
-                else:
-                    logger.error("❌ Quota/Service exhausted on all available models.")
-                    break
-            
-            # Backoff only for networking/obscure errors
-            if attempt < max_retries:
-                wait = 2.0
-                logger.warning(f"⏳ Gemini attempt {attempt+1} failed ({e}). Rotating in {wait}s...")
-                time.sleep(wait)
-                continue
-                
-            logger.error(f"❌ Gemini call failed after {max_retries} retries: {e}")
-            return None
-    return None
-
-def frame_to_base64(frame: np.ndarray) -> Optional[str]:
+def frame_to_pil(frame: np.ndarray):
     try:
         h, w = frame.shape[:2]
-        if w > 1024:
-            scale = 1024 / w
-            frame = cv2.resize(frame, (1024, int(h * scale)))
-        success, buffer = cv2.imencode('.jpg', frame, [int(cv2.IMWRITE_JPEG_QUALITY), 95])
-        if not success: return None
-        return base64.b64encode(buffer).decode('utf-8')
-    except: return None
+        # Increased to 1440px so small corner logos remain legible for Gemini
+        if w > 1440:
+            scale = 1440 / w
+            frame = cv2.resize(frame, (1440, int(h * scale)))
+        rgb_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        return Image.fromarray(rgb_frame)
+    except Exception as e:
+        logger.warning(f"Failed to convert frame to PIL: {e}")
+        return None
 
 def clean_json_response(text: str) -> str:
+    """
+    Robustly extracts JSON content from a text response that might contain
+    backticks, conversational filler, or other non-JSON headers.
+    """
+    if not text:
+        return ""
     try:
+        # 1. Handle standard markdown wrappers
         if "```" in text:
-            text = re.sub(r"```(json)?", "", text)
-            text = text.replace("```", "")
-        return text.strip()
-    except: return text
+            # Try to grab content between triple backticks
+            match = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL)
+            if match:
+                text = match.group(1)
+            else:
+                # If no pair found, just strip the backticks themselves
+                text = re.sub(r"```(json)?", "", text).replace("```", "")
 
-def detect_watermark(frames: List[np.ndarray], keywords: str = None, force_width: int = None, force_height: int = None) -> Optional[List[Dict[str, int]]]:
-    global gemini_client
-    if not gemini_client: init_gemini(os.getenv("GEMINI_API_KEY"))
-    if not gemini_client: return None
+        # 2. Heuristic extraction: Find the first { and last } or first [ and last ]
+        # This handles cases where Gemini adds text BEFORE or AFTER the JSON block.
+        json_start = text.find('{')
+        json_end = text.rfind('}')
+        list_start = text.find('[')
+        list_end = text.rfind(']')
+
+        # Determine which structure is the primary one
+        start_idx = -1
+        end_idx = -1
+
+        if json_start != -1 and (list_start == -1 or json_start < list_start):
+            start_idx = json_start
+            end_idx = json_end
+        elif list_start != -1:
+            start_idx = list_start
+            end_idx = list_end
+
+        if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+            return text[start_idx : end_idx + 1].strip()
+
+        return text.strip()
+    except Exception:
+        return text.strip()
+
+
+def detect_watermark(
+    frames: List[np.ndarray],
+    keywords: str = None,
+    force_width: int = None,
+    force_height: int = None,
+    frame_timestamps: List[float] = None,
+) -> tuple:
+    """
+    Detects watermarks AND selects the best thumbnail frame in ONE Gemini call.
+
+    Returns a tuple: (results_list_or_none, best_frame_info_or_None)
+    - results_list:    list of watermark dicts, [] if clean, None if Gemini failed/quota
+    - best_frame_info: dict with keys:
+        {
+          "index":     int,    # 0-based index into the frames list
+          "timestamp": float,  # seconds (from frame_timestamps if provided, else -1)
+          "reason":    str,    # why Gemini chose this frame
+        }
+        Returns None if frame selection fails or only 1 frame given.
+
+    frame_timestamps (optional): list of float seconds matching each frame in `frames`.
+    If provided, best_frame_info["timestamp"] is the exact second for ffmpeg -ss extraction.
+
+    Actress face-ID (Part B in v14) has been replaced with best-frame selection.
+    Niche routing is handled by .niche.json sidecar + metadata matching in actress_scheduler.
+    """
+    # Ensure genai is configured
     
     try:
+        from PIL import ImageEnhance, ImageFilter
         if not isinstance(frames, list): frames = [frames]
-        b64_contents = []
+        # Convert all frames to native PIL images
+        pil_images = []
         for f in frames:
-            b64 = frame_to_base64(f)
-            if b64: b64_contents.append({'mime_type': 'image/jpeg', 'data': b64})
-        if not b64_contents: return None
-        
-        import math
-        prompt = f"""
-SYSTEM ROLE:
-You are a Professional Output Verification Expert specializing in content safety and clean output validation.
-MISSION: Verify if this video frame contains explicit, intrusive third-party watermarks or branding that MUST be removed.
+            pil_img = frame_to_pil(f)
+            if pil_img:
+                pil_images.append(pil_img)
 
-# TARGETS (CONFIRMED VISIBILITY ONLY):
-1. LOGOS & ICONS: Distinct Channel icons (TikTok, YouTube Shorts), TV station logos.
-2. TEXT OVERLAYS: Explicit social handles (@username), "Link in bio", or watermarks added by video editors.
-3. BRANDED TICKERS: Stationary branding.
+        if not pil_images: return None, None
 
-# NEGATIVE CONSTRAINTS (DO NOT DETECT):
-1. SCENE TEXT: Street signs, store names, t-shirt text, posters, or background text. IGNORE ALL natural text.
-2. SUBTITLES: Standard movie/anime subtitles at the bottom are NOT watermarks unless they contain a handle.
-3. UI ELEMENTS: Video player controls or system UI.
-4. AMBIGUOUS NOISE: If you are not 100% sure it is a watermark, DO NOT FLAGG IT.
+        # We pass the full frames "as-is" without artificial contrast boosting,
+        # because contrast boost blows out white text on bright backgrounds (e.g. Bollywindow).
+        # Gemini 1.5/2.5 Flash has native visual acuity to detect faint overlays if given 1080p frames.
+        n_full = len(pil_images)
 
-# PRECISION RULES:
-1. BOX FORMAT: [ymin, xmin, ymax, xmax] on a 0-1000 scale.
-2. STRICT BOUNDS: Box must tightly enclose the watermark.
-3. CONFIDENCE: Only output items you are certain are artificial overlays.
+        # 🎯 FORENSIC PROMPT v16.0 — WATERMARK HUNT + BEST THUMBNAIL FRAME SELECTOR
+        # Part A: Watermark detection (unchanged)
+        # Part B: Best frame selection — Gemini picks the optimal screenshot moment
+        #         (outfit visible, good pose, sharp, well-lit) so ffmpeg extracts exactly it.
+        #         Zero extra API cost — same call, same frames, added intelligence.
+        frame_labels = ", ".join([f"Frame {i}" for i in range(n_full)])
+        prompt = f"""You are an elite forensic video analyst and visual quality inspector.
+You have been given {n_full} frame(s) from a fashion/lifestyle video: {frame_labels}.
+Frames are numbered starting at 0 (Frame 0 = first image, Frame {n_full - 1} = last image).
 
-STRICT JSON OUTPUT FORMAT:
+══════════════════════════════════════════════════════════════
+PART A — WATERMARK / BRANDING DETECTION
+══════════════════════════════════════════════════════════════
+Hunt for ANY source branding/watermark burned into these frames. Examine all {n_full} frame(s) with maximum precision.
+
+─────────────────────────────────────────────────
+WHAT TO FLAG (source branding that must be removed):
+─────────────────────────────────────────────────
+FLAG EVERY ONE of these, no matter where they appear in the frame:
+
+1. LOGO / ICON MARKS
+   • Any graphic symbol, icon, or logo — whether a professional brand mark, a phone camera app icon,
+     a social media platform logo (Instagram reel icon, TikTok logo, YouTube play button), or a custom studio emblem
+   • Semi-transparent / watermarked logos overlaid anywhere on the video (center, corner, edge, mid-frame)
+   • Animated or pulsing logo bugs (they still count even if they appear briefly)
+
+2. STUDIO / VIDEOGRAPHER BRANDING
+   • Names like "MAHESH VIDEO", "XYZ Studio", "ABC Photography", "Creative Films" — any studio tag
+   • Photographer/videographer personal brand: a name paired with any icon or graphic
+   • Production house credit anywhere in frame
+
+3. SOCIAL MEDIA HANDLES / CHANNEL TAGS
+   • ANY "@username", "#channelname", or "youtube.com/..." burned into the video
+   • These may appear in corners, edges, or even floating mid-frame
+   • Even if small and faint — still FLAG them
+
+4. AGENCY / STOCK / COPYRIGHT MARKS
+   • Getty, Shutterstock, iStock, Adobe Stock, or any watermark-text diagonal across the frame
+   • Any "© Copyright" or "All Rights Reserved" text overlay
+
+5. NEWS / BROADCAST OVERLAY ELEMENTS
+   • Channel logo bug (small logo in corner during a broadcast)
+   • Network name, show title, or programme name burned in
+   • "LIVE", "BREAKING", "EXCLUSIVE" labels
+   • News ticker/crawl along the bottom
+   • Score banners, sports overlays, election result bars
+
+6. CAMERA / DEVICE STAMPS
+   • Date/time burned in by the camera body (e.g., "2024-01-15 14:32")
+   • Device-specific overlays (e.g., CCTV timestamp, GoPro watermark, DJI logo)
+
+7. REPOST / AGGREGATOR TAGS
+   • "Via @account", "Credit: @someone", repost app tags
+   • Any text that attributes the video to a third-party distributor
+
+─────────────────────────────────────────────────
+WHAT NOT TO FLAG (creative content — leave these alone):
+─────────────────────────────────────────────────
+Do NOT flag these — they are part of the video's creative content:
+
+✅ CAPTIONS / SUBTITLES
+   → Dialogue or narration text displayed for viewers to read along
+   → KEY TEST: Are the words lines of speech/dialogue someone is saying? → CAPTION, skip it.
+   → Subtitles appear horizontally centered, usually at bottom third, change frequently
+
+✅ TITLE CARDS / INTRO TEXT
+   → Large styled text introducing the video topic, usually displayed for 1–3 seconds at the start
+
+✅ MOTIVATIONAL / LIFESTYLE TEXT OVERLAYS
+   → Inspirational quotes, "POV:" text, meme-format captions, "Day 1 of..." text
+   → These are editorial choices, not branding
+
+✅ LOWER-THIRD LABELS
+   → Interview-style labels: "JOHN SMITH — CEO", "Guest: Dr. Priya"
+   → These identify the people speaking, not the studio that filmed them
+
+✅ INTENTIONAL UI ELEMENTS
+   → Countdown timers, progress bars, poll results, like counters shown for effect
+   → Animated text effects that are part of the video's style
+
+✅ EMOJI OVERLAYS
+   → Emojis placed as creative decorations — not branding
+
+─────────────────────────────────────────────────
+THE DECISIVE TEST — Apply this to every element you see:
+─────────────────────────────────────────────────
+Ask: "Did the VIDEOGRAPHER or DISTRIBUTOR add this to claim/brand the video?"
+  → YES → FLAG IT (watermark/branding)
+  → NO, it's part of the story/content → LEAVE IT (caption/creative)
+
+Ask: "Is this text what someone is SAYING or READING in the video?"
+  → YES → It's a CAPTION. Do NOT flag it.
+  → NO → It could be branding. Check the other rules.
+
+─────────────────────────────────────────────────
+MANDATORY FULL-FRAME SWEEP (do all 9 zones):
+─────────────────────────────────────────────────
+Watermarks appear ANYWHERE — not just corners. Check every zone:
+
+  TOP-LEFT (0–20% x, 0–20% y)       TOP-CENTER (40–60% x, 0–20% y)    TOP-RIGHT (80–100% x, 0–20% y)
+  MID-LEFT (0–20% x, 40–60% y)      CENTER     (30–70% x, 30–70% y)   MID-RIGHT (80–100% x, 40–60% y)
+  BOT-LEFT (0–20% x, 80–100% y)     BOT-CENTER (40–60% x, 80–100% y)  BOT-RIGHT (80–100% x, 80–100% y)
+
+Even a tiny, faint, semi-transparent, or briefly-appearing mark → REPORT IT.
+
+══════════════════════════════════════════════════════════════
+OUTPUT — STRICT JSON ONLY, NO OTHER TEXT:
+══════════════════════════════════════════════════════════════
+If source branding IS found:
 {{
   "watermark_present": true,
   "items": [
-      {{
-          "box_2d": [ymin, xmin, ymax, xmax],
-          "type": "logo" | "text" | "social_handle",
-          "anchoring": "top_left" | "top_right" | "bottom_left" | "bottom_right" | "floating",
-          "text_content": "transcribed text",
-          "precision_reasoning": "Explain why this is an artificial overlay and not scene text."
-      }}
-  ]
+    {{
+      "box_2d": [ymin, xmin, ymax, xmax],
+      "type": "studio_logo" | "social_handle" | "agency_mark" | "news_overlay" | "cam_stamp" | "text" | "logo" | "repost_tag" | "broadcast_bug",
+      "anchoring": "top_left" | "top_right" | "bottom_left" | "bottom_right" | "top_center" | "bottom_center" | "mid_left" | "mid_right" | "center_frame" | "floating",
+      "motion": "static" | "dynamic",
+      "text_content": "exact text or logo description visible"
+    }}
+  ],
+  "best_frame": {{
+    "index": <0-based integer — which frame is the best thumbnail shot>,
+    "reason": "<one sentence: why this frame has the best outfit visibility and pose>"
+  }}
 }}
-"""
-        if keywords: prompt += f"\n\nPRIORITY FOCUS: {keywords}"
-        
-        request_contents = b64_contents + [prompt]
-        gen_config = genai.types.GenerationConfig(response_mime_type="application/json")
-        
-        # Retry loop for empty/malformed responses (Finish Reason 1 but no parts)
-        res_txt = None
-        for attempt in range(2):
-            response = _safe_gemini_call(contents=request_contents, generation_config=gen_config, safety_settings=[
-                {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
-                {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
-                {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"},
-            ])
-            
-            if not response: return None # _safe_gemini_call already handles its own retries/logging
-            
-            try:
-                res_txt = response.text
-                break # Success
-            except Exception as e:
-                logger.warning(f"⚠️ Gemini Detect returned empty Part (Attempt {attempt+1}/2): {e}")
-                if attempt < 1: 
-                    time.sleep(1)
-                    continue
-                return None
 
-        data = json.loads(clean_json_response(res_txt))
+If NO source branding found:
+{{
+  "watermark_present": false,
+  "items": [],
+  "best_frame": {{
+    "index": <0-based integer>,
+    "reason": "<one sentence: why this frame has the best outfit visibility and pose>"
+  }}
+}}
+
+══════════════════════════════════════════════════════════════
+PART B — BEST THUMBNAIL FRAME SELECTION
+══════════════════════════════════════════════════════════════
+After completing Part A, identify which ONE frame (from Frame 0 to Frame {n_full - 1}) would
+make the BEST thumbnail screenshot. This is the frame ffmpeg will extract as the cover image.
+
+Score each frame on these criteria (in priority order):
+
+1. OUTFIT / CLOTHING VISIBILITY  ← Most important
+   → Full or majority of the outfit is visible in frame
+   → Fashion details (fabric, color, accessories, shoes) are clear
+   → Not obscured by camera motion blur, other people, or objects
+
+2. POSE QUALITY
+   → Confident, flattering, complete pose — not mid-step, mid-turn, or transition
+   → Body is composed (not cut off at awkward joints)
+   → Arms/hands add to the composition, not blocking the outfit
+
+3. FACE / EXPRESSION
+   → Face visible and well-composed (not blinking, not turned away)
+   → Confident or natural expression — not caught mid-speech or distorted
+
+4. LIGHTING & SHARPNESS
+   → Frame is sharp (not motion-blurred)
+   → Even lighting — not overexposed, not in deep shadow
+   → Colors look natural and vibrant
+
+5. COMPOSITION
+   → Subject fills the frame well (not tiny in the distance)
+   → Background is clean or complementary — not distracting
+
+⚠️ AVOID frames with:
+   → Heavy motion blur
+   → Mid-transition between poses
+   → Hands covering significant outfit area
+   → Unflattering or distorted expressions
+   → Subject partially out of frame
+
+Return the index (0-based) of the single BEST frame in the "best_frame" field of your JSON output.
+"""
+        if keywords: prompt += f"\n\nADDITIONAL FOCUS HINTS: {keywords}"
+
         
-        # Robust handling for varied Gemini response formats (List vs Object)
+        request_contents = pil_images + [prompt]
+        
+        res_txt = gemini_router.generate(
+            task_type="watermark",
+            prompt=request_contents,
+            module_name="gemini_watermark"
+        )
+        
+        if not res_txt or len(res_txt.strip()) < 2:
+            logger.warning(f"⚠️ Gemini returned empty or too short response: '{res_txt}'")
+            return None, None
+
+        cleaned_txt = clean_json_response(res_txt)
+        try:
+            data = json.loads(cleaned_txt)
+        except json.JSONDecodeError as jde:
+            logger.error(f"❌ JSON Decode Error: {jde}")
+            logger.error(f"   └─ Cleaned Text (first 100 chars): {cleaned_txt[:100]}...")
+            logger.info(f"   └─ Raw Response (first 200 chars): {res_txt[:200]}...")
+            return None, None
+
+        # ── Parse best_frame selection (Part B) ──────────────────────────────────
+        best_frame_info = None
+        if isinstance(data, dict):
+            bf = data.get("best_frame", {})
+            if isinstance(bf, dict) and "index" in bf:
+                try:
+                    bf_index = int(bf["index"])
+                    # Clamp to valid range
+                    bf_index = max(0, min(bf_index, n_full - 1))
+                    bf_ts = -1.0
+                    if frame_timestamps and bf_index < len(frame_timestamps):
+                        bf_ts = float(frame_timestamps[bf_index])
+                    bf_reason = bf.get("reason", "")
+                    best_frame_info = {
+                        "index":     bf_index,
+                        "timestamp": bf_ts,
+                        "reason":    bf_reason,
+                    }
+                    logger.info(
+                        "📸 [BEST_FRAME] Frame %d selected (ts=%.2fs): %s",
+                        bf_index, bf_ts, bf_reason[:80]
+                    )
+                except (ValueError, TypeError) as _bfe:
+                    logger.debug("[BEST_FRAME] Failed to parse best_frame: %s", _bfe)
+
+        # ── Niche routing note ────────────────────────────────────────────────────
+        # Actress classification removed (was Part B in v14).
+        # Niche routing is handled exclusively by:
+        #   1. _name_in_reel() text filter in actress_scheduler.py
+        #   2. .niche.json sidecar written by _inject_niche()
+        #   3. gemini_reel_prescreen() in apify_downloader.py (pre-download)
+
         if isinstance(data, list):
             items = data
         else:
-            if not data.get("watermark_present", False): return []
             items = data.get("items", [])
-        
+            # Robust Check: Favor 'items' content over the boolean flag
+            is_present_flag = data.get("watermark_present", False)
+            
+            if not is_present_flag and not items:
+                logger.info("🕵️ Forensic Debug: Gemini reported CLEAN")
+                logger.debug(f"   └─ Response: {res_txt[:500]}...")
+                return [], best_frame_info
+            
+            if not is_present_flag and items:
+                logger.warning("🕵️ Forensic Debug: Gemini reported 'false' but found items. Overriding.")
+
         if not items:
-            logger.info(f"raw_response: {res_txt}")
-            return []
+            return [], detected_niche
+            
         results = []
         h_img, w_img = frames[0].shape[:2]
         use_w = force_width if force_width else w_img
@@ -233,11 +393,9 @@ STRICT JSON OUTPUT FORMAT:
             if len(box_norm) != 4: continue
             ymin, xmin, ymax, xmax = box_norm
             
-            # PRECISE COORDINATE MAPPING
-            # We map 0-1000 space to pixel space with sub-pixel encompassing.
+            # PRECISE COORDINATE MAPPING (0-1000 space)
             x_start = int(math.floor((xmin / 1000.0) * use_w))
             y_start = int(math.floor((ymin / 1000.0) * use_h))
-            
             x_end = int(math.ceil((xmax / 1000.0) * use_w))
             y_end = int(math.ceil((ymax / 1000.0) * use_h))
             
@@ -245,43 +403,130 @@ STRICT JSON OUTPUT FORMAT:
             h_pixel = y_end - y_start
             
             if w_pixel < 2 or h_pixel < 2: continue
+            
+            # --- QUADRANT SNAPPER DISABLED (v11.0) ---
+            # Gemini's v11.0 prompt performs a mandatory 4-step corner sweep with
+            # pixel-accurate JSON output. The snapper was built to fix old coordinate
+            # hallucinations but now actively corrupts the accurate detections by
+            # jumping to unrelated gradient clusters. Trust Gemini's coordinates directly.
+
             results.append({
                 'x': max(0, x_start), 'y': max(0, y_start),
                 'w': min(use_w-x_start, w_pixel), 'h': min(use_h-y_start, h_pixel),
                 'type': 'HYBRID_CLAMPED',
                 'semantic_type': item.get("type", "unknown"),
-                'semantic_anchor': item.get("anchoring", "floating"),
+                'semantic_anchor': item.get("anchoring", "unknown"),
+                # motion_hint intentionally NOT set — old module never returned it.
+                # is_moving always resolves to False → generate_static_mask always used.
+                # generate_tracked_mask (template matching) causes wrong-location inpainting
+                # on moving clothing/fabric textures.
                 'semantic_hint': item.get("text_content", "")
             })
-            logger.info(f"💎 Hybrid Detection: {item.get('type')} at {item.get('anchoring')} -> x={x_start}, y={y_start}, w={w_pixel}, h={h_pixel}")
+            logger.info(f"💎 Sub-Pixel Sweep: {item.get('type')} -> x={x_start}, y={y_start}, w={w_pixel}, h={h_pixel}")
 
-        return results
+        return results, best_frame_info
     except Exception as e:
-        logger.warning(f"⚠️ Gemini Detect failed: {e}")
-        return None
+        logger.warning(f"⚠️ Gemini Forensic Sweep failed: {e}")
+        return None, None
 
-def verify_watermark(frame: np.ndarray, candidate_box: Dict[str, int]) -> Optional[bool]:
-    global gemini_client
-    if not gemini_client: init_gemini(os.getenv("GEMINI_API_KEY"))
-    if not gemini_client: init_gemini(os.getenv("GEMINI_API_KEY"))
-    
-    # Check if Gemini is banned globally (prevent wasted calls)
-    if quota_manager and quota_manager.is_banned(GEMINI_MODEL):
-         return None
-         
+
+def extract_best_frame_ffmpeg(
+    video_path: str,
+    best_frame_info: dict,
+    output_path: str,
+    fallback_second: float = 1.0,
+) -> str:
+    """
+    Uses ffmpeg to extract the single best frame identified by detect_watermark().
+
+    Args:
+        video_path:       Path to the source video file.
+        best_frame_info:  Dict returned by detect_watermark() — must have 'timestamp'.
+        output_path:      Where to save the extracted JPEG/PNG frame.
+        fallback_second:  If timestamp is -1 or missing, extract at this second instead.
+
+    Returns:
+        Absolute path to the extracted frame on success, or "" on failure.
+
+    Example:
+        results, best = detect_watermark(frames, frame_timestamps=[0.5, 1.5, 2.5])
+        extract_best_frame_ffmpeg("clip.mp4", best, "thumbnail.jpg")
+    """
+    import subprocess
+    from Compiler_Modules.video_pipeline import FFMPEG_BIN
+
+    if not os.path.exists(video_path):
+        logger.warning("[BEST_FRAME_EXTRACT] Video not found: %s", video_path)
+        return ""
+
+    # Resolve timestamp
+    ts = fallback_second
+    if isinstance(best_frame_info, dict):
+        raw_ts = best_frame_info.get("timestamp", -1)
+        if raw_ts is not None and float(raw_ts) >= 0:
+            ts = float(raw_ts)
+        reason = best_frame_info.get("reason", "")
+        idx    = best_frame_info.get("index", -1)
+        logger.info(
+            "📸 [BEST_FRAME_EXTRACT] Extracting frame %d @ %.2fs → %s",
+            idx, ts, os.path.basename(output_path)
+        )
+        if reason:
+            logger.info("   Reason: %s", reason[:100])
+
+    os.makedirs(os.path.dirname(os.path.abspath(output_path)), exist_ok=True)
+
+    cmd = [
+        FFMPEG_BIN, "-y",
+        "-ss", f"{ts:.4f}",           # seek to timestamp
+        "-i", video_path,
+        "-vframes", "1",              # extract exactly one frame
+        "-q:v", "2",                  # JPEG quality (2 = near-lossless)
+        "-vf", "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black,setsar=1",
+        output_path,
+    ]
+
     try:
-        x, y, w, h = candidate_box['x'], candidate_box['y'], candidate_box['w'], candidate_box['h']
-        h_img, w_img = frame.shape[:2]
-        pad_x, pad_y = int(w * 3.0), int(h * 3.0)
-        x1, y1 = max(0, x - pad_x), max(0, y - pad_y)
-        x2, y2 = min(w_img, x + w + pad_x), min(h_img, y + h + pad_y)
-        roi = frame[y1:y2, x1:x2]
-        b64_frame = frame_to_base64(roi)
-        if not b64_frame: return None
-        prompt = "Is there ANY text, logo, or watermark visible? JSON ONLY: { 'is_watermark': true/false }"
-        # quota_manager.increment("analyze") - Removed (using simple status manager)
-        response = _safe_gemini_call(contents=[{'mime_type': 'image/jpeg', 'data': b64_frame}, prompt], generation_config=genai.types.GenerationConfig(response_mime_type="application/json"))
-        if not response: return None
-        data = json.loads(clean_json_response(response.text))
-        return data.get("is_watermark", False)
-    except: return None
+        result = subprocess.run(
+            cmd,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.PIPE,
+            timeout=30,
+        )
+        if result.returncode == 0 and os.path.exists(output_path):
+            size_kb = os.path.getsize(output_path) / 1024
+            logger.info(
+                "✅ [BEST_FRAME_EXTRACT] Saved: %s (%.0f KB)",
+                os.path.basename(output_path), size_kb
+            )
+            return os.path.abspath(output_path)
+        err = result.stderr.decode(errors="ignore")[-200:]
+        logger.warning("[BEST_FRAME_EXTRACT] FFmpeg failed: %s", err)
+        return ""
+    except subprocess.TimeoutExpired:
+        logger.warning("[BEST_FRAME_EXTRACT] FFmpeg timed out for %s", video_path)
+        return ""
+    except Exception as exc:
+        logger.warning("[BEST_FRAME_EXTRACT] Error: %s", exc)
+        return ""
+
+def verify_watermark(frame, candidate_box, confidence: float = 0.8) -> bool:
+    """3-tier confidence check for surgical removal."""
+    if confidence > 0.7:
+        return True
+    if confidence > 0.5:
+        try:
+            h_img, w_img = frame.shape[:2]
+            frame_area = h_img * w_img
+            box_area = candidate_box.get('w', 0) * candidate_box.get('h', 0)
+            if box_area > 0 and (box_area / frame_area) < 0.15:
+                return True
+        except: pass
+    return False
+
+def evaluate(video_path, frames):
+    """Legacy entry point."""
+    res, _niche = detect_watermark(frames)
+    if res:
+        return {"score": 0.8, "status": "CHECK_PASSED", "watermarks": res}
+    return {"score": 0.4, "status": "CLEAN", "watermarks": []}

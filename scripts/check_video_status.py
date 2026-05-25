@@ -8,7 +8,9 @@ load_dotenv(override=True)
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("status_check")
 
-VID_ID = "1274012037885988"
+import sys
+VID_ID = sys.argv[1] if len(sys.argv) > 1 else os.getenv("CHECK_VIDEO_ID", "")
+
 PAGE_TOKEN = os.getenv("META_PAGE_TOKEN")
 
 async def check_status():

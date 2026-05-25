@@ -1,0 +1,842 @@
+[
+    {
+        "file": "boot_test.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "boot_test.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "check_deps.py",
+        "line": 22,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "check_keys.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "check_keys.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "check_keys.py",
+        "line": 9,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only\\Content_Intelligence\\signal_fusion_engine.py"
+    },
+    {
+        "file": "check_keys.py",
+        "line": 10,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only\\Visual_Refinement_Modules\\moment_miner.py"
+    },
+    {
+        "file": "check_keys.py",
+        "line": 11,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only\\Content_Intelligence\\emotional_spike_detector.py"
+    },
+    {
+        "file": "check_keys.py",
+        "line": 12,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only\\Content_Intelligence\\retention_curve_engine.py"
+    },
+    {
+        "file": "check_keys.py",
+        "line": 13,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only\\Visual_Refinement_Modules\\motion_detector.py"
+    },
+    {
+        "file": "check_keys.py",
+        "line": 14,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only\\Audio_Modules\\beat_engine.py"
+    },
+    {
+        "file": "check_vp.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "check_vp.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "check_vp.py",
+        "line": 8,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only\\Compiler_Modules\\video_pipeline.py"
+    },
+    {
+        "file": "data_resolver.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "data_resolver.py",
+        "line": 4,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "deep_resolver.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "deep_resolver.py",
+        "line": 4,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "diag_full.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "diag_full.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "diag_full.py",
+        "line": 11,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "discover_classes.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "discover_classes.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "fix_engine_deps.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "fix_engine_deps.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "fix_engine_deps.py",
+        "line": 4,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "fix_engine_deps.py",
+        "line": 5,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "fix_rhythm_deps.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "fix_rhythm_deps.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "fix_rhythm_deps.py",
+        "line": 24,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "fix_rhythm_deps.py",
+        "line": 25,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "fix_rtb.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "fix_rtb.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "fix_rtb.py",
+        "line": 5,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "fix_rtb.py",
+        "line": 6,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "inspect_apis.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "inspect_apis.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "inspect_compilers.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "inspect_compilers.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "main.py",
+        "line": 3445,
+        "type": "absolute_path",
+        "match": "D:\\\\Videos\\\\my_clip.mp4`"
+    },
+    {
+        "file": "main.py",
+        "line": 5712,
+        "type": "absolute_path",
+        "match": "c:\\n\\n"
+    },
+    {
+        "file": "main_gradio_ui.py",
+        "line": 171,
+        "type": "absolute_path",
+        "match": "D:\\n{"
+    },
+    {
+        "file": "resolver.py",
+        "line": 5,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "resolver.py",
+        "line": 6,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "sig_check.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "sig_check.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "strip_editor.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "test_deps.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "test_deps.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "test_shot_detector.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "test_shot_detector.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "test_sigs.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "test_sigs.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "test_tracker.py",
+        "line": 2,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "test_tracker.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "D:\\AMTCE-short-form-editor-only"
+    },
+    {
+        "file": "claw-code\\rust\\README.md",
+        "line": 27,
+        "type": "credential",
+        "match": "API_KEY=\"sk-ant-...\""
+    },
+    {
+        "file": "colab\\Influencer_Colab.ipynb",
+        "line": 246,
+        "type": "absolute_path",
+        "match": "d:\\n"
+    },
+    {
+        "file": "colab\\Influencer_Colab.ipynb",
+        "line": 260,
+        "type": "absolute_path",
+        "match": "d:\\n"
+    },
+    {
+        "file": "Compiler_Modules\\karaoke_subtitle_engine.py",
+        "line": 315,
+        "type": "absolute_path",
+        "match": "d:\\n{err}"
+    },
+    {
+        "file": "Compiler_Modules\\video_pipeline.py",
+        "line": 507,
+        "type": "absolute_path",
+        "match": "d:\\n{err_tail}"
+    },
+    {
+        "file": "Compiler_Modules\\video_pipeline.py",
+        "line": 541,
+        "type": "absolute_path",
+        "match": "d:\\n{e2.stderr.decode(errors="
+    },
+    {
+        "file": "Compiler_Modules\\video_pipeline.py",
+        "line": 1419,
+        "type": "absolute_path",
+        "match": "d:\\n{_err}"
+    },
+    {
+        "file": "Influencer_Modules\\.env",
+        "line": 12,
+        "type": "credential",
+        "match": "API_KEY=\"AIzaSyDhcMYySpE307cf2tb09KfKeFBpWWjo9jE\""
+    },
+    {
+        "file": "Influencer_Output\\higgsfield\\outfit_ratings.json.migrated",
+        "line": 4,
+        "type": "absolute_path",
+        "match": "D:\\\\Autonomous"
+    },
+    {
+        "file": "Influencer_Output\\higgsfield\\outfit_ratings.json.migrated",
+        "line": 17,
+        "type": "absolute_path",
+        "match": "D:\\\\Autonomous"
+    },
+    {
+        "file": "Intelligence_Modules\\fashion_scout.py",
+        "line": 9,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "Intelligence_Modules\\monetization_brain.py",
+        "line": 642,
+        "type": "absolute_path",
+        "match": "D:\\s*([ABC])"
+    },
+    {
+        "file": "models\\Wav2Lip\\README.md",
+        "line": 36,
+        "type": "credential",
+        "match": "api_key = \"YOUR_API_KEY_HERE\""
+    },
+    {
+        "file": "scratch\\add_cinematic_story_niche.py",
+        "line": 33,
+        "type": "absolute_path",
+        "match": "d:\\n"
+    },
+    {
+        "file": "scratch\\deep_scan.py",
+        "line": 31,
+        "type": "absolute_path",
+        "match": "c:\\\\"
+    },
+    {
+        "file": "scratch\\deep_scan.py",
+        "line": 31,
+        "type": "absolute_path",
+        "match": "d:\\\\"
+    },
+    {
+        "file": "scratch\\deep_scan.py",
+        "line": 53,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\fix_background_person_bug.py",
+        "line": 22,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\fix_dim5.py",
+        "line": 4,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\omni_test_watermark.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\patch_fashion_scout.py",
+        "line": 14,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_aditi_bhatia.py",
+        "line": 13,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_aditi_bhatia.py",
+        "line": 33,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_aishwarya.py",
+        "line": 13,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_aishwarya.py",
+        "line": 33,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_akanksha.py",
+        "line": 14,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_akanksha.py",
+        "line": 34,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_first_shot_engine.py",
+        "line": 6,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_first_shot_engine.py",
+        "line": 14,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_karaoke.py",
+        "line": 13,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_karaoke.py",
+        "line": 33,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_patching_engine.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_sakshi.py",
+        "line": 13,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_sakshi.py",
+        "line": 33,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_user_clip_normalization.py",
+        "line": 6,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_user_clip_normalization.py",
+        "line": 14,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_user_clip_normalization.py",
+        "line": 18,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_v4.py",
+        "line": 13,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_v4.py",
+        "line": 33,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_v5.py",
+        "line": 14,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_v5.py",
+        "line": 34,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_v6_cinema.py",
+        "line": 14,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_v6_cinema.py",
+        "line": 34,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_v7_master.py",
+        "line": 14,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_v7_master.py",
+        "line": 34,
+        "type": "absolute_path",
+        "match": "D:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_wear_finder.py",
+        "line": 10,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_wear_finder.py",
+        "line": 15,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\test_wear_finder.py",
+        "line": 16,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scratch\\verify_uploader_auth.py",
+        "line": 29,
+        "type": "credential",
+        "match": "token = \"some_token\""
+    },
+    {
+        "file": "scratch\\verify_watermark_v2.py",
+        "line": 6,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\deliver_raw.py",
+        "line": 6,
+        "type": "absolute_path",
+        "match": "D:\\\\whatsupneyork\\\\Processed"
+    },
+    {
+        "file": "scripts\\deliver_video.py",
+        "line": 6,
+        "type": "absolute_path",
+        "match": "D:\\\\whatsupneyork\\\\Processed"
+    },
+    {
+        "file": "scripts\\orphan_check.py",
+        "line": 3,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 5,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 58,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 86,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 133,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 149,
+        "type": "credential",
+        "match": "api_key =' in lines[i] or '"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 179,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 203,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 232,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 248,
+        "type": "credential",
+        "match": "api_key =' in lines[i] or '"
+    },
+    {
+        "file": "scripts\\refactor_all_remaining.py",
+        "line": 278,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_intelligence.py",
+        "line": 5,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_intelligence.py",
+        "line": 123,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_intelligence.py",
+        "line": 195,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_intelligence_v2.py",
+        "line": 284,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "scripts\\refactor_intelligence_v2.py",
+        "line": 285,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "tests\\generate_test_graph.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "tests\\generate_test_graph.py",
+        "line": 13,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "tests\\test_attention_editor.py",
+        "line": 8,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\test_cold_start_acceleration.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\test_creative_director.py",
+        "line": 5,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "tests\\test_creative_director.py",
+        "line": 11,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "tests\\test_creative_editor_bridge.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\test_env_feature_toggles.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\test_hook_detection.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\test_motion_editor.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\test_rhythm_stabilization.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\test_scene_editor_pipeline.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\test_smart_reframe.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\test_speed_ramps.py",
+        "line": 7,
+        "type": "absolute_path",
+        "match": "d:\\\\Autonomous"
+    },
+    {
+        "file": "tests\\verification\\verify_timing.py",
+        "line": 6,
+        "type": "absolute_path",
+        "match": "d:\\Autonomous"
+    },
+    {
+        "file": "Visual_Refinement_Modules\\watermark_main.py",
+        "line": 232,
+        "type": "absolute_path",
+        "match": "D:\\\\path\\\\to\\\\video.mp4"
+    },
+    {
+        "file": "Visual_Refinement_Modules\\watermark_main.py",
+        "line": 235,
+        "type": "absolute_path",
+        "match": "D:\\\\path\\\\to\\\\video.mp4"
+    }
+]
