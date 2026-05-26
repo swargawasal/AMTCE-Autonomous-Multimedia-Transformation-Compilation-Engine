@@ -52,33 +52,38 @@ jobs:
         pip install -r requirements.txt
 
     - name: Setup Environment Variables & Tokens
+      env:
+        ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
+        CLIENT_SECRET_JSON: ${{ secrets.CLIENT_SECRET_JSON }}
+        TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
+        TOKEN_JSON_ADULT: ${{ secrets.TOKEN_JSON_ADULT }}
+        CLIENT_SECRET_JSON_ADULT: ${{ secrets.CLIENT_SECRET_JSON_ADULT }}
+        TELEGRAM_CONFIG_JSON: ${{ secrets.TELEGRAM_CONFIG_JSON }}
       run: |
         mkdir -p Credentials
-        # Securely inject the .env file from GitHub Secrets (supports both ENV_FILE and ENV_FILE_CONTENT)
-        if [ -n "${{ secrets.ENV_FILE }}" ]; then
-          echo "${{ secrets.ENV_FILE }}" > Credentials/.env
-        else
-          echo "${{ secrets.ENV_FILE_CONTENT }}" > Credentials/.env
+        # Securely inject the .env file from GitHub Secrets
+        if [ -n "$ENV_FILE_CONTENT" ]; then
+          echo "$ENV_FILE_CONTENT" > Credentials/.env
         fi
         # Inject Google client secret and access tokens if configured in Secrets
-        if [ -n "${{ secrets.CLIENT_SECRET_JSON }}" ]; then
-          echo "${{ secrets.CLIENT_SECRET_JSON }}" > Credentials/client_secret.json
+        if [ -n "$CLIENT_SECRET_JSON" ]; then
+          echo "$CLIENT_SECRET_JSON" > Credentials/client_secret.json
         fi
-        if [ -n "${{ secrets.TOKEN_JSON }}" ]; then
-          echo "${{ secrets.TOKEN_JSON }}" > Credentials/token.json
+        if [ -n "$TOKEN_JSON" ]; then
+          echo "$TOKEN_JSON" > Credentials/token.json
         fi
         # Inject niche-specific tokens (e.g. adult_content)
-        if [ -n "${{ secrets.TOKEN_JSON_ADULT }}" ]; then
+        if [ -n "$TOKEN_JSON_ADULT" ]; then
           mkdir -p Credentials/social_media/NSFW
-          echo "${{ secrets.TOKEN_JSON_ADULT }}" > Credentials/social_media/NSFW/token.json
+          echo "$TOKEN_JSON_ADULT" > Credentials/social_media/NSFW/token.json
         fi
-        if [ -n "${{ secrets.CLIENT_SECRET_JSON_ADULT }}" ]; then
+        if [ -n "$CLIENT_SECRET_JSON_ADULT" ]; then
           mkdir -p Credentials/social_media/NSFW
-          echo "${{ secrets.CLIENT_SECRET_JSON_ADULT }}" > Credentials/social_media/NSFW/client_secret.json
+          echo "$CLIENT_SECRET_JSON_ADULT" > Credentials/social_media/NSFW/client_secret.json
         fi
         # Inject telegram_config.json if configured
-        if [ -n "${{ secrets.TELEGRAM_CONFIG_JSON }}" ]; then
-          echo "${{ secrets.TELEGRAM_CONFIG_JSON }}" > Credentials/telegram_config.json
+        if [ -n "$TELEGRAM_CONFIG_JSON" ]; then
+          echo "$TELEGRAM_CONFIG_JSON" > Credentials/telegram_config.json
         fi
         # Auto-enable paparazzi mode in CI runs
         echo "PAPARAZZI_MODE=yes" >> Credentials/.env
