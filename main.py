@@ -4192,6 +4192,24 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 user_sessions[user_id]["final_path"] = final_str
                 user_sessions[user_id]["title"] = title
 
+                # [AUDIO_CLEANUP] Read audio paths from sidecar so reject can clean the pool
+                try:
+                    _sc_path_cm = os.path.splitext(final_str)[0] + ".json"
+                    if os.path.exists(_sc_path_cm):
+                        with open(_sc_path_cm, "r") as _scf:
+                            _sc_data_cm = json.load(_scf)
+                        _bgm = _sc_data_cm.get("bgm_audio_path", "")
+                        _ext = _sc_data_cm.get("extracted_audio_path", "")
+                        _all = _sc_data_cm.get("all_extracted_audio", [])
+                        if _bgm:
+                            user_sessions[user_id]["bgm_audio_path"] = _bgm
+                        if _ext:
+                            user_sessions[user_id]["extracted_audio_path"] = _ext
+                        if _all:
+                            user_sessions[user_id]["all_extracted_audio"] = _all
+                except Exception as _sc_ae:
+                    logger.debug(f"[AUDIO_CLEANUP] Could not read audio paths from sidecar: {_sc_ae}")
+
                 # Store clean path for Instagram DM mode (SEND_TO_YOUTUBE=off)
                 _clean_path = (
                     locals().get("pipeline_extras", {}).get("clean_source_path")
@@ -4230,6 +4248,24 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # BUG FIX: Save the Final Video Path to session so /approve can find it
             user_sessions[user_id]["final_path"] = final_str
             user_sessions[user_id]["title"] = title  # Update title too if needed
+
+            # [AUDIO_CLEANUP] Read audio paths from sidecar so reject can clean the pool
+            try:
+                _sc_path_main = os.path.splitext(final_str)[0] + ".json"
+                if os.path.exists(_sc_path_main):
+                    with open(_sc_path_main, "r") as _scf2:
+                        _sc_data_main = json.load(_scf2)
+                    _bgm2 = _sc_data_main.get("bgm_audio_path", "")
+                    _ext2 = _sc_data_main.get("extracted_audio_path", "")
+                    _all2 = _sc_data_main.get("all_extracted_audio", [])
+                    if _bgm2:
+                        user_sessions[user_id]["bgm_audio_path"] = _bgm2
+                    if _ext2:
+                        user_sessions[user_id]["extracted_audio_path"] = _ext2
+                    if _all2:
+                        user_sessions[user_id]["all_extracted_audio"] = _all2
+            except Exception as _sc_ae2:
+                logger.debug(f"[AUDIO_CLEANUP] Could not read audio paths from sidecar (main): {_sc_ae2}")
 
             # Save clean pre-overlay path for Instagram DM mode (when SEND_TO_YOUTUBE=off)
             _clean_path = (
@@ -7022,36 +7058,60 @@ async def reject_upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
                     except Exception:
                         pass
 
-                # ── DELETE EXTRACTED AUDIO (Original_audio/) ─────────────────
-                # The pipeline extracts a clean MP3 from the source into
-                # Original_audio/active/ (and root/cooldown as fallback).
-                # On rejection we no longer need this — free the space.
+                # ── DELETE EXTRACTED AUDIO (Original_audio/) ─────────────────────
+                # Use session-stored audio paths written from the sidecar JSON.
+                # The old stem-match approach NEVER worked because the audio file
+                # is named after the SOURCE (e.g. downloaded_abc.mp3), not the output.
                 try:
-                    _audio_stem = os.path.splitext(os.path.basename(final_path))[0]
-                    # Strip trailing index (_1, _2 …) to get the base title stem
-                    _audio_stem_clean = re.sub(r"_\d+$", "", _audio_stem)
+                    _audio_paths_to_delete = []
+                    _bgm_p  = session.get("bgm_audio_path", "")
+                    _ext_p  = session.get("extracted_audio_path", "")
+                    _all_p  = session.get("all_extracted_audio", [])
+
+                    if _bgm_p:
+                        _audio_paths_to_delete.append(_bgm_p)
+                    if _ext_p and _ext_p != _bgm_p:
+                        _audio_paths_to_delete.append(_ext_p)
+                    for _ap in _all_p:
+                        if _ap and _ap not in _audio_paths_to_delete:
+                            _audio_paths_to_delete.append(_ap)
+
+                    # Also search cooldown/ for the same filenames (pool moves files around)
                     _orig_audio_root = "Original_audio"
                     _audio_sub_dirs = [
                         os.path.join(_orig_audio_root, "active"),
                         os.path.join(_orig_audio_root, "cooldown"),
                         _orig_audio_root,
                     ]
-                    for _adir in _audio_sub_dirs:
-                        if not os.path.isdir(_adir):
-                            continue
-                        for _acandidate in os.listdir(_adir):
-                            _aname_no_ext = os.path.splitext(_acandidate)[0]
-                            # Match if stem (with or without index) matches
-                            if _aname_no_ext in (_audio_stem, _audio_stem_clean):
-                                _apath = os.path.join(_adir, _acandidate)
-                                if os.path.isfile(_apath):
+                    for _apath in _audio_paths_to_delete:
+                        _abase = os.path.basename(_apath)
+                        _deleted = False
+                        # Try exact path first
+                        if os.path.isfile(_apath):
+                            try:
+                                os.remove(_apath)
+                                logger.info(f"🗑️ Deleted extracted audio: {_apath}")
+                                _deleted = True
+                            except Exception as _ae:
+                                logger.warning(f"⚠️ Could not delete audio {_apath}: {_ae}")
+                        # Search all subdirs by basename as fallback
+                        if not _deleted:
+                            for _adir in _audio_sub_dirs:
+                                if not os.path.isdir(_adir):
+                                    continue
+                                _candidate = os.path.join(_adir, _abase)
+                                if os.path.isfile(_candidate):
                                     try:
-                                        os.remove(_apath)
-                                        logger.info(f"🗑️ Deleted extracted audio: {_apath}")
-                                    except Exception as _ae:
-                                        logger.warning(f"⚠️ Could not delete audio {_apath}: {_ae}")
+                                        os.remove(_candidate)
+                                        logger.info(f"🗑️ Deleted extracted audio (by name): {_candidate}")
+                                    except Exception as _ae2:
+                                        logger.warning(f"⚠️ Could not delete audio {_candidate}: {_ae2}")
+
+                    if not _audio_paths_to_delete:
+                        logger.debug("[AUDIO_CLEANUP] No audio paths in session — skipping pool cleanup")
                 except Exception as _audio_err:
                     logger.warning(f"⚠️ Audio cleanup failed: {_audio_err}")
+
 
                 # ── DELETE SOURCE DOWNLOAD (downloads/) ──────────────────────
                 # The raw downloaded file is no longer needed once rejected.

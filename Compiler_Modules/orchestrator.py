@@ -1388,7 +1388,10 @@ def compile_video(
     # Self-selection guard: filenames extracted from THIS job are excluded.
     # This prevents the pipeline from using the video's own audio as its BGM.
     _current_job_filenames = {os.path.basename(p) for p in _all_clip_audios.values()}
-    
+    # [AUDIO_CLEANUP] Persist all extracted audio paths so the sidecar can track them for rejection cleanup
+    profile_data["_all_clip_audios_paths"] = list(_all_clip_audios.values())
+
+
     # [FIX] The original audio might have been extracted earlier (e.g. Banno.mp3) before
     # watermark removal renamed the working clip to watermark_clean.mp4. We must exclude
     # the original filenames and title to prevent selecting our own original audio as BGM.
@@ -5679,7 +5682,10 @@ def compile_video(
             # [TELEGRAM EXCLUSIVE] Path to the processed clip WITHOUT the first-shot intro.
             # Used by main.py to send the unfiltered breakdown to the Telegram group.
             "processed_only_path": profile_data.get("processed_only_path", ""),
-
+            # [AUDIO POOL] Track all audio files used/extracted so rejection can clean them
+            "bgm_audio_path": profile_data.get("bgm_audio_path", ""),
+            "extracted_audio_path": profile_data.get("extracted_audio_path", ""),
+            "all_extracted_audio": list(profile_data.get("_all_clip_audios_paths", [])),
         }
 
         with open(sidecar_path, "w", encoding="utf-8") as f:
