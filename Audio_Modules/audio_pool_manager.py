@@ -139,12 +139,35 @@ class AudioPoolManager:
                     continue
 
                 # ── MUSIC GATE: Never re-ingest voice-only files via boot-sync ──────────
-                # Files rejected by the Music Gate in downloader.py / orchestrator.py
-                # have is_speech_only=True written into pool_metadata.json.
-                # Without this check they would silently bypass the gate on every restart.
                 if meta and meta.get("is_speech_only", False):
                     logger.debug(f"[POOL_SYNC] Skipping voice-only file (speech gate flag): {filename}")
                     continue
+
+                # ── COOLDOWN GATE: Never move a file back to active if it's in cooldown ──
+                # This is the second layer of the repeat-audio fix. Even if the file
+                # ends up back in root (e.g. after a process restart), if it has a
+                # recent last_used timestamp it should stay off the active pool.
+                cooldown_path = os.path.join(self.cooldown_dir, filename)
+                if os.path.exists(cooldown_path):
+                    logger.debug(f"[POOL_SYNC] Skipping '{filename}' — already in cooldown/")
+                    # Remove the duplicate from root to avoid confusion
+                    try:
+                        os.remove(src)
+                    except Exception:
+                        pass
+                    continue
+
+                # ── METADATA COOLDOWN GATE: Check last_used even if file isn't in cooldown/ ──
+                # Covers the case where the cooldown/ file was already cleaned up by maintenance
+                # but the 48h window hasn't elapsed.
+                if meta and meta.get("last_used", 0) > 0:
+                    hours_since_used = (time.time() - meta["last_used"]) / 3600
+                    if hours_since_used < 48:
+                        logger.info(
+                            f"[POOL_SYNC] Skipping '{filename}' — used {hours_since_used:.1f}h ago "
+                            f"(cooldown window: 48h). Not re-adding to active pool."
+                        )
+                        continue
                 # ─────────────────────────────────────────────────────────────────────────
                 dst = os.path.join(self.active_dir, filename)
                 if os.path.exists(dst):
@@ -348,6 +371,23 @@ class AudioPoolManager:
 
         filename = os.path.basename(audio_path)
         dest_path = os.path.join(self.active_dir, filename)
+        cooldown_path = os.path.join(self.cooldown_dir, filename)
+
+        # ── COOLDOWN GUARD: If already in cooldown, do NOT move back to active ──
+        # This is the primary fix for the repeat-audio bug. A file that was recently
+        # used and moved to cooldown/ must stay there until maintenance() rotates it.
+        if os.path.exists(cooldown_path):
+            logger.info(
+                f"[POOL] '{filename}' is in cooldown — skipping re-activation. "
+                f"Metadata will be updated in-place."
+            )
+            # Still update BPM/energy if we have better data, but preserve usage history
+            existing_meta = self._get_file_metadata(filename)
+            if existing_meta:
+                existing_meta["bpm"] = bpm if bpm > 0 else existing_meta.get("bpm", 0.0)
+                existing_meta["energy"] = energy if energy > 0 else existing_meta.get("energy", 0.5)
+                self._save_metadata()
+            return
 
         try:
             # Move to active pool
@@ -373,13 +413,20 @@ class AudioPoolManager:
                 self._safe_save_npz(npz_path, times=times, energies=energies)
                 rel_npz_path = os.path.join("beats", npz_filename)
 
+            # ── PRESERVE existing usage_count and last_used — NEVER reset to 0 ──
+            # Resetting to 0 was the original bug: it erased cooldown history on
+            # re-extraction, making the same track eligible immediately.
+            existing_meta = self._get_file_metadata(filename)
+            preserved_usage_count = existing_meta.get("usage_count", 0) if existing_meta else 0
+            preserved_last_used   = existing_meta.get("last_used",   0) if existing_meta else 0
+
             # Initialize metadata
             self._set_file_metadata(filename, {
-                "usage_count": 0,
-                "last_used": 0,
+                "usage_count": preserved_usage_count,
+                "last_used": preserved_last_used,
                 "bpm": bpm,
                 "energy": energy,
-                "created_at": time.time(),
+                "created_at": existing_meta.get("created_at", time.time()) if existing_meta else time.time(),
                 "beat_data_path": rel_npz_path,
                 "drop_times": drop_times,
                 "sample_rate": 44100,
@@ -387,7 +434,7 @@ class AudioPoolManager:
                 "version": self.CURRENT_VERSION
             })
             self._save_metadata()
-            logger.info(f"🎵 [V{self.CURRENT_VERSION}] Processed: {filename} ({len(drop_times)} drops cached)")
+            logger.info(f"🎵 [V{self.CURRENT_VERSION}] Processed: {filename} (usage_count kept={preserved_usage_count}, {len(drop_times)} drops cached)")
 
             # ── Gemini background enrichment (daemon, never blocks) ──────────
             # Runs only if ENABLE_POOL_GEMINI_ENRICH=yes. Analyzes the track
@@ -544,6 +591,10 @@ class AudioPoolManager:
             self._save_metadata()
 
         # Selection & Cooldown Shift
+        # IMPORTANT: Return the src (active/) path BEFORE the move so callers
+        # always get a valid, existing file path to pass to ffmpeg.
+        # The move to cooldown happens after — the caller's reference is still valid
+        # because ffmpeg will have already opened/read the file by then.
         try:
             from shutil import move as _move
             _move(src, dst)
@@ -553,6 +604,8 @@ class AudioPoolManager:
             )
         except Exception as e:
             logger.warning(f"⚠️ [POOL] Could not move to cooldown (non-fatal): {e}")
+            # If move failed, the file is still in active/ — return src path
+            return os.path.abspath(src)
 
         return os.path.abspath(dst)
 
