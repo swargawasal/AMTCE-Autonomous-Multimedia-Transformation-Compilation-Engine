@@ -17,18 +17,9 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v4
-
-    # ── Restore publish_queue.json between runs (state persistence) ──────────
-    # Without this, the queue resets every 6 hours and posts are lost.
-    - name: Restore Publish Queue State
-      uses: actions/cache@v4
       with:
-        path: |
-          The_json/publish_queue.json
-          Actress_Modules/actress_ledger.json
-        key: amtce-state-${{ github.run_id }}
-        restore-keys: |
-          amtce-state-
+        fetch-depth: 0   # Full history so git push works cleanly
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -92,12 +83,24 @@ jobs:
       run: |
         python main.py
 
-    # ── Save updated queue/ledger after run (so next 6hr run picks up) ───────
-    - name: Save Publish Queue State
+    # ── Persist ledger + queue to git after every run (the ONLY reliable method) ──
+    # actions/cache is NOT reliable here because its key changes each run.
+    # Committing directly to the repo guarantees the next run always sees
+    # the updated dedup state, preventing repeated uploads of the same clip.
+    - name: Commit Dedup State to Git
       if: always()   # Save even if the run partially fails
-      uses: actions/cache@v4
-      with:
-        path: |
-          The_json/publish_queue.json
-          Actress_Modules/actress_ledger.json
-        key: amtce-state-${{ github.run_id }}
+      run: |
+        git config user.name  "AMTCE Bot"
+        git config user.email "amtce-bot@users.noreply.github.com"
+        # Stage only the dedup state files (never credentials or videos)
+        git add -f Actress_Modules/actress_ledger.json || true
+        git add -f Actress_Modules/published_registry.json || true
+        git add -f publish_queue.json || true
+        # Only commit if there's something changed
+        if git diff --cached --quiet; then
+          echo "No dedup state changes to commit."
+        else
+          git commit -m "ci: update dedup ledger + publish queue [skip ci]"
+          git push origin HEAD
+          echo "Dedup state committed and pushed."
+        fi

@@ -302,9 +302,10 @@ class SmartPriceTag:
         if not os.path.exists(self.font_path):
             self.font_path = "arial.ttf"
 
-    def _draw_glass_box(self, draw, x, y, w, h, radius=15):
-        """Draws a premium glass-morphism background."""
-        draw.rounded_rectangle([x, y, x+w, y+h], radius=radius, fill=(20, 20, 20, 220))
+    def _draw_glass_box(self, draw, x, y, w, h, radius=15, is_patch=False):
+        """Draws a premium glass-morphism background. If is_patch, make it fully opaque."""
+        bg_fill = (20, 20, 20, 255) if is_patch else (20, 20, 20, 220)
+        draw.rounded_rectangle([x, y, x+w, y+h], radius=radius, fill=bg_fill)
         draw.rounded_rectangle([x, y, x+w, y+h], radius=radius, outline=(255, 255, 255, 40), width=1)
 
     def _draw_strikethrough(self, draw, x, y, w, color=(180, 180, 180, 200)):
@@ -542,9 +543,13 @@ class SmartPriceTag:
             savw, savh = _tw(line_saving,  font_saving)
             uw, uh     = _tw(line_urgency, font_urgency)
 
-            box_w = max(lw, sw, pw, savw, uw) + (padding_x * 2)
-            box_h = (lh + sh + ph + savh + uh
-                     + (line_gap * 4) + (padding_y * 2))
+            text_block_w = max(lw, sw, pw, savw, uw)
+            text_block_h = (lh + sh + ph + savh + uh + (line_gap * 4))
+
+            box_w = text_block_w + (padding_x * 2)
+            box_h = text_block_h + (padding_y * 2)
+            
+            is_patch = False
 
             # ── BOX PLACEMENT ────────────────────────────────────────────────
             # Move slightly inwards from the absolute edge to look more premium
@@ -627,6 +632,12 @@ class SmartPriceTag:
             # Center the price tag directly over the watermark bounding box.
             if watermark_bbox and len(watermark_bbox) == 4:
                 _wx, _wy, _ww, _wh = watermark_bbox
+                
+                # FORCE price tag dimensions to completely cover the watermark
+                box_w = max(box_w, _ww + 20)
+                box_h = max(box_h, _wh + 20)
+                is_patch = True
+                
                 _wm_center_x = _wx + _ww / 2
                 _wm_center_y = _wy + _wh / 2
                 
@@ -641,7 +652,7 @@ class SmartPriceTag:
 
                 logger.info(
                     f"🏷️ [PRICE_TAG_WM_ANCHOR] Positioned directly over watermark patch "
-                    f"(Center: x={int(_wm_center_x)}, y={int(_wm_center_y)}) to hide it."
+                    f"(Center: x={int(_wm_center_x)}, y={int(_wm_center_y)}, w={box_w}, h={box_h}) to hide it."
                 )
 
             else:
@@ -675,11 +686,11 @@ class SmartPriceTag:
                 draw.line([(line_start_x, target_y - cross), (line_start_x, target_y + cross)], fill=(255, 0, 0, 180), width=2)
 
             # Glass box
-            self._draw_glass_box(draw, box_x, box_y, box_w, box_h)
+            self._draw_glass_box(draw, box_x, box_y, box_w, box_h, is_patch=is_patch)
 
-            # Draw text lines
-            tx = box_x + padding_x
-            ty = box_y + padding_y
+            # Center text block within the potentially expanded glass box
+            tx = box_x + (box_w - text_block_w) // 2
+            ty = box_y + (box_h - text_block_h) // 2
 
             # 1. Item label — white, small
             draw.text((tx, ty), line_label, font=font_label, fill=(255, 255, 255, 200))

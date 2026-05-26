@@ -9,8 +9,15 @@ from datetime import datetime, timedelta, timezone
 
 logger = logging.getLogger(__name__)
 
-PUBLISH_QUEUE_FILE = "publish_queue.json"
+# Anchor all state files to the REPO ROOT (one directory above this file).
+# This is critical for GitHub Actions where the CWD is the checkout root
+# but os.getcwd() can vary across steps. Using __file__-relative paths
+# ensures the same file is always read/written regardless of CWD.
+_REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PUBLISH_QUEUE_FILE    = os.path.join(_REPO_ROOT, "publish_queue.json")
+_PUBLISHED_REGISTRY   = os.path.join(_REPO_ROOT, "Actress_Modules", "published_registry.json")
 PROCESS_LEAD_TIME_MINUTES = int(os.getenv("PROCESS_LEAD_TIME_MINUTES", "6"))
+
 
 # ── Salesman State (publisher deficit + catch-up tracking) ────────────────
 try:
@@ -67,11 +74,11 @@ class PublishQueue:
             queue = cls.load()
             
             # Check published registry to prevent re-queuing
-            published = []
-            if os.path.exists("published_registry.json"):
+            published = set()
+            if os.path.exists(_PUBLISHED_REGISTRY):
                 try:
-                    with open("published_registry.json", "r", encoding="utf-8") as f:
-                        published = json.load(f)
+                    with open(_PUBLISHED_REGISTRY, "r", encoding="utf-8") as f:
+                        published = set(json.load(f))
                 except Exception:
                     pass
             
@@ -99,18 +106,18 @@ class PublishQueue:
             cls.save(queue)
             
             # Add to published registry
-            published = []
-            if os.path.exists("published_registry.json"):
+            published = set()
+            if os.path.exists(_PUBLISHED_REGISTRY):
                 try:
-                    with open("published_registry.json", "r", encoding="utf-8") as f:
-                        published = json.load(f)
+                    with open(_PUBLISHED_REGISTRY, "r", encoding="utf-8") as f:
+                        published = set(json.load(f))
                 except Exception:
                     pass
                     
             if item["video_path"] not in published:
-                published.append(item["video_path"])
-                with open("published_registry.json", "w", encoding="utf-8") as f:
-                    json.dump(published, f, indent=2)
+                published.add(item["video_path"])
+                with open(_PUBLISHED_REGISTRY, "w", encoding="utf-8") as f:
+                    json.dump(sorted(published), f, indent=2)
                     
             return item
 
