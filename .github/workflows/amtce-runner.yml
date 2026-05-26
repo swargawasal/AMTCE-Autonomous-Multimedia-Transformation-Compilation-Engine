@@ -97,7 +97,7 @@ jobs:
         git add -f Actress_Modules/published_registry.json || true
         git add -f Actress_Modules/apify_cursor.json || true
         git add -f publish_queue.json || true
-        git add -f Core_Modules/salesman_state.json || true
+        git add -f Intelligence_Data/salesman_state.json || true
         # Only commit if there's something changed
         if git diff --cached --quiet; then
           echo "No dedup state changes to commit."
