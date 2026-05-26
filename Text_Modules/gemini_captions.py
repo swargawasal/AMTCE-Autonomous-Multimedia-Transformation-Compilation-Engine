@@ -514,7 +514,8 @@ class GeminiCaptionGenerator:
             "Generate a CATCHY and LAW-BENDING YouTube title (max 60 characters) for this video. "
             "Target high search intent by using professional synonyms for suggestive terms. "
             "Make it clickable, engaging, and optimized for YouTube algorithm. "
-            "Use capitalization strategically. Be creative!"
+            "Use capitalization strategically. Be creative!\n"
+            "CRITICAL: OUTPUT ONLY THE TITLE ITSELF. DO NOT include any conversational text like 'Here is a title:' or 'Title:'."
         )
         try:
             with Image.open(image_path) as img:
@@ -544,7 +545,7 @@ class GeminiCaptionGenerator:
             "\nFORMAT RULES (STRICT):\n"
             f"{name_rule}"
             f"2. NUMBER RULE: {'You MUST include the number ' + num_str.strip() + ' in the title.' if num_str else 'Do NOT include any numbers like 11 or 12 in the title.'}\n"
-            "Max 60 characters. RETURN ONLY THE TITLE TEXT."
+            "Max 60 characters. CRITICAL: OUTPUT ONLY THE TITLE ITSELF. DO NOT include any conversational text like 'Here is a title:' or 'Title:'."
         )
         try:
             import time

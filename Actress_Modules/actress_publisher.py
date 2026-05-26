@@ -65,6 +65,20 @@ class PublishQueue:
     def add(cls, video_path: str, actress_title: str, actress_folder: str):
         with cls._lock:
             queue = cls.load()
+            
+            # Check published registry to prevent re-queuing
+            published = []
+            if os.path.exists("published_registry.json"):
+                try:
+                    with open("published_registry.json", "r", encoding="utf-8") as f:
+                        published = json.load(f)
+                except Exception:
+                    pass
+            
+            if video_path in published:
+                logger.info(f"⏭️ Skipping already published clip: {os.path.basename(video_path)}")
+                return
+                
             if not any(q["video_path"] == video_path for q in queue):
                 queue.append({
                     "video_path": video_path,
@@ -83,6 +97,21 @@ class PublishQueue:
                 return None
             item = queue.pop(0)
             cls.save(queue)
+            
+            # Add to published registry
+            published = []
+            if os.path.exists("published_registry.json"):
+                try:
+                    with open("published_registry.json", "r", encoding="utf-8") as f:
+                        published = json.load(f)
+                except Exception:
+                    pass
+                    
+            if item["video_path"] not in published:
+                published.append(item["video_path"])
+                with open("published_registry.json", "w", encoding="utf-8") as f:
+                    json.dump(published, f, indent=2)
+                    
             return item
 
 
