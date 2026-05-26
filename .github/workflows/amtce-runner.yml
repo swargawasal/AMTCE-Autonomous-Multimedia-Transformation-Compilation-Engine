@@ -72,6 +72,10 @@ jobs:
           mkdir -p Credentials/social_media/NSFW
           echo "${{ secrets.TOKEN_JSON_ADULT }}" > Credentials/social_media/NSFW/token.json
         fi
+        if [ -n "${{ secrets.CLIENT_SECRET_JSON_ADULT }}" ]; then
+          mkdir -p Credentials/social_media/NSFW
+          echo "${{ secrets.CLIENT_SECRET_JSON_ADULT }}" > Credentials/social_media/NSFW/client_secret.json
+        fi
         # Inject telegram_config.json if configured
         if [ -n "${{ secrets.TELEGRAM_CONFIG_JSON }}" ]; then
           echo "${{ secrets.TELEGRAM_CONFIG_JSON }}" > Credentials/telegram_config.json
