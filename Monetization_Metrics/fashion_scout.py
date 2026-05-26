@@ -213,13 +213,35 @@ TECHNIQUE 8 — CONTENT INTENT READING [CRITICAL FOR ACCURACY]:
   ✗ A garment that appears in only 1 out of 4 frames (random, not featured)
   ✗ Garments that are partially hidden by hands, bags, or other objects
   ✗ Garments visible only in transition/movement frames (blurred, mid-spin)
+  ✗ PROPS, STAGE DRESSING, AND SET PIECES — a garment draped on a pole, hanging from
+    a hook, spread on the floor, pinned to a wall, or used as a performance prop is NOT
+    being worn. Screen presence / visual size is IRRELEVANT — if it is not on a human body
+    it is a PROP, not fashion. Place it in ignored_items immediately.
+    Examples of PROPS to ignore:
+    → A saree draped around a pole, chair, or stage set
+    → A dupatta pinned to a backdrop
+    → A lehenga hanging as a curtain or wall piece
+    → Any garment lying flat on a surface or tied to an object
+  ✗ Garments with MORE SCREEN AREA than the primary subject themselves — this almost always
+    means it is a background element or prop, not worn clothing.
+
+  WORN-ON-BODY PRE-CHECK [MANDATORY — RUN BEFORE ANY DIMENSION SCORING]:
+  For EVERY candidate garment ask ONE question:
+  "Is this garment physically ON the primary subject's body — covering their torso, legs,
+   or arms — right now in this frame?"
+  → YES → eligible for scoring
+  → NO (draped on furniture, wrapped around a pole/prop, held in hand, lying on floor,
+         worn by a background person, or covering only an object)
+         → ABSOLUTE REJECTION. Place in ignored_items immediately. DO NOT SCORE IT.
+         Even if it takes up 90% of the screen, if it's not on a human, it's a PROP.
 
   FOREGROUND SUBJECT IDENTIFICATION — DO THIS FIRST:
   Before scoring any garment, identify the PRIMARY SUBJECT:
   → The PRIMARY SUBJECT is the person who is: CLOSEST to camera + LARGEST in frame
     + in SHARPEST FOCUS. This is always the content creator / model being filmed.
-  → ONLY score garments worn by the PRIMARY SUBJECT.
+  → ONLY score garments PHYSICALLY WORN ON the PRIMARY SUBJECT's body.
   → All other people in the frame are background — ignore their clothing entirely.
+  → Garments not worn by anyone (props, set pieces, hanging clothes) are IGNORED.
  
 ════════════════════════════════════════════════════════════════
 PHASE 1 — HERO GARMENT IDENTIFICATION [MANDATORY]
@@ -230,26 +252,33 @@ closest to camera, largest in frame, sharpest focus). Background people and thei
 clothing are INVISIBLE for scoring purposes — exclude them completely before
 you score a single dimension.
  
-SCORE EACH CANDIDATE GARMENT on these 5 dimensions (1–5 each), pick the HIGHEST total:
- 
+SCORE EACH CANDIDATE GARMENT on these 6 dimensions, but ONLY after the WORN-ON-BODY
+PRE-CHECK passes. Any garment that fails the pre-check scores 0 on ALL dimensions:
+
   DIMENSION 1 — FRAME CONSISTENCY (most important, max 5 pts):
     5 pts → Garment visible in ALL frames (4/4 or 3/3)
     4 pts → Visible in majority of frames (3/4)
     3 pts → Visible in half the frames (2/4)
     1 pt  → Visible in only 1 frame out of many (random/incidental)
- 
+
   DIMENSION 2 — CREATOR INTENT (max 5 pts):
     5 pts → Subject poses to clearly display the garment; full-body front-facing reveal
     4 pts → Clear styling effort on this item; it is pressed/fitted/coordinated
     3 pts → Garment is visible but no special posing toward it
     1 pt  → Garment appears incidental; not emphasised by subject
- 
-  DIMENSION 3 — VISUAL PROMINENCE (max 5 pts):
-    5 pts → Garment occupies the largest surface area in the frame AND is in sharp focus
-    4 pts → Largest area OR sharpest focus (not both)
-    3 pts → Visible but not the dominant visual element
-    1 pt  → Background element or partially occluded
- 
+
+  DIMENSION 3 — VISUAL PROMINENCE ON SUBJECT'S BODY (max 5 pts):
+  CRITICAL: This dimension measures how much of the PRIMARY SUBJECT's body the garment
+  covers — NOT how much of the total frame it fills. A saree draped across a stage
+  set filling 80% of frame scores 0 here because it is not on the subject's body.
+  A dress covering the subject's full torso and legs scores 5 even if the subject
+  is not taking up the entire frame.
+    5 pts → Garment covers MOST of the primary subject's visible body (full dress /
+            maxi / lehenga covering torso + full legs) AND is in sharp focus
+    4 pts → Covers upper OR lower body well (top + trousers, or midi skirt)
+    3 pts → Covers a meaningful portion (crop top, shorts — partial coverage)
+    1 pt  → Barely visible on subject's body / mostly occluded
+
   DIMENSION 4 — CAMERA QUALITY (max 5 pts):
     5 pts → Garment is centred, well-lit, sharp focus, complete view (neck to hem)
     4 pts → Well-lit and sharp but not complete view
@@ -285,9 +314,10 @@ SCORE EACH CANDIDATE GARMENT on these 5 dimensions (1–5 each), pick the HIGHES
   Example: Foreground subject in black sparkle top + jeans vs background women in
   purple sarees → The jeans+top is scored. The purple sarees are IGNORED.
 
-DOMINANCE RULE:
+DOMINANCE RULE & TIE-BREAKERS:
   The garment with the HIGHEST total score across all 6 dimensions = hero garment.
-  In a tie: prefer the garment with the higher Frame Consistency score.
+  CRITICAL: If a garment is NOT physically worn on a person's body (e.g. a pole drape, a curtain), its score is exactly 0 and it CANNOT be the hero garment under any circumstances.
+  In a tie between worn garments: prefer the garment with the higher Frame Consistency score.
   If still tied: prefer the garment with higher Visual Attractiveness (Dimension 6) score.
   If still tied: prefer the UPPER-BODY garment (dress / top / blouse > trousers).
  
