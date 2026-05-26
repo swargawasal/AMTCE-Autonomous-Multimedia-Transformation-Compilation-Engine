@@ -621,34 +621,27 @@ class SmartPriceTag:
             # Hard frame boundary clamp
             box_y = max(face_floor, min(height - box_h - SAFE_Y, box_y))
 
-            # ── WATERMARK CORNER ANCHOR ──────────────────────────────────────────────────
-            # When Gemini detected a watermark, its bounding box marks a SCREEN CORNER that
-            # is guaranteed to be away from the actress's face (corners = branding zones).
-            # Snap the price tag to that same corner — no face avoidance code needed.
+            # ── WATERMARK OVERLAY / PATCH COVER ──────────────────────────────────────────
+            # When Gemini detected a watermark, its bounding box marks the exact patched area.
+            # We must position the price tag to exactly COVER this area to hide the blur/patch.
+            # Center the price tag directly over the watermark bounding box.
             if watermark_bbox and len(watermark_bbox) == 4:
                 _wx, _wy, _ww, _wh = watermark_bbox
-                # Determine which corner the watermark was in
                 _wm_center_x = _wx + _ww / 2
                 _wm_center_y = _wy + _wh / 2
-                _is_left  = _wm_center_x < width  / 2
-                _is_top   = _wm_center_y < height / 2
-                SAFE_X = max(18, int(width * 0.04))
-                SAFE_Y_EDGE = max(20, int(height * 0.03))
-
-                if _is_left:
-                    box_x = SAFE_X
-                else:
-                    box_x = width - box_w - SAFE_X
-
-                if _is_top:
-                    box_y = SAFE_Y_EDGE
-                else:
-                    box_y = height - box_h - SAFE_Y_EDGE
+                
+                # Center the price tag exactly over the watermark's center
+                box_x = int(_wm_center_x - box_w / 2)
+                box_y = int(_wm_center_y - box_h / 2)
+                
+                # Ensure we don't bleed off the screen, but try to stay as close to the patch as possible
+                SAFE_EDGE = 10
+                box_x = max(SAFE_EDGE, min(width - box_w - SAFE_EDGE, box_x))
+                box_y = max(SAFE_EDGE, min(height - box_h - SAFE_EDGE, box_y))
 
                 logger.info(
-                    f"🏷️ [PRICE_TAG_WM_ANCHOR] Snapped to watermark corner: "
-                    f"{'left' if _is_left else 'right'}-{'top' if _is_top else 'bottom'} "
-                    f"box=({box_x},{box_y},{box_w},{box_h})"
+                    f"🏷️ [PRICE_TAG_WM_ANCHOR] Positioned directly over watermark patch "
+                    f"(Center: x={int(_wm_center_x)}, y={int(_wm_center_y)}) to hide it."
                 )
 
             else:
