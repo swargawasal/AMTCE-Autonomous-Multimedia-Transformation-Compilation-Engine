@@ -5569,8 +5569,6 @@ async def _handle_influencer_refine(
     with get_session_lock(user_id):
         _session      = user_sessions.get(user_id, {})
         _video_path   = _session.get("final_path") or _session.get("pending_video")
-        _profile_data = _session.get("profile_data", {})
-        _mon_report   = _session.get("monetization_report", {})
 
     if not _video_path or not os.path.isfile(_video_path):
         try:
@@ -5609,66 +5607,26 @@ async def _handle_influencer_refine(
         await safe_reply(update, "\n".join(_lines))
         return
 
-    # ── Run face swap (blocking — offloaded to thread) ────────────────────────
+    # ── Ask the user to send their face image ─────────────────────────────────
     try:
-        await query.answer("Starting face swap...")
+        await query.answer("Video eligible! Please send your face photo.")
     except Exception:
         pass
+
+    with acquire_session_lock(user_id):
+        user_sessions[user_id]["state"]           = "WAITING_FOR_FACE_IMAGE"
+        user_sessions[user_id]["face_swap_video"]  = _video_path
+        user_sessions[user_id]["face_swap_score"]  = _score
+        save_session(user_id)
+
     await safe_reply(
         update,
-        f"Video passed eligibility (score {_score:.2f}). Face swapping...\n"
-        "This may take 3-10 minutes depending on GPU.",
+        f"✅ Video passed eligibility (score {_score:.2f}).\n\n"
+        "📸 *Now send me the face photo you want to swap in.*\n"
+        "• Send a clear front-facing photo (JPG or PNG)\n"
+        "• One face in the photo works best\n"
+        "• Higher resolution = better result",
     )
-
-    try:
-        from Influencer_Modules.refinement_pipeline import run_face_refinement as _run_refinement
-        _result = await _asyncio.to_thread(_run_refinement, _video_path, _profile_data)
-    except Exception as _rfr_err:
-        await safe_reply(update, f"Face swap error: {_rfr_err}")
-        logger.error(f"[INFLUENCER_REFINE] Pipeline error: {_rfr_err}", exc_info=True)
-        return
-
-    if not _result.get("success"):
-        await safe_reply(update, f"Face swap failed: {_result.get('message', 'unknown error')}")
-        return
-
-    _swapped   = _result["swapped_path"]
-    _niche     = _result.get("niche", "face_refinement")
-    _portrait  = _result.get("portrait_path")
-    logger.info(f"[INFLUENCER_REFINE] Swap done: {os.path.basename(_swapped)} niche={_niche}")
-    await safe_reply(update, f"Face swap complete! Uploading to influencer account ({_niche})...")
-
-    # ── Upload to face_refinement IG account ──────────────────────────────────
-    try:
-        import Uploader_Modules.meta_uploader as _meta_mod
-        _caption = _mon_report.get("final_caption") or _mon_report.get("caption") or ""
-        _upload_type = os.getenv("META_UPLOAD_TYPE", "Reels")
-        _ig_result = await _meta_mod.AsyncMetaUploader.upload_to_meta(
-            _swapped,
-            _caption,
-            upload_type=_upload_type,
-            skip_facebook=True,
-            thumbnail_path=_portrait,
-            niche=_niche,
-        )
-        _ig = _ig_result.get("instagram", {}) if isinstance(_ig_result, dict) else {}
-        _ig_status = _ig.get("status", "unknown") if isinstance(_ig, dict) else str(_ig)
-        _ig_link   = _ig.get("link", "")          if isinstance(_ig, dict) else ""
-        if _ig_status == "success":
-            _msg = f"Face-swapped post is live!{chr(10)}{_ig_link}" if _ig_link else "Face-swapped post is live!"
-        else:
-            _msg = (
-                f"Upload status: {_ig_status}.\n"
-                "Check face_refinement/meta_config.json credentials."
-            )
-        await safe_reply(update, _msg)
-    except Exception as _up_err:
-        await safe_reply(
-            update,
-            f"Upload error (swap file saved locally): {_up_err}\n"
-            f"Swapped video: {_swapped}",
-        )
-        logger.error(f"[INFLUENCER_REFINE] Upload error: {_up_err}", exc_info=True)
 
 
 async def _handle_autonomous_story(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -7625,6 +7583,158 @@ async def cmd_bid(update: Update, context: ContextTypes.DEFAULT_TYPE):
         logger.error(f"❌ Auction Bid Error: {e}")
         await safe_reply(update, "⚠️ Auction system is busy. Please try again in a few seconds.")
 
+async def _execute_face_swap_pipeline(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    user_id: int,
+    video_path: str,
+    face_image_path: str,
+    profile_data: dict,
+    mon_report: dict,
+) -> None:
+    """
+    Internal helper: runs eligibility-check-passed face swap + upload.
+    Called from handle_face_swap_photo after the face image is received.
+    """
+    import asyncio as _asyncio
+
+    await safe_reply(
+        update,
+        "🎭 Face swapping in progress... This may take 3-10 minutes depending on GPU.",
+    )
+
+    try:
+        from Influencer_Modules.refinement_pipeline import run_face_refinement as _run_refinement
+        # Temporarily override the env-based face image path with the user-supplied one
+        _orig_env = os.environ.get("INFLUENCER_FACE_IMAGE", "")
+        os.environ["INFLUENCER_FACE_IMAGE"] = face_image_path
+        try:
+            _result = await _asyncio.to_thread(_run_refinement, video_path, profile_data)
+        finally:
+            # Restore original env value regardless of outcome
+            os.environ["INFLUENCER_FACE_IMAGE"] = _orig_env
+    except Exception as _rfr_err:
+        await safe_reply(update, f"Face swap error: {_rfr_err}")
+        logger.error(f"[INFLUENCER_REFINE] Pipeline error: {_rfr_err}", exc_info=True)
+        return
+
+    if not _result.get("success"):
+        await safe_reply(update, f"Face swap failed: {_result.get('message', 'unknown error')}")
+        return
+
+    _swapped  = _result["swapped_path"]
+    _niche    = _result.get("niche", "face_refinement")
+    _portrait = _result.get("portrait_path")
+    logger.info(f"[INFLUENCER_REFINE] Swap done: {os.path.basename(_swapped)} niche={_niche}")
+    await safe_reply(update, f"✅ Face swap complete! Uploading to influencer account ({_niche})...")
+
+    # ── Upload to face_refinement IG account ──────────────────────────────────
+    try:
+        import Uploader_Modules.meta_uploader as _meta_mod
+        _caption     = mon_report.get("final_caption") or mon_report.get("caption") or ""
+        _upload_type = os.getenv("META_UPLOAD_TYPE", "Reels")
+        _ig_result   = await _meta_mod.AsyncMetaUploader.upload_to_meta(
+            _swapped,
+            _caption,
+            upload_type=_upload_type,
+            skip_facebook=True,
+            thumbnail_path=_portrait,
+            niche=_niche,
+        )
+        _ig        = _ig_result.get("instagram", {}) if isinstance(_ig_result, dict) else {}
+        _ig_status = _ig.get("status", "unknown") if isinstance(_ig, dict) else str(_ig)
+        _ig_link   = _ig.get("link", "")           if isinstance(_ig, dict) else ""
+        if _ig_status == "success":
+            _msg = f"Face-swapped post is live!\n{_ig_link}" if _ig_link else "Face-swapped post is live!"
+        else:
+            _msg = (
+                f"Upload status: {_ig_status}.\n"
+                "Check face_refinement/meta_config.json credentials."
+            )
+        await safe_reply(update, _msg)
+    except Exception as _up_err:
+        await safe_reply(
+            update,
+            f"Upload error (swap file saved locally): {_up_err}\n"
+            f"Swapped video: {_swapped}",
+        )
+        logger.error(f"[INFLUENCER_REFINE] Upload error: {_up_err}", exc_info=True)
+
+
+async def handle_face_swap_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Photo handler for the WAITING_FOR_FACE_IMAGE state.
+    Downloads the user's face photo, stores it, then kicks off the swap pipeline.
+    Routes to handle_auction_screenshot for all other photo messages.
+    """
+    user_id = update.effective_user.id if update.effective_user else None
+    if not user_id:
+        return
+
+    with get_session_lock(user_id):
+        _state = user_sessions.get(user_id, {}).get("state", "")
+
+    # If NOT waiting for a face image, fall through to the auction screenshot handler
+    if _state != "WAITING_FOR_FACE_IMAGE":
+        await handle_auction_screenshot(update, context)
+        return
+
+    if not update.message or not update.message.photo:
+        await safe_reply(update, "❌ No photo detected. Please send a face photo (JPG/PNG).")
+        return
+
+    # ── Download the face photo ───────────────────────────────────────────────
+    os.makedirs("temp", exist_ok=True)
+    _photo_file = await update.message.photo[-1].get_file()  # largest size
+    _face_save_path = os.path.join(
+        "temp", f"face_swap_input_{user_id}_{int(time.time())}.jpg"
+    )
+    try:
+        await _photo_file.download_to_drive(_face_save_path)
+    except Exception as _dl_err:
+        await safe_reply(update, f"❌ Failed to download your photo: {_dl_err}")
+        logger.error(f"[FACE_SWAP_PHOTO] Download error for user {user_id}: {_dl_err}")
+        return
+
+    if not os.path.isfile(_face_save_path) or os.path.getsize(_face_save_path) == 0:
+        await safe_reply(update, "❌ Photo download resulted in an empty file. Please try again.")
+        return
+
+    logger.info(
+        f"[FACE_SWAP_PHOTO] Face image received from user {user_id}: {_face_save_path} "
+        f"({os.path.getsize(_face_save_path) / 1024:.1f} KB)"
+    )
+    await safe_reply(update, "📥 Face photo received! Starting face swap pipeline...")
+
+    # ── Pull stored session data & reset state ────────────────────────────────
+    with acquire_session_lock(user_id):
+        _sess         = user_sessions.get(user_id, {})
+        _video_path   = _sess.get("face_swap_video", "")
+        _profile_data = _sess.get("profile_data", {})
+        _mon_report   = _sess.get("monetization_report", {})
+        # Clear the waiting state so the user can send other messages
+        user_sessions[user_id]["state"] = _sess.get("_pre_faceswap_state", "IDLE")
+        user_sessions[user_id].pop("face_swap_video", None)
+        user_sessions[user_id].pop("face_swap_score", None)
+        save_session(user_id)
+
+    if not _video_path or not os.path.isfile(_video_path):
+        await safe_reply(
+            update,
+            "❌ Session video is no longer available. Please process a new video and try face swap again.",
+        )
+        return
+
+    # ── Execute the swap pipeline ─────────────────────────────────────────────
+    await _execute_face_swap_pipeline(
+        update, context, user_id,
+        video_path=_video_path,
+        face_image_path=_face_save_path,
+        profile_data=_profile_data,
+        mon_report=_mon_report,
+    )
+
+
 async def handle_auction_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.photo: return
     try:
@@ -7819,7 +7929,9 @@ def main():
     app.add_handler(CommandHandler("confirm", cmd_confirm))
     app.add_handler(CommandHandler("auction_start", cmd_auction_start))
     app.add_handler(CommandHandler("auction_stop", cmd_auction_stop))
-    app.add_handler(MessageHandler(filters.PHOTO, handle_auction_screenshot))
+    # Face-swap photo handler must come FIRST so it intercepts WAITING_FOR_FACE_IMAGE
+    # state before the auction screenshot handler can claim the photo.
+    app.add_handler(MessageHandler(filters.PHOTO, handle_face_swap_photo))
 
     # Direct Video Upload Handler
     app.add_handler(

@@ -41,6 +41,11 @@ jobs:
         sudo apt-get update -qq
         sudo apt-get install -y ffmpeg
 
+    - name: Install PyTorch (CPU-only)
+      run: |
+        # GitHub runners have no GPU — install the slim CPU wheel (~200 MB vs ~2 GB CUDA build)
+        pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cpu
+
     - name: Install Python Dependencies
       run: |
         python -m pip install --upgrade pip
