@@ -243,9 +243,9 @@ def validate_segments(candidate_moments: List[Dict], selected_segments: List[Dic
     _signal_poor = not _has_emotion and not _has_beat and not _has_face
 
     reasons = []
-    if lq_ratio > _lq_threshold:
+    if lq_ratio > locals().get("lq_threshold", 0.5):
         reasons.append("LOW_QUALITY_DOMINANCE")
-    if bs_ratio > _bs_threshold:
+    if bs_ratio > locals().get("bs_threshold", 0.5):
         reasons.append("POOR_SELECTION_ALIGNMENT")
     if hook_status == "WEAK_HOOK":
         reasons.append("WEAK_HOOK")

@@ -173,7 +173,6 @@ def check_health() -> dict:
     Master Health Gate with 5s Caching.
     Returns structured dict with final verdict.
     """
-    global _health_cache
     now = time.time()
     if _health_cache["verdict"] and (now - _health_cache["last_check"] < HEALTH_CACHE_TTL):
         return _health_cache["verdict"]

@@ -12,6 +12,9 @@ When to run:
 
 import httpx
 import os
+import sys
+import sys
+import sys
 import time
 import asyncio
 from dotenv import load_dotenv

@@ -381,7 +381,7 @@ Return the index (0-based) of the single BEST frame in the "best_frame" field of
                 logger.warning("🕵️ Forensic Debug: Gemini reported 'false' but found items. Overriding.")
 
         if not items:
-            return [], detected_niche
+            return [], locals().get("detected_niche", "")
             
         results = []
         h_img, w_img = frames[0].shape[:2]

@@ -19,7 +19,7 @@ import logging
 import os
 import re
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Any, Any, Any, Dict, List, Optional
 
 import google.generativeai as genai  # noqa: F401  (side-effect: SDK init)
 from PIL import Image

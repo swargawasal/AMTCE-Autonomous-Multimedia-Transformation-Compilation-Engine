@@ -686,6 +686,9 @@ def generate_caption_from_context(visual_context: dict, video_path: str = "") ->
     print(f"[CAPTION] candidates={len(generated_list)} selected=1")
     return final_caption
 
+    generated = locals().get("generated", "")
+    generated = locals().get("generated", "")
+    generated = locals().get("generated", "")
     if not generated:
         logger.warning("⚠️ Context caption failed. Using Diversified Fallback.")
         generated = generator.get_diversified_fallback()

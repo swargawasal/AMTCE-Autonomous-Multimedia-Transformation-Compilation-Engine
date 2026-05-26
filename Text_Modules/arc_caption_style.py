@@ -305,6 +305,12 @@ def is_emphasis_line(line: str) -> bool:
 
 
 def font_size_for_line(line: str) -> int:
+    EMPHASIS_FONT_SIZE=70
+    NORMAL_FONT_SIZE=55
+    EMPHASIS_FONT_SIZE=70
+    NORMAL_FONT_SIZE=55
+    EMPHASIS_FONT_SIZE=70
+    NORMAL_FONT_SIZE=55
     return EMPHASIS_FONT_SIZE if is_emphasis_line(line) else NORMAL_FONT_SIZE
 
 

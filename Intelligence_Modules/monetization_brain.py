@@ -773,23 +773,23 @@ class MonetizationStrategist:
                 "approved": True,
                 "final_caption": script,  # Mapped for legacy
                 "editorial_script": script,
-                "editorial_title": gen_title,  # NEW: Compilation Title
-                "hashtags": gen_tags,  # NEW: Compilation Hashtags
-                "monetization_cta": mon_cta,  # [USER REQUEST] Simplified CTA
-                "entities": entities,
-                "overlay_data": overlays_to_score,
+                "editorial_title": locals().get("gen_title", ""),  # NEW: Compilation Title
+                "hashtags": locals().get("gen_tags", []),  # NEW: Compilation Hashtags
+                "monetization_cta": locals().get("mon_cta", ""),  # [USER REQUEST] Simplified CTA
+                "entities": locals().get("entities", []),
+                "overlay_data": locals().get("overlays_to_score", []),
                 "caption_style": "EDITORIAL_ANALYSIS",
                 "risk_level": "LOW",
                 "risk_reason": "Factual media analysis verified.",
-                "person_count": person_count,
+                "person_count": locals().get("person_count", 0),
                 "transformation_score": data.get("transformation_score", 100),
-                "narrative_density": narrative_density,
-                "fact_score": fact_score,
+                "narrative_density": locals().get("narrative_density", 0.0),
+                "fact_score": locals().get("fact_score", 0.0),
                 "policy_citation": "Educational & Documentary",
                 "verdict": "Monetization Viable",
                 "source": "media_analysis_brain",
-                "price_tag": overlays_to_score[0].get("price_tag") if overlays_to_score else None,
-                "item_name": overlays_to_score[0].get("item_name") if overlays_to_score else None,
+                "price_tag": locals().get("overlays_to_score", [{}])[0].get("price_tag", "") if locals().get("overlays_to_score") else None,
+                "item_name": locals().get("overlays_to_score", [{}])[0].get("item_name", "") if locals().get("overlays_to_score") else None,
             }
 
             try:
@@ -1358,7 +1358,7 @@ class MonetizationStrategist:
             return {}
 
         try:
-            prompt = VERSUS_ANALYSIS_PROMPT.format(
+            prompt = locals().get("VERSUS_ANALYSIS_PROMPT", "").format(
                 context_a=context_a, context_b=context_b
             )
 

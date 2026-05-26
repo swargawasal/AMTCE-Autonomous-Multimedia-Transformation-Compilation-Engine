@@ -23,6 +23,9 @@ Configuration (.env):
 import io
 import logging
 import os
+from PIL import Image
+from PIL import Image
+from PIL import Image
 
 logger = logging.getLogger("ai_media_generator")
 

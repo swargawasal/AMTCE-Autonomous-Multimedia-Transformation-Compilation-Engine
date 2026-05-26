@@ -239,13 +239,8 @@ class ForensicVideoAnalyzer:
             logger.warning("🔬 ForensicAnalyzer: GEMINI_API_KEY not set — will return defaults")
             return
 
-        try:
-                                    model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
-                        self._genai = genai
-            self._available = True
-            logger.info(f"🔬 ForensicAnalyzer: ACTIVE (model={model_name})")
-        except Exception as e:
-            logger.warning(f"🔬 ForensicAnalyzer: init failed — {e}")
+        model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        logger.info(f"?? ForensicAnalyzer: ACTIVE (model={model_name})")
 
     # ── Public API ─────────────────────────────────────────────────────────────
 
@@ -351,7 +346,7 @@ class ForensicVideoAnalyzer:
         Send frames + prompt to Gemini Vision, parse and validate JSON response.
         Falls back gracefully to DEFAULT_RESULT on any error.
         """
-        }
+
 
         # Build prompt with frame metadata
         prompt_text = FORENSIC_PROMPT.format(
@@ -580,15 +575,3 @@ def analyze_video(video_path: str, frame_paths: List[str] = None, intelligence_c
 
 # Alias for legacy support
 analyze = analyze_video
-        try:
-            res_txt = self.router.generate(
-                task_type="vision",
-                prompt=payload,
-                module_name="forensic_analyzer",
-                gen_config={"temperature": 0.2, "response_mime_type": "application/json"}
-            )
-            if not res_txt: return DEFAULT_RESULT.copy()
-            return self._parse_response(res_txt)
-        except Exception as e:
-            logger.error(f"Forensic error: {e}")
-            return DEFAULT_RESULT.copy()

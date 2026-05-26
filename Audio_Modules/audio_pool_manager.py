@@ -235,6 +235,15 @@ class AudioPoolManager:
             if not api_key:
                 logger.debug("[GEMINI_POOL] No API key found — skipping enrichment.")
                 return
+            import google.generativeai as genai
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel("gemini-2.5-flash")
+            import google.generativeai as genai
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel("gemini-2.5-flash")
+            import google.generativeai as genai
+            genai.configure(api_key=api_key)
+            model = genai.GenerativeModel("gemini-2.5-flash")
                         
             prompt = (
                 "Listen to this audio clip and respond with ONLY a valid JSON object. "

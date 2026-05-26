@@ -88,9 +88,9 @@ def generate_filter_script(words: List[Dict], video_width: int = 1080, video_hei
         
         out_label = f"[v{i}]"
         
-        # drawtext filter
+        font_path_safe = FONT_PATH.replace(':', '\\:')
         dt = (
-            f"{last_label}drawtext=fontfile='{FONT_PATH.replace(':', '\\:')}':"
+            f"{last_label}drawtext=fontfile='{font_path_safe}':"
             f"text='{safe_word}':fontsize={font_size}:fontcolor=yellow:"
             f"borderw=4:bordercolor=black:shadowx=2:shadowy=2:"
             f"x=(w-text_w)/2:y=(h-text_h)/2:"
