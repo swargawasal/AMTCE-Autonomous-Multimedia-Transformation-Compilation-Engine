@@ -548,17 +548,38 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
                                 outfit_description = "",
                             )
 
-                            _rate_buttons = [
-                                _IKB(f"{'⭐' * i}", callback_data=f"outfit_rate:{_entry_id}:{i}")
-                                for i in range(1, 6)
-                            ]
-                            _rate_kb = _IKM([_rate_buttons[:3], _rate_buttons[3:]])
-                            _rate_caption = (
-                                f"👗 **Outfit Rating Request**\n\n"
-                                f"📦 Product: `{title or actress_title}`\n\n"
-                                f"Rate the outfit quality for AI swap generation.\n"
-                                f"⭐⭐⭐⭐⭐ = Generate AI influencer outfit swap."
-                            )
+                            is_war_mode = False
+                            try:
+                                from Uploader_Modules.telegram_auction_engine import AuctionState
+                                is_war_mode = AuctionState().state.get("active", False)
+                            except Exception:
+                                pass
+
+                            if is_war_mode:
+                                _rate_buttons = [
+                                    _IKB(f"💰 {'🔥' * i}", callback_data=f"outfit_rate:{_entry_id}:{i}")
+                                    for i in range(1, 6)
+                                ]
+                                _rate_kb = _IKM([_rate_buttons[:3], _rate_buttons[3:]])
+                                _rate_caption = (
+                                    f"⚔️ **WAR MODE: BET ON HER!** 😈\n\n"
+                                    f"🎯 Target: `{title or actress_title}`\n\n"
+                                    f"Forget the outfit. How much are you dropping on HER tonight? 🔥💦\n"
+                                    f"Place your stakes. Only verified whales get the prize.\n"
+                                    f"💰🔥🔥🔥🔥🔥 = ALL IN!"
+                                )
+                            else:
+                                _rate_buttons = [
+                                    _IKB(f"{'⭐' * i}", callback_data=f"outfit_rate:{_entry_id}:{i}")
+                                    for i in range(1, 6)
+                                ]
+                                _rate_kb = _IKM([_rate_buttons[:3], _rate_buttons[3:]])
+                                _rate_caption = (
+                                    f"👗 **Outfit Rating Request**\n\n"
+                                    f"📦 Product: `{title or actress_title}`\n\n"
+                                    f"Rate the outfit quality for AI swap generation.\n"
+                                    f"⭐⭐⭐⭐⭐ = Generate AI influencer outfit swap."
+                                )
 
                             # ── Step 3: DM the frame to admin with rating buttons ──
                             _admin_int = int(admin_id_raw)
