@@ -136,6 +136,7 @@ COMPILATION_MIN_CLIPS = int(os.getenv("COMPILATION_MIN_CLIPS", "3"))
 COMPILATION_INTRO_FALLBACK_SECS = float(os.getenv("COMPILATION_INTRO_FALLBACK_SECS", "8.0"))
 DOWNLOADS_RETENTION_DAYS       = int(os.getenv("DOWNLOADS_RETENTION_DAYS", "30"))
 PROCESSED_SHORTS_RETENTION_DAYS = int(os.getenv("PROCESSED_SHORTS_RETENTION_DAYS", "30"))
+FINAL_COMPILATIONS_RETENTION_DAYS = int(os.getenv("FINAL_COMPILATIONS_RETENTION_DAYS", "30"))
 # New purge policies (days) — override via .env
 TEMP_RETENTION_HOURS           = int(os.getenv("TEMP_RETENTION_HOURS", "24"))   # temp/ — 1 day
 DEBUG_FRAMES_RETENTION_HOURS   = int(os.getenv("DEBUG_FRAMES_RETENTION_HOURS", "24"))  # debug_frames/ — 1 day
@@ -8155,6 +8156,9 @@ class AutoCleanup(threading.Thread):
                 elif "Processed Shorts" in target_dir:
                     effective_cutoff = time.time() - (PROCESSED_SHORTS_RETENTION_DAYS * 86400)
                     logger.info(f"🧹 Cleanup: Applying {PROCESSED_SHORTS_RETENTION_DAYS}-Day policy to Processed Shorts")
+                elif "final_compilations" in target_dir:
+                    effective_cutoff = time.time() - (FINAL_COMPILATIONS_RETENTION_DAYS * 86400)
+                    logger.info(f"🧹 Cleanup: Applying {FINAL_COMPILATIONS_RETENTION_DAYS}-Day policy to final_compilations")
                 elif target_dir in ("temp",):
                     effective_cutoff = time.time() - (TEMP_RETENTION_HOURS * 3600)
                     logger.info(f"🧹 Cleanup: Applying {TEMP_RETENTION_HOURS}h policy to temp/")
