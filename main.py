@@ -3,6 +3,10 @@ import sys
 import uuid
 import warnings
 from typing import List
+from dotenv import load_dotenv
+
+load_dotenv()
+load_dotenv("Credentials/.env")
 
 # Suppress Python 3.10 EOL warning from Google SDKs
 warnings.filterwarnings("ignore", category=FutureWarning, module="google")
