@@ -67,6 +67,10 @@ jobs:
         if [ -n "${{ secrets.TOKEN_JSON }}" ]; then
           echo "${{ secrets.TOKEN_JSON }}" > Credentials/token.json
         fi
+        # Inject telegram_config.json if configured
+        if [ -n "${{ secrets.TELEGRAM_CONFIG_JSON }}" ]; then
+          echo "${{ secrets.TELEGRAM_CONFIG_JSON }}" > Credentials/telegram_config.json
+        fi
         # Auto-enable paparazzi mode in CI runs
         echo "PAPARAZZI_MODE=yes" >> Credentials/.env
 
