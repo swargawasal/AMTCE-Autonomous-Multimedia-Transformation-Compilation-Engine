@@ -1,7 +1,7 @@
 # Graph Report - D:\Autonomous Multimedia Transformation & Compilation Engine (AMTCE)  (2026-05-25)
 
 ## Corpus Check
-- 803 files · ~12,654,128 words
+- 803 files · ~12,654,132 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -1735,11 +1735,11 @@ Nodes (1): Returns (pre_seconds, post_seconds) based on moment signals.
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `get()` connect `Community 2` to `Community 0`, `Community 1`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 33`, `Community 34`, `Community 35`, `Community 36`, `Community 37`, `Community 39`, `Community 40`, `Community 41`, `Community 42`, `Community 43`, `Community 44`, `Community 46`, `Community 47`, `Community 54`, `Community 56`, `Community 57`?**
-  _High betweenness centrality (0.437) - this node is a cross-community bridge._
+  _High betweenness centrality (0.411) - this node is a cross-community bridge._
 - **Why does `info()` connect `Community 1` to `Community 0`, `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 8`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 17`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 34`, `Community 35`, `Community 36`, `Community 37`, `Community 39`, `Community 40`, `Community 42`, `Community 43`, `Community 47`, `Community 48`?**
-  _High betweenness centrality (0.087) - this node is a cross-community bridge._
-- **Why does `error()` connect `Community 4` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 5`, `Community 6`, `Community 8`, `Community 11`, `Community 12`, `Community 13`, `Community 15`, `Community 17`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 24`, `Community 26`, `Community 30`, `Community 34`, `Community 37`, `Community 54`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
+  _High betweenness centrality (0.141) - this node is a cross-community bridge._
+- **Why does `compile_video()` connect `Community 3` to `Community 0`, `Community 1`, `Community 2`, `Community 4`, `Community 5`, `Community 6`, `Community 8`, `Community 10`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 20`, `Community 23`, `Community 25`, `Community 28`, `Community 30`, `Community 36`, `Community 44`, `Community 48`, `Community 52`?**
+  _High betweenness centrality (0.043) - this node is a cross-community bridge._
 - **Are the 986 inferred relationships involving `get()` (e.g. with `compute_anchor()` and `_get_session_niche()`) actually correct?**
   _`get()` has 986 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 537 inferred relationships involving `info()` (e.g. with `load_sessions()` and `_get_session_niche()`) actually correct?**
