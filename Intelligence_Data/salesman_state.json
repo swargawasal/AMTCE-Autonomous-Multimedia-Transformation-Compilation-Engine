@@ -1,35 +1,24 @@
 {
   "harvest": {
-    "last_run_date": "2026-05-26",
+    "last_run_date": "2026-05-27",
     "slots_completed_today": [
-      "01:45 [catchup]",
-      "03:00 [catchup]"
+      "01:45 [catchup]"
     ],
     "catchup_fired_today": true,
-    "total_runs_all_time": 10
+    "total_runs_all_time": 11
   },
   "publisher": {
-    "last_check_date": "2026-05-26",
-    "slots_published_today": [
-      "17:40[catchup]",
-      "18:50[catchup]",
-      "19:30"
-    ],
-    "slots_missed_today": [
-      "07:30",
-      "4:02"
-    ],
-    "catchup_slots_today": [
-      "17:40",
-      "18:50"
-    ],
-    "deficit_videos": 1
+    "last_check_date": "2026-05-27",
+    "slots_published_today": [],
+    "slots_missed_today": [],
+    "catchup_slots_today": [],
+    "deficit_videos": 2
   },
   "apify": {
-    "quota_date": "2026-05-26",
-    "quota_used": 39,
+    "quota_date": "2026-05-27",
+    "quota_used": 1,
     "quota_limit": 50,
-    "total_calls_all_time": 120
+    "total_calls_all_time": 121
   },
   "scraped_posts": {
     "shortcodes": [
