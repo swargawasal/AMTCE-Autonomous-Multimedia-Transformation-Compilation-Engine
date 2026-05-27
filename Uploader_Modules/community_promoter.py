@@ -11,14 +11,49 @@ from datetime import datetime
 logger = logging.getLogger("community_promoter")
 logger.setLevel(logging.INFO)
 
-STATE_FILE = "The_json/community_promo_state.json"
-LOS_POLLOS_FILE = "The_json/los_pollos_links.json"
+STATE_FILE       = "The_json/community_promo_state.json"
+LOS_POLLOS_FILE  = "The_json/los_pollos_links.json"
+GEO_ANALYTICS_FILE = "The_json/geo_analytics.json"
+
+# ── Country → Language mapping ────────────────────────────────────────────────
+_COUNTRY_LANG: Dict[str, str] = {
+    "India":                 "Hindi",
+    "United States":         "English",
+    "Pakistan":              "Urdu",
+    "Bangladesh":            "Bengali",
+    "United Kingdom":        "English",
+    "Germany":               "German",
+    "United Arab Emirates":  "Arabic",
+    "Mexico":                "Spanish",
+    "Malaysia":              "Malay",
+    "Canada":                "English",
+    "Saudi Arabia":          "Arabic",
+    "France":                "French",
+    "Australia":             "English",
+    "Sri Lanka":             "Sinhala",
+    "T\u00fcrkiye":           "Turkish",
+    "Oman":                  "Arabic",
+    "Spain":                 "Spanish",
+    "Nepal":                 "Nepali",
+    "Indonesia":             "Indonesian",
+    "Brazil":                "Portuguese",
+    "Italy":                 "Italian",
+    "Japan":                 "Japanese",
+    "South Korea":           "Korean",
+    "Russia":                "Russian",
+    "Netherlands":           "Dutch",
+    "Sweden":                "Swedish",
+    "Qatar":                 "Arabic",
+    "Kuwait":                "Arabic",
+    "Bahrain":               "Arabic",
+    "Egypt":                 "Arabic",
+}
 
 class CommunityPromoter:
     """
     Handles 'Community Post' promotion via Channel Comments (commentThreads).
     - Rate Limited (6h)
-    - Deterministic Content (No Gemini)
+    - Gemini-generated multilingual hooks (language selection driven by geo_analytics.json)
     - Silent Failures
     """
     
@@ -63,14 +98,63 @@ class CommunityPromoter:
                 return data.get("telegram_link", "")
         except:
             return ""
+
+    @staticmethod
+    def _get_top_languages(max_langs: int = 3) -> list:
+        """
+        Reads The_json/geo_analytics.json, maps country → language,
+        aggregates viewer % per language, and returns the top `max_langs`
+        languages sorted by audience share.
+
+        English is ALWAYS first (widest reach regardless of %).
+        The list is deduplicated (e.g. UAE + Saudi + Oman all map to Arabic once).
+
+        Update geo_analytics.json from YouTube Analytics → Geography tab to
+        keep the language selection current.
+        """
+        try:
+            with open(GEO_ANALYTICS_FILE, "r", encoding="utf-8") as fh:
+                geo = json.load(fh)
+            countries = geo.get("countries", [])
+        except Exception as _e:
+            logger.warning(f"⚠️ [GEO] Could not read geo_analytics.json: {_e}")
+            return ["English", "Hindi", "Urdu"]   # safe hard-coded fallback
+
+        # Aggregate % per language
+        lang_pct: Dict[str, float] = {}
+        for row in countries:
+            country = row.get("country", "")
+            pct     = float(row.get("pct", 0))
+            lang    = _COUNTRY_LANG.get(country, None)
+            if not lang:
+                continue
+            lang_pct[lang] = lang_pct.get(lang, 0.0) + pct
+
+        # Sort descending, deduplicated by language name
+        sorted_langs = sorted(lang_pct.items(), key=lambda x: x[1], reverse=True)
+
+        # Always lead with English; then fill remaining slots with top non-English
+        result = ["English"]
+        for lang, pct in sorted_langs:
+            if lang == "English":
+                continue
+            if lang not in result:
+                result.append(lang)
+            if len(result) >= max_langs:
+                break
+
+        logger.info(f"🌐 [GEO] Selected languages for this post: {result} (from {len(countries)} countries)")
+        return result
+
     def _generate_gemini_hook(self, is_short: bool, fashion_data: Optional[Dict], tg_display: str, actress_name: str = "") -> Optional[str]:
-        """Uses Gemini to generate a unique multilingual dual-CTA hook (Partner + Clips).
+        """Uses Gemini to generate a unique multilingual dual-CTA hook.
+        Languages are chosen automatically from geo_analytics.json viewer %.
         Cache is intentionally DISABLED so every post is unique.
         """
-        # ── Tier 0: Cache intentionally SKIPPED for uniqueness ────────────────
-        # (Pipeline cache previously caused repeated identical posts — removed)
+        # ── Cache intentionally SKIPPED for uniqueness ────────────────────────
+        # (Pipeline cache caused repeated identical posts — removed)
 
-        # ── Tier 1: Gemini Call with uniqueness seed ──────────────────────────
+        # ── Gemini Call with uniqueness seed ──────────────────────────────────
         try:
             from Intelligence_Modules.gemini_governor import gemini_router
             if not gemini_router:
@@ -99,28 +183,39 @@ class CommunityPromoter:
             _style_seed = random.choice(_styles)
             _ts = datetime.datetime.now().strftime("%H%M%S")  # injects uniqueness into context
 
-            # ── Language strategy ──────────────────────────────────────────────
-            # Write the comment in 3 languages in one go:
-            #   Block 1: English (widest reach)
-            #   Block 2: Hindi (largest Indian audience)
-            #   Block 3: One random South Indian language (Tamil/Telugu/Malayalam/Kannada)
-            _south_langs = ["Tamil", "Telugu", "Malayalam", "Kannada"]
-            _south_lang  = random.choice(_south_langs)
+            # ── Language strategy: read from geo analytics ────────────────────
+            # _get_top_languages() reads The_json/geo_analytics.json and picks
+            # the top languages by real viewer %. Always English first.
+            # Current top (from analytics): English, Hindi, Urdu, Bengali, Arabic…
+            _langs = CommunityPromoter._get_top_languages(max_langs=3)
+
+            # Build dynamic language block instructions for Gemini
+            _lang_blocks = []
+            for i, lang in enumerate(_langs, 1):
+                _lang_blocks += [
+                    f"BLOCK {i} — {lang.upper()} (Style: {_style_seed if i == 1 else 'match tone'}):",
+                    f"  Write 2 mini-hooks about {name_anchor}. Each hook = 1 teaser line + its arrow label.",
+                    f"  Hook A ends with: → {partner_label}",
+                    f"  Hook B ends with: → {corn_label}",
+                    f"  Use {name_anchor}'s name. Keep it YouTube-safe.",
+                    "",
+                ]
 
             prompt = [
                 "SYSTEM ROLE:",
                 "You are a growth hacker who specializes in building Telegram groups via YouTube comments.",
-                "Your audience is mostly male viewers across India watching actress / celebrity content on YouTube.",
-                "Your goal: write ONE YouTube comment that contains the hook in THREE LANGUAGES so every Indian viewer can read it.",
+                "Your audience is viewers from multiple countries watching actress / celebrity content on YouTube.",
+                f"Your goal: write ONE YouTube comment with the hook written in {len(_langs)} LANGUAGES so viewers from all top countries can read it.",
                 "The comment MUST NOT contain adult links, explicit words, or gender-specific sexual language.",
                 "CRITICAL: Do NOT use words like 'girl', 'she', 'her', 'raw footage', 'censorship', or '🔞'.",
-                f"CRITICAL: Use the NAME '{name_anchor}' instead of any gender pronoun.",
+                f"CRITICAL: Use the NAME '{name_anchor}' instead of any gender pronoun in ALL languages.",
                 "Use curiosity gaps, name-based exclusivity, and 'members-only hidden content' framing. Keep it fully YouTube-safe.",
                 f"WRITING STYLE THIS TIME: {_style_seed}",
-                f"SESSION: {_ts}",   # forces Gemini to generate fresh output
+                f"SESSION: {_ts}",   # forces Gemini to generate fresh output every call
                 "",
                 f"TARGET LINK: {tg_display}",
                 f"ACTRESS / CREATOR NAME: {name_anchor}",
+                f"LANGUAGES TO USE (in this order): {', '.join(_langs)}",
                 "",
                 "CONTEXT:",
             ]
@@ -138,35 +233,20 @@ class CommunityPromoter:
             prompt += [
                 "",
                 "─────────────────────────────────────────",
-                "OUTPUT STRUCTURE — THREE LANGUAGE BLOCKS:",
+                f"OUTPUT STRUCTURE — {len(_langs)} LANGUAGE BLOCKS:",
                 "─────────────────────────────────────────",
                 "",
-                f"BLOCK 1 — ENGLISH (Style: {_style_seed}):",
-                f"  Write 2 mini-hooks about {name_anchor}. Each hook = 1 teaser line + its arrow label.",
-                f"  Hook A ends with: → {partner_label}",
-                f"  Hook B ends with: → {corn_label}",
-                "  Blank line between hooks.",
-                "",
-                "BLOCK 2 — HINDI:",
-                f"  Same 2-hook structure in Hindi. Use {name_anchor}'s name. Same arrow labels (keep English labels).",
-                f"  Hook A ends with: → {partner_label}",
-                f"  Hook B ends with: → {corn_label}",
-                "",
-                f"BLOCK 3 — {_south_lang.upper()}:",
-                f"  Same 2-hook structure in {_south_lang}. Use {name_anchor}'s name. Same arrow labels (keep English labels).",
-                f"  Hook A ends with: → {partner_label}",
-                f"  Hook B ends with: → {corn_label}",
-                "",
+            ] + _lang_blocks + [
                 "─────────────────────────────────────────",
                 "RULES:",
                 f"1. Use '{name_anchor}' — never use 'she', 'her', 'girl' in any language.",
-                "2. No explicit words, no 🔞, no censorship references. Keep all three blocks YouTube-safe.",
+                "2. No explicit words, no 🔞, no censorship references. Keep all blocks YouTube-safe.",
                 "3. Keep each block punchy: max 4 lines per block.",
                 "4. Separate blocks with a single blank line.",
                 "5. The VERY LAST LINE of the entire comment must be: 👉 [TARGET LINK]",
                 "6. Output ONLY the raw comment text. No block headers, no markdown, no labels.",
                 "",
-                "EXAMPLE STRUCTURE (tone and format only — write completely differently):",
+                "EXAMPLE STRUCTURE (tone and format only — write completely differently each time):",
                 f"{name_anchor}'s extended cut didn't survive YouTube's filter. 👀",
                 f"→ {partner_label}",
                 "",
@@ -179,10 +259,10 @@ class CommunityPromoter:
                 f"Jo clip delete hui, wo members ke liye abhi bhi live hai.",
                 f"→ {corn_label}",
                 "",
-                f"{name_anchor} video YouTube filter la marandhu pochu. Members ku kittum. 👀",
+                f"{name_anchor} er full clip delete kora hoyeche. Members ra ekhono dekhte parchen.",
                 f"→ {partner_label}",
                 "",
-                f"Delete aana clip group la iruku. Members matrum.",
+                f"YouTube theke hatiye dewa video group e achhe. Members only.",
                 f"→ {corn_label}",
                 f"👉 {tg_display}",
             ]
@@ -191,7 +271,8 @@ class CommunityPromoter:
                 task_type="copywriter",
                 prompt="\n".join(prompt),
                 module_name="community_promoter",
-                metadata={"type": "actress_funnel_comment_multilang", "fashion": bool(fashion_data), "lang3": _south_lang, "seed": _style_seed}
+                metadata={"type": "actress_funnel_comment_multilang", "fashion": bool(fashion_data), "langs": _langs, "seed": _style_seed}
+
             )
 
             if res and tg_display in res:
