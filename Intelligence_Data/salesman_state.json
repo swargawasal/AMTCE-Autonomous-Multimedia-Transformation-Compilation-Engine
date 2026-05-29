@@ -1,35 +1,27 @@
 {
   "harvest": {
-    "last_run_date": "2026-05-28",
+    "last_run_date": "2026-05-29",
     "slots_completed_today": [
       "01:45 [catchup]",
-      "01:45",
       "03:00"
     ],
     "catchup_fired_today": true,
-    "total_runs_all_time": 16
+    "total_runs_all_time": 18
   },
   "publisher": {
-    "last_check_date": "2026-05-28",
-    "slots_published_today": [
-      "04:02",
-      "07:15[catchup]",
-      "07:30",
-      "19:30"
-    ],
-    "slots_missed_today": [
-      "4:02"
-    ],
+    "last_check_date": "2026-05-29",
+    "slots_published_today": [],
+    "slots_missed_today": [],
     "catchup_slots_today": [
       "07:15"
     ],
-    "deficit_videos": 0
+    "deficit_videos": 1
   },
   "apify": {
-    "quota_date": "2026-05-28",
-    "quota_used": 2,
+    "quota_date": "2026-05-29",
+    "quota_used": 37,
     "quota_limit": 50,
-    "total_calls_all_time": 123
+    "total_calls_all_time": 160
   },
   "scraped_posts": {
     "shortcodes": [
@@ -37,49 +29,55 @@
       "DYxYZbTsFpm",
       "DYw62Aqzajn",
       "DYpbeUUR9PG",
-      "DYjbLqwsI03"
+      "DYjbLqwsI03",
+      "DY5uZAUBmH-",
+      "DY49-GyRWRk",
+      "DY4osCXo58V",
+      "DY4P5CGoGPV",
+      "DY4O5r8MuBt",
+      "DY2Lv6iMVny"
     ],
-    "total_seen": 5
+    "total_seen": 11
   },
   "account_scrape_throttle": {
     "last_scraped_at": {
-      "akanksha8000": "2026-05-26T15:42:07.895557",
-      "avneetkaur_13": "2026-05-26T15:42:07.895557",
-      "lalalalisa_m": "2026-05-26T15:42:07.895557",
-      "sassy_poonam": "2026-05-26T15:42:07.895557",
-      "tammanahbhatia": "2026-05-26T15:42:07.895557",
-      "nehasharma": "2026-05-26T15:42:07.895557",
-      "saieemmanjrekar": "2026-05-26T15:42:07.895557",
-      "dishapatani": "2026-05-26T15:42:07.895557",
-      "kritisanon": "2026-05-26T15:42:07.895557",
-      "ruhisingh12": "2026-05-26T15:42:07.895557",
-      "kiaraaliaadvani": "2026-05-26T15:42:07.895557",
-      "parineetichopra": "2026-05-26T15:42:07.895557",
-      "rakulpreetsingh": "2026-05-26T15:42:07.895557",
-      "giorgia.andriani22": "2026-05-26T15:42:07.895557",
-      "sakshimalik": "2026-05-26T15:42:07.895557",
-      "muskankaria": "2026-05-26T15:42:07.895557",
-      "poojahedge": "2026-05-26T15:42:07.895557",
-      "ankitasingh_2910": "2026-05-26T15:42:07.895557",
-      "katesharma": "2026-05-26T15:42:07.895557",
-      "roshniwaliaa": "2026-05-26T15:42:07.895557",
-      "ayeshaakhan_official": "2026-05-26T15:42:07.895557",
-      "gima_ashi": "2026-05-26T15:42:07.895557",
-      "urvashirautela": "2026-05-26T15:42:07.895557",
-      "shefali": "2026-05-26T15:42:07.895557",
-      "kyliejenner": "2026-05-26T15:42:07.895557",
-      "malavika": "2026-05-26T15:42:07.895557",
-      "miamalkova": "2026-05-26T15:42:07.895557",
-      "shaanayakatiyan_official": "2026-05-26T15:42:07.895557",
-      "realaditimistry": "2026-05-26T15:42:07.895557",
-      "deekshagulati24": "2026-05-26T15:42:07.895557",
-      "ms.sethii": "2026-05-26T15:42:07.895557",
-      "iamdivaflawless": "2026-05-26T15:42:07.895557",
-      "offcialjackielove2": "2026-05-26T15:42:07.895557",
-      "realjackielove": "2026-05-26T15:42:07.895557",
-      "official_jackielove": "2026-05-26T15:42:07.895557",
-      "analuu555_": "2026-05-26T15:42:07.895557",
-      "pratika_sood": "2026-05-26T15:42:07.895557"
+      "akanksha8000": "2026-05-29T02:17:56.773651",
+      "avneetkaur_13": "2026-05-29T02:17:56.773651",
+      "lalalalisa_m": "2026-05-29T02:17:56.773651",
+      "sassy_poonam": "2026-05-29T02:17:56.773651",
+      "tammanahbhatia": "2026-05-29T02:17:56.773651",
+      "nehasharma": "2026-05-29T02:17:56.773651",
+      "saieemmanjrekar": "2026-05-29T02:17:56.773651",
+      "dishapatani": "2026-05-29T02:17:56.773651",
+      "kritisanon": "2026-05-29T02:17:56.773651",
+      "ruhisingh12": "2026-05-29T02:17:56.773651",
+      "kiaraaliaadvani": "2026-05-29T02:17:56.773651",
+      "parineetichopra": "2026-05-29T02:17:56.773651",
+      "rakulpreetsingh": "2026-05-29T02:17:56.773651",
+      "giorgia.andriani22": "2026-05-29T02:17:56.773651",
+      "sakshimalik": "2026-05-29T02:17:56.773651",
+      "muskankaria": "2026-05-29T02:17:56.773651",
+      "poojahedge": "2026-05-29T02:17:56.773651",
+      "ankitasingh_2910": "2026-05-29T02:17:56.773651",
+      "katesharma": "2026-05-29T02:17:56.773651",
+      "roshniwaliaa": "2026-05-29T02:17:56.773651",
+      "ayeshaakhan_official": "2026-05-29T02:17:56.773651",
+      "gima_ashi": "2026-05-29T02:17:56.773651",
+      "urvashirautela": "2026-05-29T02:17:56.773651",
+      "shefali": "2026-05-29T02:17:56.773651",
+      "kyliejenner": "2026-05-29T02:17:56.773651",
+      "malavika": "2026-05-29T02:17:56.773651",
+      "miamalkova": "2026-05-29T02:17:56.773651",
+      "shaanayakatiyan_official": "2026-05-29T02:17:56.773651",
+      "realaditimistry": "2026-05-29T02:17:56.773651",
+      "deekshagulati24": "2026-05-29T02:17:56.773651",
+      "ms.sethii": "2026-05-29T02:17:56.773651",
+      "iamdivaflawless": "2026-05-29T02:17:56.773651",
+      "offcialjackielove2": "2026-05-29T02:17:56.773651",
+      "realjackielove": "2026-05-29T02:17:56.773651",
+      "official_jackielove": "2026-05-29T02:17:56.773651",
+      "analuu555_": "2026-05-29T02:17:56.773651",
+      "pratika_sood": "2026-05-29T02:17:56.773651"
     }
   }
 }
