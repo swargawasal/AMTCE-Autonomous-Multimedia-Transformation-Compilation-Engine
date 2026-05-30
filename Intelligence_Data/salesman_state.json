@@ -1,28 +1,28 @@
 {
   "harvest": {
-    "last_run_date": "2026-05-29",
+    "last_run_date": "2026-05-30",
     "slots_completed_today": [
-      "01:45 [catchup]",
-      "03:00"
+      "01:45"
     ],
-    "catchup_fired_today": true,
-    "total_runs_all_time": 18
+    "catchup_fired_today": false,
+    "total_runs_all_time": 19
   },
   "publisher": {
     "last_check_date": "2026-05-29",
     "slots_published_today": [],
     "slots_missed_today": [
       "07:30",
-      "4:02"
+      "4:02",
+      "19:30"
     ],
     "catchup_slots_today": [
       "07:15"
     ],
-    "deficit_videos": 3
+    "deficit_videos": 4
   },
   "apify": {
-    "quota_date": "2026-05-29",
-    "quota_used": 39,
+    "quota_date": "2026-05-30",
+    "quota_used": 0,
     "quota_limit": 50,
     "total_calls_all_time": 162
   },
