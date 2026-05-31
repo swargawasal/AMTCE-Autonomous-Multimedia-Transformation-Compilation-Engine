@@ -659,7 +659,6 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
                             
                             # Clean up the temporary frame
                             try:
-                                import os
                                 if os.path.exists(_frame_path):
                                     os.remove(_frame_path)
                             except Exception:
@@ -680,7 +679,6 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
             
             # ── ULTIMATE SAFETY: IMMEDIATE HARD DELETE AFTER PUBLISH ──
             try:
-                import os
                 if os.path.exists(video_path):
                     os.remove(video_path)
                     logger.info(f"🗑️ [SAFETY] Hard-deleted published clip: {os.path.basename(video_path)}")

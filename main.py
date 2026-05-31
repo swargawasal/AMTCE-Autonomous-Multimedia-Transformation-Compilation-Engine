@@ -8549,7 +8549,6 @@ def run_ci_mode():
         if queue:
             logger.info(f"📤 [CI] Found {len(queue)} queued clip(s). Starting human-like round-robin publishing...")
             
-            import os, re, time, random
             
             start_time = time.time()
             max_runtime = 5.5 * 3600  # 5.5 hours limit
