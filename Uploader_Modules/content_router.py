@@ -2,9 +2,22 @@
 content_router.py — Gemini Vision Content Router
 =================================================
 Classifies a video clip into one of three routing tiers:
-  • "fashion"  — clothing coverage >= 40% → Fashion_01, Fashion_02, ... accounts (randomly picked)
-  • "nsfw"     — clothing coverage <  40% → NSFW_01, NSFW_02, ... accounts (randomly picked)
-  • "general"  — no human detected        → General_Fallback only
+
+  CONTENT-BASED (Gemini Vision clothing coverage %):
+  • "fashion" — coverage >= 25%  → General_Fallback or Fashion_XX accounts
+  • "nsfw"    — coverage <  25%  → NSFW_XX accounts (strict: only genuinely adult content)
+  • "general" — no human detected → General_Fallback only
+
+  IDENTITY-BASED OVERRIDE (known NSFW accounts):
+  • is_nsfw=True from channel_router → always routes to NSFW regardless of coverage %
+    (e.g. Mia Malkova, Shilpa Sethi etc. — explicitly listed in actress_accounts.json)
+
+  NSFW content is for WOMEN — adult female creators route to NSFW accounts.
+  Both paparazzi clips AND manual inputs follow this 25% coverage rule.
+
+  Threshold env var: CONTENT_ROUTER_FASHION_THRESHOLD (default 25)
+  Set higher (e.g. 40) to send more content to NSFW.
+  Set lower  (e.g. 15) to only send near-nude content to NSFW.
 
 Account pools are auto-discovered from Credentials/social_media/ at runtime.
 Adding a new account is as simple as creating the folder:
@@ -26,7 +39,10 @@ import tempfile
 logger = logging.getLogger(__name__)
 
 # ── Constants ─────────────────────────────────────────────────────────────────
-FASHION_THRESHOLD  = int(os.getenv("CONTENT_ROUTER_FASHION_THRESHOLD", "40"))  # %
+# FASHION_THRESHOLD: clothing coverage % at or above which content is fashion (not NSFW).
+# Recommended: 25 (strict NSFW — only bikini/lingerie/near-nude goes to NSFW).
+# Set to 40 if you want borderline revealing fashion to also go to NSFW.
+FASHION_THRESHOLD  = int(os.getenv("CONTENT_ROUTER_FASHION_THRESHOLD", "25"))  # %
 ROUTE_CACHE_EXT    = ".route.json"
 CREDS_BASE         = os.path.join("Credentials", "social_media")
 
