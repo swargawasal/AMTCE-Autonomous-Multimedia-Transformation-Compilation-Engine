@@ -70,7 +70,9 @@ def authenticate(client_secret_file=None, token_file=None):
         
         # --- TELEGRAM NOTIFICATION ---
         token = os.getenv("TELEGRAM_BOT_TOKEN")
-        admin_id = os.getenv("TELEGRAM_ADMIN_ID")
+        admin_id = os.getenv("TELEGRAM_ADMIN_ID") or os.getenv("TELEGRAM_OWNER_CHAT_ID")
+        if not admin_id and os.getenv("ADMIN_IDS"):
+            admin_id = os.getenv("ADMIN_IDS").split(",")[0].strip()
         if token and admin_id:
             try:
                 msg = f"⚠️ YouTube Auth Required!\n\nPlease authorize here:\n{auth_url}"

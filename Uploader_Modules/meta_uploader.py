@@ -47,6 +47,8 @@ def _is_niche_enabled(niche: str) -> bool:
     """
     if os.path.exists(os.path.join("Credentials", "social_media", niche, "meta_config.json")):
         return True
+    if os.path.exists(os.path.join("Credentials", "social_media", niche.capitalize(), "meta_config.json")):
+        return True
     if niche.strip() == "General_Fallback":
         key = "NICHE_GENERAL_FALLBACK_ENABLED"
         return os.getenv(key, "yes").strip().lower() in ("yes", "true", "on", "1")
@@ -60,6 +62,8 @@ def _niche_meta_enabled(niche: str) -> bool:
     Prevents Instagram/Facebook upload attempts for YouTube-only niches.
     """
     if os.path.exists(os.path.join("Credentials", "social_media", niche, "meta_config.json")):
+        return True
+    if os.path.exists(os.path.join("Credentials", "social_media", niche.capitalize(), "meta_config.json")):
         return True
     key = f"{_niche_env_key(niche)}_PLATFORMS"
     platforms = os.getenv(key, "youtube").lower()
@@ -98,6 +102,7 @@ class AsyncMetaUploader:
         # ── Tier 1 & 2: JSON config files ────────────────────────────────────
         search_dirs = [
             os.path.join("Credentials", "social_media", niche),
+            os.path.join("Credentials", "social_media", niche.capitalize()),
             os.path.join("Credentials", "social_media", "General_Fallback"),
         ]
 

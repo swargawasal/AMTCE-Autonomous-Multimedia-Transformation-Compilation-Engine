@@ -79,7 +79,9 @@ def set_platform_lock(reason: str):
 def send_telegram_notification(message: str):
     """Sends a notification via Telegram if token and admin ID are present."""
     token = os.getenv("TELEGRAM_BOT_TOKEN")
-    admin_id = os.getenv("TELEGRAM_ADMIN_ID")
+    admin_id = os.getenv("TELEGRAM_ADMIN_ID") or os.getenv("TELEGRAM_OWNER_CHAT_ID")
+    if not admin_id and os.getenv("ADMIN_IDS"):
+        admin_id = os.getenv("ADMIN_IDS").split(",")[0].strip()
     if token and admin_id:
         try:
             url = f"https://api.telegram.org/bot{token}/sendMessage"
