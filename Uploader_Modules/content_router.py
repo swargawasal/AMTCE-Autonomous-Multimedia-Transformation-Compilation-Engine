@@ -83,29 +83,35 @@ def get_route_pool(category: str) -> list[str]:
     Returns the full shuffled pool of eligible niche folders for a category.
     Always randomised so no single account is always first.
 
-    fashion → all Fashion_XX folders (shuffled) + General_Fallback as final fallback
-    nsfw    → all NSFW_XX folders (shuffled) + General_Fallback as final fallback
-    general → [General_Fallback]
+    fashion → all Fashion_XX folders (shuffled) + all General_Fallback_XX folders (shuffled) as final fallback
+    nsfw    → all NSFW_XX folders (shuffled) + all General_Fallback_XX folders (shuffled) as final fallback
+    general → all General_Fallback_XX folders (shuffled)
     """
+    fallback_pool = _discover_pool("General_Fallback")
+    if not fallback_pool:
+        fallback_pool = ["General_Fallback"]
+    else:
+        random.shuffle(fallback_pool)
+
     if category == "fashion":
         numbered = _discover_pool("Fashion")
         if not numbered:
-            logger.info("📂 [CONTENT_ROUTER] No Fashion_XX folders found — using General_Fallback")
-            return ["General_Fallback"]
+            logger.info("📂 [CONTENT_ROUTER] No Fashion_XX folders found — using General_Fallback pool")
+            return fallback_pool
         random.shuffle(numbered)
         # General_Fallback as ultimate fallback if all Fashion accounts are at daily limit
-        return numbered + ["General_Fallback"]
+        return numbered + fallback_pool
 
     elif category == "nsfw":
         numbered = _discover_pool("NSFW")
         if not numbered:
-            logger.info("📂 [CONTENT_ROUTER] No NSFW_XX folders found — falling back to NSFW then General_Fallback")
-            return ["NSFW", "General_Fallback"]
+            logger.info("📂 [CONTENT_ROUTER] No NSFW_XX folders found — falling back to NSFW then General_Fallback pool")
+            return ["NSFW"] + fallback_pool
         random.shuffle(numbered)
-        return numbered + ["General_Fallback"]
+        return numbered + fallback_pool
 
     else:  # general
-        return ["General_Fallback"]
+        return fallback_pool
 
 
 # ── Frame extraction ──────────────────────────────────────────────────────────

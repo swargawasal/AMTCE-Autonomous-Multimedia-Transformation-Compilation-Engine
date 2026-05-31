@@ -18,7 +18,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0   # Full history so git push works cleanly
+        fetch-depth: 0
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Python
@@ -34,7 +34,6 @@ jobs:
 
     - name: Install PyTorch (CPU-only)
       run: |
-        # GitHub runners have no GPU — install the slim CPU wheel (~200 MB vs ~2 GB CUDA build)
         pip install torch==2.6.0 torchvision==0.21.0 --index-url https://download.pytorch.org/whl/cpu
 
     - name: Install Python Dependencies
@@ -46,145 +45,153 @@ jobs:
       env:
         ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
         TELEGRAM_CONFIG_JSON: ${{ secrets.TELEGRAM_CONFIG_JSON }}
+        # General Fallback IG (base=META_CONFIG_JSON, then _01, _02...)
         META_CONFIG_GENERAL_FALLBACK: ${{ secrets.META_CONFIG_JSON }}
-        # ── Fashion IG accounts (base = index 0, then _01, _02 ...) ──────────
-        META_CONFIG_JSON_FASHION:    ${{ secrets.META_CONFIG_JSON_FASHION }}
-        META_CONFIG_JSON_FASHION_01: ${{ secrets.META_CONFIG_JSON_FASHION_01 }}
-        META_CONFIG_JSON_FASHION_02: ${{ secrets.META_CONFIG_JSON_FASHION_02 }}
-        META_CONFIG_JSON_FASHION_03: ${{ secrets.META_CONFIG_JSON_FASHION_03 }}
-        META_CONFIG_JSON_FASHION_04: ${{ secrets.META_CONFIG_JSON_FASHION_04 }}
-        # ── Fashion YT (existing CLIENT_SECRET_JSON/TOKEN_JSON = index 0) ────
-        CLIENT_SECRET_JSON:    ${{ secrets.CLIENT_SECRET_JSON }}
-        TOKEN_JSON:            ${{ secrets.TOKEN_JSON }}
-        CLIENT_SECRET_JSON_01: ${{ secrets.CLIENT_SECRET_JSON_01 }}
-        TOKEN_JSON_01:         ${{ secrets.TOKEN_JSON_01 }}
-        CLIENT_SECRET_JSON_02: ${{ secrets.CLIENT_SECRET_JSON_02 }}
-        TOKEN_JSON_02:         ${{ secrets.TOKEN_JSON_02 }}
-        # ── NSFW IG accounts (base = index 0, then _01, _02 ...) ─────────────
-        META_CONFIG_JSON_NSFW:    ${{ secrets.META_CONFIG_JSON_NSFW }}
-        META_CONFIG_JSON_NSFW_01: ${{ secrets.META_CONFIG_JSON_NSFW_01 }}
-        META_CONFIG_JSON_NSFW_02: ${{ secrets.META_CONFIG_JSON_NSFW_02 }}
-        META_CONFIG_JSON_NSFW_03: ${{ secrets.META_CONFIG_JSON_NSFW_03 }}
-        # ── NSFW YT (existing CLIENT_SECRET_JSON_ADULT/TOKEN_JSON_ADULT = base) ──
-        CLIENT_SECRET_JSON_ADULT:    ${{ secrets.CLIENT_SECRET_JSON_ADULT }}
-        TOKEN_JSON_ADULT:            ${{ secrets.TOKEN_JSON_ADULT }}
-        CLIENT_SECRET_JSON_ADULT_01: ${{ secrets.CLIENT_SECRET_JSON_ADULT_01 }}
-        TOKEN_JSON_ADULT_01:         ${{ secrets.TOKEN_JSON_ADULT_01 }}
-        CLIENT_SECRET_JSON_ADULT_02: ${{ secrets.CLIENT_SECRET_JSON_ADULT_02 }}
-        TOKEN_JSON_ADULT_02:         ${{ secrets.TOKEN_JSON_ADULT_02 }}
+        META_CONFIG_JSON_01:          ${{ secrets.META_CONFIG_JSON_01 }}
+        META_CONFIG_JSON_02:          ${{ secrets.META_CONFIG_JSON_02 }}
+        META_CONFIG_JSON_03:          ${{ secrets.META_CONFIG_JSON_03 }}
+        META_CONFIG_JSON_04:          ${{ secrets.META_CONFIG_JSON_04 }}
+        # Fashion IG accounts (base=index 0, then _01, _02...)
+        META_CONFIG_JSON_FASHION:     ${{ secrets.META_CONFIG_JSON_FASHION }}
+        META_CONFIG_JSON_FASHION_01:  ${{ secrets.META_CONFIG_JSON_FASHION_01 }}
+        META_CONFIG_JSON_FASHION_02:  ${{ secrets.META_CONFIG_JSON_FASHION_02 }}
+        META_CONFIG_JSON_FASHION_03:  ${{ secrets.META_CONFIG_JSON_FASHION_03 }}
+        META_CONFIG_JSON_FASHION_04:  ${{ secrets.META_CONFIG_JSON_FASHION_04 }}
+        # Fashion YT (CLIENT_SECRET_JSON/TOKEN_JSON = index 0)
+        CLIENT_SECRET_JSON:           ${{ secrets.CLIENT_SECRET_JSON }}
+        TOKEN_JSON:                   ${{ secrets.TOKEN_JSON }}
+        CLIENT_SECRET_JSON_01:        ${{ secrets.CLIENT_SECRET_JSON_01 }}
+        TOKEN_JSON_01:                ${{ secrets.TOKEN_JSON_01 }}
+        CLIENT_SECRET_JSON_02:        ${{ secrets.CLIENT_SECRET_JSON_02 }}
+        TOKEN_JSON_02:                ${{ secrets.TOKEN_JSON_02 }}
+        # NSFW IG accounts (base=index 0, then _01, _02...)
+        META_CONFIG_JSON_NSFW:        ${{ secrets.META_CONFIG_JSON_NSFW }}
+        META_CONFIG_JSON_NSFW_01:     ${{ secrets.META_CONFIG_JSON_NSFW_01 }}
+        META_CONFIG_JSON_NSFW_02:     ${{ secrets.META_CONFIG_JSON_NSFW_02 }}
+        META_CONFIG_JSON_NSFW_03:     ${{ secrets.META_CONFIG_JSON_NSFW_03 }}
+        # NSFW YT (CLIENT_SECRET_JSON_ADULT/TOKEN_JSON_ADULT = base)
+        CLIENT_SECRET_JSON_ADULT:     ${{ secrets.CLIENT_SECRET_JSON_ADULT }}
+        TOKEN_JSON_ADULT:             ${{ secrets.TOKEN_JSON_ADULT }}
+        CLIENT_SECRET_JSON_ADULT_01:  ${{ secrets.CLIENT_SECRET_JSON_ADULT_01 }}
+        TOKEN_JSON_ADULT_01:          ${{ secrets.TOKEN_JSON_ADULT_01 }}
+        CLIENT_SECRET_JSON_ADULT_02:  ${{ secrets.CLIENT_SECRET_JSON_ADULT_02 }}
+        TOKEN_JSON_ADULT_02:          ${{ secrets.TOKEN_JSON_ADULT_02 }}
       run: |
         mkdir -p Credentials
 
-        # ── Main .env ─────────────────────────────────────────────────────────
+        # Main .env
         if [ -n "$ENV_FILE_CONTENT" ]; then
           echo "$ENV_FILE_CONTENT" > Credentials/.env
         fi
 
-        # ── Telegram config ───────────────────────────────────────────────────
+        # Telegram config
         if [ -n "$TELEGRAM_CONFIG_JSON" ]; then
           echo "$TELEGRAM_CONFIG_JSON" > Credentials/telegram_config.json
         fi
 
-        # ── General Fallback IG ───────────────────────────────────────────────
+        # General Fallback IG -- base account
         if [ -n "$META_CONFIG_GENERAL_FALLBACK" ]; then
           mkdir -p Credentials/social_media/General_Fallback
           echo "$META_CONFIG_GENERAL_FALLBACK" > Credentials/social_media/General_Fallback/meta_config.json
-          echo "✅ Injected General_Fallback IG"
+          echo "Injected General_Fallback IG"
         fi
 
-        # ── Fashion IG — base account (index 0) → Fashion/ ───────────────────
+        # General Fallback IG -- additional accounts (_01, _02...)
+        for n in 01 02 03 04; do
+          VAR="META_CONFIG_JSON_${n}"
+          VAL="${!VAR}"
+          if [ -n "$VAL" ]; then
+            mkdir -p "Credentials/social_media/General_Fallback_${n}"
+            echo "$VAL" > "Credentials/social_media/General_Fallback_${n}/meta_config.json"
+            echo "Injected General_Fallback_${n} IG"
+          fi
+        done
+
+        # Fashion IG -- base account -> Fashion/
         if [ -n "$META_CONFIG_JSON_FASHION" ]; then
           mkdir -p Credentials/social_media/Fashion
           echo "$META_CONFIG_JSON_FASHION" > Credentials/social_media/Fashion/meta_config.json
-          echo "✅ Injected Fashion (base) IG"
+          echo "Injected Fashion (base) IG"
         fi
-        # Fashion YT — base (existing CLIENT_SECRET_JSON / TOKEN_JSON)
         if [ -n "$CLIENT_SECRET_JSON" ]; then
           mkdir -p Credentials/social_media/Fashion
           echo "$CLIENT_SECRET_JSON" > Credentials/social_media/Fashion/client_secret.json
-          echo "✅ Injected Fashion (base) YT client_secret"
+          echo "Injected Fashion (base) YT client_secret"
         fi
         if [ -n "$TOKEN_JSON" ]; then
           mkdir -p Credentials/social_media/Fashion
           echo "$TOKEN_JSON" > Credentials/social_media/Fashion/token.json
-          echo "✅ Injected Fashion (base) YT token"
+          echo "Injected Fashion (base) YT token"
         fi
 
-        # ── Fashion IG — additional accounts (_01, _02 ...) ──────────────────
+        # Fashion IG -- additional accounts (_01, _02...)
         for n in 01 02 03 04; do
-          # IG
           VAR="META_CONFIG_JSON_FASHION_${n}"
           VAL="${!VAR}"
           if [ -n "$VAL" ]; then
             mkdir -p "Credentials/social_media/Fashion_${n}"
             echo "$VAL" > "Credentials/social_media/Fashion_${n}/meta_config.json"
-            echo "✅ Injected Fashion_${n} IG"
+            echo "Injected Fashion_${n} IG"
           fi
-          # YT client secret
           CS_VAR="CLIENT_SECRET_JSON_${n}"
           CS_VAL="${!CS_VAR}"
           if [ -n "$CS_VAL" ]; then
             mkdir -p "Credentials/social_media/Fashion_${n}"
             echo "$CS_VAL" > "Credentials/social_media/Fashion_${n}/client_secret.json"
-            echo "✅ Injected Fashion_${n} YT client_secret"
+            echo "Injected Fashion_${n} YT client_secret"
           fi
-          # YT token
           TK_VAR="TOKEN_JSON_${n}"
           TK_VAL="${!TK_VAR}"
           if [ -n "$TK_VAL" ]; then
             mkdir -p "Credentials/social_media/Fashion_${n}"
             echo "$TK_VAL" > "Credentials/social_media/Fashion_${n}/token.json"
-            echo "✅ Injected Fashion_${n} YT token"
+            echo "Injected Fashion_${n} YT token"
           fi
         done
 
-        # ── NSFW IG — base account (index 0) → NSFW/ ─────────────────────────
+        # NSFW IG -- base account -> NSFW/
         if [ -n "$META_CONFIG_JSON_NSFW" ]; then
           mkdir -p Credentials/social_media/NSFW
           echo "$META_CONFIG_JSON_NSFW" > Credentials/social_media/NSFW/meta_config.json
-          echo "✅ Injected NSFW (base) IG"
+          echo "Injected NSFW (base) IG"
         fi
-        # NSFW YT — base (existing CLIENT_SECRET_JSON_ADULT / TOKEN_JSON_ADULT)
         if [ -n "$CLIENT_SECRET_JSON_ADULT" ]; then
           mkdir -p Credentials/social_media/NSFW
           echo "$CLIENT_SECRET_JSON_ADULT" > Credentials/social_media/NSFW/client_secret.json
-          echo "✅ Injected NSFW (base) YT client_secret"
+          echo "Injected NSFW (base) YT client_secret"
         fi
         if [ -n "$TOKEN_JSON_ADULT" ]; then
           mkdir -p Credentials/social_media/NSFW
           echo "$TOKEN_JSON_ADULT" > Credentials/social_media/NSFW/token.json
-          echo "✅ Injected NSFW (base) YT token"
+          echo "Injected NSFW (base) YT token"
         fi
 
-        # ── NSFW IG — additional accounts (_01, _02 ...) ─────────────────────
+        # NSFW IG -- additional accounts (_01, _02...)
         for n in 01 02 03; do
-          # IG
           VAR="META_CONFIG_JSON_NSFW_${n}"
           VAL="${!VAR}"
           if [ -n "$VAL" ]; then
             mkdir -p "Credentials/social_media/NSFW_${n}"
             echo "$VAL" > "Credentials/social_media/NSFW_${n}/meta_config.json"
-            echo "✅ Injected NSFW_${n} IG"
+            echo "Injected NSFW_${n} IG"
           fi
-          # YT client secret
           CS_VAR="CLIENT_SECRET_JSON_ADULT_${n}"
           CS_VAL="${!CS_VAR}"
           if [ -n "$CS_VAL" ]; then
             mkdir -p "Credentials/social_media/NSFW_${n}"
             echo "$CS_VAL" > "Credentials/social_media/NSFW_${n}/client_secret.json"
-            echo "✅ Injected NSFW_${n} YT client_secret"
+            echo "Injected NSFW_${n} YT client_secret"
           fi
-          # YT token
           TK_VAR="TOKEN_JSON_ADULT_${n}"
           TK_VAL="${!TK_VAR}"
           if [ -n "$TK_VAL" ]; then
             mkdir -p "Credentials/social_media/NSFW_${n}"
             echo "$TK_VAL" > "Credentials/social_media/NSFW_${n}/token.json"
-            echo "✅ Injected NSFW_${n} YT token"
+            echo "Injected NSFW_${n} YT token"
           fi
         done
 
-        # ── CI flags ──────────────────────────────────────────────────────────
+        # CI flags
         echo "PAPARAZZI_MODE=yes" >> Credentials/.env
         echo "AUTO_PUBLISH_ACTRESS_CLIPS=yes" >> Credentials/.env
 
@@ -193,23 +200,17 @@ jobs:
       run: |
         python ci_runner.py
 
-    # ── Persist ledger + queue to git after every run (the ONLY reliable method) ──
-    # actions/cache is NOT reliable here because its key changes each run.
-    # Committing directly to the repo guarantees the next run always sees
-    # the updated dedup state, preventing repeated uploads of the same clip.
     - name: Commit Dedup State to Git
-      if: always()   # Save even if the run partially fails
+      if: always()
       run: |
         git config user.name  "AMTCE Bot"
         git config user.email "amtce-bot@users.noreply.github.com"
-        # Stage only the dedup state files (never credentials or videos)
         git add -f Actress_Modules/actress_ledger.json || true
         git add -f Actress_Modules/published_registry.json || true
         git add -f Actress_Modules/apify_cursor.json || true
         git add -f Actress_Modules/account_daily_limits.json || true
         git add -f publish_queue.json || true
         git add -f Intelligence_Data/salesman_state.json || true
-        # Only commit if there's something changed
         if git diff --cached --quiet; then
           echo "No dedup state changes to commit."
         else
