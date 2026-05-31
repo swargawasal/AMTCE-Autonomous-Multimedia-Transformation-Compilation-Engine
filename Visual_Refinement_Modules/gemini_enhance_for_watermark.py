@@ -104,7 +104,7 @@ def detect_watermark(
         {
           "best_frame":           {"index": int, "reason": str, "timestamp": float},
           "clothing_coverage_pct": int,   # 0-100
-          "is_nsfw":              bool,   # True if coverage < 25%
+          "is_nsfw":              bool,   # True if coverage < 30%
           "content_category":     str,    # "fashion" | "nsfw" | "general"
         }
         Returns None if Gemini fails.
@@ -313,14 +313,22 @@ Return the index (0-based) of the single BEST frame in the "best_frame" field.
 
 CLOTHING COVERAGE (for account routing):
 Estimate % of main subject's body covered by clothing (0–100).
-  100 = fully clothed | 60–99 = crop tops/gym wear | 40–59 = significant skin
-  25–39 = heavy skin exposure | 0–24 = near-nude
+  100 = fully clothed | 60–99 = crop tops/gym wear | 30–59 = significant skin/revealing
+  15–29 = heavy skin exposure (swimwear, lingerie) | 0–14 = near-nude / explicit
 
-👗 Fashion / General: clothing coverage >= 40% — person is dressed, stylish
-🔞 NSFW: clothing coverage < 40% — revealing, suggestive, minimal clothing
+👗 FASHION / GENERAL  — clothing coverage >= 30%
+   Examples: crop tops, short skirts, gym wear, mini dresses, deep necklines
+   → Set is_nsfw = false
 
-Set "is_nsfw": true if coverage < 40%, false otherwise.
-If no human visible, set coverage = 100 and is_nsfw = false.
+🔞 NSFW              — clothing coverage < 30%
+   Examples: bikinis, lingerie, underwear, near-nude, topless, explicit content
+   → Set is_nsfw = true
+
+CRITICAL RULE: The threshold is EXACTLY 30%.
+  coverage >= 30  →  is_nsfw = false  (fashion / general — safe for Instagram)
+  coverage <  30  →  is_nsfw = true   (adult content — routes to NSFW account)
+
+If no human visible in the video, set coverage = 100 and is_nsfw = false.
 
 """
         if keywords: prompt += f"\n\nADDITIONAL FOCUS HINTS: {keywords}"
@@ -364,8 +372,8 @@ If no human visible, set coverage = 100 and is_nsfw = false.
 
             # ─ Clothing coverage / fashion vs NSFW ─
             coverage_pct = int(data.get("clothing_coverage_pct", 100))
-            is_nsfw      = bool(data.get("is_nsfw", coverage_pct < 40))
-            category     = "nsfw" if is_nsfw else ("fashion" if coverage_pct >= 40 else "general")
+            is_nsfw      = bool(data.get("is_nsfw", coverage_pct < 30))
+            category     = "nsfw" if is_nsfw else ("fashion" if coverage_pct >= 30 else "general")
 
             frame_and_niche_info = {
                 "best_frame":            best_frame,

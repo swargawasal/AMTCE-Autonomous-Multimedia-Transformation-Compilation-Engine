@@ -4,8 +4,8 @@ content_router.py — Gemini Vision Content Router
 Classifies a video clip into one of three routing tiers:
 
   CONTENT-BASED (Gemini Vision clothing coverage %):
-  • "fashion" — coverage >= 25%  → General_Fallback or Fashion_XX accounts
-  • "nsfw"    — coverage <  25%  → NSFW_XX accounts (strict: only genuinely adult content)
+  • "fashion" — coverage >= 30%  → General_Fallback or Fashion_XX accounts
+  • "nsfw"    — coverage <  30%  → NSFW_XX accounts (strict: only genuine adult content)
   • "general" — no human detected → General_Fallback only
 
   IDENTITY-BASED OVERRIDE (known NSFW accounts):
@@ -40,9 +40,9 @@ logger = logging.getLogger(__name__)
 
 # ── Constants ─────────────────────────────────────────────────────────────────
 # FASHION_THRESHOLD: clothing coverage % at or above which content is fashion (not NSFW).
-# Recommended: 25 (strict NSFW — only bikini/lingerie/near-nude goes to NSFW).
-# Set to 40 if you want borderline revealing fashion to also go to NSFW.
-FASHION_THRESHOLD  = int(os.getenv("CONTENT_ROUTER_FASHION_THRESHOLD", "25"))  # %
+# Recommended: 30 (strict NSFW — only bikini/lingerie/near-nude goes to NSFW).
+# Set to 40 if you want more borderline content to also go to NSFW.
+FASHION_THRESHOLD  = int(os.getenv("CONTENT_ROUTER_FASHION_THRESHOLD", "30"))  # %
 ROUTE_CACHE_EXT    = ".route.json"
 CREDS_BASE         = os.path.join("Credentials", "social_media")
 
