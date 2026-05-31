@@ -233,7 +233,15 @@ class ActressLedger:
                 self._shortcodes.add(shortcode)
                 self._channel_map[shortcode] = channel_folder
                 if post_timestamp is not None:
-                    self._timestamp_map[shortcode] = float(post_timestamp)
+                    try:
+                        self._timestamp_map[shortcode] = float(post_timestamp)
+                    except ValueError:
+                        try:
+                            from datetime import datetime
+                            ts_str = str(post_timestamp).replace("Z", "+00:00")
+                            self._timestamp_map[shortcode] = datetime.fromisoformat(ts_str).timestamp()
+                        except Exception:
+                            pass
             if hasattr(self, "_last_hash") and self._last_hash:
                 self._hashes[self._last_hash] = os.path.basename(video_path)
             elif os.path.exists(video_path):
