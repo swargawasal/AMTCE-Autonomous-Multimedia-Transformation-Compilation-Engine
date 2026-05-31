@@ -256,7 +256,7 @@ class ActressLedger:
                 "total: %d SC / %d hashes / %d channel-mapped",
                 shortcode or "N/A",
                 channel_folder,
-                datetime.fromtimestamp(post_timestamp).strftime("%H:%M") if post_timestamp else "N/A",
+                datetime.fromtimestamp(self._timestamp_map[shortcode]).strftime("%H:%M") if (shortcode and shortcode in self._timestamp_map) else "N/A",
                 len(self._shortcodes),
                 len(self._hashes),
                 len(self._channel_map),
