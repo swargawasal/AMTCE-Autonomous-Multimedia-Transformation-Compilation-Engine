@@ -46,7 +46,7 @@ jobs:
       env:
         ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
         TELEGRAM_CONFIG_JSON: ${{ secrets.TELEGRAM_CONFIG_JSON }}
-        META_CONFIG_GENERAL_FALLBACK: ${{ secrets.META_CONFIG_GENERAL_FALLBACK }}
+        META_CONFIG_GENERAL_FALLBACK: ${{ secrets.META_CONFIG_JSON }}
         # ── Fashion IG accounts (base = index 0, then _01, _02 ...) ──────────
         META_CONFIG_JSON_FASHION:    ${{ secrets.META_CONFIG_JSON_FASHION }}
         META_CONFIG_JSON_FASHION_01: ${{ secrets.META_CONFIG_JSON_FASHION_01 }}
