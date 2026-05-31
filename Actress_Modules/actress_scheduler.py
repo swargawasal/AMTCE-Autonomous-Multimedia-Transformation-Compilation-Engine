@@ -1071,7 +1071,8 @@ def run_paparazzi_cycle() -> None:
 
         if ledger.hash_seen(video_path):
             if shortcode:
-                ledger.commit_with_channel(shortcode, video_path, actress_folder)
+                ledger.commit_with_channel(shortcode, video_path, actress_folder,
+                                           post_timestamp=reel.get("timestamp"))
             try:
                 os.remove(video_path)
             except Exception:
@@ -1090,7 +1091,8 @@ def run_paparazzi_cycle() -> None:
             clip_idx,
         )
         _inject_niche(video_path, actress_folder, actress_title)
-        ledger.commit_with_channel(shortcode, video_path, actress_folder)
+        ledger.commit_with_channel(shortcode, video_path, actress_folder,
+                                   post_timestamp=reel.get("timestamp"))
 
         channel_counts[actress_folder] = ch_count + 1
         total_dl += 1

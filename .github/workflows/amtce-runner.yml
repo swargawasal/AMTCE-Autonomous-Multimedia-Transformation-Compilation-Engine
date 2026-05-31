@@ -1,4 +1,4 @@
-﻿name: AMTCE Runner
+name: AMTCE Runner
 
 on:
   workflow_dispatch:  # Manual trigger anytime
@@ -76,6 +76,11 @@ jobs:
         TOKEN_JSON_ADULT_01:          ${{ secrets.TOKEN_JSON_ADULT_01 }}
         CLIENT_SECRET_JSON_ADULT_02:  ${{ secrets.CLIENT_SECRET_JSON_ADULT_02 }}
         TOKEN_JSON_ADULT_02:          ${{ secrets.TOKEN_JSON_ADULT_02 }}
+        # Paparazzi IG accounts (future: add META_CONFIG_JSON_PAPARAZZI secret to activate)
+        META_CONFIG_JSON_PAPARAZZI:    ${{ secrets.META_CONFIG_JSON_PAPARAZZI }}
+        META_CONFIG_JSON_PAPARAZZI_01: ${{ secrets.META_CONFIG_JSON_PAPARAZZI_01 }}
+        META_CONFIG_JSON_PAPARAZZI_02: ${{ secrets.META_CONFIG_JSON_PAPARAZZI_02 }}
+        META_CONFIG_JSON_PAPARAZZI_03: ${{ secrets.META_CONFIG_JSON_PAPARAZZI_03 }}
       run: |
         mkdir -p Credentials
 
@@ -188,6 +193,24 @@ jobs:
             mkdir -p "Credentials/social_media/NSFW_${n}"
             echo "$TK_VAL" > "Credentials/social_media/NSFW_${n}/token.json"
             echo "Injected NSFW_${n} YT token"
+          fi
+        done
+
+        # Paparazzi IG -- base account -> Paparazzi/ (activates when secret is added)
+        if [ -n "$META_CONFIG_JSON_PAPARAZZI" ]; then
+          mkdir -p Credentials/social_media/Paparazzi
+          echo "$META_CONFIG_JSON_PAPARAZZI" > Credentials/social_media/Paparazzi/meta_config.json
+          echo "Injected Paparazzi (base) IG"
+        fi
+
+        # Paparazzi IG -- additional accounts (_01, _02...)
+        for n in 01 02 03; do
+          VAR="META_CONFIG_JSON_PAPARAZZI_${n}"
+          VAL="${!VAR}"
+          if [ -n "$VAL" ]; then
+            mkdir -p "Credentials/social_media/Paparazzi_${n}"
+            echo "$VAL" > "Credentials/social_media/Paparazzi_${n}/meta_config.json"
+            echo "Injected Paparazzi_${n} IG"
           fi
         done
 

@@ -30,9 +30,24 @@ _BASE_DIR      = os.path.dirname(os.path.abspath(__file__))
 _IDENTITIES_PATH = os.path.join(_BASE_DIR, "actress_accounts.json")
 
 # ── Channel constants ─────────────────────────────────────────────────────────
-CHANNEL_WOMEN  = "General_Fallback"    # Women-only social channel
-CHANNEL_ALL    = "Paparazzi_Channel"   # All scraped content channel
-CHANNEL_MANUAL = "Fashion_Style"       # Manual input only — never auto-routed
+CHANNEL_WOMEN     = "General_Fallback"   # Women content → General_Fallback (mixed channel)
+CHANNEL_ALL       = "General_Fallback"   # Men/unknown → also General_Fallback (mixed paparazzi style)
+CHANNEL_PAPARAZZI = "Paparazzi"         # Future: separate Paparazzi account (activates when META_CONFIG_JSON_PAPARAZZI secret is added)
+CHANNEL_FASHION   = "Fashion_Style"     # Pure women/fashion — manual input or Fashion_XX accounts only
+CHANNEL_MANUAL    = "Fashion_Style"     # Manual input only — never auto-routed
+
+# ── Runtime: detect if a Paparazzi credential folder exists ──────────────────
+def _paparazzi_creds_exist() -> bool:
+    """Returns True if Credentials/social_media/Paparazzi/ folder has files.
+    When True, men/unknown content routes to Paparazzi instead of General_Fallback."""
+    import os
+    base = os.path.join("Credentials", "social_media", "Paparazzi")
+    if not os.path.isdir(base):
+        return False
+    return any(
+        os.path.isfile(os.path.join(base, f))
+        for f in os.listdir(base)
+    )
 
 # ── In-memory cache ───────────────────────────────────────────────────────────
 _identities_cache: Optional[Dict] = None
@@ -222,6 +237,9 @@ def resolve_channel(ig_id: str, reel: Dict) -> Tuple[str, str, bool]:
 
     ig_id_clean = ig_id.lower().lstrip("@")
 
+    # ── Runtime channel for men/unknown (Paparazzi if creds exist, else General_Fallback) ──
+    _men_channel = CHANNEL_PAPARAZZI if _paparazzi_creds_exist() else CHANNEL_ALL
+
     # ── Step 0: Direct ig_id match (fastest — no reel metadata needed) ────────
     # Covers: direct artist pages, or paparazzi pages that ARE known accounts
     if ig_id_clean in women_by_id:
@@ -235,8 +253,8 @@ def resolve_channel(ig_id: str, reel: Dict) -> Tuple[str, str, bool]:
 
     if ig_id_clean in men_by_id:
         name = men_by_id[ig_id_clean]
-        logger.info("👨 [ROUTER] Direct ID match (men): @%s → %s → %s", ig_id_clean, name, CHANNEL_ALL)
-        return CHANNEL_ALL, name, False
+        logger.info("👨 [ROUTER] Direct ID match (men): @%s → %s → %s", ig_id_clean, name, _men_channel)
+        return _men_channel, name, False
 
     # ── Step 1: Check taggedUsers against identity dicts ──────────────────────
     tagged = reel.get("taggedUsers", [])
@@ -255,8 +273,8 @@ def resolve_channel(ig_id: str, reel: Dict) -> Tuple[str, str, bool]:
                 return CHANNEL_WOMEN, name, is_nsfw
             if uid and uid in men_by_id:
                 name = men_by_id[uid]
-                logger.info("👨 [ROUTER] Tagged match (men): @%s → %s → %s", uid, name, CHANNEL_ALL)
-                return CHANNEL_ALL, name, False
+                logger.info("👨 [ROUTER] Tagged match (men): @%s → %s → %s", uid, name, _men_channel)
+                return _men_channel, name, False
 
 
     # ── Step 2: Extract featured person name and look up ──────────────────────
@@ -278,8 +296,8 @@ def resolve_channel(ig_id: str, reel: Dict) -> Tuple[str, str, bool]:
     for name, mid in men_map.items():
         name_tokens = [t.lower() for t in name.split() if len(t) > 2]
         if any(t in person_lower for t in name_tokens):
-            logger.info("👨 [ROUTER] Name match (men): '%s' → %s → %s", person_name, name, CHANNEL_ALL)
-            return CHANNEL_ALL, name, False
+            logger.info("👨 [ROUTER] Name match (men): '%s' → %s → %s", person_name, name, _men_channel)
+            return _men_channel, name, False
 
     # ── Step 3: Gender heuristic from name tokens ──────────────────────────────
     gender = detect_gender_from_name(person_name)
@@ -291,9 +309,9 @@ def resolve_channel(ig_id: str, reel: Dict) -> Tuple[str, str, bool]:
         )
         return CHANNEL_WOMEN, display, False
 
-    # male or unknown → Paparazzi_Channel
+    # male or unknown → General_Fallback (or Paparazzi if that account is set up)
     display = person_name or "Unknown"
     logger.info(
-        "👤 [ROUTER] Heuristic %s: '%s' → %s", gender.upper(), display, CHANNEL_ALL
+        "👤 [ROUTER] Heuristic %s: '%s' → %s", gender.upper(), display, _men_channel
     )
-    return CHANNEL_ALL, display, False
+    return _men_channel, display, False

@@ -95,10 +95,11 @@ class ActressLedger:
     """
 
     def __init__(self, path: str = _LEDGER_PATH):
-        self._path       = path
-        self._shortcodes: Set[str]       = set()
-        self._hashes:     Dict[str, str] = {}   # md5 → stored_path
-        self._channel_map: Dict[str, str] = {}  # shortcode → channel_folder (cross-channel dedup)
+        self._path        = path
+        self._shortcodes:    Set[str]        = set()
+        self._hashes:        Dict[str, str]  = {}   # md5 → stored_path
+        self._channel_map:   Dict[str, str]  = {}   # shortcode → channel_folder
+        self._timestamp_map: Dict[str, float] = {}  # shortcode → Apify post unix timestamp
         self._load()
 
     # ── Persistence ──────────────────────────────────────────────────────────
@@ -110,12 +111,13 @@ class ActressLedger:
         try:
             with open(self._path, "r", encoding="utf-8") as f:
                 data = json.load(f)
-            self._shortcodes  = set(data.get("shortcodes", []))
-            self._hashes      = data.get("hashes", {})
-            self._channel_map = data.get("channel_map", {})
+            self._shortcodes    = set(data.get("shortcodes", []))
+            self._hashes        = data.get("hashes", {})
+            self._channel_map   = data.get("channel_map", {})
+            self._timestamp_map = data.get("timestamp_map", {})
             logger.info(
-                "📖 Actress Ledger loaded — %d shortcodes, %d hashes, %d channel-mapped",
-                len(self._shortcodes), len(self._hashes), len(self._channel_map)
+                "📖 Actress Ledger loaded — %d shortcodes, %d hashes, %d channel-mapped, %d timestamped",
+                len(self._shortcodes), len(self._hashes), len(self._channel_map), len(self._timestamp_map)
             )
         except Exception as exc:
             logger.warning("⚠️ Ledger load failed (starting fresh): %s", exc)
@@ -125,11 +127,12 @@ class ActressLedger:
             with open(self._path, "w", encoding="utf-8") as f:
                 json.dump(
                     {
-                        "version":     3,
-                        "updated":     datetime.now().isoformat(),
-                        "shortcodes":  sorted(self._shortcodes),
-                        "hashes":      self._hashes,
-                        "channel_map": self._channel_map,
+                        "version":       4,
+                        "updated":       datetime.now().isoformat(),
+                        "shortcodes":    sorted(self._shortcodes),
+                        "hashes":        self._hashes,
+                        "channel_map":   self._channel_map,
+                        "timestamp_map": self._timestamp_map,
                     },
                     f,
                     indent=2,
@@ -214,18 +217,23 @@ class ActressLedger:
         shortcode: Optional[str],
         video_path: str,
         channel_folder: str,
+        post_timestamp: Optional[float] = None,  # Unix epoch from Apify reel metadata
     ) -> None:
         """
-        Extended commit that also records which channel used this clip.
+        Extended commit that also records which channel used this clip
+        and the original post timestamp from Apify (for posting time analysis).
         Prevents the same clip from being posted on multiple channels.
 
         Replaces the plain commit() call in the new paparazzi pipeline.
         commit() still works for legacy actress_accounts.json paths.
+        post_timestamp: reel.get("timestamp") from Apify — Unix epoch float.
         """
         with _LOCK:
             if shortcode:
                 self._shortcodes.add(shortcode)
                 self._channel_map[shortcode] = channel_folder
+                if post_timestamp is not None:
+                    self._timestamp_map[shortcode] = float(post_timestamp)
             if hasattr(self, "_last_hash") and self._last_hash:
                 self._hashes[self._last_hash] = os.path.basename(video_path)
             elif os.path.exists(video_path):
@@ -236,14 +244,27 @@ class ActressLedger:
                     pass
             self._save()
             logger.info(
-                "🔒 [LEDGER+CH] Committed — shortcode: %s | channel: %s | "
+                "🔒 [LEDGER+CH] Committed — shortcode: %s | channel: %s | ts: %s | "
                 "total: %d SC / %d hashes / %d channel-mapped",
                 shortcode or "N/A",
                 channel_folder,
+                datetime.fromtimestamp(post_timestamp).strftime("%H:%M") if post_timestamp else "N/A",
                 len(self._shortcodes),
                 len(self._hashes),
                 len(self._channel_map),
             )
+
+    def get_timestamp_map(self) -> Dict:
+        """
+        Returns a dict of {shortcode: {channel, timestamp_utc}} for the posting time analyzer.
+        Only includes entries that have both a channel and a timestamp.
+        """
+        result = {}
+        for sc, ts in self._timestamp_map.items():
+            ch = self._channel_map.get(sc)
+            if ch and ts:
+                result[sc] = {"channel": ch, "timestamp_utc": ts}
+        return result
 
 
 # ─────────────────────────────────────────────────────────────────────────────
