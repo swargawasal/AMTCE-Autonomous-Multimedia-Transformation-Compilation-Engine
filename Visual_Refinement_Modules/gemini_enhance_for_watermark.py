@@ -96,23 +96,21 @@ def detect_watermark(
     frame_timestamps: List[float] = None,
 ) -> tuple:
     """
-    Detects watermarks AND selects the best thumbnail frame in ONE Gemini call.
+    Detects watermarks AND classifies fashion vs NSFW + picks best thumbnail frame in ONE Gemini call.
 
-    Returns a tuple: (results_list_or_none, best_frame_info_or_None)
-    - results_list:    list of watermark dicts, [] if clean, None if Gemini failed/quota
-    - best_frame_info: dict with keys:
+    Returns a tuple: (results_list_or_none, frame_and_niche_info_or_None)
+    - results_list:         list of watermark dicts, [] if clean, None if Gemini failed/quota
+    - frame_and_niche_info: dict with keys:
         {
-          "index":     int,    # 0-based index into the frames list
-          "timestamp": float,  # seconds (from frame_timestamps if provided, else -1)
-          "reason":    str,    # why Gemini chose this frame
+          "best_frame":           {"index": int, "reason": str, "timestamp": float},
+          "clothing_coverage_pct": int,   # 0-100
+          "is_nsfw":              bool,   # True if coverage < 25%
+          "content_category":     str,    # "fashion" | "nsfw" | "general"
         }
-        Returns None if frame selection fails or only 1 frame given.
+        Returns None if Gemini fails.
 
-    frame_timestamps (optional): list of float seconds matching each frame in `frames`.
-    If provided, best_frame_info["timestamp"] is the exact second for ffmpeg -ss extraction.
-
-    Actress face-ID (Part B in v14) has been replaced with best-frame selection.
-    Niche routing is handled by .niche.json sidecar + metadata matching in actress_scheduler.
+    Part A: Watermark detection (UNCHANGED)
+    Part B: Best thumbnail frame selection + fashion/NSFW clothing coverage detection
     """
     # Ensure genai is configured
     
@@ -133,11 +131,9 @@ def detect_watermark(
         # Gemini 1.5/2.5 Flash has native visual acuity to detect faint overlays if given 1080p frames.
         n_full = len(pil_images)
 
-        # 🎯 FORENSIC PROMPT v16.0 — WATERMARK HUNT + BEST THUMBNAIL FRAME SELECTOR
-        # Part A: Watermark detection (unchanged)
-        # Part B: Best frame selection — Gemini picks the optimal screenshot moment
-        #         (outfit visible, good pose, sharp, well-lit) so ffmpeg extracts exactly it.
-        #         Zero extra API cost — same call, same frames, added intelligence.
+        # 🎯 FORENSIC PROMPT v17.0 — WATERMARK HUNT + BEST FRAME + FASHION/NSFW DETECTION
+        # Part A: Watermark detection (UNCHANGED — do not modify)
+        # Part B: Best thumbnail frame selection + clothing coverage (fashion vs NSFW)
         frame_labels = ", ".join([f"Frame {i}" for i in range(n_full)])
         prompt = f"""You are an elite forensic video analyst and visual quality inspector.
 You have been given {n_full} frame(s) from a fashion/lifestyle video: {frame_labels}.
@@ -244,6 +240,8 @@ OUTPUT — STRICT JSON ONLY, NO OTHER TEXT:
 If source branding IS found:
 {{
   "watermark_present": true,
+  "clothing_coverage_pct": 85,
+  "is_nsfw": false,
   "items": [
     {{
       "box_2d": [ymin, xmin, ymax, xmax],
@@ -262,6 +260,8 @@ If source branding IS found:
 If NO source branding found:
 {{
   "watermark_present": false,
+  "clothing_coverage_pct": 85,
+  "is_nsfw": false,
   "items": [],
   "best_frame": {{
     "index": <0-based integer>,
@@ -270,8 +270,10 @@ If NO source branding found:
 }}
 
 ══════════════════════════════════════════════════════════════
-PART B — BEST THUMBNAIL FRAME SELECTION
+PART B — BEST THUMBNAIL FRAME + FASHION/NSFW DETECTION
 ══════════════════════════════════════════════════════════════
+
+THUMBNAIL FRAME SELECTION:
 After completing Part A, identify which ONE frame (from Frame 0 to Frame {n_full - 1}) would
 make the BEST thumbnail screenshot. This is the frame ffmpeg will extract as the cover image.
 
@@ -307,7 +309,19 @@ Score each frame on these criteria (in priority order):
    → Unflattering or distorted expressions
    → Subject partially out of frame
 
-Return the index (0-based) of the single BEST frame in the "best_frame" field of your JSON output.
+Return the index (0-based) of the single BEST frame in the "best_frame" field.
+
+CLOTHING COVERAGE (for account routing):
+Estimate % of main subject's body covered by clothing (0–100).
+  100 = fully clothed | 60–99 = crop tops/gym wear | 40–59 = significant skin
+  25–39 = heavy skin exposure | 0–24 = near-nude
+
+👗 Fashion / General: clothing coverage >= 40% — person is dressed, stylish
+🔞 NSFW: clothing coverage < 40% — revealing, suggestive, minimal clothing
+
+Set "is_nsfw": true if coverage < 40%, false otherwise.
+If no human visible, set coverage = 100 and is_nsfw = false.
+
 """
         if keywords: prompt += f"\n\nADDITIONAL FOCUS HINTS: {keywords}"
 
@@ -333,55 +347,50 @@ Return the index (0-based) of the single BEST frame in the "best_frame" field of
             logger.info(f"   └─ Raw Response (first 200 chars): {res_txt[:200]}...")
             return None, None
 
-        # ── Parse best_frame selection (Part B) ──────────────────────────────────
-        best_frame_info = None
+        # ── Parse Part B: best_frame + clothing coverage / fashion vs NSFW ──────────
+        frame_and_niche_info = None
         if isinstance(data, dict):
+            # ─ Thumbnail frame selection ─
             bf = data.get("best_frame", {})
+            best_frame = None
             if isinstance(bf, dict) and "index" in bf:
                 try:
-                    bf_index = int(bf["index"])
-                    # Clamp to valid range
-                    bf_index = max(0, min(bf_index, n_full - 1))
-                    bf_ts = -1.0
-                    if frame_timestamps and bf_index < len(frame_timestamps):
-                        bf_ts = float(frame_timestamps[bf_index])
-                    bf_reason = bf.get("reason", "")
-                    best_frame_info = {
-                        "index":     bf_index,
-                        "timestamp": bf_ts,
-                        "reason":    bf_reason,
-                    }
-                    logger.info(
-                        "📸 [BEST_FRAME] Frame %d selected (ts=%.2fs): %s",
-                        bf_index, bf_ts, bf_reason[:80]
-                    )
-                except (ValueError, TypeError) as _bfe:
-                    logger.debug("[BEST_FRAME] Failed to parse best_frame: %s", _bfe)
+                    bf_index = max(0, min(int(bf["index"]), n_full - 1))
+                    bf_ts    = float(frame_timestamps[bf_index]) if (frame_timestamps and bf_index < len(frame_timestamps)) else -1.0
+                    best_frame = {"index": bf_index, "timestamp": bf_ts, "reason": bf.get("reason", "")}
+                    logger.info("📸 [BEST_FRAME] Frame %d (ts=%.2fs): %s", bf_index, bf_ts, bf.get("reason", "")[:80])
+                except (ValueError, TypeError) as _e:
+                    logger.debug("[BEST_FRAME] Parse failed: %s", _e)
 
-        # ── Niche routing note ────────────────────────────────────────────────────
-        # Actress classification removed (was Part B in v14).
-        # Niche routing is handled exclusively by:
-        #   1. _name_in_reel() text filter in actress_scheduler.py
-        #   2. .niche.json sidecar written by _inject_niche()
-        #   3. gemini_reel_prescreen() in apify_downloader.py (pre-download)
+            # ─ Clothing coverage / fashion vs NSFW ─
+            coverage_pct = int(data.get("clothing_coverage_pct", 100))
+            is_nsfw      = bool(data.get("is_nsfw", coverage_pct < 40))
+            category     = "nsfw" if is_nsfw else ("fashion" if coverage_pct >= 40 else "general")
+
+            frame_and_niche_info = {
+                "best_frame":            best_frame,
+                "clothing_coverage_pct": coverage_pct,
+                "is_nsfw":               is_nsfw,
+                "content_category":      category,
+            }
+            logger.info("👗 [NICHE] coverage=%d%% is_nsfw=%s category=%s", coverage_pct, is_nsfw, category)
 
         if isinstance(data, list):
             items = data
         else:
             items = data.get("items", [])
-            # Robust Check: Favor 'items' content over the boolean flag
             is_present_flag = data.get("watermark_present", False)
-            
+
             if not is_present_flag and not items:
                 logger.info("🕵️ Forensic Debug: Gemini reported CLEAN")
                 logger.debug(f"   └─ Response: {res_txt[:500]}...")
-                return [], best_frame_info
-            
+                return [], frame_and_niche_info
+
             if not is_present_flag and items:
                 logger.warning("🕵️ Forensic Debug: Gemini reported 'false' but found items. Overriding.")
 
         if not items:
-            return [], locals().get("detected_niche", "")
+            return [], frame_and_niche_info
             
         results = []
         h_img, w_img = frames[0].shape[:2]
@@ -424,7 +433,7 @@ Return the index (0-based) of the single BEST frame in the "best_frame" field of
             })
             logger.info(f"💎 Sub-Pixel Sweep: {item.get('type')} -> x={x_start}, y={y_start}, w={w_pixel}, h={h_pixel}")
 
-        return results, best_frame_info
+        return results, frame_and_niche_info
     except Exception as e:
         logger.warning(f"⚠️ Gemini Forensic Sweep failed: {e}")
         return None, None
@@ -526,7 +535,7 @@ def verify_watermark(frame, candidate_box, confidence: float = 0.8) -> bool:
 
 def evaluate(video_path, frames):
     """Legacy entry point."""
-    res, _niche = detect_watermark(frames)
+    res, _niche_info = detect_watermark(frames)
     if res:
         return {"score": 0.8, "status": "CHECK_PASSED", "watermarks": res}
     return {"score": 0.4, "status": "CLEAN", "watermarks": []}
