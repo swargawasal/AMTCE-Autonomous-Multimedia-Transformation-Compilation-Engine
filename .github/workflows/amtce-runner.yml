@@ -1,4 +1,4 @@
-name: AMTCE Runner
+﻿name: AMTCE Runner
 
 on:
   workflow_dispatch:  # Manual trigger anytime
@@ -198,7 +198,7 @@ jobs:
 
     - name: Run AMTCE Engine
       run: |
-        python ci_runner.py
+        python main.py
 
     - name: Commit Dedup State to Git
       if: always()
