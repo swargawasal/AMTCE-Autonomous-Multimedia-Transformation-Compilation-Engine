@@ -47,30 +47,31 @@ jobs:
         ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
         TELEGRAM_CONFIG_JSON: ${{ secrets.TELEGRAM_CONFIG_JSON }}
         META_CONFIG_GENERAL_FALLBACK: ${{ secrets.META_CONFIG_GENERAL_FALLBACK }}
-        # ── Fashion accounts (add META_CONFIG_FASHION_01 .. _05 as you scale) ──
-        META_CONFIG_FASHION_01: ${{ secrets.META_CONFIG_FASHION_01 }}
-        META_CONFIG_FASHION_02: ${{ secrets.META_CONFIG_FASHION_02 }}
-        META_CONFIG_FASHION_03: ${{ secrets.META_CONFIG_FASHION_03 }}
-        META_CONFIG_FASHION_04: ${{ secrets.META_CONFIG_FASHION_04 }}
-        META_CONFIG_FASHION_05: ${{ secrets.META_CONFIG_FASHION_05 }}
-        # ── Fashion YT tokens (CLIENT_SECRET_JSON_01 .. _05 + TOKEN_JSON_01 .. _05) ──
+        # ── Fashion IG accounts (base = index 0, then _01, _02 ...) ──────────
+        META_CONFIG_JSON_FASHION:    ${{ secrets.META_CONFIG_JSON_FASHION }}
+        META_CONFIG_JSON_FASHION_01: ${{ secrets.META_CONFIG_JSON_FASHION_01 }}
+        META_CONFIG_JSON_FASHION_02: ${{ secrets.META_CONFIG_JSON_FASHION_02 }}
+        META_CONFIG_JSON_FASHION_03: ${{ secrets.META_CONFIG_JSON_FASHION_03 }}
+        META_CONFIG_JSON_FASHION_04: ${{ secrets.META_CONFIG_JSON_FASHION_04 }}
+        # ── Fashion YT (existing CLIENT_SECRET_JSON/TOKEN_JSON = index 0) ────
+        CLIENT_SECRET_JSON:    ${{ secrets.CLIENT_SECRET_JSON }}
+        TOKEN_JSON:            ${{ secrets.TOKEN_JSON }}
         CLIENT_SECRET_JSON_01: ${{ secrets.CLIENT_SECRET_JSON_01 }}
+        TOKEN_JSON_01:         ${{ secrets.TOKEN_JSON_01 }}
         CLIENT_SECRET_JSON_02: ${{ secrets.CLIENT_SECRET_JSON_02 }}
-        CLIENT_SECRET_JSON_03: ${{ secrets.CLIENT_SECRET_JSON_03 }}
-        TOKEN_JSON_01: ${{ secrets.TOKEN_JSON_01 }}
-        TOKEN_JSON_02: ${{ secrets.TOKEN_JSON_02 }}
-        TOKEN_JSON_03: ${{ secrets.TOKEN_JSON_03 }}
-        # ── NSFW accounts (add META_CONFIG_NSFW_01 .. _05 as you scale) ──
-        META_CONFIG_NSFW_01: ${{ secrets.META_CONFIG_NSFW_01 }}
-        META_CONFIG_NSFW_02: ${{ secrets.META_CONFIG_NSFW_02 }}
-        META_CONFIG_NSFW_03: ${{ secrets.META_CONFIG_NSFW_03 }}
-        META_CONFIG_NSFW_04: ${{ secrets.META_CONFIG_NSFW_04 }}
-        META_CONFIG_NSFW_05: ${{ secrets.META_CONFIG_NSFW_05 }}
-        # ── NSFW YT tokens ──
-        CLIENT_SECRET_JSON_ADULT_01: ${{ secrets.CLIENT_SECRET_JSON_ADULT }}
+        TOKEN_JSON_02:         ${{ secrets.TOKEN_JSON_02 }}
+        # ── NSFW IG accounts (base = index 0, then _01, _02 ...) ─────────────
+        META_CONFIG_JSON_NSFW:    ${{ secrets.META_CONFIG_JSON_NSFW }}
+        META_CONFIG_JSON_NSFW_01: ${{ secrets.META_CONFIG_JSON_NSFW_01 }}
+        META_CONFIG_JSON_NSFW_02: ${{ secrets.META_CONFIG_JSON_NSFW_02 }}
+        META_CONFIG_JSON_NSFW_03: ${{ secrets.META_CONFIG_JSON_NSFW_03 }}
+        # ── NSFW YT (existing CLIENT_SECRET_JSON_ADULT/TOKEN_JSON_ADULT = base) ──
+        CLIENT_SECRET_JSON_ADULT:    ${{ secrets.CLIENT_SECRET_JSON_ADULT }}
+        TOKEN_JSON_ADULT:            ${{ secrets.TOKEN_JSON_ADULT }}
+        CLIENT_SECRET_JSON_ADULT_01: ${{ secrets.CLIENT_SECRET_JSON_ADULT_01 }}
+        TOKEN_JSON_ADULT_01:         ${{ secrets.TOKEN_JSON_ADULT_01 }}
         CLIENT_SECRET_JSON_ADULT_02: ${{ secrets.CLIENT_SECRET_JSON_ADULT_02 }}
-        TOKEN_JSON_ADULT_01: ${{ secrets.TOKEN_JSON_ADULT }}
-        TOKEN_JSON_ADULT_02: ${{ secrets.TOKEN_JSON_ADULT_02 }}
+        TOKEN_JSON_ADULT_02:         ${{ secrets.TOKEN_JSON_ADULT_02 }}
       run: |
         mkdir -p Credentials
 
@@ -91,9 +92,28 @@ jobs:
           echo "✅ Injected General_Fallback IG"
         fi
 
-        # ── Fashion accounts (Fashion_01 .. Fashion_05) ───────────────────────
-        for n in 01 02 03 04 05; do
-          VAR="META_CONFIG_FASHION_${n}"
+        # ── Fashion IG — base account (index 0) → Fashion/ ───────────────────
+        if [ -n "$META_CONFIG_JSON_FASHION" ]; then
+          mkdir -p Credentials/social_media/Fashion
+          echo "$META_CONFIG_JSON_FASHION" > Credentials/social_media/Fashion/meta_config.json
+          echo "✅ Injected Fashion (base) IG"
+        fi
+        # Fashion YT — base (existing CLIENT_SECRET_JSON / TOKEN_JSON)
+        if [ -n "$CLIENT_SECRET_JSON" ]; then
+          mkdir -p Credentials/social_media/Fashion
+          echo "$CLIENT_SECRET_JSON" > Credentials/social_media/Fashion/client_secret.json
+          echo "✅ Injected Fashion (base) YT client_secret"
+        fi
+        if [ -n "$TOKEN_JSON" ]; then
+          mkdir -p Credentials/social_media/Fashion
+          echo "$TOKEN_JSON" > Credentials/social_media/Fashion/token.json
+          echo "✅ Injected Fashion (base) YT token"
+        fi
+
+        # ── Fashion IG — additional accounts (_01, _02 ...) ──────────────────
+        for n in 01 02 03 04; do
+          # IG
+          VAR="META_CONFIG_JSON_FASHION_${n}"
           VAL="${!VAR}"
           if [ -n "$VAL" ]; then
             mkdir -p "Credentials/social_media/Fashion_${n}"
@@ -118,9 +138,28 @@ jobs:
           fi
         done
 
-        # ── NSFW accounts (NSFW_01 .. NSFW_05) ───────────────────────────────
-        for n in 01 02 03 04 05; do
-          VAR="META_CONFIG_NSFW_${n}"
+        # ── NSFW IG — base account (index 0) → NSFW/ ─────────────────────────
+        if [ -n "$META_CONFIG_JSON_NSFW" ]; then
+          mkdir -p Credentials/social_media/NSFW
+          echo "$META_CONFIG_JSON_NSFW" > Credentials/social_media/NSFW/meta_config.json
+          echo "✅ Injected NSFW (base) IG"
+        fi
+        # NSFW YT — base (existing CLIENT_SECRET_JSON_ADULT / TOKEN_JSON_ADULT)
+        if [ -n "$CLIENT_SECRET_JSON_ADULT" ]; then
+          mkdir -p Credentials/social_media/NSFW
+          echo "$CLIENT_SECRET_JSON_ADULT" > Credentials/social_media/NSFW/client_secret.json
+          echo "✅ Injected NSFW (base) YT client_secret"
+        fi
+        if [ -n "$TOKEN_JSON_ADULT" ]; then
+          mkdir -p Credentials/social_media/NSFW
+          echo "$TOKEN_JSON_ADULT" > Credentials/social_media/NSFW/token.json
+          echo "✅ Injected NSFW (base) YT token"
+        fi
+
+        # ── NSFW IG — additional accounts (_01, _02 ...) ─────────────────────
+        for n in 01 02 03; do
+          # IG
+          VAR="META_CONFIG_JSON_NSFW_${n}"
           VAL="${!VAR}"
           if [ -n "$VAL" ]; then
             mkdir -p "Credentials/social_media/NSFW_${n}"

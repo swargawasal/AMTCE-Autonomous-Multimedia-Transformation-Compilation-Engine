@@ -42,23 +42,39 @@ _STATIC_FALLBACK = {
 
 def _discover_pool(prefix: str) -> list[str]:
     """
-    Returns all credential folders matching <prefix>_NN (e.g. Fashion_01, NSFW_03).
-    Sorted numerically. Only includes folders that contain at least one credential file.
+    Returns all credential folders for a given prefix, including:
+      - Base folder (no number) = index 0  e.g. "Fashion", "NSFW"
+      - Numbered folders        = _01, _02  e.g. "Fashion_01", "NSFW_02"
+
+    Only includes folders that contain at least one credential file.
+    Result is returned in natural order (base first, then 01, 02...).
+    Caller shuffles before picking.
     """
     if not os.path.isdir(CREDS_BASE):
         return []
 
+    found = []
+
+    # ── Base folder (index 0, no number suffix) ───────────────────────────────
+    base_folder = os.path.join(CREDS_BASE, prefix)
+    if os.path.isdir(base_folder):
+        files = [f for f in os.listdir(base_folder) if os.path.isfile(os.path.join(base_folder, f))]
+        if files:
+            found.append(prefix)  # e.g. "Fashion"
+
+    # ── Numbered folders (_01, _02, ...) ─────────────────────────────────────
     pattern = re.compile(rf"^{re.escape(prefix)}_(\d+)$", re.IGNORECASE)
-    found   = []
+    numbered = []
     for name in os.listdir(CREDS_BASE):
         if pattern.match(name):
             folder = os.path.join(CREDS_BASE, name)
-            # Must have at least one file (meta_config.json or .env)
-            files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+            files  = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
             if files:
-                found.append(name)
+                numbered.append(name)
 
-    found.sort(key=lambda n: int(pattern.match(n).group(1)))
+    numbered.sort(key=lambda n: int(pattern.match(n).group(1)))
+    found.extend(numbered)  # e.g. ["Fashion", "Fashion_01", "Fashion_02"]
+
     return found
 
 
