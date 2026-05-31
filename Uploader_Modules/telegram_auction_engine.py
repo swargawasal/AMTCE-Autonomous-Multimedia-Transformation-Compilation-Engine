@@ -6,7 +6,8 @@ import threading
 import schedule
 import urllib.request
 import urllib.parse
-from datetime import datetime
+import random
+from datetime import datetime, timedelta
 from typing import Dict, Optional, List
 from contextlib import contextmanager
 try:
@@ -262,6 +263,119 @@ class SettlementEngine:
             "refunds": refunds
         }
 
+# ---------------------------------------------------------------------------
+# FEATURED REEL PICKER
+# ---------------------------------------------------------------------------
+
+OUTPUT_BATCH_STATE_FILE = "The_json/output_batch_state.json"
+
+def pick_featured_reel() -> Optional[str]:
+    """
+    Always returns a valid on-disk video path for the auction opening.
+    Priority:
+      1. Clips processed/updated today (within last 24h) — freshest harvest
+      2. Most recently updated clip from the output ledger (any day)
+      3. None — caller sends text-only announcement
+    """
+    try:
+        if not os.path.exists(OUTPUT_BATCH_STATE_FILE):
+            return None
+        with open(OUTPUT_BATCH_STATE_FILE, 'r') as f:
+            ledger: dict = json.load(f)
+    except Exception as e:
+        logger.warning(f"⚠️ pick_featured_reel: could not load ledger: {e}")
+        return None
+
+    now = time.time()
+    cutoff_24h = now - 86400  # 24 hours ago
+
+    # Flatten all (actress, path, updated_at) tuples
+    candidates = []
+    for actress, data in ledger.items():
+        updated_at = data.get("updated_at", 0)
+        for fpath in data.get("files", []):
+            candidates.append((actress, fpath, updated_at))
+
+    if not candidates:
+        return None
+
+    # Sort newest first
+    candidates.sort(key=lambda x: x[2], reverse=True)
+
+    # Pass 1: today's clips (last 24h) that exist on disk
+    todays = [(a, p, u) for a, p, u in candidates if u >= cutoff_24h and os.path.exists(p)]
+    if todays:
+        chosen = random.choice(todays)
+        logger.info(f"🎬 pick_featured_reel: today's clip → {chosen[1]} ({chosen[0]})")
+        return chosen[1]
+
+    # Pass 2: any clip from ledger that exists on disk (most recent first)
+    for actress, fpath, updated_at in candidates:
+        if os.path.exists(fpath):
+            logger.info(f"🎬 pick_featured_reel: fallback clip → {fpath} ({actress})")
+            return fpath
+
+    logger.warning("⚠️ pick_featured_reel: no on-disk clips found — text-only auction open")
+    return None
+
+
+def send_video_to_telegram(video_path: str, caption: str) -> bool:
+    """
+    Sends a local video file to the Telegram group using the Bot API.
+    Returns True on success, False on failure.
+    """
+    token = os.getenv("TELEGRAM_BOT_TOKEN")
+    chat_id = os.getenv("TELEGRAM_GROUP_ID", os.getenv("TELEGRAM_ADMIN_ID"))
+    if not token or not chat_id:
+        logger.warning("send_video_to_telegram: missing token or chat_id")
+        return False
+    try:
+        import urllib.request
+        import mimetypes
+        url = f"https://api.telegram.org/bot{token}/sendVideo"
+        boundary = "----AMTCE_BOUNDARY"
+        mime_type = mimetypes.guess_type(video_path)[0] or "video/mp4"
+        with open(video_path, 'rb') as vf:
+            video_data = vf.read()
+        filename = os.path.basename(video_path)
+
+        # Build multipart/form-data body manually (no external deps)
+        def encode_field(name, value):
+            return (f"--{boundary}\r\n"
+                    f"Content-Disposition: form-data; name=\"{name}\"\r\n\r\n"
+                    f"{value}\r\n").encode("utf-8")
+
+        def encode_file(name, fname, data, ctype):
+            header = (f"--{boundary}\r\n"
+                      f"Content-Disposition: form-data; name=\"{name}\"; filename=\"{fname}\"\r\n"
+                      f"Content-Type: {ctype}\r\n\r\n").encode("utf-8")
+            return header + data + b"\r\n"
+
+        body = b""
+        body += encode_field("chat_id", chat_id)
+        body += encode_field("caption", caption)
+        body += encode_field("parse_mode", "HTML")
+        body += encode_file("video", filename, video_data, mime_type)
+        body += f"--{boundary}--\r\n".encode("utf-8")
+
+        req = urllib.request.Request(
+            url, data=body,
+            headers={"Content-Type": f"multipart/form-data; boundary={boundary}"},
+            method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            result = json.loads(resp.read().decode())
+            if result.get("ok"):
+                logger.info(f"✅ send_video_to_telegram: sent {filename}")
+                return True
+            else:
+                logger.error(f"❌ send_video_to_telegram: API error: {result}")
+                return False
+    except Exception as e:
+        logger.error(f"❌ send_video_to_telegram: {e}")
+        return False
+
+
 class SchedulerDaemon:
     """Time-loop wrapper for 6PM announce, 7PM open, 9PM close loops."""
     _thread = None
@@ -351,7 +465,25 @@ class SchedulerDaemon:
         state = AuctionState()
         state.state["active"] = True
         state.save_state()
-        LiveLeaderboard.send_broadcast("⚔️ <b>THE WAR HAS BEGUN!</b>\nFlash Deal is OPEN. Use /join to enter.")
+
+        # --- ALWAYS OPEN WITH A FEATURED REEL (even if today's harvest hasn't run yet) ---
+        opening_caption = (
+            "⚔️ <b>THE WAR HAS BEGUN!</b>\n"
+            "Flash Deal is OPEN. 🔥\n"
+            "Use /join to enter the auction and place your bid!"
+        )
+        featured_reel = pick_featured_reel()
+        if featured_reel:
+            # Send the reel as a video in a background thread so the scheduler isn't blocked
+            def _send_reel():
+                success = send_video_to_telegram(featured_reel, caption=opening_caption)
+                if not success:
+                    # Fallback: plain text broadcast
+                    LiveLeaderboard.send_broadcast(opening_caption)
+            threading.Thread(target=_send_reel, daemon=True).start()
+        else:
+            # No clip on disk — send text-only announcement
+            LiveLeaderboard.send_broadcast(opening_caption)
         
     @classmethod
     def job_war_mode_tick(cls, tick: int):

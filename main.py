@@ -8621,11 +8621,28 @@ def run_ci_mode():
                     try: os.remove(video_path)
                     except Exception: pass
 
-                # Human-like delay (if queue still has items)
-                if PublishQueue.load():
-                    sleep_secs = random.randint(300, 900)  # 5 to 15 mins
-                    logger.info(f"💤 Sleeping for {sleep_secs//60}m {sleep_secs%60}s to mimic human behavior before next upload...")
-                    time.sleep(sleep_secs)
+                # Mathematical delay (spread remaining clips evenly across remaining time)
+                queue_left = len(PublishQueue.load())
+                if queue_left > 0:
+                    elapsed = time.time() - start_time
+                    time_left = max_runtime - elapsed
+                    
+                    if time_left > 0:
+                        # Base mathematical delay: evenly divide remaining time by remaining clips
+                        base_delay = time_left / queue_left
+                        
+                        # Cap the max delay at 45 minutes to prevent infinite hangs if queue is tiny
+                        # Cap the min delay at 3 minutes to avoid bot-like spam
+                        base_delay = max(180.0, min(2700.0, base_delay))
+                        
+                        # Add a tiny +/- 10% jitter to the math so it feels organic/human
+                        sleep_secs = int(base_delay * random.uniform(0.9, 1.1))
+                        
+                        logger.info(f"🧮 Mathematical Delay: {queue_left} clips left. {int(time_left//60)} mins remaining.")
+                        logger.info(f"💤 Sleeping for {sleep_secs//60}m {sleep_secs%60}s before next upload...")
+                        time.sleep(sleep_secs)
+                    else:
+                        logger.warning("⏳ [CI] Time is fully exhausted, cannot sleep.")
 
             logger.info("✅ [CI] Queue processing phase complete.")
         else:

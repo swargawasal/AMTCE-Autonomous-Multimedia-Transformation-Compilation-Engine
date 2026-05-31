@@ -288,6 +288,7 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
         from Uploader_Modules.content_router import classify_content
         route   = classify_content(video_path)
         targets = route["targets"]   # ordered list e.g. ["General_Fallback", "Fashion_Style"]
+        content_category = route.get("category", "general")  # "fashion" | "nsfw" | "general"
         logger.info(
             "🗺️  [CONTENT_ROUTER] category=%s coverage=%d%% targets=%s",
             route["category"], route["coverage_pct"], targets,
@@ -296,8 +297,9 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
         upload_niche = targets[0]
     except Exception as _re:
         logger.warning("⚠️ [CONTENT_ROUTER] Routing failed: %s — falling back to actress_folder", _re)
-        upload_niche = actress_folder
-        targets      = [actress_folder]
+        upload_niche     = actress_folder
+        targets          = [actress_folder]
+        content_category = "general"
 
     # ── Account Limiter: import helpers ───────────────────────────────────────
     try:
@@ -477,11 +479,21 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
                 from dotenv import load_dotenv
                 load_dotenv("Credentials/.env")
 
-                token   = os.getenv("TELEGRAM_BOT_TOKEN")
-                chat_id = os.getenv("TELEGRAM_GROUP_ID")
-                if not token or not chat_id:
-                    logger.warning("⚠️ [AUTO_PUBLISH] Telegram config missing, skipping video upload.")
+                token = os.getenv("TELEGRAM_BOT_TOKEN")
+                if not token:
+                    logger.warning("⚠️ [AUTO_PUBLISH] TELEGRAM_BOT_TOKEN missing, skipping TG upload.")
                     return
+
+                # ── Route to the correct niche Telegram group ──────────────────
+                from Uploader_Modules.telegram_router import get_telegram_group_id
+                chat_id = get_telegram_group_id(content_category)
+                if not chat_id:
+                    logger.warning(
+                        "⚠️ [AUTO_PUBLISH] No Telegram group configured for category=%s — skipping.",
+                        content_category
+                    )
+                    return
+                logger.info("📡 [AUTO_PUBLISH] Telegram → %s group: %s", content_category.upper(), chat_id)
 
                 # ── Los Pollos (partner/dating CPA link) ─────────────────────
                 from Uploader_Modules.community_promoter import CommunityPromoter as _CP
@@ -799,9 +811,20 @@ def run_daily_cycle() -> None:
     Dispatcher for harvest cycles.
     PAPARAZZI_MODE=yes in Credentials/.env -> run_paparazzi_cycle() (gender routing).
     Otherwise -> classic actress-account mode (backward compatible).
+    Also runs posting_time_analyzer to dynamically optimize schedule slots.
     """
     import re as _re, os as _os
     _env_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "Credentials", ".env")
+    
+    # ── Auto-Optimize Harvest & Publish Timings ──
+    try:
+        from Actress_Modules.posting_time_analyzer import get_recommendations, patch_env
+        logger.info("🧠 [ANALYZER] Dynamically optimizing harvest & publish schedules...")
+        recs = get_recommendations()
+        patch_env(recs, env_path=_env_path)
+    except Exception as _ae:
+        logger.warning("⚠️ [ANALYZER] Schedule optimization failed (non-fatal): %s", _ae)
+
     _paparazzi_mode = False
     try:
         with open(_env_path, "r", encoding="utf-8", errors="ignore") as _f:

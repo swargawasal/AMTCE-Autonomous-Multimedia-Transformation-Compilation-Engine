@@ -298,7 +298,7 @@ jobs:
         git add -f Actress_Modules/apify_cursor.json || true
         git add -f Actress_Modules/account_daily_limits.json || true
         git add -f publish_queue.json || true
-        git add downloads/ || true
+        git add --all downloads/ || true
         git add -f The_json/telegram_router_state.json || true
         if git diff --cached --quiet; then
           echo "No dedup state changes to commit."

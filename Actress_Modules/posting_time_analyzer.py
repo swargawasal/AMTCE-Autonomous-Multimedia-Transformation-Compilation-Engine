@@ -269,10 +269,7 @@ def patch_env(recs: Optional[Dict] = None, env_path: str = "Credentials/.env") -
 
     logger.info("✅ [ANALYZER] Patched %s:", env_path)
     logger.info("   ACTRESS_SCHEDULE_TIMES      = %s", new_harvest)
-    logger.info("   ACTRESS_STATIC_PUBLISH_TIMES = %s", new_publish)
-    print(f"\n✅ Patched {env_path}:")
-    print(f"   ACTRESS_SCHEDULE_TIMES       = {new_harvest}")
-    print(f"   ACTRESS_STATIC_PUBLISH_TIMES = {new_publish}\n")
+    logger.info("Patched %s with smart schedule.", env_path)
 
 
 # ── CLI entry point ─────────────────────────────────────────────────────────
