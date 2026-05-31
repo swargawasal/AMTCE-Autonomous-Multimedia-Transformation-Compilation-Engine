@@ -50,6 +50,9 @@ jobs:
         TOKEN_JSON_ADULT: ${{ secrets.TOKEN_JSON_ADULT }}
         CLIENT_SECRET_JSON_ADULT: ${{ secrets.CLIENT_SECRET_JSON_ADULT }}
         TELEGRAM_CONFIG_JSON: ${{ secrets.TELEGRAM_CONFIG_JSON }}
+        META_CONFIG_GENERAL_FALLBACK: ${{ secrets.META_CONFIG_GENERAL_FALLBACK }}
+        META_CONFIG_NSFW: ${{ secrets.META_CONFIG_NSFW }}
+        META_CONFIG_FASHION_STYLE: ${{ secrets.META_CONFIG_FASHION_STYLE }}
       run: |
         mkdir -p Credentials
         # Securely inject the .env file from GitHub Secrets
@@ -76,12 +79,30 @@ jobs:
         if [ -n "$TELEGRAM_CONFIG_JSON" ]; then
           echo "$TELEGRAM_CONFIG_JSON" > Credentials/telegram_config.json
         fi
+        # Inject Meta/Instagram credentials per niche account
+        if [ -n "$META_CONFIG_GENERAL_FALLBACK" ]; then
+          mkdir -p Credentials/social_media/General_Fallback
+          echo "$META_CONFIG_GENERAL_FALLBACK" > Credentials/social_media/General_Fallback/meta_config.json
+          echo "Injected META_CONFIG_GENERAL_FALLBACK"
+        fi
+        if [ -n "$META_CONFIG_NSFW" ]; then
+          mkdir -p Credentials/social_media/NSFW
+          echo "$META_CONFIG_NSFW" > Credentials/social_media/NSFW/meta_config.json
+          echo "Injected META_CONFIG_NSFW"
+        fi
+        if [ -n "$META_CONFIG_FASHION_STYLE" ]; then
+          mkdir -p "Credentials/social_media/Fashion_Style"
+          echo "$META_CONFIG_FASHION_STYLE" > "Credentials/social_media/Fashion_Style/meta_config.json"
+          echo "Injected META_CONFIG_FASHION_STYLE"
+        fi
         # Auto-enable paparazzi mode in CI runs
         echo "PAPARAZZI_MODE=yes" >> Credentials/.env
+        # Auto-enable actress clip publishing in CI
+        echo "AUTO_PUBLISH_ACTRESS_CLIPS=yes" >> Credentials/.env
 
     - name: Run AMTCE Engine
       run: |
-        python main.py
+        python ci_runner.py
 
     # ── Persist ledger + queue to git after every run (the ONLY reliable method) ──
     # actions/cache is NOT reliable here because its key changes each run.
@@ -96,6 +117,7 @@ jobs:
         git add -f Actress_Modules/actress_ledger.json || true
         git add -f Actress_Modules/published_registry.json || true
         git add -f Actress_Modules/apify_cursor.json || true
+        git add -f Actress_Modules/account_daily_limits.json || true
         git add -f publish_queue.json || true
         git add -f Intelligence_Data/salesman_state.json || true
         # Only commit if there's something changed

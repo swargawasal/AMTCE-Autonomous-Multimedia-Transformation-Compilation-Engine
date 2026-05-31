@@ -279,6 +279,42 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
 
     logger.info("🚀 [AUTO_PUBLISH] Starting auto-publish for: %s", os.path.basename(video_path))
 
+    # ── Content Router: classify clip → pick upload niche ─────────────────────
+    # Overrides actress_folder with the correct routing target:
+    #   fashion (coverage >= 40%) → General_Fallback / Fashion_Style
+    #   nsfw    (coverage <  40%) → NSFW / General_Fallback
+    #   general (no human)        → General_Fallback
+    try:
+        from Uploader_Modules.content_router import classify_content
+        route   = classify_content(video_path)
+        targets = route["targets"]   # ordered list e.g. ["General_Fallback", "Fashion_Style"]
+        logger.info(
+            "🗺️  [CONTENT_ROUTER] category=%s coverage=%d%% targets=%s",
+            route["category"], route["coverage_pct"], targets,
+        )
+        # Use the primary target as the upload niche (overrides actress folder for credentials)
+        upload_niche = targets[0]
+    except Exception as _re:
+        logger.warning("⚠️ [CONTENT_ROUTER] Routing failed: %s — falling back to actress_folder", _re)
+        upload_niche = actress_folder
+        targets      = [actress_folder]
+
+    # ── Account Limiter: import helpers ───────────────────────────────────────
+    try:
+        from Uploader_Modules.account_limiter import can_post, record_post, select_posting_style
+        _limiter_ok = True
+    except Exception as _le:
+        logger.warning("⚠️ [LIMITER] Import failed: %s — limits disabled", _le)
+        _limiter_ok = False
+        def can_post(n, p): return True   # noqa: E731
+        def record_post(n, p): pass       # noqa: E731
+        def select_posting_style(): return {}  # noqa: E731
+
+    # Pick a random posting style to vary caption structure across accounts
+    post_style = select_posting_style()
+    logger.info("🎲 [LIMITER] Posting style: %s", post_style)
+
+
     # ── Step 1: Extract a thumbnail frame for Gemini vision ──────────────────
     import subprocess, tempfile, asyncio
     frame_path = None
@@ -374,34 +410,46 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
             except Exception as e:
                 logger.warning("⚠️ Failed to calculate YT schedule time, defaulting to immediate: %s", e)
 
-            # 1. YouTube
+            # 1. YouTube — guarded by daily limit
             logger.info("📤 Uploading to YouTube...")
-            try:
-                yt_link = await upload_to_youtube(
-                    file_path=video_path,
-                    hashtags=hashtags,
-                    title=title,
-                    description=description,
-                    privacy="public",
-                    publish_at=yt_publish_at,
-                    niche=actress_folder
-                )
-                if yt_link:
-                    logger.info("🎥 [AUTO_PUBLISH] YouTube success: %s", yt_link)
-                else:
-                    logger.warning("⚠️ [AUTO_PUBLISH] YouTube upload failed.")
-            except Exception as e:
-                logger.error("❌ YouTube upload error: %s", e)
+            if can_post(upload_niche, "yt"):
+                try:
+                    yt_link = await upload_to_youtube(
+                        file_path=video_path,
+                        hashtags=hashtags,
+                        title=title,
+                        description=description,
+                        privacy="public",
+                        publish_at=yt_publish_at,
+                        niche=upload_niche
+                    )
+                    if yt_link:
+                        logger.info("🎥 [AUTO_PUBLISH] YouTube success: %s", yt_link)
+                        record_post(upload_niche, "yt")
+                    else:
+                        logger.warning("⚠️ [AUTO_PUBLISH] YouTube upload failed.")
+                except Exception as e:
+                    logger.error("❌ YouTube upload error: %s", e)
+            else:
+                logger.info("🚫 [LIMITER] YouTube daily limit hit for %s — skipping YT upload", upload_niche)
 
-            # 2. Meta (Instagram + Facebook)
+            # 2. Meta (Instagram + Facebook) — guarded by daily limit
             logger.info("📤 Uploading to Meta (Insta/FB)...")
-            return await AsyncMetaUploader.upload_to_meta(
-                video_path=video_path,
-                caption=caption,
-                upload_type="Reels",
-                skip_facebook=os.getenv("AUTO_PUBLISH_SKIP_FB", "no").lower() in ("yes", "true"),
-                niche=actress_folder,
-            )
+            if can_post(upload_niche, "ig"):
+                meta_result = await AsyncMetaUploader.upload_to_meta(
+                    video_path=video_path,
+                    caption=caption,
+                    upload_type="Reels",
+                    skip_facebook=os.getenv("AUTO_PUBLISH_SKIP_FB", "no").lower() in ("yes", "true"),
+                    niche=upload_niche,
+                )
+                ig_ok = meta_result.get("instagram", {}).get("status", "") == "success"
+                if ig_ok:
+                    record_post(upload_niche, "ig")
+                return meta_result
+            else:
+                logger.info("🚫 [LIMITER] Instagram daily limit hit for %s — skipping IG upload", upload_niche)
+                return {"instagram": {"status": "skipped_limit"}, "facebook": {"status": "skipped_limit"}}
 
         try:
             loop = asyncio.get_event_loop()
@@ -497,18 +545,22 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
                     _tg_chat = f"@{_tg_chat}"
 
                 bot = telegram.Bot(token=token)
-                logger.info("📤 Uploading to Telegram (dual-button) ...")
-                with open(video_path, 'rb') as vf:
-                    await bot.send_video(
-                        chat_id=_tg_chat,
-                        video=vf,
-                        caption=tg_caption,
-                        reply_markup=reply_markup,
-                        read_timeout=600,
-                        write_timeout=600,
-                        connect_timeout=60
-                    )
-                logger.info("✅ [AUTO_PUBLISH] Sent clip to Telegram with dual CTA buttons.")
+                if can_post(upload_niche, "telegram"):
+                    logger.info("📤 Uploading to Telegram (dual-button) ...")
+                    with open(video_path, 'rb') as vf:
+                        await bot.send_video(
+                            chat_id=_tg_chat,
+                            video=vf,
+                            caption=tg_caption,
+                            reply_markup=reply_markup,
+                            read_timeout=600,
+                            write_timeout=600,
+                            connect_timeout=60
+                        )
+                    logger.info("✅ [AUTO_PUBLISH] Sent clip to Telegram with dual CTA buttons.")
+                    record_post(upload_niche, "telegram")
+                else:
+                    logger.info("🚫 [LIMITER] Telegram daily limit hit for %s — skipping TG upload", upload_niche)
 
                 # ── Outfit Rating DM → Admin (same as manual pipeline) ───────
                 try:
@@ -622,7 +674,7 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
                     logger.info(f"🗑️ [SAFETY] Hard-deleted published clip: {os.path.basename(video_path)}")
                 
                 base_path = os.path.splitext(video_path)[0]
-                for ext in [".niche.json", ".jpg", ".txt"]:
+                for ext in [".niche.json", ".jpg", ".txt", ".route.json"]:
                     sidecar = base_path + ext
                     if os.path.exists(sidecar):
                         os.remove(sidecar)
