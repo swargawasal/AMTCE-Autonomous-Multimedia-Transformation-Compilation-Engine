@@ -146,6 +146,39 @@ def get_daily_summary() -> dict:
     return summary
 
 
+def pick_available_account(pool: list[str], platform: str) -> str | None:
+    """
+    Given a shuffled pool of niche folder names, returns the first one
+    that still has capacity for today on the given platform.
+
+    Args:
+        pool:     e.g. ["Fashion_02", "Fashion_01", "General_Fallback"]  (pre-shuffled)
+        platform: "ig", "yt", or "telegram"
+
+    Returns:
+        Niche folder name (str) or None if all accounts are at daily limit.
+
+    Example usage:
+        pool    = get_route_pool("fashion")   # shuffled automatically
+        account = pick_available_account(pool, "ig")
+        if account:
+            record_post(account, "ig")
+    """
+    for niche in pool:
+        if can_post(niche, platform):
+            logger.info(
+                "✅ [LIMITER] Selected account: %s for platform=%s",
+                niche, platform,
+            )
+            return niche
+
+    logger.warning(
+        "🚫 [LIMITER] All accounts in pool exhausted for platform=%s: %s",
+        platform, pool,
+    )
+    return None
+
+
 def stagger_delay() -> None:
     """
     Sleep a random amount between MIN_STAGGER_SECS and MAX_STAGGER_SECS.

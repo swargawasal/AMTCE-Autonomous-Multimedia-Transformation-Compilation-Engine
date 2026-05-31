@@ -2,9 +2,14 @@
 content_router.py — Gemini Vision Content Router
 =================================================
 Classifies a video clip into one of three routing tiers:
-  • "fashion"  — clothing coverage >= 40% → General_Fallback / Fashion_Style accounts
-  • "nsfw"     — clothing coverage <  40% → NSFW account
-  • "general"  — no human detected       → General_Fallback only
+  • "fashion"  — clothing coverage >= 40% → Fashion_01, Fashion_02, ... accounts (randomly picked)
+  • "nsfw"     — clothing coverage <  40% → NSFW_01, NSFW_02, ... accounts (randomly picked)
+  • "general"  — no human detected        → General_Fallback only
+
+Account pools are auto-discovered from Credentials/social_media/ at runtime.
+Adding a new account is as simple as creating the folder:
+  Fashion_01, Fashion_02, Fashion_03 ...
+  NSFW_01,    NSFW_02,    NSFW_03    ...
 
 Results are cached in a .route.json sidecar next to the video file so
 Gemini is only called once per clip.
@@ -13,32 +18,87 @@ Gemini is only called once per clip.
 import json
 import logging
 import os
+import random
+import re
 import subprocess
 import tempfile
 
 logger = logging.getLogger(__name__)
 
-# ── Constants ────────────────────────────────────────────────────────────────
-FASHION_THRESHOLD = int(os.getenv("CONTENT_ROUTER_FASHION_THRESHOLD", "40"))  # %
-ROUTE_CACHE_EXT   = ".route.json"
+# ── Constants ─────────────────────────────────────────────────────────────────
+FASHION_THRESHOLD  = int(os.getenv("CONTENT_ROUTER_FASHION_THRESHOLD", "40"))  # %
+ROUTE_CACHE_EXT    = ".route.json"
+CREDS_BASE         = os.path.join("Credentials", "social_media")
 
-# Route → ordered list of target niche folders (first = primary)
-ROUTE_TARGETS = {
-    "fashion": ["General_Fallback", "Fashion_Style"],
+# Fallback static targets used when no numbered folders exist yet
+_STATIC_FALLBACK = {
+    "fashion": ["General_Fallback"],
     "nsfw":    ["NSFW", "General_Fallback"],
     "general": ["General_Fallback"],
 }
 
 
+# ── Dynamic account pool discovery ───────────────────────────────────────────
+
+def _discover_pool(prefix: str) -> list[str]:
+    """
+    Returns all credential folders matching <prefix>_NN (e.g. Fashion_01, NSFW_03).
+    Sorted numerically. Only includes folders that contain at least one credential file.
+    """
+    if not os.path.isdir(CREDS_BASE):
+        return []
+
+    pattern = re.compile(rf"^{re.escape(prefix)}_(\d+)$", re.IGNORECASE)
+    found   = []
+    for name in os.listdir(CREDS_BASE):
+        if pattern.match(name):
+            folder = os.path.join(CREDS_BASE, name)
+            # Must have at least one file (meta_config.json or .env)
+            files = [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f))]
+            if files:
+                found.append(name)
+
+    found.sort(key=lambda n: int(pattern.match(n).group(1)))
+    return found
+
+
+def get_route_pool(category: str) -> list[str]:
+    """
+    Returns the full shuffled pool of eligible niche folders for a category.
+    Always randomised so no single account is always first.
+
+    fashion → all Fashion_XX folders (shuffled) + General_Fallback as final fallback
+    nsfw    → all NSFW_XX folders (shuffled) + General_Fallback as final fallback
+    general → [General_Fallback]
+    """
+    if category == "fashion":
+        numbered = _discover_pool("Fashion")
+        if not numbered:
+            logger.info("📂 [CONTENT_ROUTER] No Fashion_XX folders found — using General_Fallback")
+            return ["General_Fallback"]
+        random.shuffle(numbered)
+        # General_Fallback as ultimate fallback if all Fashion accounts are at daily limit
+        return numbered + ["General_Fallback"]
+
+    elif category == "nsfw":
+        numbered = _discover_pool("NSFW")
+        if not numbered:
+            logger.info("📂 [CONTENT_ROUTER] No NSFW_XX folders found — falling back to NSFW then General_Fallback")
+            return ["NSFW", "General_Fallback"]
+        random.shuffle(numbered)
+        return numbered + ["General_Fallback"]
+
+    else:  # general
+        return ["General_Fallback"]
+
+
+# ── Frame extraction ──────────────────────────────────────────────────────────
+
 def _extract_frame(video_path: str) -> str | None:
     """Extract the middle frame from a video as a temp JPEG. Returns path or None."""
     try:
-        # Get duration
         probe = subprocess.run(
-            [
-                "ffprobe", "-v", "quiet", "-print_format", "json",
-                "-show_format", video_path,
-            ],
+            ["ffprobe", "-v", "quiet", "-print_format", "json", "-show_format", video_path],
             capture_output=True, text=True, timeout=15,
         )
         info     = json.loads(probe.stdout)
@@ -49,10 +109,7 @@ def _extract_frame(video_path: str) -> str | None:
             frame_path = tmp.name
 
         subprocess.run(
-            [
-                "ffmpeg", "-y", "-ss", str(seek), "-i", video_path,
-                "-vframes", "1", "-q:v", "2", frame_path,
-            ],
+            ["ffmpeg", "-y", "-ss", str(seek), "-i", video_path, "-vframes", "1", "-q:v", "2", frame_path],
             check=True, capture_output=True, timeout=30,
         )
         return frame_path
@@ -60,6 +117,8 @@ def _extract_frame(video_path: str) -> str | None:
         logger.warning("⚠️ [CONTENT_ROUTER] Frame extraction failed: %s", exc)
         return None
 
+
+# ── Gemini Vision classification ──────────────────────────────────────────────
 
 def _classify_with_gemini(frame_path: str) -> dict:
     """
@@ -72,8 +131,8 @@ def _classify_with_gemini(frame_path: str) -> dict:
 
         api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
         if not api_key:
-            logger.warning("⚠️ [CONTENT_ROUTER] No Gemini API key found — defaulting to 'general'")
-            return {"coverage_pct": 50, "has_human": False, "category": "general"}
+            logger.warning("⚠️ [CONTENT_ROUTER] No Gemini API key — defaulting to 'fashion'")
+            return {"coverage_pct": 50, "has_human": True, "category": "fashion"}
 
         genai.configure(api_key=api_key)
         model = genai.GenerativeModel("gemini-1.5-flash")
@@ -94,7 +153,6 @@ def _classify_with_gemini(frame_path: str) -> dict:
         response = model.generate_content([prompt, img])
         raw      = response.text.strip()
 
-        # Strip markdown fences if present
         if raw.startswith("```"):
             raw = raw.split("```")[1]
             if raw.startswith("json"):
@@ -102,64 +160,65 @@ def _classify_with_gemini(frame_path: str) -> dict:
         raw = raw.strip()
 
         result = json.loads(raw)
-        # Sanitise
         result["coverage_pct"] = int(result.get("coverage_pct", 50))
         result["has_human"]    = bool(result.get("has_human", True))
-        result["category"]     = result.get("category", "general").lower()
+        result["category"]     = result.get("category", "fashion").lower()
         if result["category"] not in ("fashion", "nsfw", "general"):
             result["category"] = "fashion" if result["coverage_pct"] >= FASHION_THRESHOLD else "nsfw"
 
         logger.info(
-            "🎨 [CONTENT_ROUTER] Gemini result — coverage: %d%%, human: %s, category: %s",
+            "🎨 [CONTENT_ROUTER] Gemini — coverage: %d%%, human: %s, category: %s",
             result["coverage_pct"], result["has_human"], result["category"],
         )
         return result
 
     except Exception as exc:
-        logger.warning("⚠️ [CONTENT_ROUTER] Gemini classification failed: %s — defaulting to 'fashion'", exc)
+        logger.warning("⚠️ [CONTENT_ROUTER] Gemini failed: %s — defaulting to 'fashion'", exc)
         return {"coverage_pct": 50, "has_human": True, "category": "fashion"}
 
 
+# ── Main entry point ──────────────────────────────────────────────────────────
+
 def classify_content(video_path: str, force: bool = False) -> dict:
     """
-    Main entry point. Classifies a video clip.
+    Classifies a video clip and returns routing info.
 
     Returns:
         {
             "category":     "fashion" | "nsfw" | "general",
             "coverage_pct": int,
             "has_human":    bool,
-            "targets":      ["General_Fallback", ...],   # ordered target niches
+            "targets":      ["Fashion_02", "Fashion_01", "General_Fallback"],  # shuffled pool
             "cached":       bool,
         }
 
-    Result is cached in a .route.json sidecar next to the video.
-    Pass force=True to re-classify even if cache exists.
+    The targets list is a shuffled pool — account_limiter picks the first one
+    that hasn't hit its daily cap.
     """
     if not video_path or not os.path.exists(video_path):
         logger.warning("⚠️ [CONTENT_ROUTER] video_path not found: %s", video_path)
         return {
-            "category": "general",
-            "coverage_pct": 50,
-            "has_human": False,
-            "targets": ROUTE_TARGETS["general"],
-            "cached": False,
+            "category": "general", "coverage_pct": 50,
+            "has_human": False, "targets": ["General_Fallback"], "cached": False,
         }
 
-    base        = os.path.splitext(video_path)[0]
-    cache_path  = base + ROUTE_CACHE_EXT
+    base       = os.path.splitext(video_path)[0]
+    cache_path = base + ROUTE_CACHE_EXT
 
-    # ── Return cached result ──────────────────────────────────────────────────
+    # ── Return cached classification (but always re-discover pool so new accounts are picked up) ──
+    cached_category = None
     if not force and os.path.exists(cache_path):
         try:
             with open(cache_path, "r", encoding="utf-8") as f:
                 cached = json.load(f)
+            cached_category = cached.get("category", "fashion")
+            # Re-run pool discovery every time (accounts may have been added)
+            cached["targets"] = get_route_pool(cached_category)
             cached["cached"]  = True
-            cached["targets"] = ROUTE_TARGETS.get(cached.get("category", "general"), ROUTE_TARGETS["general"])
-            logger.info("📦 [CONTENT_ROUTER] Using cached route: %s → %s", video_path, cached["category"])
+            logger.info("📦 [CONTENT_ROUTER] Cached category=%s pool=%s", cached_category, cached["targets"])
             return cached
         except Exception:
-            pass  # Re-classify if cache is corrupted
+            pass
 
     # ── Extract frame & classify ──────────────────────────────────────────────
     frame_path = _extract_frame(video_path)
@@ -174,22 +233,21 @@ def classify_content(video_path: str, force: bool = False) -> dict:
     else:
         result = {"coverage_pct": 50, "has_human": True, "category": "fashion"}
 
-    result["targets"] = ROUTE_TARGETS.get(result["category"], ROUTE_TARGETS["general"])
+    result["targets"] = get_route_pool(result["category"])
     result["cached"]  = False
 
-    # ── Write sidecar cache ───────────────────────────────────────────────────
+    # ── Cache classification result (not the pool — pool is re-discovered each time) ──
     try:
         with open(cache_path, "w", encoding="utf-8") as f:
-            json.dump({k: v for k, v in result.items() if k != "cached"}, f, indent=2)
+            cache_data = {k: v for k, v in result.items() if k not in ("cached", "targets")}
+            json.dump(cache_data, f, indent=2)
     except Exception as exc:
         logger.warning("⚠️ [CONTENT_ROUTER] Failed to write route cache: %s", exc)
 
+    logger.info("🗺️  [CONTENT_ROUTER] category=%s pool=%s", result["category"], result["targets"])
     return result
 
 
 def get_route_targets(video_path: str) -> list[str]:
-    """
-    Convenience wrapper — returns ordered list of target niche folder names.
-    Example: ["General_Fallback", "Fashion_Style"]
-    """
+    """Convenience wrapper — returns shuffled pool of target niche folder names."""
     return classify_content(video_path)["targets"]

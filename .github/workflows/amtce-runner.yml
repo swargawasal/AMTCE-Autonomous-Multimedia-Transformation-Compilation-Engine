@@ -45,60 +45,110 @@ jobs:
     - name: Setup Environment Variables & Tokens
       env:
         ENV_FILE_CONTENT: ${{ secrets.ENV_FILE_CONTENT }}
-        CLIENT_SECRET_JSON: ${{ secrets.CLIENT_SECRET_JSON }}
-        TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
-        TOKEN_JSON_ADULT: ${{ secrets.TOKEN_JSON_ADULT }}
-        CLIENT_SECRET_JSON_ADULT: ${{ secrets.CLIENT_SECRET_JSON_ADULT }}
         TELEGRAM_CONFIG_JSON: ${{ secrets.TELEGRAM_CONFIG_JSON }}
         META_CONFIG_GENERAL_FALLBACK: ${{ secrets.META_CONFIG_GENERAL_FALLBACK }}
-        META_CONFIG_NSFW: ${{ secrets.META_CONFIG_NSFW }}
-        META_CONFIG_FASHION_STYLE: ${{ secrets.META_CONFIG_FASHION_STYLE }}
+        # ── Fashion accounts (add META_CONFIG_FASHION_01 .. _05 as you scale) ──
+        META_CONFIG_FASHION_01: ${{ secrets.META_CONFIG_FASHION_01 }}
+        META_CONFIG_FASHION_02: ${{ secrets.META_CONFIG_FASHION_02 }}
+        META_CONFIG_FASHION_03: ${{ secrets.META_CONFIG_FASHION_03 }}
+        META_CONFIG_FASHION_04: ${{ secrets.META_CONFIG_FASHION_04 }}
+        META_CONFIG_FASHION_05: ${{ secrets.META_CONFIG_FASHION_05 }}
+        # ── Fashion YT tokens (CLIENT_SECRET_JSON_01 .. _05 + TOKEN_JSON_01 .. _05) ──
+        CLIENT_SECRET_JSON_01: ${{ secrets.CLIENT_SECRET_JSON_01 }}
+        CLIENT_SECRET_JSON_02: ${{ secrets.CLIENT_SECRET_JSON_02 }}
+        CLIENT_SECRET_JSON_03: ${{ secrets.CLIENT_SECRET_JSON_03 }}
+        TOKEN_JSON_01: ${{ secrets.TOKEN_JSON_01 }}
+        TOKEN_JSON_02: ${{ secrets.TOKEN_JSON_02 }}
+        TOKEN_JSON_03: ${{ secrets.TOKEN_JSON_03 }}
+        # ── NSFW accounts (add META_CONFIG_NSFW_01 .. _05 as you scale) ──
+        META_CONFIG_NSFW_01: ${{ secrets.META_CONFIG_NSFW_01 }}
+        META_CONFIG_NSFW_02: ${{ secrets.META_CONFIG_NSFW_02 }}
+        META_CONFIG_NSFW_03: ${{ secrets.META_CONFIG_NSFW_03 }}
+        META_CONFIG_NSFW_04: ${{ secrets.META_CONFIG_NSFW_04 }}
+        META_CONFIG_NSFW_05: ${{ secrets.META_CONFIG_NSFW_05 }}
+        # ── NSFW YT tokens ──
+        CLIENT_SECRET_JSON_ADULT_01: ${{ secrets.CLIENT_SECRET_JSON_ADULT }}
+        CLIENT_SECRET_JSON_ADULT_02: ${{ secrets.CLIENT_SECRET_JSON_ADULT_02 }}
+        TOKEN_JSON_ADULT_01: ${{ secrets.TOKEN_JSON_ADULT }}
+        TOKEN_JSON_ADULT_02: ${{ secrets.TOKEN_JSON_ADULT_02 }}
       run: |
         mkdir -p Credentials
-        # Securely inject the .env file from GitHub Secrets
+
+        # ── Main .env ─────────────────────────────────────────────────────────
         if [ -n "$ENV_FILE_CONTENT" ]; then
           echo "$ENV_FILE_CONTENT" > Credentials/.env
         fi
-        # Inject Google client secret and access tokens if configured in Secrets
-        if [ -n "$CLIENT_SECRET_JSON" ]; then
-          echo "$CLIENT_SECRET_JSON" > Credentials/client_secret.json
-        fi
-        if [ -n "$TOKEN_JSON" ]; then
-          echo "$TOKEN_JSON" > Credentials/token.json
-        fi
-        # Inject niche-specific tokens (e.g. adult_content)
-        if [ -n "$TOKEN_JSON_ADULT" ]; then
-          mkdir -p Credentials/social_media/NSFW
-          echo "$TOKEN_JSON_ADULT" > Credentials/social_media/NSFW/token.json
-        fi
-        if [ -n "$CLIENT_SECRET_JSON_ADULT" ]; then
-          mkdir -p Credentials/social_media/NSFW
-          echo "$CLIENT_SECRET_JSON_ADULT" > Credentials/social_media/NSFW/client_secret.json
-        fi
-        # Inject telegram_config.json if configured
+
+        # ── Telegram config ───────────────────────────────────────────────────
         if [ -n "$TELEGRAM_CONFIG_JSON" ]; then
           echo "$TELEGRAM_CONFIG_JSON" > Credentials/telegram_config.json
         fi
-        # Inject Meta/Instagram credentials per niche account
+
+        # ── General Fallback IG ───────────────────────────────────────────────
         if [ -n "$META_CONFIG_GENERAL_FALLBACK" ]; then
           mkdir -p Credentials/social_media/General_Fallback
           echo "$META_CONFIG_GENERAL_FALLBACK" > Credentials/social_media/General_Fallback/meta_config.json
-          echo "Injected META_CONFIG_GENERAL_FALLBACK"
+          echo "✅ Injected General_Fallback IG"
         fi
-        if [ -n "$META_CONFIG_NSFW" ]; then
-          mkdir -p Credentials/social_media/NSFW
-          echo "$META_CONFIG_NSFW" > Credentials/social_media/NSFW/meta_config.json
-          echo "Injected META_CONFIG_NSFW"
-        fi
-        if [ -n "$META_CONFIG_FASHION_STYLE" ]; then
-          mkdir -p "Credentials/social_media/Fashion_Style"
-          echo "$META_CONFIG_FASHION_STYLE" > "Credentials/social_media/Fashion_Style/meta_config.json"
-          echo "Injected META_CONFIG_FASHION_STYLE"
-        fi
-        # Auto-enable paparazzi mode in CI runs
+
+        # ── Fashion accounts (Fashion_01 .. Fashion_05) ───────────────────────
+        for n in 01 02 03 04 05; do
+          VAR="META_CONFIG_FASHION_${n}"
+          VAL="${!VAR}"
+          if [ -n "$VAL" ]; then
+            mkdir -p "Credentials/social_media/Fashion_${n}"
+            echo "$VAL" > "Credentials/social_media/Fashion_${n}/meta_config.json"
+            echo "✅ Injected Fashion_${n} IG"
+          fi
+          # YT client secret
+          CS_VAR="CLIENT_SECRET_JSON_${n}"
+          CS_VAL="${!CS_VAR}"
+          if [ -n "$CS_VAL" ]; then
+            mkdir -p "Credentials/social_media/Fashion_${n}"
+            echo "$CS_VAL" > "Credentials/social_media/Fashion_${n}/client_secret.json"
+            echo "✅ Injected Fashion_${n} YT client_secret"
+          fi
+          # YT token
+          TK_VAR="TOKEN_JSON_${n}"
+          TK_VAL="${!TK_VAR}"
+          if [ -n "$TK_VAL" ]; then
+            mkdir -p "Credentials/social_media/Fashion_${n}"
+            echo "$TK_VAL" > "Credentials/social_media/Fashion_${n}/token.json"
+            echo "✅ Injected Fashion_${n} YT token"
+          fi
+        done
+
+        # ── NSFW accounts (NSFW_01 .. NSFW_05) ───────────────────────────────
+        for n in 01 02 03 04 05; do
+          VAR="META_CONFIG_NSFW_${n}"
+          VAL="${!VAR}"
+          if [ -n "$VAL" ]; then
+            mkdir -p "Credentials/social_media/NSFW_${n}"
+            echo "$VAL" > "Credentials/social_media/NSFW_${n}/meta_config.json"
+            echo "✅ Injected NSFW_${n} IG"
+          fi
+          # YT client secret
+          CS_VAR="CLIENT_SECRET_JSON_ADULT_${n}"
+          CS_VAL="${!CS_VAR}"
+          if [ -n "$CS_VAL" ]; then
+            mkdir -p "Credentials/social_media/NSFW_${n}"
+            echo "$CS_VAL" > "Credentials/social_media/NSFW_${n}/client_secret.json"
+            echo "✅ Injected NSFW_${n} YT client_secret"
+          fi
+          # YT token
+          TK_VAR="TOKEN_JSON_ADULT_${n}"
+          TK_VAL="${!TK_VAR}"
+          if [ -n "$TK_VAL" ]; then
+            mkdir -p "Credentials/social_media/NSFW_${n}"
+            echo "$TK_VAL" > "Credentials/social_media/NSFW_${n}/token.json"
+            echo "✅ Injected NSFW_${n} YT token"
+          fi
+        done
+
+        # ── CI flags ──────────────────────────────────────────────────────────
         echo "PAPARAZZI_MODE=yes" >> Credentials/.env
-        # Auto-enable actress clip publishing in CI
         echo "AUTO_PUBLISH_ACTRESS_CLIPS=yes" >> Credentials/.env
+
 
     - name: Run AMTCE Engine
       run: |
