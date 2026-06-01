@@ -1,9 +1,5 @@
 {
-  "pending": [],
-  "done_this_round": [
-    "instantbollywood",
-    "justbollywood.in",
-    "bollywooddazzle",
+  "pending": [
     "filmygalaxy",
     "filmymantramedia",
     "bollywindow",
@@ -27,5 +23,10 @@
     "bollywood76612",
     "filmycrest",
     "pinkmedia_official"
+  ],
+  "done_this_round": [
+    "instantbollywood",
+    "justbollywood.in",
+    "bollywooddazzle"
   ]
 }
