@@ -248,6 +248,16 @@ def _process_queue_item():
     from Actress_Modules.actress_scheduler import _auto_publish_clip
     _auto_publish_clip(final_video_path, actress_title, actress_folder)
 
+    # Belt-and-suspenders: ensure both paths are gone even if _auto_publish_clip's
+    # finally block was skipped (e.g. Telegram not configured, function returned early).
+    for _cleanup_path in {final_video_path, video_path}:
+        try:
+            if _cleanup_path and os.path.exists(_cleanup_path):
+                os.remove(_cleanup_path)
+                logger.info(f"🗑️ [PUBLISHER] Cleanup: deleted input after publish: {os.path.basename(_cleanup_path)}")
+        except Exception as _ce:
+            logger.warning(f"⚠️ [PUBLISHER] Could not delete {_cleanup_path}: {_ce}")
+
 
 def _publish_loop():
     static_times = _get_static_peak_times()

@@ -676,27 +676,39 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
                     loop.run_until_complete(_upload_tg())
             except RuntimeError:
                 asyncio.run(_upload_tg())
-            
-            # ── ULTIMATE SAFETY: IMMEDIATE HARD DELETE AFTER PUBLISH ──
-            try:
-                if os.path.exists(video_path):
-                    os.remove(video_path)
-                    logger.info(f"🗑️ [SAFETY] Hard-deleted published clip: {os.path.basename(video_path)}")
-                
-                base_path = os.path.splitext(video_path)[0]
-                for ext in [".niche.json", ".jpg", ".txt", ".route.json"]:
-                    sidecar = base_path + ext
-                    if os.path.exists(sidecar):
-                        os.remove(sidecar)
-                        logger.info(f"🗑️ [SAFETY] Hard-deleted sidecar: {os.path.basename(sidecar)}")
-            except Exception as del_err:
-                logger.error(f"⚠️ [SAFETY] Failed to delete clip after publish: {del_err}")
 
         except Exception as e:
             logger.warning(f"⚠️ [AUTO_PUBLISH] Telegram upload failed: {e}")
 
     except Exception as exc:
         logger.error("❌ [AUTO_PUBLISH] Upload failed (non-fatal): %s", exc)
+
+    finally:
+        # ── GUARANTEED HARD DELETE: Always runs after upload (success OR failure) ──
+        # Placed in `finally` so clips are NEVER left behind to be re-queued.
+        try:
+            if os.path.exists(video_path):
+                os.remove(video_path)
+                logger.info(f"🗑️ [SAFETY] Hard-deleted published clip: {os.path.basename(video_path)}")
+
+            base_path = os.path.splitext(video_path)[0]
+            for _ext in [".niche.json", ".jpg", ".txt", ".route.json"]:
+                sidecar = base_path + _ext
+                if os.path.exists(sidecar):
+                    os.remove(sidecar)
+                    logger.info(f"🗑️ [SAFETY] Hard-deleted sidecar: {os.path.basename(sidecar)}")
+
+            # Also nuke the parent batch folder if it's now empty
+            parent = os.path.dirname(video_path)
+            try:
+                if os.path.isdir(parent) and not os.listdir(parent):
+                    import shutil as _shutil
+                    _shutil.rmtree(parent, ignore_errors=True)
+                    logger.info(f"🗑️ [SAFETY] Removed empty batch folder: {os.path.basename(parent)}")
+            except Exception:
+                pass
+        except Exception as del_err:
+            logger.error(f"⚠️ [SAFETY] Failed to delete clip after publish: {del_err}")
 
 
 def _process_account_batch(username: str, actress_folder: str, actress_title: str) -> int:
