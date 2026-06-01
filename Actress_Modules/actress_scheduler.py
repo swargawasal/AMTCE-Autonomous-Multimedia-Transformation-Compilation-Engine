@@ -264,6 +264,39 @@ def _organize_clip(video_path: str, actress_title: str,
 # Gate: AUTO_PUBLISH_ACTRESS_CLIPS=yes in .env
 # ─────────────────────────────────────────────────────────────────────────────
 
+def extract_auction_item(frame_path: str, actress_title: str) -> dict:
+    """Uses Gemini vision to identify outfit details for the auction from the video frame."""
+    try:
+        from PIL import Image
+        from Intelligence_Modules.gemini_governor import gemini_router
+        
+        prompt = f"""
+        You are a fashion product identifier. Look at this image of {actress_title}.
+        Identify the most prominent clothing item or accessory visible in the image.
+        Return JSON only:
+        {{
+            "item_name": "Brand Name + Item Type (e.g. 'Sabyasachi Lehenga', 'Zara Dress')",
+            "item_category": "lehenga|dress|saree|kurta|accessories|other",
+            "estimated_price_inr": 0,
+            "affiliate_link": ""
+        }}
+        """
+        res_txt = gemini_router.generate(
+            task_type="caption",
+            prompt=[prompt, Image.open(frame_path)],
+            module_name="auction_item_extractor",
+            gen_config={"response_mime_type": "application/json"}
+        )
+        if res_txt:
+            import json as _json, re as _re
+            _json_match = _re.search(r'\{.*\}', res_txt or '', _re.DOTALL)
+            if _json_match:
+                return _json.loads(_json_match.group(0))
+    except Exception as e:
+        logger.warning("⚠️ [AUCTION PREP] Failed to run Gemini outfit extraction: %s", e)
+    return {}
+
+
 def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str) -> None:
     """
     After a clip is organised, call Gemini to generate a viral title + hashtags,
@@ -361,6 +394,26 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
         logger.info("✨ [AUTO_PUBLISH] Title: %s", title)
         logger.info("✨ [AUTO_PUBLISH] Hashtags: %s", hashtags[:80])
 
+        # Extract outfit item for auction before frame_path is deleted
+        if frame_path and os.path.exists(frame_path):
+            try:
+                auction_item = extract_auction_item(frame_path, actress_title)
+                if auction_item:
+                    import json as _json
+                    _auction_sched = {
+                        "product_name": auction_item.get("item_name", f"{actress_title} - Featured Look"),
+                        "affiliate_link": auction_item.get("affiliate_link", ""),
+                        "featured_video_path": video_path,
+                        "actress": actress_title,
+                        "posted_at": time.time(),
+                    }
+                    os.makedirs("The_json", exist_ok=True)
+                    with open("The_json/auction_schedule.json", "w", encoding="utf-8") as _f:
+                        _json.dump(_auction_sched, _f, indent=2)
+                    logger.info("🏷️ [AUCTION PREP] Auction context written: %s", _auction_sched["product_name"])
+            except Exception as _ae:
+                logger.warning("⚠️ [AUCTION PREP] Failed to write auction_schedule.json: %s", _ae)
+
     except Exception as exc:
         logger.warning("⚠️ [AUTO_PUBLISH] Gemini generation failed: %s", exc)
         title    = f"{actress_title} | Viral Reel 🔥"
@@ -385,11 +438,15 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
     logger.info("📝 [AUTO_PUBLISH] Full caption (%d chars)", len(caption))
 
     # ── Step 4: Upload to Meta & YouTube ─────────────────────────────────────
+    ig_ok = False
+    yt_link = None
+
     try:
         from Uploader_Modules.meta_uploader import AsyncMetaUploader
         from Uploader_Modules.uploader import upload_to_youtube
 
         async def _do_upload():
+            nonlocal ig_ok, yt_link
             # Calculate Native YouTube Schedule via Analytics
             yt_publish_at = None
             try:
@@ -471,6 +528,38 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
         logger.info("📸 [AUTO_PUBLISH] Instagram: %s%s",
                     ig_status, f" → {ig_link}" if ig_link else "")
         logger.info("📘 [AUTO_PUBLISH] Facebook : %s", fb_status)
+
+        # Success/failure registry write (Fix 3)
+        _upload_succeeded = ig_ok or bool(yt_link)
+        if _upload_succeeded:
+            # Write to published registry
+            _PUBLISHED_REGISTRY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "published_registry.json")
+            published = set()
+            if os.path.exists(_PUBLISHED_REGISTRY):
+                try:
+                    with open(_PUBLISHED_REGISTRY, "r", encoding="utf-8") as f:
+                        published = set(json.load(f))
+                except Exception:
+                    pass
+            published.add(video_path)
+            with open(_PUBLISHED_REGISTRY, "w", encoding="utf-8") as f:
+                json.dump(sorted(published), f, indent=2)
+            logger.info("✅ [REGISTRY] Marked as published: %s", os.path.basename(video_path))
+        else:
+            # Failed — write to failed registry so it can be retried
+            _FAILED_REGISTRY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "failed_uploads.json")
+            failed = []
+            if os.path.exists(_FAILED_REGISTRY):
+                try:
+                    with open(_FAILED_REGISTRY, "r", encoding="utf-8") as f:
+                        failed = json.load(f)
+                except Exception:
+                    pass
+            if video_path not in failed:
+                failed.append(video_path)
+                with open(_FAILED_REGISTRY, "w", encoding="utf-8") as f:
+                    json.dump(failed, f, indent=2)
+            logger.warning("⚠️ [REGISTRY] Upload failed — added to retry list: %s", os.path.basename(video_path))
 
         # Telegram integration (Upload actual video with dual CTA buttons)
         try:

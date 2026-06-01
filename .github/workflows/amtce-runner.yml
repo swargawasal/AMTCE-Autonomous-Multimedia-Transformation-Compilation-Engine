@@ -1,32 +1,32 @@
 name: AMTCE Runner
 
 on:
-  workflow_dispatch:  # Manual trigger anytime
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Run mode (harvest / publish / both)'
+        required: false
+        default: 'both'
+        type: choice
+        options: [harvest, publish, both]
   schedule:
-    # --- NEW DYNAMIC SMART SCHEDULE (Staggered to prevent collapse) ---
-    # Harvester Schedule: 10:00, 11:00, 14:00, 15:00, 21:00 IST
-    - cron: '30 4 * * *'    # 10:00 IST
-    - cron: '30 5 * * *'    # 11:00 IST
-    - cron: '30 8 * * *'    # 14:00 IST
-    - cron: '30 9 * * *'    # 15:00 IST
-    - cron: '30 15 * * *'   # 21:00 IST
+    # HARVESTER — scrape 1hr before publish peaks (IST)
+    - cron: '0 2 * * *'    # 07:30 IST — before morning publish window
+    - cron: '0 6 * * *'    # 11:30 IST — before lunch publish
+    - cron: '0 11 * * *'   # 16:30 IST — before evening surge
+    - cron: '0 13 * * *'   # 18:30 IST — before prime time (also pre-auction harvest)
+    - cron: '0 15 * * *'   # 20:30 IST — late harvest
 
-    # Publisher Schedule: 09:00, 10:00, 13:00, 14:00, 20:00 IST
-    # (Staggered by 15 mins to xx:15 IST so they don't collapse with Harvester)
-    - cron: '45 3 * * *'    # 09:15 IST
-    - cron: '45 4 * * *'    # 10:15 IST
-    - cron: '45 7 * * *'    # 13:15 IST
-    - cron: '45 8 * * *'    # 14:15 IST
-    - cron: '45 14 * * *'   # 20:15 IST
+    # PUBLISHER — fire at real Indian peak hours (IST)
+    - cron: '30 2 * * *'   # 08:00 IST ✅ Morning commute
+    - cron: '30 6 * * *'   # 12:00 IST ✅ Lunch peak
+    - cron: '30 11 * * *'  # 17:00 IST ✅ Evening commute
+    - cron: '30 13 * * *'  # 19:00 IST ✅ Pre-prime surge
+    - cron: '30 14 * * *'  # 20:00 IST ✅ Prime time
 
-    # --- EXISTING PREVIOUSLY IMPLEMENTED TIMES (Preserved) ---
-    - cron: '0  16 * * *'   # 21:30 IST — post-auction second harvest
-    # Auction trigger: exactly 7 PM IST = 13:30 UTC  (Mon–Sat only, skip Sunday=0)
-    - cron: '30 13 * * 1-6'
-    # Morning publish cycle: 04:02 IST = 22:32 UTC previous day
-    - cron: '32 22 * * *'   # 04:02 IST publish slot
-    # Morning peak: 07:30 IST = 02:00 UTC
-    - cron: '0   2 * * *'   # 07:30 IST publish slot
+    # Auction pre-post (Mon–Sat only): publish the featured reel + schedule auction
+    - cron: '0 12 * * 1-6'  # 17:30 IST → publish 30min before auction teaser at 18:00
+
 
 jobs:
   run-amtce:
@@ -35,6 +35,7 @@ jobs:
       TZ: "Asia/Kolkata"
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"   # Fix Node.js 20 deprecation
       GITHUB_CRON: ${{ github.event.schedule }}
+      DISPATCH_MODE: ${{ github.event.inputs.mode || 'both' }}
     timeout-minutes: 360
     permissions:
       contents: write
@@ -307,11 +308,13 @@ jobs:
 
         git add -f Actress_Modules/actress_ledger.json || true
         git add -f Actress_Modules/published_registry.json || true
+        git add -f Actress_Modules/failed_uploads.json || true
         git add -f Actress_Modules/apify_cursor.json || true
         git add -f Actress_Modules/account_daily_limits.json || true
         git add -f publish_queue.json || true
         git add -f The_json/telegram_router_state.json || true
         git add -f The_json/music_usage.json || true
+        git add -f The_json/auction_schedule.json || true
         git add -f Original_audio/pool_metadata.json || true
         
         if git diff --cached --quiet; then

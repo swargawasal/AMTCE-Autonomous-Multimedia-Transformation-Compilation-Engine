@@ -8625,23 +8625,19 @@ def run_ci_mode():
 
     # Define Harvester vs Publisher crons precisely
     harvester_crons = {
-        '30 4 * * *',
-        '30 5 * * *',
-        '30 8 * * *',
-        '30 9 * * *',
-        '30 15 * * *',
-        '0 16 * * *',
-        '30 13 * * 1-6'
+        '0 2 * * *',
+        '0 6 * * *',
+        '0 11 * * *',
+        '0 13 * * *',
+        '0 15 * * *'
     }
 
     publisher_crons = {
-        '45 3 * * *',
-        '45 4 * * *',
-        '45 7 * * *',
-        '45 8 * * *',
-        '45 14 * * *',
-        '32 22 * * *',
-        '0 2 * * *'
+        '30 2 * * *',
+        '30 6 * * *',
+        '30 11 * * *',
+        '30 13 * * *',
+        '30 14 * * *'
     }
 
     should_harvest = False
@@ -8656,6 +8652,10 @@ def run_ci_mode():
         elif cron_key in publisher_crons:
             should_publish = True
             logger.info(f"📤 [CI] Scheduled Publisher Slot Fired ('{cron_key}')")
+        elif cron_key == '0 12 * * 1-6':
+            should_harvest = True
+            should_publish = True
+            logger.info(f"🏷️ [CI] Scheduled Auction Pre-Post Fired ('{cron_key}'): Harvest + Publish enabled!")
         else:
             # Fallback if a cron is not in the set, run harvest/publish based on minute heuristic
             try:
@@ -8678,15 +8678,21 @@ def run_ci_mode():
                 load_dotenv(p, override=True)
                 break
 
-        force_harvest = os.getenv("FORCE_HARVEST", "no").lower() in ("yes", "true", "1")
-        force_publish = os.getenv("FORCE_NEXT_BATCH", "no").lower() in ("yes", "true", "1")
+        if github_event == "workflow_dispatch":
+            dispatch_mode = os.getenv("DISPATCH_MODE", "both").lower()
+            should_harvest = dispatch_mode in ("harvest", "both")
+            should_publish = dispatch_mode in ("publish", "both")
+            logger.info(f"🔧 [CI] Manual dispatch — mode='{dispatch_mode}' harvest={should_harvest} publish={should_publish}")
+        else:
+            force_harvest = os.getenv("FORCE_HARVEST", "no").lower() in ("yes", "true", "1")
+            force_publish = os.getenv("FORCE_NEXT_BATCH", "no").lower() in ("yes", "true", "1")
 
-        if force_harvest:
-            should_harvest = True
-            logger.info("🔥 [CI] Manual Override: FORCE_HARVEST=yes detected.")
-        if force_publish:
-            should_publish = True
-            logger.info("🔥 [CI] Manual Override: FORCE_NEXT_BATCH=yes detected.")
+            if force_harvest:
+                should_harvest = True
+                logger.info("🔥 [CI] Manual Override: FORCE_HARVEST=yes detected.")
+            if force_publish:
+                should_publish = True
+                logger.info("🔥 [CI] Manual Override: FORCE_NEXT_BATCH=yes detected.")
 
         if not should_harvest and not should_publish:
             logger.info("⏭️ [CI] Skipping all automations. Manual trigger runs in dry/setup-only mode.")
@@ -8819,7 +8825,7 @@ if __name__ == "__main__":
 
     if args.input:
         run_cli_mode(args)
-    elif os.getenv("GITHUB_ACTIONS") == "true" and os.getenv("GITHUB_EVENT_NAME", "") != "workflow_dispatch":
+    elif os.getenv("GITHUB_ACTIONS") == "true":
         run_ci_mode()
     else:
         # Run Persistent Bot & Schedulers

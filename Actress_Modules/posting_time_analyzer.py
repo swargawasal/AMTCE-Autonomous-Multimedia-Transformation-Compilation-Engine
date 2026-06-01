@@ -138,17 +138,26 @@ def harvest_times_from_peaks(peak_hours: List[int], offset: int = 1) -> List[str
 
 def get_recommendations(ledger_path: Optional[str] = None) -> Dict:
     """
-    Main API — returns harvest and publish time recommendations based purely on
-    human peak retention timing, skipping the dynamic math calculations.
+    Main API — returns harvest and publish time recommendations based on
+    analyzed ledger histograms if MIN_SAMPLES is met, falling back to research-backed
+    defaults otherwise.
     """
+    hists = build_histograms(ledger_path)
     result = {}
 
     for gender in ("women", "men"):
-        # Strict Human Peak Retention Timings (no math)
-        if gender == "women":
-            peaks = [9, 13, 20]   # Bollywood actress typical peak retention windows
+        sample_count = hists["total"][gender]
+        if sample_count >= MIN_SAMPLES:
+            peaks = top_hours(hists[gender], top_n=3)
+            confidence = "high"
         else:
-            peaks = [10, 14, 21]  # Men/Paparazzi typical peak retention windows
+            # Research-backed Indian audience defaults
+            peaks = [9, 13, 20] if gender == "women" else [10, 14, 21]
+            confidence = f"low (only {sample_count} samples, need {MIN_SAMPLES})"
+
+        # Fallback if top_hours returns empty list
+        if not peaks:
+            peaks = [9, 13, 20] if gender == "women" else [10, 14, 21]
 
         publish_times = [f"{h:02d}:00" for h in sorted(peaks)]
         harvest_times = harvest_times_from_peaks(peaks, offset=1)
@@ -157,8 +166,8 @@ def get_recommendations(ledger_path: Optional[str] = None) -> Dict:
             "peak_hours_ist": sorted(peaks),
             "publish_times":  publish_times,
             "harvest_times":  harvest_times,
-            "sample_count":   999,  # Mocked to prevent "low confidence" warnings
-            "confidence":     "high",
+            "sample_count":   sample_count,
+            "confidence":     confidence,
         }
 
     # Combined: union of both, max 5 entries to avoid spamming

@@ -273,10 +273,24 @@ def pick_featured_reel() -> Optional[str]:
     """
     Always returns a valid on-disk video path for the auction opening.
     Priority:
+      0. The reel that was published today, from auction_schedule.json
       1. Clips processed/updated today (within last 24h) — freshest harvest
       2. Most recently updated clip from the output ledger (any day)
       3. None — caller sends text-only announcement
     """
+    # Priority 0: The reel that was published today, from auction_schedule.json
+    if os.path.exists("The_json/auction_schedule.json"):
+        try:
+            with open("The_json/auction_schedule.json") as f:
+                sched = json.load(f)
+            fpath = sched.get("featured_video_path", "")
+            posted_at = sched.get("posted_at", 0)
+            if fpath and os.path.exists(fpath) and (time.time() - posted_at) < 14400:
+                logger.info("🎬 pick_featured_reel: using today's auction reel → %s", fpath)
+                return fpath
+        except Exception:
+            pass
+
     try:
         if not os.path.exists(OUTPUT_BATCH_STATE_FILE):
             return None
@@ -456,7 +470,18 @@ class SchedulerDaemon:
                     state.state["affiliate_link"] = data.get("affiliate_link", "")
                     state.save_state()
             except Exception: pass
-        msg = f"📢 <b>TONIGHT'S FLASH DEAL TEASER!</b>\nProduct: {state.state['product_name']}\nAuction opens at 7 PM IST. Get ready! 🔥"
+        
+        product_name = state.state.get("product_name", "Mystery Deal")
+        affiliate_link = state.state.get("affiliate_link", "")
+
+        msg = (
+            f"🛍️ <b>TONIGHT'S FLASH DEAL — 7PM IST</b>\n\n"
+            f"🎯 Item: <b>{product_name}</b>\n"
+            f"💰 Base deposit: ₹549 (refundable if you lose)\n"
+            f"🏆 Winner takes the full pot!\n\n"
+            f"{'🔗 ' + affiliate_link if affiliate_link else ''}\n\n"
+            f"Watch the reel we just posted, then join the auction at 7PM! 🔥"
+        )
         LiveLeaderboard.send_broadcast(msg)
         
     @classmethod

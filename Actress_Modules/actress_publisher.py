@@ -127,21 +127,6 @@ class PublishQueue:
 
             item = queue.pop(best_idx)
             cls.save(queue)
-            
-            # Add to published registry
-            published = set()
-            if os.path.exists(_PUBLISHED_REGISTRY):
-                try:
-                    with open(_PUBLISHED_REGISTRY, "r", encoding="utf-8") as f:
-                        published = set(json.load(f))
-                except Exception:
-                    pass
-                    
-            if item["video_path"] not in published:
-                published.add(item["video_path"])
-                with open(_PUBLISHED_REGISTRY, "w", encoding="utf-8") as f:
-                    json.dump(sorted(published), f, indent=2)
-                    
             return item
 
 
