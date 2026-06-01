@@ -2,6 +2,15 @@ name: AMTCE Runner
 
 on:
   workflow_dispatch:  # Manual trigger anytime
+    inputs:
+      force_harvest:
+        description: 'Force a Harvest run (yes/no)'
+        required: false
+        default: 'yes'
+      force_publish:
+        description: 'Force a Publish run (yes/no)'
+        required: false
+        default: 'yes'
   schedule:
     # --- NEW DYNAMIC SMART SCHEDULE (Staggered to prevent collapse) ---
     # Harvester Schedule: 10:00, 11:00, 14:00, 15:00, 21:00 IST
@@ -288,6 +297,8 @@ jobs:
 
     - name: Run AMTCE Engine
       run: |
+        export FORCE_HARVEST="${{ github.event.inputs.force_harvest || '' }}"
+        export FORCE_NEXT_BATCH="${{ github.event.inputs.force_publish || '' }}"
         python main.py
 
     - name: Commit Dedup State to Git
