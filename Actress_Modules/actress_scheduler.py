@@ -296,9 +296,10 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
         # Use the primary target as the upload niche (overrides actress folder for credentials)
         upload_niche = targets[0]
     except Exception as _re:
-        logger.warning("⚠️ [CONTENT_ROUTER] Routing failed: %s — falling back to actress_folder", _re)
-        upload_niche     = actress_folder
-        targets          = [actress_folder]
+        logger.warning("⚠️ [CONTENT_ROUTER] Routing failed: %s — falling back to General_Fallback", _re)
+        # Fallback to General_Fallback so that it correctly picks up the base meta_config.json
+        upload_niche     = "General_Fallback"
+        targets          = ["General_Fallback"]
         content_category = "general"
 
     # ── Account Limiter: import helpers ───────────────────────────────────────
