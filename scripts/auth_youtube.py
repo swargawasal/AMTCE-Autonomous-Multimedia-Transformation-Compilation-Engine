@@ -9,6 +9,20 @@ import argparse
 # Add parent directory to path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# ==============================================================================
+# AMTCE YouTube Authentication Script
+# 
+# To refresh or generate a token manually via CLI, run this script from the AMTCE root directory:
+#
+#   1. Default (Root credentials):
+#      python scripts/auth_youtube.py
+#
+#   2. Niche-specific credentials (e.g., for 'fashion'):
+#      python scripts/auth_youtube.py --secret "Credentials/social_media/fashion/client_secret.json" --token "Credentials/social_media/fashion/token.json"
+#
+# This will trigger the OAuth flow and save the new token.json to the specified path.
+# ==============================================================================
+
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/youtube.force-ssl",
