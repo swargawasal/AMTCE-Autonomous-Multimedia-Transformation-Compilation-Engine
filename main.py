@@ -407,6 +407,11 @@ user_sessions = {}
 user_result_locks = {}
 g_session_lock = threading.Lock()
 
+# Per-user pending job queue: {user_id: deque([(url, title), ...])}
+# When a job is running and user sends another URL, it goes here.
+import collections as _collections
+user_pending_jobs: dict = collections.defaultdict(_collections.deque)
+
 WATCHDOG_TIMEOUT = int(os.getenv("JOB_WATCHDOG_SECS", "1200"))  # 20 min stuck-job kill
 _job_start_time: float = 0.0  # epoch timestamp when current job started
 
@@ -3631,24 +3636,46 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Case 1: New URL
     if _validate_url(text):
-        # Store URL and wait for title
-        with acquire_session_lock(user_id):
-            user_sessions[user_id] = {"state": "WAITING_FOR_TITLE", "pending_url": text}
-            save_session(user_id)
-
-        default_hashtags = os.getenv("DEFAULT_HASHTAGS_SHORTS", "#shorts")
-
-        await safe_reply(
-            update,
-            f"✅ Got the link!\n\n📌 Hashtags:\n{default_hashtags}\n\n✏️ Now send the title.",
-        )
+        if state == "PROCESSING":
+            # Job is running — queue this URL, ask for title separately
+            with acquire_session_lock(user_id):
+                user_pending_jobs[user_id].append({"url": text, "title": None})
+                pos = len(user_pending_jobs[user_id])
+            default_hashtags = os.getenv("DEFAULT_HASHTAGS_SHORTS", "#shorts")
+            await safe_reply(
+                update,
+                f"✅ Got the link!\n\n📌 Hashtags:\n{default_hashtags}\n\n"
+                f"⏳ A job is running. This is queued at position #{pos}.\n"
+                f"✏️ Send the title for this link now — I'll hold it.",
+            )
+        else:
+            # No active job — store normally and wait for title
+            with acquire_session_lock(user_id):
+                user_sessions[user_id] = {"state": "WAITING_FOR_TITLE", "pending_url": text}
+                save_session(user_id)
+            default_hashtags = os.getenv("DEFAULT_HASHTAGS_SHORTS", "#shorts")
+            await safe_reply(
+                update,
+                f"✅ Got the link!\n\n📌 Hashtags:\n{default_hashtags}\n\n✏️ Now send the title.",
+            )
         return
 
-    # Guard: already processing — ignore stray messages
+    # Guard: PROCESSING + non-URL text = check if it's a title for a pending queued job
     if state == "PROCESSING":
+        with acquire_session_lock(user_id):
+            pending = user_pending_jobs.get(user_id)
+            if pending and pending[0].get("title") is None:
+                # Fill in the title for the queued job
+                pending[0]["title"] = text
+                pos = 1  # It's at the front of the pending queue (will run next)
+                await safe_reply(
+                    update,
+                    f'✅ Title set for queued job: \'{text}\'\nIt will start as soon as the current job finishes.',
+                )
+                return
         await safe_reply(
             update,
-            "⏳ Already processing your previous request. Please wait until it finishes."
+            "⏳ Already processing. Send a new link to queue another job."
         )
         return
 
