@@ -70,8 +70,8 @@ def _get_telegram_creds():
         )
     )
 
-    if admin_id and str(admin_id).lstrip("-").isdigit() and int(admin_id) < 0:
-        print(f"⚠️ WARNING: admin_id={admin_id} looks like a GROUP chat (negative). "
+    if admin_id and (str(admin_id).startswith("@") or str(admin_id).startswith("-")):
+        print(f"⚠️ WARNING: admin_id='{admin_id}' looks like a public GROUP/CHANNEL. "
               "Auth messages will NOT be sent to groups. Set TELEGRAM_ADMIN_ID to your personal chat ID.")
         admin_id = None  # refuse to send to group
 

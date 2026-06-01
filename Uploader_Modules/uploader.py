@@ -82,6 +82,12 @@ def send_telegram_notification(message: str):
     admin_id = os.getenv("TELEGRAM_ADMIN_ID") or os.getenv("TELEGRAM_OWNER_CHAT_ID")
     if not admin_id and os.getenv("ADMIN_IDS"):
         admin_id = os.getenv("ADMIN_IDS").split(",")[0].strip()
+        
+    # Prevent blasting auth/error messages to public groups/channels
+    if admin_id and (str(admin_id).startswith("@") or str(admin_id).startswith("-")):
+        logger.warning(f"⚠️ WARNING: admin_id='{admin_id}' looks like a public group/channel. Notification blocked.")
+        admin_id = None
+        
     if token and admin_id:
         try:
             url = f"https://api.telegram.org/bot{token}/sendMessage"
