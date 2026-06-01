@@ -163,6 +163,9 @@ def _auto_fill_queue_from_downloads():
         # Derive actress title: strip trailing _NNN batch suffix
         import re as _re
         actress_title = _re.sub(r"_\d+$", "", folder_name).strip()
+        # Clean prefix: "General_Fallback_bollywooddazzle" -> "bollywooddazzle"
+        if actress_title.startswith("General_Fallback_"):
+            actress_title = actress_title.replace("General_Fallback_", "", 1).strip()
         actress_folder = actress_title  # matches the Social_Media folder convention
 
         for mp4 in sorted(entry.path and [f for f in os.listdir(entry.path) if f.lower().endswith(".mp4")]):

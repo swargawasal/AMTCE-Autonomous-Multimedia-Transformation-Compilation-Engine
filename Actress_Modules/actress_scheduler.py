@@ -298,6 +298,10 @@ def extract_auction_item(frame_path: str, actress_title: str) -> dict:
 
 
 def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str) -> None:
+    # Clean prefix: "General_Fallback_bollywooddazzle" -> "bollywooddazzle"
+    if actress_title.startswith("General_Fallback_"):
+        actress_title = actress_title.replace("General_Fallback_", "", 1).strip()
+
     """
     After a clip is organised, call Gemini to generate a viral title + hashtags,
     then immediately upload to Instagram (and Facebook if enabled) via the
