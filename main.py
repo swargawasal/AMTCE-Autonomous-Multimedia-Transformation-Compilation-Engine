@@ -3345,22 +3345,21 @@ async def cmd_ytcode(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # ── TRIGGER: run auth script in background, it sends the link via Telegram ──
         await update.message.reply_text(
             "🔄 <b>Triggering YouTube auth refresh...</b>\n\n"
-            "The Google sign-in link will appear here in a moment.\n"
-            "Tap it → sign in → copy the code shown → send:\n"
-            "<code>/ytcode YOUR_CODE</code>",
+            "The Google sign-in link is being sent to your <b>private chat</b> with the bot.",
             parse_mode="HTML"
         )
         import threading
-        def _run_auth():
+        def _run_auth(chat_id):
             try:
                 subprocess.run(
-                    [sys.executable, "scripts/auth_youtube.py"],
+                    [sys.executable, "scripts/auth_youtube.py", "--chat_id", str(chat_id)],
                     cwd=os.path.abspath("."),
                     timeout=660
                 )
             except Exception as e:
                 logger.error(f"auth_youtube background run failed: {e}")
-        threading.Thread(target=_run_auth, daemon=True).start()
+        # Send the link directly to the user who triggered the command
+        threading.Thread(target=_run_auth, args=(user_id,), daemon=True).start()
         return
 
     # ── SUBMIT: paste the code or full URL back ───────────────────────────────

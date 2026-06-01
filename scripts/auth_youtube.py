@@ -262,10 +262,14 @@ def _fallback_url_flow(secret_path, token_path, tg_token, tg_admin):
 
 # ── Main entry point ──────────────────────────────────────────────────────────
 
-def authenticate(client_secret_file=None, token_file=None):
+def authenticate(client_secret_file=None, token_file=None, chat_id=None):
     secret_path = client_secret_file or DEFAULT_CLIENT_SECRET_FILE
     token_path  = token_file or DEFAULT_TOKEN_FILE
     tg_token, tg_admin = _get_telegram_creds()
+    
+    # Override admin chat ID if one was explicitly provided
+    if chat_id:
+        tg_admin = chat_id
 
     print("🚀 Starting YouTube Authentication...")
 
@@ -305,6 +309,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="AMTCE YouTube Authentication")
     parser.add_argument("--secret", help="Path to client_secret.json")
     parser.add_argument("--token",  help="Path to save token.json")
+    parser.add_argument("--chat_id", help="Telegram Chat ID to send the auth link to")
     args = parser.parse_args()
 
-    authenticate(client_secret_file=args.secret, token_file=args.token)
+    authenticate(client_secret_file=args.secret, token_file=args.token, chat_id=args.chat_id)
+
