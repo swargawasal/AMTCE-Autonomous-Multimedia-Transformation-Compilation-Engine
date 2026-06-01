@@ -410,7 +410,7 @@ g_session_lock = threading.Lock()
 # Per-user pending job queue: {user_id: deque([(url, title), ...])}
 # When a job is running and user sends another URL, it goes here.
 import collections as _collections
-user_pending_jobs: dict = collections.defaultdict(_collections.deque)
+user_pending_jobs: dict = _collections.defaultdict(_collections.deque)
 
 WATCHDOG_TIMEOUT = int(os.getenv("JOB_WATCHDOG_SECS", "1200"))  # 20 min stuck-job kill
 _job_start_time: float = 0.0  # epoch timestamp when current job started
@@ -3345,21 +3345,22 @@ async def cmd_ytcode(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # ── TRIGGER: run auth script in background, it sends the link via Telegram ──
         await update.message.reply_text(
             "🔄 <b>Triggering YouTube auth refresh...</b>\n\n"
-            "The Google sign-in link is being sent to your <b>private chat</b> with the bot.",
+            "The Google sign-in link will appear here in a moment.\n"
+            "Tap it → sign in → copy the code shown → send:\n"
+            "<code>/ytcode YOUR_CODE</code>",
             parse_mode="HTML"
         )
         import threading
-        def _run_auth(chat_id):
+        def _run_auth():
             try:
                 subprocess.run(
-                    [sys.executable, "scripts/auth_youtube.py", "--chat_id", str(chat_id)],
+                    [sys.executable, "scripts/auth_youtube.py"],
                     cwd=os.path.abspath("."),
                     timeout=660
                 )
             except Exception as e:
                 logger.error(f"auth_youtube background run failed: {e}")
-        # Send the link directly to the user who triggered the command
-        threading.Thread(target=_run_auth, args=(user_id,), daemon=True).start()
+        threading.Thread(target=_run_auth, daemon=True).start()
         return
 
     # ── SUBMIT: paste the code or full URL back ───────────────────────────────
