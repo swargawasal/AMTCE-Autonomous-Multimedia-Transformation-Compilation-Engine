@@ -53,7 +53,13 @@ def _is_niche_enabled(niche: str) -> bool:
         key = "NICHE_GENERAL_FALLBACK_ENABLED"
         return os.getenv(key, "yes").strip().lower() in ("yes", "true", "on", "1")
     key = f"{_niche_env_key(niche)}_ENABLED"
-    return os.getenv(key, "no").strip().lower() in ("yes", "true", "on", "1")
+    is_enabled = os.getenv(key, "no").strip().lower() in ("yes", "true", "on", "1")
+    if is_enabled:
+        return True
+        
+    # If the specific niche isn't explicitly enabled, allow it to fallback to General_Fallback
+    fallback_key = "NICHE_GENERAL_FALLBACK_ENABLED"
+    return os.getenv(fallback_key, "yes").strip().lower() in ("yes", "true", "on", "1")
 
 def _niche_meta_enabled(niche: str) -> bool:
     """
@@ -67,7 +73,13 @@ def _niche_meta_enabled(niche: str) -> bool:
         return True
     key = f"{_niche_env_key(niche)}_PLATFORMS"
     platforms = os.getenv(key, "youtube").lower()
-    return "meta" in platforms
+    if "meta" in platforms:
+        return True
+        
+    # If the specific niche doesn't include meta, fallback to General_Fallback
+    fallback_key = "NICHE_GENERAL_FALLBACK_PLATFORMS"
+    fallback_platforms = os.getenv(fallback_key, "youtube,meta").lower()
+    return "meta" in fallback_platforms
 
 # ─────────────────────────────────────────────────────────────────────────────
 class AsyncMetaUploader:
