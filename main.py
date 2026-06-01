@@ -8857,7 +8857,7 @@ if __name__ == "__main__":
 
     if args.input:
         run_cli_mode(args)
-    elif os.getenv("GITHUB_ACTIONS") == "true":
+    elif os.getenv("GITHUB_ACTIONS") == "true" and os.getenv("GITHUB_EVENT_NAME", "").lower() != "workflow_dispatch":
         run_ci_mode()
     else:
         # Run Persistent Bot & Schedulers
