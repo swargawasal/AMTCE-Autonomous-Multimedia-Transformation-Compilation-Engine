@@ -297,6 +297,29 @@ def extract_auction_item(frame_path: str, actress_title: str) -> dict:
     return {}
 
 
+def _actress_name_tags(actress_title: str) -> str:
+    """
+    Returns per-word hashtags ONLY if actress_title looks like a human name.
+    Human name = 2+ space-separated alpha words (e.g. 'Disha Patani').
+    Account handles / single-word titles return empty string (excluded from hashtags).
+
+    'Disha Patani'    → '#disha #patani'
+    'Avneet Kaur'     → '#avneet #kaur'
+    'bollywooddazzle' → ''   (not a human name — skip)
+    'Fashion_Style'   → ''   (not a human name — skip)
+    """
+    import re as _re
+    # Strip system prefixes
+    clean = _re.sub(r'(?i)general[-_]?fallback_?', '', actress_title).strip()
+    # Only keep plain alpha words (no underscores, no digits)
+    words = [w.lower() for w in clean.split() if w.isalpha() and len(w) > 1]
+    if len(words) < 2:
+        # Single word or non-alpha → account handle, not a person
+        return ""
+    # Per-word hashtags: #disha #patani
+    return " ".join(f"#{w}" for w in words)
+
+
 def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str) -> None:
     # Clean prefix: "General_Fallback_bollywooddazzle" -> "bollywooddazzle"
     if actress_title.startswith("General_Fallback_"):
@@ -387,11 +410,12 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
             title = f"{actress_title} | Hot Reel 🔥"
 
         # Always guarantee actress name tag + viral base tags in hashtags
-        _actress_tag = f"#{actress_title.replace(' ', '')}"
-        _base_tags   = f"{_actress_tag} #viral #reels #trending #shorts #hot #bollywood"
+        _name_tags  = _actress_name_tags(actress_title)  # '' if not a human name
+        _base_tags  = "#viral #reels #trending #shorts #hot #bollywood"
+        _base_tags  = f"{_name_tags} {_base_tags}".strip() if _name_tags else _base_tags
         if not hashtags:
             hashtags = _base_tags
-        elif _actress_tag.lower() not in hashtags.lower():
+        elif _name_tags and not any(t in hashtags.lower() for t in _name_tags.split()):
             # Gemini forgot the actress name — prepend it
             hashtags = f"{_base_tags} {hashtags}"
 
@@ -421,7 +445,9 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
     except Exception as exc:
         logger.warning("⚠️ [AUTO_PUBLISH] Gemini generation failed: %s", exc)
         title    = f"{actress_title} | Viral Reel 🔥"
-        hashtags = f"#{actress_title.replace(' ', '')} #viral #reels #trending #shorts #bollywood"
+        _name_tags = _actress_name_tags(actress_title)
+        _tag_prefix = f"{_name_tags} " if _name_tags else ""
+        hashtags = f"{_tag_prefix}#viral #reels #trending #shorts #bollywood"
 
     finally:
         if frame_path and os.path.exists(frame_path):
