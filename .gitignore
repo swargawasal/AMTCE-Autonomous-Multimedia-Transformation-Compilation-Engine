@@ -36,7 +36,20 @@ email_creds*
 temp/
 jobs/
 downloads/
-Original_audio/
+# Original_audio pool: ignore everything EXCEPT the pool files that must persist across CI runs.
+# The audio pool (active/ + cooldown/ + beats/ + pool_metadata.json) must survive across
+# GitHub Actions runner sessions — otherwise the pool is always empty and rotation never works.
+Original_audio/**
+!Original_audio/active/
+!Original_audio/active/*.mp3
+!Original_audio/active/*.wav
+!Original_audio/cooldown/
+!Original_audio/cooldown/*.mp3
+!Original_audio/cooldown/*.wav
+!Original_audio/beats/
+!Original_audio/beats/*.npz
+!Original_audio/pool_metadata.json
+
 final_compilations/
 Processed Shorts/
 debug_frames/

@@ -329,11 +329,30 @@ jobs:
         git add -f The_json/auction_schedule.json || true
         git add -f The_json/bot_lock.json || true
         git add -f Original_audio/pool_metadata.json || true
-        
+
+        # ── Audio Pool Persistence ──────────────────────────────────────────────
+        # Commit extracted audio clips so the pool survives across runner sessions.
+        # Without this, active/ is always empty at startup and rotation never works.
+        # Size guard: skip any single file > 10MB to keep the repo lean.
+        for f in Original_audio/active/*.mp3 \
+                  Original_audio/active/*.wav \
+                  Original_audio/cooldown/*.mp3 \
+                  Original_audio/cooldown/*.wav \
+                  Original_audio/beats/*.npz; do
+          [ -f "$f" ] || continue
+          size=$(stat -c%s "$f" 2>/dev/null || echo 0)
+          if [ "$size" -le 10485760 ]; then
+            git add -f "$f" && echo "Pool: staged $f (${size}B)" || true
+          else
+            echo "Pool: skipped $f — too large (${size}B > 10MB)"
+          fi
+        done
+        # ────────────────────────────────────────────────────────────────────────
+
         if git diff --cached --quiet; then
           echo "No dedup state changes to commit."
         else
-          git commit -m "ci: update dedup ledger, queue [skip ci]"
+          git commit -m "ci: update dedup ledger, audio pool + queue [skip ci]"
           # Pull remote changes before pushing to avoid exit code 128
           git fetch origin main
           git rebase origin/main --strategy-option=theirs || git rebase --abort
@@ -341,4 +360,5 @@ jobs:
           echo "State committed."
         fi
         exit 0
+
 
