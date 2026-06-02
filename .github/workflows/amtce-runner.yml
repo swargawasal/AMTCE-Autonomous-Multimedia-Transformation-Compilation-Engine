@@ -31,6 +31,15 @@ on:
     - cron: '30 15 * * 1-6' # 21:00 IST → close the auction
 
 
+# ── Concurrency Control ────────────────────────────────────────────────────
+# A manual (workflow_dispatch) run holds the 'amtce-bot' lock for its full
+# 6-hour duration. Any scheduled cron that fires while the bot is still
+# running will be CANCELLED immediately (cancel-in-progress: true).
+# This prevents two runners from sharing the same Telegram bot token.
+concurrency:
+  group: amtce-bot
+  cancel-in-progress: ${{ github.event_name == 'schedule' }}
+
 jobs:
   run-amtce:
     runs-on: ubuntu-latest
@@ -318,6 +327,7 @@ jobs:
         git add -f The_json/telegram_router_state.json || true
         git add -f The_json/music_usage.json || true
         git add -f The_json/auction_schedule.json || true
+        git add -f The_json/bot_lock.json || true
         git add -f Original_audio/pool_metadata.json || true
         
         if git diff --cached --quiet; then

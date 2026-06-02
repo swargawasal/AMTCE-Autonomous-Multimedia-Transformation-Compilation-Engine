@@ -8612,16 +8612,42 @@ def process_clip(video_path: str, actress_title: str) -> str | None:
 
 def run_ci_mode():
     logger.info("🤖 [CI] Running AMTCE in One-Shot CI Mode...")
-    
+
     # 1. Check and update env / heal json files
     check_and_update_env()
-    
+
     github_event = os.getenv("GITHUB_EVENT_NAME", "").lower()
     github_cron  = os.getenv("GITHUB_CRON", "")
 
     logger.info(f"📊 [CI Trigger Info] Event: '{github_event}' | Cron: '{github_cron}'")
 
     is_scheduled = (github_event == "schedule")
+
+    # ── Bot Lock: scheduled runs yield to a running persistent bot ──────────
+    # When a manual (workflow_dispatch) run starts main() it writes bot_lock.json
+    # with the expected expiry timestamp. Any scheduled cron that starts while
+    # the lock is still valid skips all work and exits immediately to prevent
+    # two runners sharing the same Telegram bot token.
+    _BOT_LOCK_FILE = "The_json/bot_lock.json"
+    if is_scheduled:
+        try:
+            if os.path.exists(_BOT_LOCK_FILE):
+                import json as _jl
+                with open(_BOT_LOCK_FILE, "r") as _f:
+                    _lock = _jl.load(_f)
+                _expires = _lock.get("expires_at", 0)
+                if time.time() < _expires:
+                    _mins_left = int((_expires - time.time()) / 60)
+                    logger.info(
+                        "🔒 [CI] Bot lock active — persistent bot running for ~%d more min. "
+                        "Scheduled cron '%s' will skip to avoid token conflict.",
+                        _mins_left, github_cron or 'unknown'
+                    )
+                    return  # ← Scheduled run exits immediately, bot keeps running
+                else:
+                    logger.info("🔓 [CI] Bot lock expired — scheduled cron proceeding normally.")
+        except Exception as _le:
+            logger.warning("⚠️ [CI] Could not read bot_lock.json: %s", _le)
 
     # Define Harvester vs Publisher crons precisely
     harvester_crons = {
@@ -8860,6 +8886,26 @@ if __name__ == "__main__":
     elif os.getenv("GITHUB_ACTIONS") == "true" and os.getenv("GITHUB_EVENT_NAME", "").lower() != "workflow_dispatch":
         run_ci_mode()
     else:
+        # Write bot lock so scheduled crons know to stand down while we run
+        _BOT_LOCK_FILE = "The_json/bot_lock.json"
+        _BOT_TIMEOUT_HOURS = 5.5  # GitHub Actions hard-kills at 6h; we expire at 5.5h
+        _bot_expires = time.time() + (_BOT_TIMEOUT_HOURS * 3600)
+        try:
+            os.makedirs("The_json", exist_ok=True)
+            import json as _jl
+            with open(_BOT_LOCK_FILE, "w") as _f:
+                _jl.dump({
+                    "started_at": time.time(),
+                    "expires_at": _bot_expires,
+                    "mode": "workflow_dispatch",
+                }, _f)
+            logger.info(
+                "🔒 [BOT LOCK] Written — bot holds lock until %s IST",
+                __import__('datetime').datetime.fromtimestamp(_bot_expires).strftime('%H:%M')
+            )
+        except Exception as _le:
+            logger.warning("⚠️ Could not write bot_lock.json: %s", _le)
+
         # Run Persistent Bot & Schedulers
         logger.info("🤖 Starting AMTCE in Persistent Server Mode (Schedulers Active)")
         main()
