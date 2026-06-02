@@ -2324,7 +2324,7 @@ async def finish_compilation_upload(
                     )
                     async with UPLOAD_SEMAPHORE:
                         with open(merged_path, "rb") as _vf:
-                            await locals().get("context").bot.send_video(
+                            sent_msg = await locals().get("context").bot.send_video(
                                 chat_id=_tg_chat,
                                 video=_vf,
                                 caption=tg_comp_caption[:1024],
@@ -2334,6 +2334,17 @@ async def finish_compilation_upload(
                                 connect_timeout=60,
                             )
                     logger.info("[MONETIZE] Affiliate link injected into Telegram group compilation post.")
+                    try:
+                        from Uploader_Modules.telegram_message_ledger import record_telegram_post
+                        record_telegram_post(
+                            message_id=sent_msg.message_id,
+                            chat_id=str(_tg_chat),
+                            title=title or "Compilation Post",
+                            caption=tg_comp_caption[:1024],
+                            reply_markup=None
+                        )
+                    except Exception as ledger_err:
+                        logger.error(f"⚠️ [LEDGER] Failed to log compilation Telegram post: {ledger_err}")
                 except Exception as _tge:
                     logger.warning(f"⚠️ Telegram affiliate post failed (non-fatal): {_tge}")
 
@@ -6759,7 +6770,7 @@ async def _perform_upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
                 async with UPLOAD_SEMAPHORE:
                     with ProgressFile(_tg_video_path, logger.info) as vf:
-                        await locals().get("context").bot.send_video(
+                        sent_msg = await locals().get("context").bot.send_video(
                             chat_id=_tg_chat,
                             video=vf,
                             caption=public_cap_tg[:1024],
@@ -6770,6 +6781,18 @@ async def _perform_upload(update: Update, context: ContextTypes.DEFAULT_TYPE):
                         )
                 logger.info(f"✅ Clip sent to Telegram group: {tg_group_id}")
                 await safe_reply(update, "✅ Telegram Group: Sent!", force=True)
+
+                try:
+                    from Uploader_Modules.telegram_message_ledger import record_telegram_post
+                    record_telegram_post(
+                        message_id=sent_msg.message_id,
+                        chat_id=str(_tg_chat),
+                        title=title or "Manual Post",
+                        caption=public_cap_tg[:1024],
+                        reply_markup=_tg_markup
+                    )
+                except Exception as ledger_err:
+                    logger.error(f"⚠️ [LEDGER] Failed to log manual Telegram post: {ledger_err}")
 
                 # ── OUTFIT SWAP RATING PROMPT (fires RIGHT AFTER TG group send) ──────
                 # Admin gets a DM with the thumbnail + ⭐×5 buttons.
@@ -8165,6 +8188,50 @@ async def cmd_tg_status(update: Update, context: ContextTypes.DEFAULT_TYPE):
     except Exception as e:
         await safe_reply(update, f"❌ tg_status error: {e}")
 
+async def cmd_affilate_refresh(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    /affilate_refresh [old_link] [new_link]
+    Performs link refresh across historical Telegram group posts and pools.
+    """
+    user_id = update.effective_user.id
+    if ADMIN_IDS and user_id not in ADMIN_IDS:
+        await update.message.reply_text("⛔ Unauthorized.")
+        return
+
+    args = context.args
+    old_link = None
+    new_link = None
+    
+    if len(args) >= 2:
+        old_link = args[0]
+        new_link = args[1]
+        
+    await update.message.reply_text("⏳ Starting Telegram link refresh and pool update...")
+    
+    try:
+        from Uploader_Modules.telegram_message_ledger import update_affiliate_link
+        summary = await update_affiliate_link(context.bot, old_link=old_link, new_link=new_link)
+        
+        # Build beautiful HTML report
+        response = [
+            f"<b>📊 Affiliate Link Refresh Summary</b>",
+            f"━━━━━━━━━━━━━━━━━━━",
+            f"<b>Status:</b> {'✅ SUCCESS' if summary['status'] == 'success' else '❌ FAILED'}",
+            f"<b>New Link:</b> <code>{summary['new_link']}</code>",
+            f"<b>Posts Scanned:</b> {summary['posts_scanned']}",
+            f"<b>Posts Updated:</b> {summary['posts_updated']}",
+            f"<b>Pools Updated:</b> {', '.join(summary['pools_updated']) if summary['pools_updated'] else 'None'}",
+            f"\n<b>📝 Logs/Details:</b>"
+        ]
+        
+        for detail in summary["details"]:
+            response.append(f"• {detail}")
+            
+        await update.message.reply_text("\n".join(response), parse_mode="HTML")
+    except Exception as e:
+        logger.error(f"Error executing link refresh: {e}")
+        await update.message.reply_text(f"❌ Error during refresh: {e}")
+
 # --- END AUCTION ENGINE HANDLERS ---
 
 
@@ -8217,6 +8284,7 @@ def main():
     app.add_handler(CommandHandler("approve", approve_upload))
     app.add_handler(CommandHandler("reject", reject_upload))
     app.add_handler(CommandHandler("register_promo", register_promo))  # New Command
+    app.add_handler(CommandHandler("affilate_refresh", cmd_affilate_refresh))
     app.add_handler(CommandHandler("compile", cmd_compile))
     app.add_handler(CommandHandler("learn", cmd_learn))
     app.add_handler(CommandHandler("stats_hooks", cmd_stats_hooks))          # Hook CTR leaderboard

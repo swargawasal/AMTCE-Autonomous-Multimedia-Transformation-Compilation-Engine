@@ -1,0 +1,17 @@
+[
+  {
+    "message_id": 12345,
+    "chat_id": "-1003762065314",
+    "title": "Mock Actress Post 1",
+    "caption": "Hey look at this amazing video! Buy here: https://new-link.com/yd6huy5 #hot #reels",
+    "buttons": [
+      [
+        {
+          "text": "Find Your Match",
+          "url": "https://new-link.com/yd6huy5"
+        }
+      ]
+    ],
+    "timestamp": "2026-06-02T16:00:00.000000"
+  }
+]

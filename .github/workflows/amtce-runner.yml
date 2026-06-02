@@ -329,6 +329,9 @@ jobs:
         git add -f The_json/auction_schedule.json || true
         git add -f The_json/bot_lock.json || true
         git add -f Original_audio/pool_metadata.json || true
+        git add -f Intelligence_Data/salesman_state.json || true
+        git add -f The_json/message_ledger.json || true
+        git add -f The_json/auction_ledger.json || true
 
         # ── Audio Pool Persistence ──────────────────────────────────────────────
         # Commit extracted audio clips so the pool survives across runner sessions.

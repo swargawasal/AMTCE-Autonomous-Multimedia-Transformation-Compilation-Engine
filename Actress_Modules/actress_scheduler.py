@@ -687,7 +687,7 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
                 if can_post(upload_niche, "telegram"):
                     logger.info("📤 Uploading to Telegram (dual-button) ...")
                     with open(video_path, 'rb') as vf:
-                        await bot.send_video(
+                        sent_msg = await bot.send_video(
                             chat_id=_tg_chat,
                             video=vf,
                             caption=tg_caption,
@@ -698,6 +698,18 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
                         )
                     logger.info("✅ [AUTO_PUBLISH] Sent clip to Telegram with dual CTA buttons.")
                     record_post(upload_niche, "telegram")
+
+                    try:
+                        from Uploader_Modules.telegram_message_ledger import record_telegram_post
+                        record_telegram_post(
+                            message_id=sent_msg.message_id,
+                            chat_id=str(_tg_chat),
+                            title=actress_title,
+                            caption=tg_caption,
+                            reply_markup=reply_markup
+                        )
+                    except Exception as ledger_err:
+                        logger.error(f"⚠️ [AUTO_PUBLISH] Failed to log post to ledger: {ledger_err}")
                 else:
                     logger.info("🚫 [LIMITER] Telegram daily limit hit for %s — skipping TG upload", upload_niche)
 
