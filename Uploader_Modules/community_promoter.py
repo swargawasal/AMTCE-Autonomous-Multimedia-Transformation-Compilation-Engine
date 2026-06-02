@@ -84,6 +84,16 @@ class CommunityPromoter:
         except Exception as e:
             logger.error(f"❌ Failed to save promoter state: {e}")
 
+    # ── NSFW emojis that YouTube classifies as adult content ─────────────────
+    _YT_UNSAFE_EMOJI = ["💦", "🍑", "🔞", "🍆", "👙", "🩲", "🍒", "🌽", "🥵"]
+
+    @staticmethod
+    def _yt_safe_label(text: str) -> str:
+        """Strip NSFW emojis from any string before writing it into a YouTube comment."""
+        for emoji in CommunityPromoter._YT_UNSAFE_EMOJI:
+            text = text.replace(emoji, "")
+        return text.strip()
+
     def _get_telegram_link(self) -> str:
         """Reads the Telegram link from config or .env."""
         try:
@@ -167,12 +177,12 @@ class CommunityPromoter:
             if not gemini_router:
                 return None
 
-            # Read customisable button labels from .env (fallback to defaults)
+            # Read customisable button labels from .env — strip NSFW emojis for YT safety
             from dotenv import load_dotenv
             import datetime
             load_dotenv("Credentials/.env")
-            partner_label = os.getenv("TG_BTN_PARTNER_LABEL", "Find Your Match").replace("🔥 ", "").strip()
-            corn_label    = os.getenv("TG_BTN_CORN_LABEL",   "Watch Full Clips").replace("🎬 ", "").strip()
+            partner_label = self._yt_safe_label(os.getenv("TG_BTN_PARTNER_LABEL", "Find Your Match").replace("🔥 ", "").strip())
+            corn_label    = self._yt_safe_label(os.getenv("TG_BTN_CORN_LABEL",   "Watch Full Clips").replace("🎬 ", "").strip())
 
             # Build name anchor — prefer actress name, fallback to neutral
             name_anchor = actress_name.strip() if actress_name else "this creator"
@@ -210,15 +220,40 @@ class CommunityPromoter:
 
             prompt = [
                 "SYSTEM ROLE:",
-                "You are a growth hacker who specializes in building Telegram groups via YouTube comments.",
+                "You are a neuroscience-aware YouTube copywriter who understands exactly how the human brain releases dopamine.",
                 "Your audience is viewers from multiple countries watching actress / celebrity content on YouTube.",
-                f"Your goal: write ONE YouTube comment with the hook written in {len(_langs)} LANGUAGES so viewers from all top countries can read it.",
-                "The comment MUST NOT contain adult links, explicit words, or gender-specific sexual language.",
-                "CRITICAL: Do NOT use words like 'girl', 'she', 'her', 'raw footage', 'censorship', or '🔞'.",
-                f"CRITICAL: Use the NAME '{name_anchor}' instead of any gender pronoun in ALL languages.",
-                "Use curiosity gaps, name-based exclusivity, and 'members-only hidden content' framing. Keep it fully YouTube-safe.",
+                f"Your goal: write ONE YouTube comment in {len(_langs)} LANGUAGES that triggers a dopamine spike the moment someone reads it — without using a single word that a content moderator would flag.",
+                "",
+                "── DOPAMINE TRIGGER SCIENCE ────────────────────────────────────────────",
+                "Dopamine fires on ANTICIPATION, not reward. The brain releases dopamine when it senses an incomplete loop — a gap between what it knows and what it wants to know.",
+                "Your comment must open that gap and leave it open. The viewer's brain will compulsively click to close the loop.",
+                "Mechanisms to use:",
+                "  1. CURIOSITY GAP — State that something exists but withhold what it is. 'Something about [Name] that doesn't go on the main channel.' Brain MUST find out.",
+                "  2. SOCIAL EXCLUSIVITY — 'Not everyone gets to see this version.' In-group / out-group fires the tribal reward circuit.",
+                "  3. VARIABLE REWARD — Don't tell them exactly what's inside. Ambiguity ('a different side of [Name]') fires more dopamine than a specific promise.",
+                "  4. PERSONALISATION — Use the actress's NAME directly. Named subjects activate stronger neural salience than generic terms.",
+                "  5. PRESENT-TENSE IMMEDIACY — 'Still live', 'right now', 'still there' — the reward EXISTS NOW. Brain hates missing present-moment rewards.",
+                "",
+                "── ABSOLUTE YOUTUBE SAFETY RULES ──────────────────────────────────────",
+                "RULE 1: NEVER mention YouTube, flagging, removal, banning, censorship, or platform moderation. These words trigger YouTube's manipulation-bait classifier.",
+                "RULE 2: NEVER use emojis: 💦 🍑 🔞 🍆 👙 🩲 🍒 🌽 — YouTube's visual classifier flags these as adult content.",
+                "RULE 3: Each CTA label must appear EXACTLY ONCE per full comment. Never repeat the same arrow line.",
+                "RULE 4: NEVER use: explicit, adult, nude, hot, sexy, censored, banned, raw footage, uncut, leaked.",
+                "RULE 5: Every line must pass the 'grandmother test' — sounds innocent to a moderator, fires dopamine in the target viewer through context alone.",
+                f"RULE 6: Use '{name_anchor}' — never 'she', 'her', 'girl' in any language.",
+                "",
+                "── APPROVED LANGUAGE PATTERNS ─────────────────────────────────────────",
+                "Use these surface-clean, brain-loaded frames:",
+                "  • 'Not everything about [Name] goes public.'  (implies: there's more)",
+                "  • 'Some things about [Name] stay private.'     (implies: exclusive/forbidden)",
+                "  • '[Name]'s extended cut didn't make the final edit.'  (implies: they have it)",
+                "  • 'Members get a different side of [Name].'    (implies: uncurated/raw)",
+                "  • 'What [Name] keeps for the group is different.'  (implies: intimate)",
+                "  • 'You already know what you came here for.'   (mirrors the viewer's real intent back at them)",
+                "  • 'The full picture is still live — but only inside.'  (present-tense reward exists NOW)",
+                "",
                 f"WRITING STYLE THIS TIME: {_style_seed}",
-                f"SESSION: {_ts}",   # forces Gemini to generate fresh output every call
+                f"SESSION: {_ts}",
                 "",
                 f"TARGET LINK: {tg_display}",
                 f"ACTRESS / CREATOR NAME: {name_anchor}",
@@ -245,32 +280,23 @@ class CommunityPromoter:
                 "",
             ] + _lang_blocks + [
                 "─────────────────────────────────────────",
-                "RULES:",
-                f"1. Use '{name_anchor}' — never use 'she', 'her', 'girl' in any language.",
-                "2. No explicit words, no 🔞, no censorship references. Keep all blocks YouTube-safe.",
-                "3. Keep each block punchy: max 4 lines per block.",
-                "4. Separate blocks with a single blank line.",
-                "5. The VERY LAST LINE of the entire comment must be: 👉 [TARGET LINK]",
-                "6. Output ONLY the raw comment text. No block headers, no markdown, no labels.",
+                "FINAL OUTPUT RULES:",
+                f"1. Use '{name_anchor}' — never 'she', 'her', 'girl' in any language.",
+                "2. Zero explicit words. Zero platform/moderation references. No 💦🍑🔞.",
+                "3. Each CTA arrow (→ label) appears EXACTLY ONCE across the entire comment. Never repeat.",
+                "4. Each block: max 2 lines of hook + 1 arrow line. Punchy. No filler.",
+                "5. Separate blocks with a single blank line.",
+                "6. The VERY LAST LINE of the entire comment must be: 👉 [TARGET LINK]",
+                "7. Output ONLY the raw comment text. No headers, no markdown, no meta-text.",
                 "",
-                "EXAMPLE STRUCTURE (tone and format only — write completely differently each time):",
-                f"{name_anchor}'s extended cut didn't survive YouTube's filter. 👀",
-                f"→ {partner_label}",
-                "",
-                f"The version they flagged and removed? Still live for members.",
+                "EXAMPLE STRUCTURE (dopamine-trigger format — write completely differently each time):",
+                f"Not everything about {name_anchor} makes it to the main channel. 👀",
                 f"→ {corn_label}",
                 "",
-                f"{name_anchor} ka full version yahan se hata diya gaya. Group mein available hai.",
+                f"{name_anchor} ka kuch content sirf members ke liye rakha gaya hai.",
                 f"→ {partner_label}",
                 "",
-                f"Jo clip delete hui, wo members ke liye abhi bhi live hai.",
-                f"→ {corn_label}",
-                "",
-                f"{name_anchor} er full clip delete kora hoyeche. Members ra ekhono dekhte parchen.",
-                f"→ {partner_label}",
-                "",
-                f"YouTube theke hatiye dewa video group e achhe. Members only.",
-                f"→ {corn_label}",
+                f"{name_anchor} er extended version shudhu members der jonyo ekhono live achhe.",
                 f"👉 {tg_display}",
             ]
 
@@ -389,71 +415,105 @@ class CommunityPromoter:
             logger.info(f"✨ Using Gemini-generated hook for '{_actress}'.")
             return gemini_hook
 
-        # 2. Secondary Fallback Hooks — Actress-Funnel Oriented (YouTube-Safe)
+        # 2. Secondary Fallback Hooks — Dopamine-trigger, YouTube-safe curiosity gaps
+        # ── Neuroscience principle: dopamine fires on ANTICIPATION not reward.
+        # ── Each hook opens an information gap. The viewer's brain must close it.
+        # ── No explicit words. No platform/moderation references. No repeated CTAs.
         from dotenv import load_dotenv
         load_dotenv("Credentials/.env")
-        partner_label = os.getenv("TG_BTN_PARTNER_LABEL", "🔥 Find Your Match").strip()
-        corn_label    = os.getenv("TG_BTN_CORN_LABEL",   "🎬 Watch Full Clips").strip()
+        # Strip NSFW emojis from labels before writing them into YouTube comment body
+        partner_label = self._yt_safe_label(os.getenv("TG_BTN_PARTNER_LABEL", "Find Your Match").replace("🔥 ", "").strip())
+        corn_label    = self._yt_safe_label(os.getenv("TG_BTN_CORN_LABEL",   "Watch Full Clips").replace("🎬 ", "").strip())
+
+        # ── Fashion/Style niche: purely aspirational, zero innuendo ───────────────
+        _is_fashion = _actress and fashion_data and "fashion" in str(fashion_data.get("niche", "")).lower()
+        if _is_fashion:
+            item  = fashion_data.get("outfit_type", "this look")
+            brand = fashion_data.get("designer_or_brand", "the label")
+            return (
+                f"{_actress}'s {item} is the blueprint for this season.\n"
+                f"The full style breakdown and extended archive is inside.\n"
+                f"→ {corn_label}\n"
+                f"👉 {tg_display}"
+            )
 
         if is_short:
-            # Dual-hook fallback pool — name-based, YouTube-safe curiosity hooks
+            # ── Dopamine fallback pool — curiosity gap, exclusivity, present-tense reward ──
+            # Each set: 2 hooks, each CTA appears EXACTLY ONCE, no platform references
             teasers = [
-                # Set 1 — Extended cut + members-only
-                f"{_actress}'s extended cut didn't make it past YouTube's filter. 👀\n"
+
+                # Set 1 — "Private side" / variable reward
+                # Brain trigger: ambiguity + name + present-tense reward
+                f"Not everything about {_actress} goes on the main channel. 👀\n"
                 f"→ {corn_label}\n"
                 f"\n"
-                f"Members get behind-the-scenes content {_actress} posted before it got taken down.\n"
+                f"The extended version is still live — members only, not public anywhere else.\n"
                 f"→ {partner_label}\n"
                 f"👉 {tg_display}",
 
-                # Set 2 — Deleted version
-                f"YouTube flagged and removed {_actress}'s original upload. The full version is inside.\n"
+                # Set 2 — "You already know" / viewer intent mirror
+                # Brain trigger: self-recognition fires stronger than external suggestion
+                f"You already know what you came here for. 🔑\n"
+                f"→ {partner_label}\n"
+                f"\n"
+                f"{_actress}'s extended cut is inside — still live for members right now.\n"
+                f"→ {corn_label}\n"
+                f"👉 {tg_display}",
+
+                # Set 3 — "Different energy" / social exclusivity
+                # Brain trigger: in-group reward + curiosity about what's different
+                f"{_actress} keeps a different energy for the group. Members know. 🔑\n"
                 f"→ {corn_label}\n"
                 f"\n"
-                f"Members-only access. Not public anywhere else.\n"
+                f"Not public. Not shared. Just inside.\n"
                 f"→ {partner_label}\n"
                 f"👉 {tg_display}",
 
-                # Set 3 — FOMO / secret cut
-                f"This is the edited version. {_actress}'s full cut is inside the group. 🔑\n"
+                # Set 4 — Hinglish / India & Pakistan audience
+                # Brain trigger: native language drops guard; exclusivity framing
+                f"{_actress} ka kuch content sirf group ke liye rakha gaya hai. 👀\n"
                 f"→ {corn_label}\n"
                 f"\n"
-                f"Group members get exclusive content that doesn't go public.\n"
+                f"Jo public nahi hai, wo members ke paas hai. Aap bhi aa sakte hain.\n"
                 f"→ {partner_label}\n"
                 f"👉 {tg_display}",
 
-                # Set 4 — Hinglish variant (India audience) — name-based
-                f"{_actress} ka full version yahan nahi daal sakte. Group mein available hai. 👀\n"
+                # Set 5 — "Didn't make the final edit" / curiosity gap
+                # Brain trigger: implies existence of hidden content without mentioning moderation
+                f"{_actress}'s extended version didn't make the final edit. 👀\n"
                 f"→ {corn_label}\n"
                 f"\n"
-                f"Members ko exclusive content milta hai jo publicly nahi hai.\n"
+                f"Members get what doesn't go public. Still live right now.\n"
                 f"→ {partner_label}\n"
                 f"👉 {tg_display}",
 
-                # Set 5 — Platform removed it
-                f"The platform keeps removing {_actress}'s best clips. We archive them inside.\n"
+                # Set 6 — "Something about [Name]" / pure curiosity gap
+                # Brain trigger: maximum ambiguity — brain MUST resolve what "something" is
+                f"Something about {_actress} that the main channel won't show you. 🔑\n"
+                f"→ {partner_label}\n"
+                f"\n"
+                f"The full archive is inside — members only, still live.\n"
+                f"→ {corn_label}\n"
+                f"👉 {tg_display}",
+
+                # Set 7 — "What [Name] saves for inside" / intimate framing
+                # Brain trigger: "saves for" implies intentional private sharing
+                f"What {_actress} saves for the group is a different story. 👀\n"
                 f"→ {corn_label}\n"
                 f"\n"
-                f"Join to get notified every time new content drops. Members only.\n"
+                f"Not posted publicly. Exclusive to members right now.\n"
                 f"→ {partner_label}\n"
                 f"👉 {tg_display}",
 
-                # Set 6 — Behind the scenes
-                f"{_actress}'s behind-the-scenes clips never go on the main channel. 🔑\n"
-                f"→ {corn_label}\n"
-                f"\n"
-                f"Every upload — exclusive to group members before it's anywhere else.\n"
-                f"→ {partner_label}\n"
-                f"👉 {tg_display}",
             ]
             return random.choice(teasers)
         else:
-            # Long-form / compilation — name-based, YouTube-safe
+            # Long-form / compilation fallback — curiosity gap, no moderation references
             return (
-                f"{_actress}'s extended compilation — the version YouTube keeps flagging is inside the group.\n"
+                f"{_actress}'s extended compilation — the version that didn't make the final edit. 👀\n"
                 f"→ {corn_label}\n"
                 f"\n"
-                f"Members get early access to every upload before it goes public. No waiting.\n"
+                f"Members get early access to every archive before it goes public.\n"
                 f"→ {partner_label}\n"
                 f"👉 {tg_display}"
             )
