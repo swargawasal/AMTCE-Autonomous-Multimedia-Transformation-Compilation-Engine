@@ -293,8 +293,8 @@
       "version": 2
     },
     "Gizele_thakral.mp3": {
-      "usage_count": 0,
-      "last_used": 0,
+      "usage_count": 1,
+      "last_used": 1780400620.1356704,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.945487,
@@ -353,8 +353,8 @@
       "version": 2
     },
     "Mahi_kapoor.mp3": {
-      "usage_count": 0,
-      "last_used": 0,
+      "usage_count": 1,
+      "last_used": 1780400046.0255215,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.946521,
@@ -367,13 +367,13 @@
     "Malavika.mp3": {
       "usage_count": 0,
       "last_used": 0,
-      "bpm": 0.0,
-      "energy": 0.5,
+      "bpm": 91.1,
+      "energy": 0.8011714285714285,
       "created_at": 1780391156.946521,
-      "beat_data_path": null,
+      "beat_data_path": "beats/Malavika.npz",
       "drop_times": [],
       "sample_rate": 44100,
-      "audio_hash": "549340_1777415826",
+      "audio_hash": "581942_1780400001",
       "version": 2
     },
     "Malavika_10.mp3": {
@@ -629,8 +629,8 @@
       "version": 2
     },
     "Sakshi.mp3": {
-      "usage_count": 0,
-      "last_used": 0,
+      "usage_count": 1,
+      "last_used": 1780402270.0030994,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.9496174,
@@ -773,8 +773,8 @@
       "version": 2
     },
     "Urvashi_rautela.mp3": {
-      "usage_count": 0,
-      "last_used": 0,
+      "usage_count": 1,
+      "last_used": 1780400052.8222315,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.9511678,
@@ -854,6 +854,33 @@
       "drop_times": [],
       "sample_rate": 44100,
       "audio_hash": "222082_1778607462",
+      "version": 2
+    },
+    "Kangna_sharma.mp3": {
+      "is_speech_only": true,
+      "usage_count": 0,
+      "last_used": 0,
+      "bpm": 0.0,
+      "energy": 0.809,
+      "created_at": 1780399991.6271508,
+      "beat_data_path": null,
+      "drop_times": [],
+      "sample_rate": 44100,
+      "audio_hash": "",
+      "version": 2
+    },
+    "Shruthi_hassan.mp3": {
+      "usage_count": 0,
+      "last_used": 0,
+      "bpm": 100.3,
+      "energy": 0.8626727272727271,
+      "created_at": 1780402172.5887027,
+      "beat_data_path": "beats/Shruthi_hassan.npz",
+      "drop_times": [
+        30.25
+      ],
+      "sample_rate": 44100,
+      "audio_hash": "810152_1780402172",
       "version": 2
     }
   }
