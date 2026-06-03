@@ -1,8 +1,5 @@
 {
   "pending": [
-    "filmygalaxy",
-    "filmymantramedia",
-    "bollywindow",
     "pappsnap",
     "bollywoodchronicle",
     "mahesh_videojournalist",
@@ -27,6 +24,9 @@
   "done_this_round": [
     "instantbollywood",
     "justbollywood.in",
-    "bollywooddazzle"
+    "bollywooddazzle",
+    "filmygalaxy",
+    "filmymantramedia",
+    "bollywindow"
   ]
 }
