@@ -1,3 +1,5 @@
 {
-  "fashion": 0
+  "fashion": 1,
+  "nsfw": 0,
+  "general": 0
 }

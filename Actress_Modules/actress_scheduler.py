@@ -561,6 +561,9 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
 
         # Success/failure registry write (Fix 3)
         _upload_succeeded = ig_ok or bool(yt_link)
+        _REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        rel_video_path = os.path.relpath(video_path, _REPO_ROOT).replace("\\", "/")
+
         if _upload_succeeded:
             # Write to published registry
             _PUBLISHED_REGISTRY = os.path.join(os.path.dirname(os.path.abspath(__file__)), "published_registry.json")
@@ -568,12 +571,17 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
             if os.path.exists(_PUBLISHED_REGISTRY):
                 try:
                     with open(_PUBLISHED_REGISTRY, "r", encoding="utf-8") as f:
-                        published = set(json.load(f))
+                        for p in json.load(f):
+                            if os.path.isabs(p) or "/" in p or "\\" in p:
+                                rel_p = os.path.relpath(p, _REPO_ROOT).replace("\\", "/")
+                            else:
+                                rel_p = p
+                            published.add(rel_p)
                 except Exception:
                     pass
-            published.add(video_path)
+            published.add(rel_video_path)
             with open(_PUBLISHED_REGISTRY, "w", encoding="utf-8") as f:
-                json.dump(sorted(published), f, indent=2)
+                json.dump(sorted(list(published)), f, indent=2)
             logger.info("✅ [REGISTRY] Marked as published: %s", os.path.basename(video_path))
         else:
             # Failed — write to failed registry so it can be retried
@@ -582,11 +590,17 @@ def _auto_publish_clip(video_path: str, actress_title: str, actress_folder: str)
             if os.path.exists(_FAILED_REGISTRY):
                 try:
                     with open(_FAILED_REGISTRY, "r", encoding="utf-8") as f:
-                        failed = json.load(f)
+                        for p in json.load(f):
+                            if os.path.isabs(p) or "/" in p or "\\" in p:
+                                rel_p = os.path.relpath(p, _REPO_ROOT).replace("\\", "/")
+                            else:
+                                rel_p = p
+                            if rel_p not in failed:
+                                failed.append(rel_p)
                 except Exception:
                     pass
-            if video_path not in failed:
-                failed.append(video_path)
+            if rel_video_path not in failed:
+                failed.append(rel_video_path)
                 with open(_FAILED_REGISTRY, "w", encoding="utf-8") as f:
                     json.dump(failed, f, indent=2)
             logger.warning("⚠️ [REGISTRY] Upload failed — added to retry list: %s", os.path.basename(video_path))
