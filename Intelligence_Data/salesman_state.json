@@ -24,9 +24,9 @@
   },
   "apify": {
     "quota_date": "2026-06-03",
-    "quota_used": 3,
+    "quota_used": 6,
     "quota_limit": 50,
-    "total_calls_all_time": 215
+    "total_calls_all_time": 218
   },
   "scraped_posts": {
     "shortcodes": [
@@ -95,7 +95,10 @@
       "voompla": "2026-06-02T23:21:01.195828",
       "bollywood.portal": "2026-06-03T00:13:01.568542",
       "avneetphile": "2026-06-03T00:13:01.568542",
-      "bollywoodstandard": "2026-06-03T00:13:01.568542"
+      "bollywoodstandard": "2026-06-03T00:13:01.568542",
+      "bollywxxd": "2026-06-03T12:17:05.089096",
+      "glitz.in": "2026-06-03T12:17:05.089096",
+      "bollywoodreporter.in": "2026-06-03T12:17:05.089096"
     }
   }
 }
