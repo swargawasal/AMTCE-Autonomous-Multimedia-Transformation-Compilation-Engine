@@ -24,9 +24,9 @@
   },
   "apify": {
     "quota_date": "2026-06-03",
-    "quota_used": 29,
+    "quota_used": 31,
     "quota_limit": 50,
-    "total_calls_all_time": 241
+    "total_calls_all_time": 243
   },
   "scraped_posts": {
     "shortcodes": [
@@ -104,7 +104,9 @@
       "totalfilmii": "2026-06-03T14:24:53.326769",
       "bujji5749": "2026-06-03T14:33:09.125248",
       "bollywoodboundary": "2026-06-03T14:33:09.125248",
-      "bollywood76612": "2026-06-03T14:33:09.125248"
+      "bollywood76612": "2026-06-03T14:33:09.125248",
+      "filmycrest": "2026-06-03T20:58:25.448219",
+      "pinkmedia_official": "2026-06-03T20:58:25.448219"
     }
   }
 }
