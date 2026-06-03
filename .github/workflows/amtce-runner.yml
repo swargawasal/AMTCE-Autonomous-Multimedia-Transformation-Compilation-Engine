@@ -32,13 +32,14 @@ on:
 
 
 # ── Concurrency Control ────────────────────────────────────────────────────
-# A manual (workflow_dispatch) run holds the 'amtce-bot' lock for its full
-# 6-hour duration. Any scheduled cron that fires while the bot is still
-# running will be CANCELLED immediately (cancel-in-progress: true).
-# This prevents two runners from sharing the same Telegram bot token.
+# A manual (workflow_dispatch) run holds the 'amtce-bot' lock.
+# Scheduled crons that fire NEVER cancel a running dispatch — they yield
+# immediately via the bot_lock.json check inside run_ci_mode().
+# A new dispatch DOES cancel any stale/leftover scheduled run so it can
+# claim the lock right away (cancel-in-progress = true for dispatch).
 concurrency:
   group: amtce-bot
-  cancel-in-progress: ${{ github.event_name == 'schedule' }}
+  cancel-in-progress: ${{ github.event_name != 'schedule' }}
 
 jobs:
   run-amtce:

@@ -8667,13 +8667,13 @@ def process_clip(video_path: str, actress_title: str) -> str | None:
         director = VanguardDirector()
         title_val = actress_title or "CLI Mission"
         video_request = f"CLI: Process '{title_val}'"
-        
+
         result = director.execute_mission(
             niche=os.getenv("DEFAULT_NICHE", "viral"),
             video_request=video_request,
             input_paths=[video_path],
         )
-        
+
         if result and result.success and result.output and os.path.exists(result.output):
             return result.output
         return None
@@ -8820,33 +8820,51 @@ def run_ci_mode():
     # --- 2. PUBLISH PHASE ---
     if should_publish:
         try:
-            from Actress_Modules.actress_publisher import PublishQueue, _process_queue_item, _auto_fill_queue_from_downloads
-            import time, random
+            from Actress_Modules.actress_publisher import PublishQueue, _auto_fill_queue_from_downloads
+            import time as _ci_time
 
             # Pull any un-queued clips from downloads/ into the queue first
             _auto_fill_queue_from_downloads()
 
             queue = PublishQueue.load()
+            _max_clips = int(os.getenv("MAX_CLIPS_PER_CI", "10"))
             if queue:
-                logger.info(f"📤 [CI] Found {len(queue)} queued clip(s). Processing EXACTLY ONE queued item to avoid posting like a maniac...")
-                
-                # Setup trackers for pop_one if necessary
+                logger.info(
+                    f"📤 [CI] Found {len(queue)} queued clip(s). "
+                    f"Processing up to {_max_clips} this run..."
+                )
                 last_folder = None
                 last_gender = None
-                
-                item = PublishQueue.pop_one(last_folder, last_gender)
-                if item:
+                _processed  = 0
+
+                for _ci_idx in range(min(len(queue), _max_clips)):
+                    item = PublishQueue.pop_one(last_folder, last_gender)
+                    if not item:
+                        break
+
+                    # Polite delay between uploads (skip on first item)
+                    if _processed > 0:
+                        _delay = int(os.getenv("CI_INTER_UPLOAD_DELAY_SEC", "45"))
+                        logger.info(
+                            f"⏱️ [CI] Waiting {_delay}s before next upload (rate-limit guard)..."
+                        )
+                        _ci_time.sleep(_delay)
+
                     video_path     = item['video_path']
                     actress_title  = item['actress_title']
                     actress_folder = item['actress_folder']
-                    
+
                     f_lower = actress_folder.lower()
-                    if f_lower.startswith("paparazzi"): last_gender = "men"
-                    elif f_lower.startswith("fashion"): last_gender = "women_fashion"
-                    else: last_gender = "women_general"
-                    
-                    logger.info(f"🎬 Popped video for processing: {os.path.basename(video_path)} (Gender: {last_gender})")
-                    
+                    if f_lower.startswith("paparazzi"):    last_gender = "men"
+                    elif f_lower.startswith("fashion"):    last_gender = "women_fashion"
+                    else:                                  last_gender = "women_general"
+                    last_folder = actress_folder
+
+                    logger.info(
+                        f"🎬 [CI {_ci_idx+1}/{min(len(queue), _max_clips)}] "
+                        f"Processing: {os.path.basename(video_path)} (gender={last_gender})"
+                    )
+
                     final_video_path = video_path
                     try:
                         result_path = process_clip(video_path, actress_title)
@@ -8857,13 +8875,13 @@ def run_ci_mode():
                         logger.error(f"⚠️ Failed to run AMTCE PROCESS: {e}")
 
                     if os.path.exists(final_video_path) and final_video_path != video_path:
-                        base_dir   = os.path.dirname(final_video_path)
-                        raw_stem   = os.path.splitext(os.path.basename(video_path))[0]
-                        ext        = os.path.splitext(video_path)[1]
-                        nums       = re.findall(r"\d+", raw_stem)
-                        idx        = int(nums[0]) if nums else 1
-                        safe_title = actress_title.replace("/", "-").replace("\\", "-")
-                        clean_name = f"{safe_title}_{idx:02d}{ext}"
+                        base_dir    = os.path.dirname(final_video_path)
+                        raw_stem    = os.path.splitext(os.path.basename(video_path))[0]
+                        ext         = os.path.splitext(video_path)[1]
+                        nums        = re.findall(r"\d+", raw_stem)
+                        idx         = int(nums[0]) if nums else 1
+                        safe_title  = actress_title.replace("/", "-").replace("\\", "-")
+                        clean_name  = f"{safe_title}_{idx:02d}{ext}"
                         titled_path = os.path.join(base_dir, clean_name)
                         try:
                             os.replace(final_video_path, titled_path)
@@ -8873,16 +8891,22 @@ def run_ci_mode():
 
                     from Actress_Modules.actress_scheduler import _auto_publish_clip
                     _auto_publish_clip(final_video_path, actress_title, actress_folder)
-                    
-                    # Cleanup .mp4
-                    if os.path.exists(final_video_path):
-                        try: os.remove(final_video_path)
-                        except Exception: pass
-                    if os.path.exists(video_path) and final_video_path != video_path:
-                        try: os.remove(video_path)
-                        except Exception: pass
-                        
-                logger.info("✅ [CI] Queue item processing phase complete.")
+
+                    # Belt-and-suspenders cleanup for both paths
+                    for _cp in {final_video_path, video_path}:
+                        if _cp and os.path.exists(_cp):
+                            try:
+                                os.remove(_cp)
+                                logger.info(f"🗑️ [CI] Cleaned up: {os.path.basename(_cp)}")
+                            except Exception as _ce:
+                                logger.warning(f"⚠️ [CI] Could not delete {_cp}: {_ce}")
+
+                    _processed += 1
+
+                logger.info(
+                    f"✅ [CI] Published {_processed} clip(s). "
+                    f"Remaining in queue: {len(PublishQueue.load())}"
+                )
             else:
                 logger.info("📭 [CI] Publish queue is empty.")
         except Exception as e:

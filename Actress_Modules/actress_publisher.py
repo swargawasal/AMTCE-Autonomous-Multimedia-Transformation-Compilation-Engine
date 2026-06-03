@@ -59,7 +59,13 @@ class PublishQueue:
             return []
         try:
             with open(PUBLISH_QUEUE_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
+                queue = json.load(f)
+                # Auto-migrate any absolute or platform-dependent paths to relative paths with forward slashes
+                for q in queue:
+                    vp = q["video_path"]
+                    if os.path.isabs(vp) or "/" in vp or "\\" in vp:
+                        q["video_path"] = os.path.relpath(vp, _REPO_ROOT).replace("\\", "/")
+                return queue
         except Exception:
             return []
 
@@ -73,32 +79,42 @@ class PublishQueue:
         with cls._lock:
             queue = cls.load()
             
+            # Normalize target path to relative path with forward slashes
+            rel_video_path = os.path.relpath(video_path, _REPO_ROOT).replace("\\", "/")
+            
             # Check published registry to prevent re-queuing
             published = set()
             if os.path.exists(_PUBLISHED_REGISTRY):
                 try:
                     with open(_PUBLISHED_REGISTRY, "r", encoding="utf-8") as f:
-                        published = set(json.load(f))
+                        for p in json.load(f):
+                            # Normalize path formatting to relative with forward slashes
+                            if os.path.isabs(p) or "/" in p or "\\" in p:
+                                rel_p = os.path.relpath(p, _REPO_ROOT).replace("\\", "/")
+                            else:
+                                rel_p = p
+                            published.add(rel_p)
                 except Exception:
                     pass
             
-            if video_path in published:
-                if os.path.exists(video_path):
-                    # Physical file exists, meaning it was never actually published (or needs republishing)
-                    logger.info(f"🔄 Clip physically exists on disk but is marked as published. Bypassing skip and cleaning registry: {os.path.basename(video_path)}")
+            if rel_video_path in published:
+                abs_path = os.path.join(_REPO_ROOT, rel_video_path)
+                if os.path.exists(abs_path):
+                    # File is already in published_registry but still exists on disk — it's a
+                    # leftover from a previous run where cleanup failed.  DO NOT remove it from
+                    # the registry (that was the root cause of the 4x duplicate upload bug).
+                    # Instead, delete the stale file and skip re-queuing.
                     try:
-                        published.remove(video_path)
-                        with open(_PUBLISHED_REGISTRY, "w", encoding="utf-8") as f:
-                            json.dump(sorted(published), f, indent=2)
-                    except Exception as e:
-                        logger.warning(f"⚠️ Could not clean published registry for {video_path}: {e}")
-                else:
-                    logger.info(f"⏭️ Skipping already published clip: {os.path.basename(video_path)}")
-                    return
+                        os.remove(abs_path)
+                        logger.info(f"🗑️ [DEDUP] Deleted leftover published clip: {os.path.basename(abs_path)}")
+                    except Exception as _de:
+                        logger.warning(f"⚠️ [DEDUP] Could not delete leftover file {abs_path}: {_de}")
+                logger.info(f"⏭️ [DEDUP] Skipping already-published clip: {os.path.basename(rel_video_path)}")
+                return
                 
-            if not any(q["video_path"] == video_path for q in queue):
+            if not any(os.path.relpath(q["video_path"], _REPO_ROOT).replace("\\", "/") == rel_video_path for q in queue):
                 queue.append({
-                    "video_path": video_path,
+                    "video_path": rel_video_path,
                     "actress_title": actress_title,
                     "actress_folder": actress_folder,
                     "added_at": time.time()
@@ -137,6 +153,8 @@ class PublishQueue:
 
             item = queue.pop(best_idx)
             cls.save(queue)
+            # Resolve to absolute path so downstream tasks receive a valid, local absolute path
+            item["video_path"] = os.path.abspath(os.path.join(_REPO_ROOT, item["video_path"]))
             return item
 
 
@@ -153,7 +171,7 @@ def _auto_fill_queue_from_downloads():
         return 0
 
     added = 0
-    existing = {q["video_path"] for q in PublishQueue.load()}
+    existing = {os.path.relpath(q["video_path"], base).replace("\\", "/") for q in PublishQueue.load()}
 
     for entry in sorted(os.scandir(downloads_dir), key=lambda e: e.name):
         if not entry.is_dir():
@@ -170,9 +188,10 @@ def _auto_fill_queue_from_downloads():
 
         for mp4 in sorted(entry.path and [f for f in os.listdir(entry.path) if f.lower().endswith(".mp4")]):
             full_path = os.path.join(entry.path, mp4)
-            if full_path not in existing:
+            rel_path = os.path.relpath(full_path, base).replace("\\", "/")
+            if rel_path not in existing:
                 PublishQueue.add(full_path, actress_title, actress_folder)
-                existing.add(full_path)
+                existing.add(rel_path)
                 added += 1
 
     if added:
