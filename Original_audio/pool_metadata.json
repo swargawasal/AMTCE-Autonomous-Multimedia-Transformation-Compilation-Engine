@@ -161,8 +161,8 @@
       "version": 2
     },
     "Avneet_kaur_2.mp3": {
-      "usage_count": 0,
-      "last_used": 0,
+      "usage_count": 1,
+      "last_used": 1780476885.8925128,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.9444246,
@@ -689,8 +689,8 @@
       "version": 2
     },
     "Sassy_poonam_1.mp3": {
-      "usage_count": 0,
-      "last_used": 0,
+      "usage_count": 1,
+      "last_used": 1780476941.1046767,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.9501328,
@@ -881,6 +881,19 @@
       ],
       "sample_rate": 44100,
       "audio_hash": "810152_1780402172",
+      "version": 2
+    },
+    "Kirthi_sanon.mp3": {
+      "is_speech_only": true,
+      "usage_count": 0,
+      "last_used": 0,
+      "bpm": 0.0,
+      "energy": 0.783,
+      "created_at": 1780476848.2364657,
+      "beat_data_path": null,
+      "drop_times": [],
+      "sample_rate": 44100,
+      "audio_hash": "",
       "version": 2
     }
   }
