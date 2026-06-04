@@ -32,14 +32,12 @@ on:
 
 
 # ── Concurrency Control ────────────────────────────────────────────────────
-# A manual (workflow_dispatch) run holds the 'amtce-bot' lock.
-# Scheduled crons that fire NEVER cancel a running dispatch — they yield
-# immediately via the bot_lock.json check inside run_ci_mode().
-# A new dispatch DOES cancel any stale/leftover scheduled run so it can
-# claim the lock right away (cancel-in-progress = true for dispatch).
+# The main bot run holds the 'amtce-bot' concurrency lock for the full 5.25h
+# session. The chain-restart job has NO concurrency key so it can always fire
+# after the main job exits — even if another run is starting at the same time.
 concurrency:
   group: amtce-bot
-  cancel-in-progress: ${{ github.event_name != 'schedule' }}
+  cancel-in-progress: false
 
 jobs:
   run-amtce:
@@ -133,6 +131,8 @@ jobs:
         TELEGRAM_CONFIG_ADULT_01:    ${{ secrets.TELEGRAM_CONFIG_ADULT_01 }}
         TELEGRAM_CONFIG_ADULT_02:    ${{ secrets.TELEGRAM_CONFIG_ADULT_02 }}
         TELEGRAM_CONFIG_ADULT_03:    ${{ secrets.TELEGRAM_CONFIG_ADULT_03 }}
+        # Hotness Poll — UPI ID for user payments
+        UPI_ID:                      ${{ secrets.UPI_ID }}
       run: |
         mkdir -p Credentials
 
@@ -366,3 +366,22 @@ jobs:
         exit 0
 
 
+# ── Chain-restart (separate job, NO concurrency key) ───────────────────────
+# Runs AFTER the main job is fully done (lock released). The absence of a
+# concurrency key means GitHub never kills this job due to the amtce-bot group.
+chain-restart:
+  runs-on: ubuntu-latest
+  needs: run-amtce
+  if: always()
+  permissions:
+    actions: write
+  steps:
+    - name: Trigger Next Run
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo "🔄 Chain-restarting AMTCE for continuous 24/7 operation..."
+        gh workflow run amtce-runner.yml \
+          --repo "$GITHUB_REPOSITORY" \
+          --ref "$GITHUB_REF_NAME"
+        echo "✅ Next run queued successfully."

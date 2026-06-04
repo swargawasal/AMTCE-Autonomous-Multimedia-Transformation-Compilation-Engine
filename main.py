@@ -7835,9 +7835,300 @@ async def cmd_run_swap(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await safe_reply(update, f"❌ Error: {e}")
 
 
-# --- AUCTION ENGINE HANDLERS ---
-from Uploader_Modules.telegram_auction_engine import AuctionState, PaymentVerifier
+# --- HOTNESS POLL ENGINE HANDLERS ---
+from Uploader_Modules.hotness_poll_engine import (
+    HotnessPollState, PollResultCalculator,
+    verify_payment_screenshot, PollSchedulerDaemon,
+)
 OCR_COOLDOWN = {}
+
+async def cmd_vote(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    /vote A 100  — invest ₹100 on Post A being hotter
+    /vote B 50   — invest ₹50 on Post B
+    """
+    try:
+        if len(context.args) < 2:
+            await safe_reply(
+                update,
+                "📲 <b>Usage:</b> <code>/vote A 100</code> or <code>/vote B 50</code>\n"
+                "Vote on which post is hotter and invest real ₹!",
+            )
+            return
+        side   = context.args[0].upper()
+        amount = float(context.args[1])
+    except (ValueError, IndexError):
+        await safe_reply(update, "❌ Usage: /vote A 100  (side: A or B, amount in ₹)")
+        return
+
+    uid      = str(update.effective_user.id)
+    username = update.effective_user.username or update.effective_user.first_name or uid
+    poll     = HotnessPollState()
+    result   = poll.register_vote(uid, username, side, amount)
+
+    if result == "OK":
+        upi_id = os.getenv("UPI_ID", "your-upi@bank")
+        status = poll.get_live_status()
+        await safe_reply(
+            update,
+            f"✅ Vote registered!\n\n"
+            f"Your pick: Post {side} ({status[f'post_{side.lower()}_label']})\n"
+            f"Amount: ₹{amount:.0f}\n\n"
+            f"📲 Now send ₹{amount:.0f} to UPI: <code>{upi_id}</code>\n"
+            f"Then send the <b>payment screenshot here</b> for verification.\n\n"
+            f"⏰ Votes close at 9 PM IST.",
+        )
+    else:
+        await safe_reply(update, result)
+
+
+async def cmd_mystats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    /mystats — show your current vote, investment and potential winnings.
+    """
+    uid  = str(update.effective_user.id)
+    poll = HotnessPollState()
+    stats = poll.get_user_stats(uid)
+    if not stats:
+        await safe_reply(update, "❌ You haven't voted yet! Use /vote A 100 or /vote B 50.")
+        return
+    verified_emoji = "✅ Verified" if stats["verified"] else "⏳ Awaiting verification"
+    await safe_reply(
+        update,
+        f"📊 <b>Your Poll Stats</b>\n\n"
+        f"Side: Post {stats['side']}\n"
+        f"Invested: ₹{stats['amount']:.0f}\n"
+        f"Status: {verified_emoji}\n\n"
+        f"💰 Expected win if your side wins: ₹{stats['expected_win']:.2f}\n"
+        f"(Based on current pot — updates as more votes come in)",
+    )
+
+
+async def cmd_pollstatus(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    /pollstatus — show live vote counts and pot totals.
+    """
+    poll   = HotnessPollState()
+    status = poll.get_live_status()
+    if not status["active"]:
+        await safe_reply(update, "🛑 No poll is active right now. Check back at 6:30 PM IST!")
+        return
+
+    leader = "A" if status["pot_a"] >= status["pot_b"] else "B"
+    await safe_reply(
+        update,
+        f"🗳️ <b>LIVE HOTNESS POLL</b>\n\n"
+        f"🅰️ {status['post_a_label']}\n"
+        f"   Voters: {status['votes_a']} | Pot: ₹{status['pot_a']:.0f}\n\n"
+        f"🅱️ {status['post_b_label']}\n"
+        f"   Voters: {status['votes_b']} | Pot: ₹{status['pot_b']:.0f}\n\n"
+        f"🏆 Leading: Post {leader}\n"
+        f"💰 Total pot: ₹{status['total_pot']:.0f}\n\n"
+        f"Use /vote A 100 or /vote B 100 to join! ⏰",
+    )
+
+
+async def handle_poll_screenshot(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """
+    Photo handler: Gemini-OCR the UPI payment screenshot and auto-verify the vote.
+    Routes to face-swap handler first if user is in WAITING_FOR_FACE_IMAGE state.
+    """
+    if not update.message or not update.message.photo:
+        return
+
+    uid = str(update.effective_user.id)
+
+    # OCR cooldown
+    last_ocr = OCR_COOLDOWN.get(uid, 0)
+    if time.time() - last_ocr < 60:
+        await safe_reply(update, "⏳ Processing previous screenshot. Please wait 60 seconds.")
+        return
+
+    poll = HotnessPollState()
+    with poll.safe_lock():
+        if not poll.state.get("active"):
+            return  # Poll not active — ignore photos
+        if uid not in poll.state["votes"]:
+            return  # No pending vote — ignore
+        if poll.state["votes"][uid].get("verified"):
+            await safe_reply(update, "✅ Your vote is already verified!")
+            return
+
+    OCR_COOLDOWN[uid] = time.time()
+    await safe_reply(update, "🔍 Reading payment screenshot via AI...")
+
+    # Download photo
+    photo_file = await update.message.photo[-1].get_file()
+    temp_path  = os.path.join("temp", f"poll_payment_{uid}_{int(time.time())}.jpg")
+    os.makedirs("temp", exist_ok=True)
+    await photo_file.download_to_drive(temp_path)
+
+    data = await asyncio.to_thread(verify_payment_screenshot, temp_path)
+
+    if data.get("status") == "success":
+        utr    = data.get("utr_number", "MANUAL")
+        amount = float(data.get("amount", 0))
+        result = poll.verify_vote(uid, utr, amount)
+        if result == "OK":
+            stats = poll.get_user_stats(uid)
+            await safe_reply(
+                update,
+                f"✅ Payment verified! Your ₹{amount:.0f} vote for Post "
+                f"{stats['side']} is locked in.\n"
+                f"Expected payout if you win: ₹{stats['expected_win']:.2f} 🤑",
+            )
+            # Notify admin
+            admin_id = os.getenv("TELEGRAM_ADMIN_ID", "")
+            if admin_id:
+                try:
+                    username = update.effective_user.username or uid
+                    await context.bot.send_photo(
+                        chat_id=admin_id,
+                        photo=open(temp_path, "rb"),
+                        caption=(
+                            f"✅ AUTO-VERIFIED VOTE\n"
+                            f"User: @{username} (ID: {uid})\n"
+                            f"Amount: ₹{amount:.0f} | UTR: {utr}\n"
+                            f"Side: Post {stats['side']}"
+                        ),
+                    )
+                except Exception:
+                    pass
+        else:
+            await safe_reply(
+                update,
+                f"❌ {result}\n\nPlease ask admin: /confirm {uid} to manually verify.",
+            )
+    else:
+        await safe_reply(
+            update,
+            "❌ Could not read the screenshot clearly.\n"
+            "Make sure the UTR number and amount are visible, then try again.",
+        )
+
+
+async def handle_face_swap_photo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Photo handler for the WAITING_FOR_FACE_IMAGE state.
+    Downloads the user's face photo, stores it, then kicks off the swap pipeline.
+    Routes to handle_poll_screenshot for all other photo messages.
+    """
+    user_id = update.effective_user.id if update.effective_user else None
+    if not user_id:
+        return
+
+    with get_session_lock(user_id):
+        _state = user_sessions.get(user_id, {}).get("state", "")
+
+    # If NOT waiting for a face image, fall through to the poll screenshot handler
+    if _state != "WAITING_FOR_FACE_IMAGE":
+        await handle_poll_screenshot(update, context)
+        return
+
+    if not update.message or not update.message.photo:
+        await safe_reply(update, "❌ No photo detected. Please send a face photo (JPG/PNG).")
+        return
+
+    # ── Download the face photo ───────────────────────────────────────────────
+    os.makedirs("temp", exist_ok=True)
+    _photo_file = await update.message.photo[-1].get_file()  # largest size
+    _face_save_path = os.path.join(
+        "temp", f"face_swap_input_{user_id}_{int(time.time())}.jpg"
+    )
+    try:
+        await _photo_file.download_to_drive(_face_save_path)
+    except Exception as _dl_err:
+        await safe_reply(update, f"❌ Failed to download your photo: {_dl_err}")
+        logger.error(f"[FACE_SWAP_PHOTO] Download error for user {user_id}: {_dl_err}")
+        return
+
+    if not os.path.isfile(_face_save_path) or os.path.getsize(_face_save_path) == 0:
+        await safe_reply(update, "❌ Photo download resulted in an empty file. Please try again.")
+        return
+
+    logger.info(
+        f"[FACE_SWAP_PHOTO] Face image received from user {user_id}: {_face_save_path} "
+        f"({os.path.getsize(_face_save_path) / 1024:.1f} KB)"
+    )
+    await safe_reply(update, "📥 Face photo received! Starting face swap pipeline...")
+
+    # ── Pull stored session data & reset state ────────────────────────────────
+    with acquire_session_lock(user_id):
+        _sess         = user_sessions.get(user_id, {})
+        _video_path   = _sess.get("face_swap_video", "")
+        _profile_data = _sess.get("profile_data", {})
+        _mon_report   = _sess.get("monetization_report", {})
+        # Clear the waiting state so the user can send other messages
+        user_sessions[user_id]["state"] = _sess.get("_pre_faceswap_state", "IDLE")
+        user_sessions[user_id].pop("face_swap_video", None)
+        user_sessions[user_id].pop("face_swap_score", None)
+        save_session(user_id)
+
+    if not _video_path or not os.path.isfile(_video_path):
+        await safe_reply(
+            update,
+            "❌ Session video is no longer available. Please process a new video and try face swap again.",
+        )
+        return
+
+    # ── Execute the swap pipeline ─────────────────────────────────────────────
+    await _execute_face_swap_pipeline(
+        update, context, user_id,
+        video_path=_video_path,
+        face_image_path=_face_save_path,
+        profile_data=_profile_data,
+        mon_report=_mon_report,
+    )
+
+
+async def cmd_confirm(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Admin: manually confirm a poll vote payment for a user ID."""
+    if update.effective_user.id not in ADMIN_IDS:
+        return
+    try:
+        target_uid = context.args[0]
+    except IndexError:
+        await safe_reply(update, "Usage: /confirm <user_id>")
+        return
+
+    poll   = HotnessPollState()
+    result = poll.verify_vote(target_uid, "ADMIN_MANUAL", 0)  # amount=0 bypasses mismatch
+    # Override: force verify regardless of amount
+    with poll.safe_lock():
+        if target_uid in poll.state["votes"]:
+            poll.state["votes"][target_uid]["verified"] = True
+            poll.save()
+            username = poll.state["votes"][target_uid].get("username", target_uid)
+            amount   = poll.state["votes"][target_uid].get("amount", 0)
+            side     = poll.state["votes"][target_uid].get("side", "?")
+        else:
+            await safe_reply(update, f"❌ User {target_uid} not found in poll.")
+            return
+
+    await safe_reply(update, f"✅ Manually verified @{username} — ₹{amount:.0f} for Post {side}.")
+    try:
+        await context.bot.send_message(chat_id=target_uid, text="🎉 Your payment was verified by admin! You're locked in. Use /mystats to see your odds.")
+    except Exception:
+        pass
+
+
+async def cmd_auction_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Admin: manually open the hotness poll."""
+    if update.effective_user.id not in ADMIN_IDS:
+        return
+    PollSchedulerDaemon.trigger_open()
+    await safe_reply(update, "✅ Hotness Poll manually OPENED! Users can now /vote A or /vote B.")
+
+
+async def cmd_auction_stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Admin: manually close the poll and run settlement."""
+    if update.effective_user.id not in ADMIN_IDS:
+        return
+    PollSchedulerDaemon.trigger_close()
+    await safe_reply(update, "✅ Poll manually CLOSED! Payouts calculated.")
+
+# --- END HOTNESS POLL HANDLERS ---
+
 
 async def cmd_join(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
@@ -8239,6 +8530,23 @@ def main():
     # Register Signal Handler for Ctrl+C
     signal.signal(signal.SIGINT, signal_handler)
 
+    # Smart posting time optimization
+    try:
+        from Actress_Modules.posting_time_analyzer import get_recommendations, patch_env
+        recs = get_recommendations()
+        patch_env(recs)
+        logger.info("✅ [CI/Bot] Successfully optimized posting times based on ledger.")
+    except Exception as e:
+        logger.warning(f"⚠️ [CI/Bot] Failed to run posting time analyzer: {e}")
+
+    # Start Hotness Poll background scheduler (announces, opens, and closes daily face-off)
+    try:
+        PollSchedulerDaemon.start_background_polling()
+        logger.info("🔥 [CI/Bot] HotnessPollDaemon started — daily face-off active.")
+    except Exception as e:
+        logger.warning(f"⚠️ [CI/Bot] Failed to start HotnessPollDaemon: {e}")
+
+
     # HARDENED TIMEOUTS (Total patience for slow uploads)
     from telegram.request import HTTPXRequest
 
@@ -8295,15 +8603,16 @@ def main():
     app.add_handler(CallbackQueryHandler(handle_outfit_rating_callback, pattern=r"^outfit_rate:"))
     app.add_handler(CallbackQueryHandler(verify_watermark))  # FIXED: Register Handler
 
-    # Auction Engine Handlers
-    app.add_handler(CommandHandler("join", cmd_join))
-    app.add_handler(CommandHandler("bid", cmd_bid))
-    app.add_handler(CommandHandler("confirm", cmd_confirm))
-    app.add_handler(CommandHandler("auction_start", cmd_auction_start))
-    app.add_handler(CommandHandler("auction_stop", cmd_auction_stop))
-    app.add_handler(CommandHandler("tg_status", cmd_tg_status))     # Telegram routing status
+    # Hotness Poll Handlers
+    app.add_handler(CommandHandler("vote", cmd_vote))                    # /vote A 100
+    app.add_handler(CommandHandler("mystats", cmd_mystats))              # /mystats
+    app.add_handler(CommandHandler("pollstatus", cmd_pollstatus))        # /pollstatus
+    app.add_handler(CommandHandler("confirm", cmd_confirm))              # Admin payment confirm
+    app.add_handler(CommandHandler("auction_start", cmd_auction_start))  # Admin: open poll
+    app.add_handler(CommandHandler("auction_stop", cmd_auction_stop))    # Admin: close poll
+    app.add_handler(CommandHandler("tg_status", cmd_tg_status))          # Telegram routing status
     # Face-swap photo handler must come FIRST so it intercepts WAITING_FOR_FACE_IMAGE
-    # state before the auction screenshot handler can claim the photo.
+    # state before the poll screenshot handler can claim the photo.
     app.add_handler(MessageHandler(filters.PHOTO, handle_face_swap_photo))
 
     # Direct Video Upload Handler
@@ -9002,13 +9311,36 @@ if __name__ == "__main__":
 
     if args.input:
         run_cli_mode(args)
-    elif os.getenv("GITHUB_ACTIONS") == "true" and os.getenv("GITHUB_EVENT_NAME", "").lower() != "workflow_dispatch":
-        run_ci_mode()
-    else:
-        # Write bot lock so scheduled crons know to stand down while we run
+    elif os.getenv("GITHUB_ACTIONS") == "true":
         _BOT_LOCK_FILE = "The_json/bot_lock.json"
-        _BOT_TIMEOUT_HOURS = 5.5  # GitHub Actions hard-kills at 6h; we expire at 5.5h
+        _BOT_TIMEOUT_HOURS = 5.25  # Run for 5.25 hours, then rotate
         _bot_expires = time.time() + (_BOT_TIMEOUT_HOURS * 3600)
+        
+        has_active_lock = False
+        if os.path.exists(_BOT_LOCK_FILE):
+            try:
+                import json as _jl
+                with open(_BOT_LOCK_FILE, "r") as _f:
+                    _lock = _jl.load(_f)
+                _expires = _lock.get("expires_at", 0)
+                if time.time() < _expires:
+                    _mins_left = int((_expires - time.time()) / 60)
+                    logger.info(
+                        "🔒 [CI] Bot lock active — persistent bot running for ~%d more min. "
+                        "Exiting this run to avoid token conflict.",
+                        _mins_left
+                    )
+                    has_active_lock = True
+                else:
+                    logger.info("🔓 [CI] Bot lock expired — proceeding with persistent bot.")
+            except Exception as _le:
+                logger.warning("⚠️ [CI] Could not read bot_lock.json: %s", _le)
+
+        if has_active_lock:
+            # Active lock exists. Exit immediately.
+            sys.exit(0)
+
+        # No active lock. Write lock file.
         try:
             os.makedirs("The_json", exist_ok=True)
             import json as _jl
@@ -9016,7 +9348,7 @@ if __name__ == "__main__":
                 _jl.dump({
                     "started_at": time.time(),
                     "expires_at": _bot_expires,
-                    "mode": "workflow_dispatch",
+                    "mode": os.getenv("GITHUB_EVENT_NAME", "unknown"),
                 }, _f)
             logger.info(
                 "🔒 [BOT LOCK] Written — bot holds lock until %s IST",
@@ -9025,6 +9357,29 @@ if __name__ == "__main__":
         except Exception as _le:
             logger.warning("⚠️ Could not write bot_lock.json: %s", _le)
 
+        # Start shutdown timer thread to exit after 5.25 hours
+        def shutdown_after_timeout(timeout_hours):
+            sleep_time = timeout_hours * 3600
+            logger.info(f"⏳ Shutdown timer initialized: will stop bot in {timeout_hours} hours ({sleep_time} seconds) for rotation.")
+            time.sleep(sleep_time)
+            logger.info("⏰ Shutdown timer expired. Preparing for rotation...")
+            
+            # Delete lock file so the next run starts immediately
+            if os.path.exists(_BOT_LOCK_FILE):
+                try:
+                    os.remove(_BOT_LOCK_FILE)
+                    logger.info("🔓 Bot lock file removed successfully.")
+                except Exception as e:
+                    logger.warning(f"⚠️ Failed to remove bot lock file: {e}")
+                    
+            logger.info("🛑 Exiting process for rotation...")
+            os._exit(0)
+
+        threading.Thread(target=shutdown_after_timeout, args=(_BOT_TIMEOUT_HOURS,), daemon=True).start()
+
         # Run Persistent Bot & Schedulers
         logger.info("🤖 Starting AMTCE in Persistent Server Mode (Schedulers Active)")
+        main()
+    else:
+        # Run Bot locally (no timeout, runs indefinitely)
         main()
