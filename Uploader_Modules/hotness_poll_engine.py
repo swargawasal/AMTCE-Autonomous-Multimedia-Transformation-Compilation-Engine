@@ -500,11 +500,42 @@ class PollSchedulerDaemon:
         if datetime.now().weekday() == 6:
             return  # Skip Sunday
         poll = HotnessPollState()
-        # Determine tonight's contenders
-        path_a, path_b = pick_two_reels()
 
-        actress_a = os.path.splitext(os.path.basename(path_a))[0].split("_")[0] if path_a else "Actress A"
-        actress_b = os.path.splitext(os.path.basename(path_b))[0].split("_")[0] if path_b else "Actress B"
+        # Try to load tonight's contenders from the schedule json first
+        path_a = None
+        path_b = None
+        actress_a = None
+        actress_b = None
+
+        if os.path.exists(POLL_SCHEDULE_FILE):
+            try:
+                with open(POLL_SCHEDULE_FILE, "r", encoding="utf-8") as f:
+                    sched = json.load(f)
+                written_at = sched.get("written_at", 0)
+                # Check if schedule is fresh (written within past 4 hours)
+                if time.time() - written_at < 4 * 3600:
+                    post_a = sched.get("post_a", {})
+                    post_b = sched.get("post_b", {})
+                    path_a = post_a.get("video_path")
+                    actress_a = post_a.get("actress")
+                    path_b = post_b.get("video_path")
+                    actress_b = post_b.get("actress")
+                    logger.info("[POLL] Loaded schedule from JSON: A=%s, B=%s", actress_a, actress_b)
+                else:
+                    logger.warning("[POLL] Schedule JSON is stale (>4h). Falling back to random pick.")
+            except Exception as e:
+                logger.error("[POLL] Error reading schedule JSON: %s. Falling back.", e)
+
+        # Fallback to pick_two_reels()
+        if not path_a or not path_b:
+            logger.info("[POLL] Falling back to pick_two_reels()")
+            fallback_a, fallback_b = pick_two_reels()
+            if not path_a:
+                path_a = fallback_a
+                actress_a = os.path.splitext(os.path.basename(path_a))[0].split("_")[0] if path_a else "Actress A"
+            if not path_b:
+                path_b = fallback_b
+                actress_b = os.path.splitext(os.path.basename(path_b))[0].split("_")[0] if path_b else "Actress B"
 
         with poll.safe_lock():
             poll.state.update({
