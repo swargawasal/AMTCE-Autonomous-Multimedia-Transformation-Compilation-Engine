@@ -21,14 +21,16 @@ def test_ollama_fallback(mock_post):
     mock_post.return_value.status_code = 200
     mock_post.return_value.json.return_value = {"response": "Local AI Response"}
     
-    # Trigger fallback (by making gemini call fail or rate limit)
-    with patch.object(GeminiGovernor, 'can_make_request', return_value=False):
-        result = gov.generate("reasoning", "test prompt")
-        assert result == "Local AI Response"
-        assert mock_post.called
+    # Trigger fallback (by making gemini call fail and bypassing orchestra)
+    from Intelligence_Modules.router_orchestra import orchestra
+    with patch.object(orchestra, 'route', return_value=None):
+        with patch.object(gov, 'get_available_model', return_value=None):
+            result = gov.generate("reasoning", "test prompt")
+            assert result == "Local AI Response"
+            assert mock_post.called
 
 @patch("Intelligence_Modules.gemini_governor.GeminiGovernor.generate")
-@patch("Intelligence_Modules.tool_system.vanguard_tools.execute")
+@patch("claw_vanguard.tool_system.vanguard_tools.execute")
 def test_director_turn_limit(mock_execute, mock_generate):
     director = VanguardDirector()
     
@@ -46,8 +48,8 @@ def test_director_turn_limit(mock_execute, mock_generate):
     assert os.path.exists("logs/mission_dashboard.json")
 
 def test_vanguard_md_structure():
-    assert os.path.exists("VANGUARD.md")
-    with open("VANGUARD.md", "r", encoding="utf-8") as f:
+    assert os.path.exists("claw_vanguard/VANGUARD.md")
+    with open("claw_vanguard/VANGUARD.md", "r", encoding="utf-8") as f:
         content = f.read()
         assert "Winning Styles" in content
         assert "Failed Patterns" in content
