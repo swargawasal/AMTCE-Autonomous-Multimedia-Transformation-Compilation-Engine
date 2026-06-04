@@ -369,19 +369,19 @@ jobs:
 # ── Chain-restart (separate job, NO concurrency key) ───────────────────────
 # Runs AFTER the main job is fully done (lock released). The absence of a
 # concurrency key means GitHub never kills this job due to the amtce-bot group.
-chain-restart:
-  runs-on: ubuntu-latest
-  needs: run-amtce
-  if: always()
-  permissions:
-    actions: write
-  steps:
-    - name: Trigger Next Run
-      env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        echo "🔄 Chain-restarting AMTCE for continuous 24/7 operation..."
-        gh workflow run amtce-runner.yml \
-          --repo "$GITHUB_REPOSITORY" \
-          --ref "$GITHUB_REF_NAME"
-        echo "✅ Next run queued successfully."
+  chain-restart:
+    runs-on: ubuntu-latest
+    needs: run-amtce
+    if: always()
+    permissions:
+      actions: write
+    steps:
+      - name: Trigger Next Run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "🔄 Chain-restarting AMTCE for continuous 24/7 operation..."
+          gh workflow run amtce-runner.yml \
+            --repo "$GITHUB_REPOSITORY" \
+            --ref "$GITHUB_REF_NAME"
+          echo "✅ Next run queued successfully."
