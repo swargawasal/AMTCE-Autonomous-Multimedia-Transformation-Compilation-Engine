@@ -169,7 +169,7 @@ class HotnessPollState:
 
         with self.safe_lock():
             if not self.state.get("active"):
-                return "❌ No poll is active right now. Wait for tonight's face-off!"
+                return "❌ No poll is active right now. Check back at 7 PM IST!"
             if self.state.get("settled"):
                 return "❌ This poll has already been settled."
 
@@ -482,12 +482,12 @@ class PollSchedulerDaemon:
             logger.error("❌ 'schedule' package not available — HotnessPollDaemon disabled.")
             return
 
-        _schedule.every().day.at("12:30").do(cls.job_announce)   # 6:00 PM IST
-        _schedule.every().day.at("13:00").do(cls.job_open_poll)  # 6:30 PM IST
-        _schedule.every().day.at("15:15").do(cls.job_war_mode, tick=3)  # 8:45 PM
-        _schedule.every().day.at("15:20").do(cls.job_war_mode, tick=2)  # 8:50 PM
-        _schedule.every().day.at("15:25").do(cls.job_war_mode, tick=1)  # 8:55 PM
-        _schedule.every().day.at("15:30").do(cls.job_close_poll) # 9:00 PM IST
+        _schedule.every().day.at("13:00").do(cls.job_announce)   # 6:30 PM IST — pre-poll tease
+        _schedule.every().day.at("13:30").do(cls.job_open_poll)  # 7:00 PM IST — poll opens
+        _schedule.every().day.at("15:15").do(cls.job_war_mode, tick=3)  # 8:45 PM IST
+        _schedule.every().day.at("15:20").do(cls.job_war_mode, tick=2)  # 8:50 PM IST
+        _schedule.every().day.at("15:25").do(cls.job_war_mode, tick=1)  # 8:55 PM IST
+        _schedule.every().day.at("15:30").do(cls.job_close_poll) # 9:00 PM IST — poll closes
 
         while not cls._stop.is_set():
             _schedule.run_pending()
@@ -523,7 +523,7 @@ class PollSchedulerDaemon:
         upi_id = os.getenv("UPI_ID", "your-upi@bank")
 
         msg = (
-            f"🔥 <b>TONIGHT'S FACE-OFF — 6:30 PM IST</b>\n\n"
+            f"🔥 <b>TONIGHT'S FACE-OFF — 7:00 PM IST</b>\n\n"
             f"Two posts. One question: <b>Who's hotter?</b>\n\n"
             f"🅰️  <b>{actress_a}</b>\n"
             f"🅱️  <b>{actress_b}</b>\n\n"
@@ -531,7 +531,7 @@ class PollSchedulerDaemon:
             f"📲 Commands: <code>/vote A 100</code> or <code>/vote B 50</code>\n\n"
             f"🏦 UPI: <code>{upi_id}</code>\n"
             f"Minimum bet: ₹{MIN_VOTE_AMOUNT:.0f}\n\n"
-            f"Voting opens at <b>6:30 PM IST</b> 👇"
+            f"Voting opens at <b>7:00 PM IST</b> 👇"
         )
         broadcast(msg)
 
