@@ -1,20 +1,20 @@
 {
-  "job_id": "27232483494",
-  "actress": "a",
+  "job_id": "27232656836",
+  "actress": "",
   "niche": "General",
-  "source_url": "https://www.instagram.com/reel/DZU4vsIzTzI/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",
-  "state": "FAILED",
-  "current_step": "STEP_DOWNLOAD",
-  "progress": 10,
+  "source_url": "",
+  "state": "RUNNING",
+  "current_step": null,
+  "progress": 0,
   "steps": {
-    "STEP_DOWNLOAD": "active",
+    "STEP_DOWNLOAD": "pending",
     "STEP_FACE_SWAP": "pending",
     "STEP_LIP_SYNC": "pending",
     "STEP_AUDIO_MIX": "pending",
     "STEP_SUBTITLES": "pending",
     "STEP_RENDER": "pending"
   },
-  "started_at": 1781035623,
-  "updated_at": 1781035659,
-  "error": "Download failed"
+  "started_at": 1781035797,
+  "updated_at": 1781035797,
+  "error": null
 }
