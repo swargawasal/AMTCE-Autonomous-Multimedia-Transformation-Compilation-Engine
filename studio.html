@@ -286,14 +286,14 @@
       background: var(--text-dim); position: relative;
       transition: background 0.2s; flex-shrink: 0;
     }
-    .platform-toggle.on .toggle-dot { background: var(--accent); }
+    .platform-toggle.on .toggle-dot, .toggle-dot.on { background: var(--accent); }
     .toggle-dot::after {
       content: ''; position: absolute;
       width: 12px; height: 12px; border-radius: 50%;
       background: white; top: 2px; left: 2px;
       transition: transform 0.2s;
     }
-    .platform-toggle.on .toggle-dot::after { transform: translateX(12px); }
+    .platform-toggle.on .toggle-dot::after, .toggle-dot.on::after { transform: translateX(12px); }
 
     /* ── BUTTONS ───────────────────────────────────────────────── */
     .action-row { display: flex; gap: 10px; margin-top: 4px; }
@@ -655,9 +655,9 @@
         <div class="card">
           <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
             <span>🎥 Source Video</span>
-            <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);text-transform:none;letter-spacing:0;cursor:pointer;margin-bottom:0;" title="Raw Input: trigger a run without a video URL — uses scheduled actress pool instead">
+            <label onclick="toggleRawMode()" style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);text-transform:none;letter-spacing:0;cursor:pointer;margin-bottom:0;user-select:none;" title="Raw Input: trigger a run without a video URL — uses scheduled actress pool instead">
               <span>Raw Input</span>
-              <div class="toggle-dot" id="rawToggleDot" onclick="toggleRawMode()" style="cursor:pointer;"></div>
+              <div class="toggle-dot" id="rawToggleDot"></div>
             </label>
           </div>
 
@@ -673,10 +673,9 @@
           </div>
 
           <!-- Raw Input mode -->
-          <div id="rawInputSection" style="display:none;">
-            <div class="field">
-              <label>Raw Parameters <span style="color:var(--text-dim);font-weight:400;">(no URL — triggers scheduled actress pool run)</span></label>
-              <textarea id="rawInputText" placeholder="Optional: paste any extra notes or leave blank to use defaults from the actress pool…" style="min-height:60px;"></textarea>
+          <div id="rawInputSection" style="display:none; margin-bottom: 12px;">
+            <div style="background: rgba(99,102,241,0.08); border: 1px dashed rgba(99,102,241,0.3); border-radius: 8px; padding: 12px; font-size: 11px; line-height: 1.5; color: #a5b4fc;">
+              💡 <strong>Raw Input Mode active:</strong> A cloud job will be launched using the selected <strong>Actress / Model</strong> and <strong>Niche</strong> below. The runner will automatically fetch/select the appropriate clips from the pool. No video URL is required.
             </div>
           </div>
 
