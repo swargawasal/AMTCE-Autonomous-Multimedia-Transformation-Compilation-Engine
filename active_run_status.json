@@ -4,10 +4,10 @@
   "niche": "General",
   "source_url": "https://www.instagram.com/reel/DZU4vsIzTzI/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",
   "state": "RUNNING",
-  "current_step": null,
-  "progress": 0,
+  "current_step": "STEP_DOWNLOAD",
+  "progress": 10,
   "steps": {
-    "STEP_DOWNLOAD": "pending",
+    "STEP_DOWNLOAD": "active",
     "STEP_FACE_SWAP": "pending",
     "STEP_LIP_SYNC": "pending",
     "STEP_AUDIO_MIX": "pending",
@@ -15,6 +15,6 @@
     "STEP_RENDER": "pending"
   },
   "started_at": 1781046430,
-  "updated_at": 1781046430,
+  "updated_at": 1781046431,
   "error": null
 }
