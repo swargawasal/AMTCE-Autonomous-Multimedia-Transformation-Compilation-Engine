@@ -1,9 +1,9 @@
 {
-  "job_id": "27241466985",
-  "actress": "",
+  "job_id": "27231518677",
+  "actress": "ankita",
   "niche": "General",
-  "source_url": "",
-  "state": "FAILED",
+  "source_url": "https://www.instagram.com/reel/DZU4vsIzTzI/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",
+  "state": "RUNNING",
   "current_step": null,
   "progress": 0,
   "steps": {
@@ -14,7 +14,7 @@
     "STEP_SUBTITLES": "pending",
     "STEP_RENDER": "pending"
   },
-  "started_at": 1781046333,
-  "updated_at": 1781046334,
-  "error": "No videos found in pool/downloads for actress: "
+  "started_at": 1781046430,
+  "updated_at": 1781046430,
+  "error": null
 }
