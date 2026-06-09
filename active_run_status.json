@@ -3,7 +3,7 @@
   "actress": "a",
   "niche": "General",
   "source_url": "https://www.instagram.com/reel/DZU4vsIzTzI/?utm_source=ig_web_copy_link&igsh=NTc4MTIwNjQ2YQ==",
-  "state": "RUNNING",
+  "state": "FAILED",
   "current_step": "STEP_DOWNLOAD",
   "progress": 10,
   "steps": {
@@ -15,6 +15,6 @@
     "STEP_RENDER": "pending"
   },
   "started_at": 1781035623,
-  "updated_at": 1781035624,
-  "error": null
+  "updated_at": 1781035659,
+  "error": "Download failed"
 }
