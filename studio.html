@@ -471,16 +471,47 @@
 <div id="settingsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(5px); z-index:1000; align-items:center; justify-content:center;">
   <div class="card" style="width:100%; max-width:400px; margin:20px; background:#0f172a; border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 20px 50px rgba(0,0,0,0.5);">
     <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <span style="color:var(--text-primary); font-weight:700; font-size:14px;">Server Connection Settings</span>
+      <span style="color:var(--text-primary); font-weight:700; font-size:14px;">Connection Settings</span>
       <button onclick="toggleSettingsModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px;">✕</button>
     </div>
-    <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
-      If you are running the AMTCE Engine locally, you can expose it using a free tunnel (like Cloudflare or ngrok) and enter the public HTTPS URL below. Default is <code>http://localhost:7862</code>.
-    </p>
+    
     <div class="field">
-      <label>Studio API Server URL</label>
-      <input type="text" id="settingApiUrl" placeholder="http://localhost:7862" />
+      <label>Connection Type</label>
+      <select id="settingConnType" onchange="toggleConnFields()" style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text-primary); font-family:var(--font); font-size:13px; padding:10px 12px; outline:none; cursor:pointer;">
+        <option value="local">Local Review Server</option>
+        <option value="github">GitHub API (Serverless Cloud)</option>
+      </select>
     </div>
+    
+    <div id="localFields">
+      <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
+        If you run the AMTCE engine locally, expose it via a free tunnel (like Cloudflare or ngrok) and enter the HTTPS URL. Default: <code>http://localhost:7862</code>.
+      </p>
+      <div class="field">
+        <label>Studio API Server URL</label>
+        <input type="text" id="settingApiUrl" placeholder="http://localhost:7862" />
+      </div>
+    </div>
+    
+    <div id="githubFields" style="display:none;">
+      <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
+        Connect directly to your repository in the cloud. Write decisions back to the repo using a GitHub Personal Access Token.
+      </p>
+      <div class="field">
+        <label>GitHub Repository (owner/repo)</label>
+        <input type="text" id="settingGhRepo" placeholder="swargawasal/AMTCE-Autonomous-Multimedia-Transformation-Compilation-Engine" />
+      </div>
+      <div class="field">
+        <label>Branch</label>
+        <input type="text" id="settingGhBranch" placeholder="gh-pages" />
+      </div>
+      <div class="field">
+        <label>Personal Access Token (PAT)</label>
+        <input type="password" id="settingGhPat" placeholder="ghp_..." style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text-primary); font-family:var(--font); font-size:13px; padding:10px 12px; outline:none;" />
+        <span style="font-size:10px; color:var(--text-muted); display:block; margin-top:4px;">Requires 'contents: write' scope. Saved only in your browser storage.</span>
+      </div>
+    </div>
+    
     <div style="display:flex; gap:10px; margin-top:20px;">
       <button class="btn btn-approve" onclick="saveSettings()">Save Settings</button>
       <button class="btn btn-reject" onclick="toggleSettingsModal()">Cancel</button>
@@ -493,15 +524,31 @@
 
 <script>
 /* ── CONFIG ─────────────────────────────────────────────────────── */
-let API = localStorage.getItem('amtce_api_url') || 'http://localhost:7862';
+let connectionType = localStorage.getItem('amtce_conn_type') || 'local';
+let API            = localStorage.getItem('amtce_api_url') || 'http://localhost:7862';
+let ghRepo         = localStorage.getItem('amtce_gh_repo') || 'swargawasal/AMTCE-Autonomous-Multimedia-Transformation-Compilation-Engine';
+let ghBranch       = localStorage.getItem('amtce_gh_branch') || 'gh-pages';
+let ghPat          = localStorage.getItem('amtce_gh_pat') || '';
+
 let currentClip = null;
 let allClips    = [];
 
 /* ── SETTINGS ───────────────────────────────────────────────────── */
+function toggleConnFields() {
+  const type = document.getElementById('settingConnType').value;
+  document.getElementById('localFields').style.display = type === 'local' ? 'block' : 'none';
+  document.getElementById('githubFields').style.display = type === 'github' ? 'block' : 'none';
+}
+
 function toggleSettingsModal() {
   const modal = document.getElementById('settingsModal');
   if (modal.style.display === 'none' || !modal.style.display) {
+    document.getElementById('settingConnType').value = connectionType;
     document.getElementById('settingApiUrl').value = API;
+    document.getElementById('settingGhRepo').value = ghRepo;
+    document.getElementById('settingGhBranch').value = ghBranch;
+    document.getElementById('settingGhPat').value = ghPat;
+    toggleConnFields();
     modal.style.display = 'flex';
   } else {
     modal.style.display = 'none';
@@ -509,11 +556,32 @@ function toggleSettingsModal() {
 }
 
 function saveSettings() {
-  let val = document.getElementById('settingApiUrl').value.trim();
-  if (!val) val = 'http://localhost:7862';
-  if (val.endsWith('/')) val = val.slice(0, -1);
-  API = val;
-  localStorage.setItem('amtce_api_url', API);
+  const type = document.getElementById('settingConnType').value;
+  localStorage.setItem('amtce_conn_type', type);
+  connectionType = type;
+  
+  if (type === 'local') {
+    let val = document.getElementById('settingApiUrl').value.trim();
+    if (!val) val = 'http://localhost:7862';
+    if (val.endsWith('/')) val = val.slice(0, -1);
+    API = val;
+    localStorage.setItem('amtce_api_url', API);
+  } else {
+    let repo = document.getElementById('settingGhRepo').value.trim();
+    if (!repo) repo = 'swargawasal/AMTCE-Autonomous-Multimedia-Transformation-Compilation-Engine';
+    let branch = document.getElementById('settingGhBranch').value.trim();
+    if (!branch) branch = 'gh-pages';
+    let pat = document.getElementById('settingGhPat').value.trim();
+    
+    ghRepo = repo;
+    ghBranch = branch;
+    ghPat = pat;
+    
+    localStorage.setItem('amtce_gh_repo', ghRepo);
+    localStorage.setItem('amtce_gh_branch', ghBranch);
+    localStorage.setItem('amtce_gh_pat', ghPat);
+  }
+  
   showToast('Settings saved! Reconnecting...', 'success');
   toggleSettingsModal();
   loadQueue();
@@ -541,6 +609,20 @@ function timeAgo(ts) {
 
 /* ── LOAD STATUS ────────────────────────────────────────────────── */
 async function loadStatus() {
+  if (connectionType === 'github') {
+    const pending = allClips.filter(c => c.status === 'PENDING_REVIEW').length;
+    const approved = allClips.filter(c => c.status === 'APPROVED').length;
+    
+    const modeEl = document.getElementById('statMode');
+    const modeLabel = document.getElementById('modeLabel');
+    modeEl.classList.add('active');
+    modeLabel.textContent = 'Cloud Review: ON';
+    
+    document.getElementById('queueCount').textContent = allClips.length;
+    document.getElementById('pendingCount').textContent = pending;
+    return;
+  }
+  
   try {
     const r = await fetch(`${API}/api/status`);
     const s = await r.json();
@@ -563,6 +645,35 @@ async function loadStatus() {
 
 /* ── LOAD QUEUE ─────────────────────────────────────────────────── */
 async function loadQueue() {
+  if (connectionType === 'github') {
+    try {
+      const headers = ghPat ? { 'Authorization': `token ${ghPat}`, 'Accept': 'application/vnd.github.v3.raw' } : { 'Accept': 'application/vnd.github.v3.raw' };
+      const url = `https://api.github.com/repos/${ghRepo}/contents/review_queue.json?ref=${ghBranch}&t=${Date.now()}`;
+      const r = await fetch(url, { headers });
+      if (!r.ok) {
+        if (r.status === 404) {
+          allClips = [];
+          renderQueue([]);
+          loadStatus();
+          return;
+        }
+        throw new Error(`GitHub API Error: ${r.statusText}`);
+      }
+      allClips = await r.json();
+      renderQueue(allClips);
+      loadStatus();
+    } catch(e) {
+      document.getElementById('queueList').innerHTML = `
+        <div class="empty-state">
+          <div class="icon">⚡</div>
+          <p>Cannot connect to GitHub Repository <code>${ghRepo}</code> branch <code>${ghBranch}</code>.<br>
+          Error: ${e.message}<br>
+          Click <strong>⚙️ Connection</strong> to update settings.</p>
+        </div>`;
+    }
+    return;
+  }
+  
   try {
     const r = await fetch(`${API}/api/review-queue`);
     allClips = await r.json();
@@ -610,7 +721,7 @@ function renderQueue(clips) {
 function selectClip(id) {
   currentClip = allClips.find(c => c.id === id);
   if (!currentClip) return;
-  renderQueue(allClips); // re-render to show active state
+  renderQueue(allClips);
   renderEditor(currentClip);
 }
 
@@ -620,13 +731,21 @@ function renderEditor(clip) {
   const platforms  = clip.platforms || { youtube: true, instagram: true, tiktok: false };
   const videoPath  = clip.video_path ? encodeURIComponent(clip.video_path.replace(/\\/g, '/').split('/').pop()) : '';
 
+  let videoSrc = "";
+  if (connectionType === 'github') {
+    const parts = ghRepo.split('/');
+    videoSrc = `https://${parts[0]}.github.io/${parts[1]}/previews/${videoPath}`;
+  } else {
+    videoSrc = `${API}/api/video/${videoPath}`;
+  }
+
   document.getElementById('editor').innerHTML = `
     <!-- VIDEO PREVIEW -->
     <div class="card">
       <div class="card-title">Video Preview</div>
       <div class="video-wrap">
         <video controls preload="metadata" id="videoPlayer"
-          src="${API}/api/video/${videoPath}"
+          src="${videoSrc}"
           onerror="this.style.display='none';document.getElementById('videoErr').style.display='flex'">
         </video>
         <div id="videoErr" style="display:none;height:140px;align-items:center;justify-content:center;color:var(--text-dim);font-size:13px;">
@@ -685,7 +804,6 @@ function renderEditor(clip) {
     </div>`}
   `;
 
-  // Wire platform toggle clicks
   ['youtube','instagram','tiktok'].forEach(p => {
     const el = document.getElementById(`toggle-${p}`);
     if (el && isPending) {
@@ -726,6 +844,60 @@ async function approveClip(id) {
     platforms,
   };
 
+  if (connectionType === 'github') {
+    if (!ghPat) {
+      showToast('❌ Personal Access Token (PAT) is required for Cloud approval.', 'error');
+      btn.disabled = rejBtn.disabled = false;
+      btn.innerHTML = '✅ Approve &amp; Publish';
+      return;
+    }
+    try {
+      const url = `https://api.github.com/repos/${ghRepo}/contents/review_queue.json?ref=${ghBranch}`;
+      const metaRes = await fetch(url, {
+        headers: { 'Authorization': `token ${ghPat}` }
+      });
+      if (!metaRes.ok) throw new Error(`Fetch queue failed: ${metaRes.statusText}`);
+      const meta = await metaRes.json();
+      const sha = meta.sha;
+      const content = atob(meta.content.replace(/\s/g, ''));
+      const queue = JSON.parse(content);
+      
+      const item = queue.find(c => c.id === id);
+      if (!item) throw new Error("Clip not found in remote queue.");
+      
+      item.title = body.title;
+      item.caption = body.caption;
+      item.hashtags = body.hashtags;
+      item.platforms = body.platforms;
+      item.status = 'APPROVED';
+      item.approved_at = Math.floor(Date.now() / 1000);
+      
+      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(queue, null, 2))));
+      const updateRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/review_queue.json`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${ghPat}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: `studio: approve clip ${id} [skip ci]`,
+          content: newContent,
+          sha: sha,
+          branch: ghBranch
+        })
+      });
+      if (!updateRes.ok) throw new Error(`Update failed: ${updateRes.statusText}`);
+      
+      showToast('✅ Clip approved — syncing to cloud runner!', 'success');
+      await loadQueue();
+    } catch(e) {
+      showToast('❌ Cloud Approve failed: ' + e.message, 'error');
+      btn.disabled = rejBtn.disabled = false;
+      btn.innerHTML = '✅ Approve &amp; Publish';
+    }
+    return;
+  }
+
   try {
     const r = await fetch(`${API}/api/approve/${id}`, {
       method: 'POST',
@@ -748,6 +920,64 @@ async function rejectClip(id) {
   const btn = document.getElementById('rejectBtn');
   btn.disabled = true;
   btn.textContent = 'Deleting…';
+
+  if (connectionType === 'github') {
+    if (!ghPat) {
+      showToast('❌ Personal Access Token (PAT) is required for Cloud rejection.', 'error');
+      btn.disabled = false;
+      btn.textContent = '🗑️ Reject';
+      return;
+    }
+    try {
+      const url = `https://api.github.com/repos/${ghRepo}/contents/review_queue.json?ref=${ghBranch}`;
+      const metaRes = await fetch(url, {
+        headers: { 'Authorization': `token ${ghPat}` }
+      });
+      if (!metaRes.ok) throw new Error(`Fetch queue failed: ${metaRes.statusText}`);
+      const meta = await metaRes.json();
+      const sha = meta.sha;
+      const content = atob(meta.content.replace(/\s/g, ''));
+      const queue = JSON.parse(content);
+      
+      const item = queue.find(c => c.id === id);
+      if (!item) throw new Error("Clip not found in remote queue.");
+      
+      item.status = 'REJECTED';
+      item.rejected_at = Math.floor(Date.now() / 1000);
+      
+      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(queue, null, 2))));
+      const updateRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/review_queue.json`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `token ${ghPat}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: `studio: reject clip ${id} [skip ci]`,
+          content: newContent,
+          sha: sha,
+          branch: ghBranch
+        })
+      });
+      if (!updateRes.ok) throw new Error(`Update failed: ${updateRes.statusText}`);
+      
+      showToast('🗑️ Clip rejected.', 'error');
+      currentClip = null;
+      document.getElementById('editor').innerHTML = `
+        <div class="editor-placeholder">
+          <div class="icon">🗑️</div>
+          <h2>Clip deleted</h2>
+          <p>Select another clip from the queue.</p>
+        </div>`;
+      await loadQueue();
+    } catch(e) {
+      showToast('❌ Cloud Reject failed: ' + e.message, 'error');
+      btn.disabled = false;
+      btn.textContent = '🗑️ Reject';
+    }
+    return;
+  }
+
   try {
     const r = await fetch(`${API}/api/reject/${id}`, { method: 'POST' });
     if (!r.ok) throw new Error(await r.text());
@@ -789,6 +1019,15 @@ function connectLogStream() {
       logBody.removeChild(logBody.firstChild);
     }
     logBody.scrollTop = logBody.scrollHeight;
+  }
+
+  if (connectionType === 'github') {
+    logBody.innerHTML = `
+      <div class="log-line info">🎬 Cloud Serverless mode active.</div>
+      <div class="log-line info">Live real-time logs are disabled to save GitHub API quota.</div>
+      <div class="log-line info"><a href="https://github.com/${ghRepo}/actions" target="_blank" style="color:var(--accent); text-decoration:underline;">Click here to view live Action Runs</a></div>
+    `;
+    return;
   }
 
   try {
