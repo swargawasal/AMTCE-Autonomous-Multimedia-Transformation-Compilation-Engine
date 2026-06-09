@@ -1,9 +1,9 @@
 {
-  "job_id": "27243010403",
+  "job_id": "27243104203",
   "actress": "",
   "niche": "General",
   "source_url": "",
-  "state": "FAILED",
+  "state": "RUNNING",
   "current_step": null,
   "progress": 0,
   "steps": {
@@ -14,7 +14,7 @@
     "STEP_SUBTITLES": "pending",
     "STEP_RENDER": "pending"
   },
-  "started_at": 1781048653,
-  "updated_at": 1781048655,
-  "error": "No videos found in pool/downloads for actress: "
+  "started_at": 1781048754,
+  "updated_at": 1781048754,
+  "error": null
 }
