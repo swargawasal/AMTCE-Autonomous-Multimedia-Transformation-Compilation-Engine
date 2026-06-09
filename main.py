@@ -9056,6 +9056,78 @@ def run_ci_mode():
     logger.info("👋 [CI] One-Shot CI Execution Finished successfully. Exiting.")
 
 
+def run_one_shot_dispatch():
+    logger.info("⚡ [DISPATCH] Running one-shot manual dispatch...")
+
+    target_url = os.getenv("DISPATCH_TARGET_URL", "").strip()
+    actress_name = os.getenv("DISPATCH_ACTRESS_NAME", "").strip()
+    niche = os.getenv("DISPATCH_NICHE", "General").strip()
+    voiceover = os.getenv("DISPATCH_VOICEOVER", "").strip()
+    review_mode = os.getenv("DISPATCH_REVIEW_MODE", "auto").strip()
+
+    if not target_url:
+        logger.error("❌ [DISPATCH] No target_url provided for manual dispatch. Exiting.")
+        return
+
+    # 1. Resolve local path vs download
+    video_path = target_url
+    if target_url.startswith("http"):
+        logger.info(f"📥 [DISPATCH] Downloading target_url: {target_url}")
+        from Download_Modules import downloader
+        dl_res = downloader.download_video(target_url)
+        if dl_res and dl_res[0]:
+            video_path, _ = dl_res
+            logger.info(f"✅ [DISPATCH] Downloaded: {video_path}")
+        else:
+            logger.error("❌ [DISPATCH] Download failed!")
+            return
+    else:
+        # Check relative path or absolute path
+        if not os.path.isabs(video_path):
+            video_path = os.path.abspath(video_path)
+        if not os.path.exists(video_path):
+            logger.error(f"❌ [DISPATCH] Local file not found: {video_path}")
+            return
+        logger.info(f"📂 [DISPATCH] Found local file at: {video_path}")
+
+    # Set environment variables overrides from inputs
+    if voiceover:
+        os.environ["DISPATCH_VOICEOVER_TEXT"] = voiceover
+
+    # Resolve niche name to meta_config.json folders
+    actress_folder = niche
+    if niche.lower() in ("general", "general_fallback"):
+        actress_folder = "General_Fallback"
+    elif niche.lower() in ("fashion", "fashion_style"):
+        actress_folder = "Fashion"
+    elif niche.lower() in ("nsfw", "adult"):
+        actress_folder = "NSFW"
+    elif niche.lower() in ("paparazzi"):
+        actress_folder = "Paparazzi"
+
+    # 2. Process/compile the video
+    logger.info(f"🎬 [DISPATCH] Processing clip: {video_path} for actress: {actress_name}")
+    processed_path = process_clip(video_path, actress_name)
+    if not processed_path or not os.path.exists(processed_path):
+        logger.error("❌ [DISPATCH] Compilation/Processing failed!")
+        return
+
+    logger.info(f"✅ [DISPATCH] Processed successfully: {processed_path}")
+
+    # 3. Publish the video
+    logger.info(f"📤 [DISPATCH] Publishing processed clip...")
+    from Actress_Modules.actress_scheduler import _auto_publish_clip
+    
+    # Run publishing synchronously
+    _auto_publish_clip(
+        video_path=processed_path,
+        actress_title=actress_name,
+        actress_folder=actress_folder,
+        shortcode=f"manual_{int(time.time())}"
+    )
+    logger.info("🎉 [DISPATCH] One-shot manual dispatch run finished successfully!")
+
+
 if __name__ == "__main__":
     lazy_load_genai_trace()
     import argparse
@@ -9073,6 +9145,12 @@ if __name__ == "__main__":
     if args.input:
         run_cli_mode(args)
     elif os.getenv("GITHUB_ACTIONS") == "true":
+        # Check if it is a manual one-shot video run
+        target_url = os.getenv("DISPATCH_TARGET_URL", "").strip()
+        if os.getenv("GITHUB_EVENT_NAME") == "workflow_dispatch" and target_url:
+            run_one_shot_dispatch()
+            sys.exit(0)
+
         _BOT_LOCK_FILE = "The_json/bot_lock.json"
         _BOT_TIMEOUT_HOURS = 5.25  # Run for 5.25 hours, then rotate
         _bot_expires = time.time() + (_BOT_TIMEOUT_HOURS * 3600)
