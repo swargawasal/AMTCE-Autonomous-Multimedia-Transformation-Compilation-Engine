@@ -896,6 +896,8 @@ let allClips     = [];
 let activeTab    = 'create';
 let renderStatus = null;   // active_run_status.json data
 let statusPollId = null;
+let launchedOldJobId = null;
+let waitingForRunner = false;
 
 /* ── PIPELINE STEP CONFIG ─────────────────────────────────────────── */
 const PIPELINE_STEPS = [
@@ -1349,6 +1351,7 @@ async function handleFileSelect(event) {
    LAUNCH JOB — triggers GitHub workflow_dispatch
    ══════════════════════════════════════════════════════════════════ */
 async function launchJob() {
+  launchedOldJobId = renderStatus ? renderStatus.job_id : null;
   const btn = document.getElementById('launchBtn');
   const actress  = document.getElementById('inputActress').value.trim();
   const niche    = document.getElementById('inputNiche').value;
@@ -1445,6 +1448,7 @@ async function launchJob() {
 
     showToast('🚀 Job launched! Switching to Live Render…', 'info');
     renderStatus = null;
+    waitingForRunner = true;
     setTimeout(() => { switchTab('timeline'); startStatusPoll(); }, 800);
     
     let logMsg = '';
@@ -1539,6 +1543,11 @@ async function pollStatus() {
       if (r.ok) data = await r.json();
     }
     if (data) {
+      if (waitingForRunner && data.job_id === launchedOldJobId) {
+        // Still reading the old run's status file. Keep waiting.
+        return;
+      }
+      waitingForRunner = false;
       renderStatus = data;
       if (activeTab === 'timeline') renderTimeline();
 
@@ -1558,6 +1567,16 @@ async function pollStatus() {
 
 function renderTimeline() {
   const container = document.getElementById('timelineContent');
+
+  if (waitingForRunner) {
+    container.innerHTML = `
+      <div class="state-idle">
+        <div class="spinner" style="width: 48px; height: 48px; border-width: 4px; border-top-color: var(--accent); margin-bottom: 16px;"></div>
+        <h3>Waiting for Runner to Start...</h3>
+        <p>GitHub Actions is provisioning a runner. This usually takes 15–30 seconds. Live progress will start automatically.</p>
+      </div>`;
+    return;
+  }
 
   if (!renderStatus || !renderStatus.job_id) {
     container.innerHTML = `
