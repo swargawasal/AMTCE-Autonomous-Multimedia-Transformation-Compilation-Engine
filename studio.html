@@ -653,14 +653,33 @@
       <!-- CENTER: Create form -->
       <main class="editor" id="createEditor">
         <div class="card">
-          <div class="card-title">🎥 Source Video</div>
-          <div class="field">
-            <label>Video URL</label>
-            <div class="input-wrap">
-              <span class="input-icon">🔗</span>
-              <input type="url" id="inputUrl" placeholder="Paste YouTube, TikTok, Instagram or direct video link…" />
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>🎥 Source Video</span>
+            <label style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);text-transform:none;letter-spacing:0;cursor:pointer;margin-bottom:0;" title="Raw Input: trigger a run without a video URL — uses scheduled actress pool instead">
+              <span>Raw Input</span>
+              <div class="toggle-dot" id="rawToggleDot" onclick="toggleRawMode()" style="cursor:pointer;"></div>
+            </label>
+          </div>
+
+          <!-- URL mode (default) -->
+          <div id="urlInputSection">
+            <div class="field">
+              <label>Video URL</label>
+              <div class="input-wrap">
+                <span class="input-icon">🔗</span>
+                <input type="url" id="inputUrl" placeholder="Paste YouTube, TikTok, Instagram or direct video link…" />
+              </div>
             </div>
           </div>
+
+          <!-- Raw Input mode -->
+          <div id="rawInputSection" style="display:none;">
+            <div class="field">
+              <label>Raw Parameters <span style="color:var(--text-dim);font-weight:400;">(no URL — triggers scheduled actress pool run)</span></label>
+              <textarea id="rawInputText" placeholder="Optional: paste any extra notes or leave blank to use defaults from the actress pool…" style="min-height:60px;"></textarea>
+            </div>
+          </div>
+
           <div class="field-row">
             <div class="field">
               <label>Actress / Model</label>
@@ -816,7 +835,7 @@
       <div class="field">
         <label>Personal Access Token (PAT)</label>
         <input type="password" id="settingGhPat" placeholder="ghp_… or github_pat_…" />
-        <p class="hint">Needs <code>contents: write</code> + <code>actions: write</code> scopes. Saved only in your browser — never sent to any third party.</p>
+        <p class="hint">⚠️ Must be a <strong>Classic PAT</strong> (not fine-grained) with <code>repo</code> + <code>workflow</code> scopes. Fine-grained PATs cannot trigger <code>workflow_dispatch</code>. Saved only in your browser — never sent to any third party.</p>
       </div>
     </div>
 
@@ -1230,20 +1249,35 @@ async function ghPutFile(path, sha, content, message) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
+   RAW INPUT TOGGLE
+   ══════════════════════════════════════════════════════════════════ */
+let rawInputMode = false;
+function toggleRawMode() {
+  rawInputMode = !rawInputMode;
+  document.getElementById('rawToggleDot').classList.toggle('on', rawInputMode);
+  document.getElementById('urlInputSection').style.display  = rawInputMode ? 'none' : 'block';
+  document.getElementById('rawInputSection').style.display  = rawInputMode ? 'block' : 'none';
+}
+
+/* ═══════════════════════════════════════════════════════════════════
    LAUNCH JOB — triggers GitHub workflow_dispatch
    ══════════════════════════════════════════════════════════════════ */
 async function launchJob() {
-  const url     = document.getElementById('inputUrl').value.trim();
-  const actress = document.getElementById('inputActress').value.trim();
-  const niche   = document.getElementById('inputNiche').value;
+  const isRaw    = rawInputMode;
+  const url      = isRaw ? '' : (document.getElementById('inputUrl').value.trim());
+  const actress  = document.getElementById('inputActress').value.trim();
+  const niche    = document.getElementById('inputNiche').value;
   const voiceover = document.getElementById('inputVoiceover').value.trim();
-  const mode    = document.getElementById('inputMode').value;
+  const mode     = document.getElementById('inputMode').value;
   const reviewMode = document.getElementById('inputReviewMode').value;
 
-  if (!url) { showToast('❌ Please enter a video URL first.', 'error'); return; }
+  if (!isRaw && !url) {
+    showToast('❌ Please enter a video URL — or enable Raw Input mode to skip it.', 'error');
+    return;
+  }
 
   if (!ghPat) {
-    showToast('❌ A GitHub PAT is required to trigger cloud jobs. Open ⚙️ Connection settings.', 'error');
+    showToast('❌ A Classic GitHub PAT (workflow scope) is required. Open ⚙️ Connection.', 'error');
     return;
   }
 
@@ -1255,12 +1289,12 @@ async function launchJob() {
     const body = {
       ref: 'main',
       inputs: {
-        mode:            mode,
-        target_url:      url,
-        actress_name:    actress,
-        niche:           niche,
+        mode:             mode,
+        target_url:       url,
+        actress_name:     actress,
+        niche:            niche,
         custom_voiceover: voiceover,
-        review_mode:     reviewMode,
+        review_mode:      reviewMode,
       },
     };
 
@@ -1276,21 +1310,22 @@ async function launchJob() {
 
     if (!r.ok) {
       const errText = await r.text().catch(() => r.statusText);
+      // Build a helpful error + CLI fallback for 403 PAT scope issues
+      if (r.status === 403 || r.status === 401) {
+        btn.disabled = false;
+        btn.innerHTML = '🚀 Launch AI Video Editor';
+        showCliModal(body.inputs);
+        showToast('❌ 403: PAT needs Classic token + workflow scope. See CLI fallback below.', 'error');
+        return;
+      }
       throw new Error(`GitHub API ${r.status}: ${errText}`);
     }
 
     showToast('🚀 Job launched! Switching to Live Render…', 'info');
-
-    // Reset status, switch to timeline tab and start polling
     renderStatus = null;
-    setTimeout(() => {
-      switchTab('timeline');
-      startStatusPoll();
-    }, 800);
-
-    addLog(logBodyCreate(), `🚀 Job dispatched! URL: ${url}`, 'step');
+    setTimeout(() => { switchTab('timeline'); startStatusPoll(); }, 800);
+    addLog(logBodyCreate(), `🚀 Job dispatched!${url ? ' URL: '+url : ' (Raw Input mode)'}`, 'step');
     addLog(logBodyCreate(), `⏳ Waiting for runner to start…`, 'info');
-
     btn.disabled = false;
     btn.innerHTML = '🚀 Launch AI Video Editor';
 
@@ -1299,6 +1334,44 @@ async function launchJob() {
     btn.disabled = false;
     btn.innerHTML = '🚀 Launch AI Video Editor';
   }
+}
+
+/* ── CLI Fallback Modal for 403 ──────────────────────────────────── */
+function showCliModal(inputs) {
+  // Build gh CLI command
+  const args = Object.entries(inputs)
+    .filter(([,v]) => v !== '' && v !== undefined)
+    .map(([k,v]) => `-f ${k}=${JSON.stringify(v)}`)
+    .join(' ');
+  const cmd = `gh workflow run amtce-runner.yml --repo ${ghRepo} --ref main ${args}`;
+
+  // Remove existing modal if any
+  const existing = document.getElementById('cliModal');
+  if (existing) existing.remove();
+
+  const modal = document.createElement('div');
+  modal.id = 'cliModal';
+  modal.style.cssText = `position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(6px);z-index:3000;display:flex;align-items:center;justify-content:center;`;
+  modal.innerHTML = `
+    <div style="width:100%;max-width:560px;margin:20px;background:#0a1628;border:1px solid rgba(99,102,241,0.5);border-radius:14px;padding:24px;box-shadow:0 24px 60px rgba(0,0,0,0.7);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <span style="font-size:15px;font-weight:800;">⚙️ 403 — CLI Fallback</span>
+        <button onclick="document.getElementById('cliModal').remove()" style="background:none;border:none;color:#64748b;cursor:pointer;font-size:18px;">✕</button>
+      </div>
+      <p style="font-size:12px;color:#64748b;line-height:1.6;margin-bottom:14px;">
+        Your PAT doesn't have <code>workflow</code> scope (required for <code>workflow_dispatch</code>). Use a 
+        <strong>Classic PAT</strong> with <code>repo</code> + <code>workflow</code> scopes, or run this command locally:
+      </p>
+      <div style="background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:8px;padding:12px;font-family:monospace;font-size:11px;color:#94a3b8;word-break:break-all;margin-bottom:14px;">${escHtml(cmd)}</div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="navigator.clipboard.writeText(${JSON.stringify(cmd)}).then(()=>showToast('✅ Command copied!','success'))" style="flex:1;padding:10px;border-radius:8px;border:none;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;font-weight:700;cursor:pointer;font-size:13px;">📋 Copy Command</button>
+        <a href="https://github.com/settings/tokens/new?scopes=repo,workflow&description=AMTCE+Studio" target="_blank" style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(99,102,241,0.4);color:#a5b4fc;font-weight:600;cursor:pointer;font-size:13px;text-decoration:none;display:flex;align-items:center;justify-content:center;">🔑 Create Classic PAT</a>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  // Click outside to close
+  modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
 }
 
 function logBodyCreate() { return document.getElementById('logBodyCreate'); }
