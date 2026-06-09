@@ -269,6 +269,13 @@
     select option { background: #0f1d35; }
 
     .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    
+    /* Segment selector for Video Source */
+    .source-selector button { transition: all 0.2s; }
+    .source-selector button.active {
+      background: var(--accent) !important;
+      color: #fff !important;
+    }
 
     /* ── PLATFORM TOGGLES ──────────────────────────────────────── */
     .platform-grid { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -655,10 +662,11 @@
         <div class="card">
           <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
             <span>🎥 Source Video</span>
-            <label onclick="toggleRawMode()" style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text-muted);text-transform:none;letter-spacing:0;cursor:pointer;margin-bottom:0;user-select:none;" title="Raw Input: trigger a run without a video URL — uses scheduled actress pool instead">
-              <span>Raw Input</span>
-              <div class="toggle-dot" id="rawToggleDot"></div>
-            </label>
+            <div class="source-selector" style="display:flex;background:rgba(255,255,255,0.05);border-radius:6px;padding:2px;font-size:10px;">
+              <button onclick="setSourceMode('url')" id="modeBtnUrl" class="active" style="border:none;background:none;color:#fff;padding:4px 8px;border-radius:4px;cursor:pointer;font-weight:600;font-family:var(--font);">🔗 URL</button>
+              <button onclick="setSourceMode('upload')" id="modeBtnUpload" style="border:none;background:none;color:var(--text-muted);padding:4px 8px;border-radius:4px;cursor:pointer;font-weight:600;font-family:var(--font);">📁 Upload</button>
+              <button onclick="setSourceMode('pool')" id="modeBtnPool" style="border:none;background:none;color:var(--text-muted);padding:4px 8px;border-radius:4px;cursor:pointer;font-weight:600;font-family:var(--font);">🧠 Pool</button>
+            </div>
           </div>
 
           <!-- URL mode (default) -->
@@ -672,10 +680,23 @@
             </div>
           </div>
 
-          <!-- Raw Input mode -->
-          <div id="rawInputSection" style="display:none; margin-bottom: 12px;">
+          <!-- Upload mode -->
+          <div id="uploadInputSection" style="display:none;">
+            <div class="field">
+              <label>Local Video File</label>
+              <div class="input-wrap" style="position:relative;border:1px dashed rgba(99,102,241,0.4);border-radius:8px;padding:16px;text-align:center;background:rgba(255,255,255,0.02);cursor:pointer;" onclick="document.getElementById('fileUploadInput').click()">
+                <input type="file" id="fileUploadInput" accept="video/*" style="display:none;" onchange="handleFileSelect(event)" />
+                <span style="font-size:24px;display:block;margin-bottom:8px;">📤</span>
+                <span id="uploadStatusText" style="font-size:12px;font-weight:600;color:var(--text-muted);">Click to choose a video file from your computer</span>
+                <span id="uploadSubtext" style="font-size:10px;color:var(--text-dim);display:block;margin-top:4px;">Supported: MP4, MOV, AVI, etc. (max 100MB)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pool mode -->
+          <div id="poolInputSection" style="display:none; margin-bottom: 12px;">
             <div style="background: rgba(99,102,241,0.08); border: 1px dashed rgba(99,102,241,0.3); border-radius: 8px; padding: 12px; font-size: 11px; line-height: 1.5; color: #a5b4fc;">
-              💡 <strong>Raw Input Mode active:</strong> A cloud job will be launched using the selected <strong>Actress / Model</strong> and <strong>Niche</strong> below. The runner will automatically fetch/select the appropriate clips from the pool. No video URL is required.
+              💡 <strong>Actress Pool Mode:</strong> A cloud job will be launched using the selected <strong>Actress / Model</strong> and <strong>Niche</strong> below. The runner will automatically fetch/select the appropriate clips from the pool. No video URL is required.
             </div>
           </div>
 
@@ -1248,31 +1269,134 @@ async function ghPutFile(path, sha, content, message) {
 }
 
 /* ═══════════════════════════════════════════════════════════════════
-   RAW INPUT TOGGLE
+   SOURCE SELECTION (URL / Local Upload / Actress Pool)
    ══════════════════════════════════════════════════════════════════ */
-let rawInputMode = false;
-function toggleRawMode() {
-  rawInputMode = !rawInputMode;
-  document.getElementById('rawToggleDot').classList.toggle('on', rawInputMode);
-  document.getElementById('urlInputSection').style.display  = rawInputMode ? 'none' : 'block';
-  document.getElementById('rawInputSection').style.display  = rawInputMode ? 'block' : 'none';
+let sourceMode = 'url'; // 'url', 'upload', 'pool'
+let uploadedFileBase64 = null;
+let uploadedFileName = '';
+
+function setSourceMode(mode) {
+  sourceMode = mode;
+  
+  // Update segment buttons
+  ['url', 'upload', 'pool'].forEach(m => {
+    const btn = document.getElementById('modeBtn' + m.charAt(0).toUpperCase() + m.slice(1));
+    if (btn) {
+      if (m === mode) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    }
+  });
+
+  // Toggle input cards
+  document.getElementById('urlInputSection').style.display = (mode === 'url') ? 'block' : 'none';
+  document.getElementById('uploadInputSection').style.display = (mode === 'upload') ? 'block' : 'none';
+  document.getElementById('poolInputSection').style.display = (mode === 'pool') ? 'block' : 'none';
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      const b64 = reader.result.split(',')[1];
+      resolve(b64);
+    };
+    reader.onerror = error => reject(error);
+  });
+}
+
+async function ghPutBinaryFile(path, base64Content, message) {
+  const body = { message, content: base64Content, branch: ghBranch };
+  const r = await fetch(`https://api.github.com/repos/${ghRepo}/contents/${path}`, {
+    method: 'PUT',
+    headers: { 'Authorization': `token ${ghPat}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) {
+    const errText = await r.text().catch(() => r.statusText);
+    throw new Error(`GitHub upload failed: ${r.status} ${errText}`);
+  }
+  return r.json();
+}
+
+async function handleFileSelect(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  
+  if (file.size > 100 * 1024 * 1024) {
+    showToast('❌ File too large (max 100MB)', 'error');
+    return;
+  }
+  
+  const statusText = document.getElementById('uploadStatusText');
+  statusText.innerText = `⏳ Reading file: ${file.name}...`;
+  
+  try {
+    uploadedFileBase64 = await fileToBase64(file);
+    uploadedFileName = file.name;
+    statusText.innerText = `✅ File selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)} MB)`;
+    showToast('✅ File loaded successfully. Ready to launch!', 'success');
+  } catch(e) {
+    statusText.innerText = '❌ Failed to read file';
+    showToast('❌ Error reading file: ' + e.message, 'error');
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
    LAUNCH JOB — triggers GitHub workflow_dispatch
    ══════════════════════════════════════════════════════════════════ */
 async function launchJob() {
-  const isRaw    = rawInputMode;
-  const url      = isRaw ? '' : (document.getElementById('inputUrl').value.trim());
+  const btn = document.getElementById('launchBtn');
   const actress  = document.getElementById('inputActress').value.trim();
   const niche    = document.getElementById('inputNiche').value;
   const voiceover = document.getElementById('inputVoiceover').value.trim();
   const mode     = document.getElementById('inputMode').value;
   const reviewMode = document.getElementById('inputReviewMode').value;
 
-  if (!isRaw && !url) {
-    showToast('❌ Please enter a video URL — or enable Raw Input mode to skip it.', 'error');
-    return;
+  let launchUrl = '';
+
+  if (sourceMode === 'url') {
+    const url = document.getElementById('inputUrl').value.trim();
+    if (!url) {
+      showToast('❌ Please enter a video URL first.', 'error');
+      return;
+    }
+    launchUrl = url;
+  } else if (sourceMode === 'upload') {
+    if (!uploadedFileBase64) {
+      showToast('❌ Please select a local video file first.', 'error');
+      return;
+    }
+    if (!ghPat) {
+      showToast('❌ A GitHub PAT is required to upload local files. Open ⚙️ Connection.', 'error');
+      return;
+    }
+    
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Uploading video to GitHub...';
+    showToast('⏳ Uploading video to your repository...', 'info');
+    
+    try {
+      const safeName = uploadedFileName.replace(/[^a-zA-Z0-9.]/g, '_');
+      const uploadPath = 'downloads/upload_' + Date.now() + '_' + safeName;
+      
+      // Upload using GitHub PUT API
+      await ghPutBinaryFile(uploadPath, uploadedFileBase64, `Upload raw video: ${uploadedFileName}`);
+      
+      // Use the repository path for target_url
+      launchUrl = uploadPath;
+      showToast('✅ Upload completed! Dispatching job...', 'success');
+    } catch(e) {
+      btn.disabled = false;
+      btn.innerHTML = '🚀 Launch AI Video Editor';
+      showToast('❌ Upload failed: ' + e.message, 'error');
+      return;
+    }
+  } else if (sourceMode === 'pool') {
+    launchUrl = ''; // Empty triggers pool run
   }
 
   if (!ghPat) {
@@ -1280,7 +1404,6 @@ async function launchJob() {
     return;
   }
 
-  const btn = document.getElementById('launchBtn');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Launching…';
 
@@ -1289,7 +1412,7 @@ async function launchJob() {
       ref: 'main',
       inputs: {
         mode:             mode,
-        target_url:       url,
+        target_url:       launchUrl,
         actress_name:     actress,
         niche:            niche,
         custom_voiceover: voiceover,
@@ -1323,8 +1446,23 @@ async function launchJob() {
     showToast('🚀 Job launched! Switching to Live Render…', 'info');
     renderStatus = null;
     setTimeout(() => { switchTab('timeline'); startStatusPoll(); }, 800);
-    addLog(logBodyCreate(), `🚀 Job dispatched!${url ? ' URL: '+url : ' (Raw Input mode)'}`, 'step');
+    
+    let logMsg = '';
+    if (sourceMode === 'url') logMsg = `🚀 Job dispatched! URL: ${launchUrl}`;
+    else if (sourceMode === 'upload') logMsg = `🚀 Job dispatched! Local Upload: ${uploadedFileName}`;
+    else logMsg = `🚀 Job dispatched! (Actress Pool mode)`;
+    
+    addLog(logBodyCreate(), logMsg, 'step');
     addLog(logBodyCreate(), `⏳ Waiting for runner to start…`, 'info');
+    
+    // Clear uploaded file cache after dispatch
+    uploadedFileBase64 = null;
+    uploadedFileName = '';
+    const fileInput = document.getElementById('fileUploadInput');
+    if (fileInput) fileInput.value = '';
+    const statusText = document.getElementById('uploadStatusText');
+    if (statusText) statusText.innerText = 'Click to choose a video file from your computer';
+
     btn.disabled = false;
     btn.innerHTML = '🚀 Launch AI Video Editor';
 
