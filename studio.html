@@ -1002,7 +1002,16 @@ async function loadQueue() {
       const url = `https://api.github.com/repos/${ghRepo}/contents/review_queue.json?ref=${ghBranch}&t=${Date.now()}`;
       const r = await fetch(url, { headers });
       if (!r.ok) { if (r.status === 404) { allClips = []; } else throw new Error(r.statusText); }
-      else allClips = await r.json();
+      else {
+        const rawData = await r.json();
+        if (rawData && typeof rawData === 'object' && rawData.encoding === 'base64' && typeof rawData.content === 'string') {
+          const decoded = atob(rawData.content.replace(/\s/g, ''));
+          allClips = JSON.parse(decodeURIComponent(escape(decoded)));
+        } else {
+          allClips = rawData;
+        }
+        if (!Array.isArray(allClips)) allClips = [];
+      }
     } catch(e) { allClips = []; }
   } else {
     try {
@@ -1537,7 +1546,15 @@ async function pollStatus() {
         `https://api.github.com/repos/${ghRepo}/contents/active_run_status.json?ref=${ghBranch}&t=${Date.now()}`,
         { headers }
       );
-      if (r.ok) data = await r.json();
+      if (r.ok) {
+        const rawData = await r.json();
+        if (rawData && typeof rawData === 'object' && rawData.encoding === 'base64' && typeof rawData.content === 'string') {
+          const decoded = atob(rawData.content.replace(/\s/g, ''));
+          data = JSON.parse(decodeURIComponent(escape(decoded)));
+        } else {
+          data = rawData;
+        }
+      }
     } else {
       const r = await fetch(`${API}/api/run-status`);
       if (r.ok) data = await r.json();
