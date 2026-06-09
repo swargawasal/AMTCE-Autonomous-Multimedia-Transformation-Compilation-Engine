@@ -9,6 +9,33 @@ on:
         default: 'both'
         type: choice
         options: [harvest, publish, both]
+      target_url:
+        description: 'Source video URL to process (YouTube, TikTok, Instagram, direct link)'
+        required: false
+        default: ''
+        type: string
+      actress_name:
+        description: 'Target actress name for face/voice replacement'
+        required: false
+        default: ''
+        type: string
+      niche:
+        description: 'Target niche (Fashion / NSFW / Paparazzi / General)'
+        required: false
+        default: 'General'
+        type: choice
+        options: [General, Fashion, NSFW, Paparazzi]
+      custom_voiceover:
+        description: 'Custom TTS voiceover script (leave blank to use AI-generated)'
+        required: false
+        default: ''
+        type: string
+      review_mode:
+        description: 'Force editorial review gate ON before publishing'
+        required: false
+        default: 'auto'
+        type: choice
+        options: [auto, on, off]
   schedule:
     # HARVESTER — scrape 1hr before publish peaks (IST)
     - cron: '0 2 * * *'    # 07:30 IST — before morning publish window
@@ -303,6 +330,11 @@ jobs:
     - name: Run AMTCE Engine
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DISPATCH_TARGET_URL: ${{ github.event.inputs.target_url || '' }}
+        DISPATCH_ACTRESS_NAME: ${{ github.event.inputs.actress_name || '' }}
+        DISPATCH_NICHE: ${{ github.event.inputs.niche || 'General' }}
+        DISPATCH_VOICEOVER: ${{ github.event.inputs.custom_voiceover || '' }}
+        DISPATCH_REVIEW_MODE: ${{ github.event.inputs.review_mode || 'auto' }}
       run: |
         python main.py
 

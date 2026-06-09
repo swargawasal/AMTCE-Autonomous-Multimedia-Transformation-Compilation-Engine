@@ -3,33 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AMTCE Content Studio — Editorial Panel</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <title>AMTCE Content Studio — Cloud Video Editor</title>
+  <meta name="description" content="AMTCE Content Studio: Input a video URL, trigger AI editing in the cloud, watch live render progress, and approve final clips for publishing." />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
-    /* ── DESIGN TOKENS ─────────────────────────────────────────────── */
+    /* ── DESIGN TOKENS ─────────────────────────────────────────── */
     :root {
-      --bg-base:       #060b14;
-      --bg-card:       rgba(15, 23, 42, 0.85);
-      --bg-glass:      rgba(255,255,255,0.04);
-      --bg-glass-h:    rgba(255,255,255,0.08);
-      --border:        rgba(255,255,255,0.08);
-      --border-glow:   rgba(99, 102, 241, 0.4);
-      --accent:        #6366f1;
-      --accent-glow:   rgba(99, 102, 241, 0.2);
-      --green:         #22c55e;
-      --green-glow:    rgba(34, 197, 94, 0.15);
-      --red:           #ef4444;
-      --red-glow:      rgba(239, 68, 68, 0.15);
-      --amber:         #f59e0b;
-      --text-primary:  #f1f5f9;
-      --text-muted:    #64748b;
-      --text-dim:      #475569;
-      --radius:        12px;
-      --radius-sm:     8px;
-      --font:          'Inter', -apple-system, sans-serif;
+      --bg-base:      #050a12;
+      --bg-card:      rgba(12,20,38,0.9);
+      --bg-glass:     rgba(255,255,255,0.04);
+      --bg-glass-h:   rgba(255,255,255,0.08);
+      --border:       rgba(255,255,255,0.07);
+      --border-h:     rgba(99,102,241,0.45);
+      --accent:       #6366f1;
+      --accent2:      #8b5cf6;
+      --accent-glow:  rgba(99,102,241,0.22);
+      --green:        #22c55e;
+      --green-glow:   rgba(34,197,94,0.16);
+      --red:          #ef4444;
+      --red-glow:     rgba(239,68,68,0.15);
+      --amber:        #f59e0b;
+      --cyan:         #06b6d4;
+      --cyan-glow:    rgba(6,182,212,0.18);
+      --pink:         #ec4899;
+      --text-primary: #f0f4ff;
+      --text-muted:   #64748b;
+      --text-dim:     #3f4f6b;
+      --radius:       14px;
+      --radius-sm:    9px;
+      --font:         'Inter', -apple-system, sans-serif;
     }
 
-    /* ── RESET ─────────────────────────────────────────────────────── */
+    /* ── RESET ─────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body {
@@ -40,185 +45,207 @@
       overflow-x: hidden;
     }
 
-    /* ── BACKGROUND GRADIENT ───────────────────────────────────────── */
+    /* ── ANIMATED BG ───────────────────────────────────────────── */
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background:
-        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(99,102,241,0.12) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 110%, rgba(34,197,94,0.07) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
+        radial-gradient(ellipse 90% 60% at 15% -5%,  rgba(99,102,241,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse 70% 50% at 85% 100%, rgba(139,92,246,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse 50% 40% at 50%  50%, rgba(6,182,212,0.04)  0%, transparent 60%);
     }
 
-    /* ── LAYOUT ────────────────────────────────────────────────────── */
+    /* ── LAYOUT ────────────────────────────────────────────────── */
     .app { position: relative; z-index: 1; display: flex; flex-direction: column; min-height: 100vh; }
 
-    /* ── HEADER ────────────────────────────────────────────────────── */
+    /* ── HEADER ────────────────────────────────────────────────── */
     .header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 16px 28px;
-      background: rgba(6, 11, 20, 0.9);
-      backdrop-filter: blur(20px);
+      padding: 14px 28px;
+      background: rgba(5,10,18,0.94);
+      backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100;
+      position: sticky; top: 0; z-index: 200;
     }
-    .header-brand { display: flex; align-items: center; gap: 10px; }
+    .header-brand { display: flex; align-items: center; gap: 12px; }
     .header-logo {
-      width: 32px; height: 32px; border-radius: 8px;
-      background: linear-gradient(135deg, var(--accent), #8b5cf6);
+      width: 36px; height: 36px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
+      font-size: 18px; flex-shrink: 0;
+      box-shadow: 0 0 18px var(--accent-glow);
     }
-    .header-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
-    .header-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
-    .header-stats { display: flex; gap: 14px; align-items: center; }
+    .header-title { font-size: 15px; font-weight: 800; letter-spacing: -0.4px; }
+    .header-sub   { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+    .header-right { display: flex; gap: 10px; align-items: center; }
+
     .stat-pill {
       display: flex; align-items: center; gap: 6px;
       background: var(--bg-glass);
       border: 1px solid var(--border);
       border-radius: 20px;
-      padding: 5px 12px;
+      padding: 5px 13px;
       font-size: 12px; color: var(--text-muted);
     }
-    .stat-pill .dot {
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--text-dim);
-    }
-    .stat-pill.active .dot { background: var(--green); box-shadow: 0 0 6px var(--green); }
-    .stat-pill .val { font-weight: 600; color: var(--text-primary); }
+    .stat-pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text-dim); }
+    .stat-pill.active .dot { background: var(--green); box-shadow: 0 0 6px var(--green); animation: pulse 1.5s infinite; }
+    .stat-pill .val { font-weight: 700; color: var(--text-primary); }
 
-    .settings-btn {
+    .icon-btn {
       background: var(--bg-glass);
       border: 1px solid var(--border);
       border-radius: 20px;
       color: var(--text-primary);
       cursor: pointer;
-      font-size: 12px;
-      font-weight: 600;
-      padding: 5px 14px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.15s;
+      font-size: 12px; font-weight: 600;
+      padding: 5px 15px;
+      display: flex; align-items: center; gap: 6px;
+      transition: all 0.18s;
     }
-    .settings-btn:hover {
-      border-color: var(--accent);
-      background: var(--accent-glow);
-    }
+    .icon-btn:hover { border-color: var(--accent); background: var(--accent-glow); }
 
-    /* ── MAIN GRID ─────────────────────────────────────────────────── */
+    /* ── TAB BAR ───────────────────────────────────────────────── */
+    .tabs {
+      display: flex; align-items: center; gap: 4px;
+      padding: 0 28px;
+      background: rgba(5,10,18,0.7);
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      padding: 12px 20px;
+      font-size: 13px; font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.18s;
+      user-select: none;
+      display: flex; align-items: center; gap: 7px;
+    }
+    .tab:hover { color: var(--text-primary); }
+    .tab.active { color: var(--text-primary); border-bottom-color: var(--accent); }
+    .tab-badge {
+      background: var(--accent); color: #fff;
+      font-size: 10px; font-weight: 800;
+      padding: 2px 7px; border-radius: 20px;
+      display: none;
+    }
+    .tab-badge.show { display: inline-block; }
+
+    /* ── MAIN CONTENT ──────────────────────────────────────────── */
     .main {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 340px 1fr 280px;
+      flex: 1; display: grid;
+      grid-template-columns: 340px 1fr 290px;
       gap: 0;
       overflow: hidden;
-      height: calc(100vh - 65px);
+      height: calc(100vh - 110px);
     }
 
-    /* ── SIDEBAR — QUEUE ───────────────────────────────────────────── */
+    /* ── PANEL SHARED ──────────────────────────────────────────── */
+    .panel-page { display: none; height: 100%; }
+    .panel-page.active { display: grid; grid-template-columns: 340px 1fr 290px; }
+    .panel-page.full   { display: flex; flex-direction: column; }
+
+    /* ── SIDEBAR ───────────────────────────────────────────────── */
     .sidebar {
       border-right: 1px solid var(--border);
       overflow-y: auto;
-      padding: 16px;
-      display: flex; flex-direction: column; gap: 12px;
+      padding: 14px;
+      display: flex; flex-direction: column; gap: 10px;
     }
     .sidebar-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 4px 0 8px;
+      padding: 2px 0 8px;
     }
-    .sidebar-title { font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
-    .badge {
-      font-size: 11px; font-weight: 700;
-      background: var(--accent); color: #fff;
-      padding: 2px 8px; border-radius: 20px;
+    .sidebar-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.9px; }
+    .refresh-btn {
+      background: var(--bg-glass);
+      border: 1px solid var(--border); border-radius: 6px;
+      color: var(--text-muted); cursor: pointer;
+      font-size: 13px; padding: 4px 10px;
+      transition: all 0.15s;
     }
-    .badge.amber { background: var(--amber); color: #000; }
-    .badge.green { background: var(--green); color: #000; }
-    .badge.red   { background: var(--red); }
+    .refresh-btn:hover { border-color: var(--accent); color: var(--text-primary); }
 
-    /* ── CLIP CARD ─────────────────────────────────────────────────── */
+    /* ── CLIP CARD ─────────────────────────────────────────────── */
     .clip-card {
       background: var(--bg-glass);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
+      overflow: hidden; cursor: pointer;
+      transition: all 0.2s; position: relative;
     }
     .clip-card:hover, .clip-card.active {
-      border-color: var(--border-glow);
+      border-color: var(--border-h);
       background: var(--bg-glass-h);
       transform: translateY(-1px);
-      box-shadow: 0 4px 20px var(--accent-glow);
+      box-shadow: 0 4px 22px var(--accent-glow);
     }
     .clip-card.active { border-color: var(--accent); }
-    .clip-thumb-placeholder {
-      width: 100%; height: 80px;
+    .clip-thumb { width: 100%; height: 78px; object-fit: cover; display: block; }
+    .clip-thumb-ph {
+      width: 100%; height: 78px;
+      background: linear-gradient(135deg, #12203a, #0a1628);
       display: flex; align-items: center; justify-content: center;
-      background: linear-gradient(135deg, #1e293b, #0f172a);
       font-size: 28px; color: var(--text-dim);
     }
-    .clip-info { padding: 10px 12px; }
-    .clip-name { font-size: 13px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
+    .clip-info { padding: 9px 12px; }
+    .clip-name { font-size: 12px; font-weight: 600; line-height: 1.3; margin-bottom: 4px; }
     .clip-meta { display: flex; align-items: center; justify-content: space-between; }
-    .clip-time { font-size: 11px; color: var(--text-muted); }
+    .clip-time { font-size: 10px; color: var(--text-muted); }
     .status-badge {
-      font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
-      text-transform: uppercase; letter-spacing: 0.5px;
+      font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.4px;
     }
     .status-badge.pending  { background: rgba(245,158,11,0.15); color: var(--amber); border: 1px solid rgba(245,158,11,0.3); }
     .status-badge.approved { background: var(--green-glow); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
     .status-badge.rejected { background: var(--red-glow); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
 
     .empty-state {
-      text-align: center; padding: 40px 20px; color: var(--text-dim);
+      text-align: center; padding: 38px 18px; color: var(--text-dim);
     }
-    .empty-state .icon { font-size: 36px; margin-bottom: 12px; }
-    .empty-state p { font-size: 13px; line-height: 1.6; }
+    .empty-state .icon { font-size: 34px; margin-bottom: 12px; }
+    .empty-state p { font-size: 12px; line-height: 1.7; }
 
-    /* ── CENTER — EDITOR ───────────────────────────────────────────── */
+    /* ── EDITOR CENTER ─────────────────────────────────────────── */
     .editor {
-      overflow-y: auto;
-      padding: 20px;
+      overflow-y: auto; padding: 20px;
       display: flex; flex-direction: column; gap: 16px;
     }
     .editor-placeholder {
-      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
       color: var(--text-dim); gap: 16px; text-align: center;
     }
-    .editor-placeholder .icon { font-size: 56px; opacity: 0.4; }
-    .editor-placeholder h2 { font-size: 18px; font-weight: 600; opacity: 0.5; }
-    .editor-placeholder p  { font-size: 13px; max-width: 300px; line-height: 1.6; opacity: 0.4; }
+    .editor-placeholder .icon { font-size: 52px; opacity: 0.35; }
+    .editor-placeholder h2 { font-size: 17px; font-weight: 600; opacity: 0.45; }
+    .editor-placeholder p  { font-size: 13px; max-width: 280px; line-height: 1.65; opacity: 0.38; }
 
+    /* ── CARD ──────────────────────────────────────────────────── */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       padding: 16px 20px;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
     }
-    .card-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 12px; }
+    .card-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.9px; margin-bottom: 14px; }
 
-    /* Video player */
+    /* ── VIDEO PLAYER ──────────────────────────────────────────── */
     .video-wrap {
-      width: 100%; border-radius: var(--radius);
-      overflow: hidden;
-      background: #000;
-      position: relative;
+      width: 100%; border-radius: var(--radius); overflow: hidden;
+      background: #000; position: relative;
     }
-    .video-wrap video {
-      width: 100%; display: block; max-height: 380px;
-      object-fit: contain;
-    }
+    .video-wrap video { width: 100%; display: block; max-height: 360px; object-fit: contain; }
 
-    /* Form fields */
-    label { display: block; font-size: 12px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+    /* ── FORM ──────────────────────────────────────────────────── */
+    label { display: block; font-size: 11px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.3px; }
     .field { margin-bottom: 14px; }
-    input[type="text"], textarea {
+    .input-wrap { position: relative; }
+    .input-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      font-size: 15px; pointer-events: none; z-index: 1;
+    }
+    input[type="text"], input[type="password"], input[type="url"], textarea, select {
       width: 100%;
       background: rgba(255,255,255,0.04);
       border: 1px solid var(--border);
@@ -228,40 +255,36 @@
       font-size: 13px;
       padding: 10px 12px;
       outline: none;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, background 0.2s;
       resize: vertical;
+      -webkit-appearance: none;
     }
-    input[type="text"]:focus, textarea:focus {
+    .input-wrap input { padding-left: 38px; }
+    input:focus, textarea:focus, select:focus {
       border-color: var(--accent);
-      background: rgba(99,102,241,0.06);
+      background: rgba(99,102,241,0.07);
     }
     textarea { min-height: 80px; }
+    select { cursor: pointer; }
+    select option { background: #0f1d35; }
 
-    /* Platform toggles */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ── PLATFORM TOGGLES ──────────────────────────────────────── */
     .platform-grid { display: flex; gap: 10px; flex-wrap: wrap; }
     .platform-toggle {
       display: flex; align-items: center; gap: 8px;
-      background: var(--bg-glass);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-      user-select: none;
-      font-size: 13px; font-weight: 500;
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 9px; padding: 8px 14px;
+      cursor: pointer; transition: all 0.2s;
+      user-select: none; font-size: 13px; font-weight: 500;
     }
-    .platform-toggle.on {
-      border-color: var(--accent);
-      background: var(--accent-glow);
-      color: #a5b4fc;
-    }
-    .platform-toggle .pt-icon { font-size: 16px; }
+    .platform-toggle.on { border-color: var(--accent); background: var(--accent-glow); color: #a5b4fc; }
     .platform-toggle input { display: none; }
     .toggle-dot {
       width: 28px; height: 16px; border-radius: 8px;
       background: var(--text-dim); position: relative;
-      transition: background 0.2s;
-      flex-shrink: 0;
+      transition: background 0.2s; flex-shrink: 0;
     }
     .platform-toggle.on .toggle-dot { background: var(--accent); }
     .toggle-dot::after {
@@ -272,132 +295,297 @@
     }
     .platform-toggle.on .toggle-dot::after { transform: translateX(12px); }
 
-    /* Action buttons */
+    /* ── BUTTONS ───────────────────────────────────────────────── */
     .action-row { display: flex; gap: 10px; margin-top: 4px; }
     .btn {
       flex: 1; padding: 12px 20px; border-radius: var(--radius-sm);
       border: none; cursor: pointer; font-family: var(--font);
-      font-size: 14px; font-weight: 600; letter-spacing: 0.2px;
+      font-size: 14px; font-weight: 700; letter-spacing: 0.2px;
       transition: all 0.2s;
       display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; box-shadow: 0 0 0 0 var(--accent-glow);
+    }
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 28px var(--accent-glow);
+    }
     .btn-approve {
       background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #fff; box-shadow: 0 0 0 0 var(--green-glow);
+      color: #fff;
     }
     .btn-approve:hover:not(:disabled) {
       transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(34,197,94,0.4);
+      box-shadow: 0 4px 22px rgba(34,197,94,0.4);
     }
     .btn-reject {
-      background: rgba(239,68,68,0.12);
-      color: var(--red);
+      background: rgba(239,68,68,0.12); color: var(--red);
       border: 1px solid rgba(239,68,68,0.3);
     }
-    .btn-reject:hover:not(:disabled) {
-      background: rgba(239,68,68,0.2);
-      box-shadow: 0 4px 20px var(--red-glow);
+    .btn-reject:hover:not(:disabled) { background: rgba(239,68,68,0.22); }
+    .btn-ghost {
+      background: var(--bg-glass); color: var(--text-muted);
+      border: 1px solid var(--border); flex: 0;
+      padding: 12px 18px;
+    }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--accent); color: var(--text-primary); }
+
+    /* Big launch button */
+    .launch-btn {
+      width: 100%;
+      padding: 16px 28px;
+      border-radius: var(--radius);
+      border: none;
+      background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 50%, var(--pink) 100%);
+      color: #fff; font-family: var(--font);
+      font-size: 16px; font-weight: 800; letter-spacing: 0.3px;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      position: relative; overflow: hidden;
+      box-shadow: 0 0 40px rgba(99,102,241,0.35);
+      margin-top: 6px;
+    }
+    .launch-btn::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), transparent);
+      transition: opacity 0.2s;
+    }
+    .launch-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 40px rgba(99,102,241,0.55);
+    }
+    .launch-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* ── RENDER TIMELINE ───────────────────────────────────────── */
+    .timeline-section {
+      padding: 24px 28px;
+      flex: 1; overflow-y: auto;
+    }
+    .timeline-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 28px;
+    }
+    .timeline-title {
+      font-size: 20px; font-weight: 800; letter-spacing: -0.5px;
+    }
+    .timeline-title span { color: var(--accent); }
+    .run-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+
+    /* Global progress bar */
+    .global-progress {
+      margin-bottom: 32px;
+    }
+    .gp-label {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .gp-label-text { font-size: 13px; font-weight: 600; }
+    .gp-pct { font-size: 22px; font-weight: 900; color: var(--accent); }
+    .gp-bar-track {
+      width: 100%; height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 4px; overflow: hidden;
+    }
+    .gp-bar-fill {
+      height: 100%; border-radius: 4px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--pink));
+      transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+      box-shadow: 0 0 12px var(--accent-glow);
     }
 
-    /* Spinner */
-    .spinner {
-      display: inline-block; width: 14px; height: 14px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-top-color: #fff;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* Toast */
-    #toast {
-      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
-      background: var(--bg-card);
+    /* Pipeline steps */
+    .pipeline { display: flex; flex-direction: column; gap: 14px; }
+    .pipe-step {
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px 18px;
+      border-radius: var(--radius);
       border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px 20px;
-      font-size: 13px; font-weight: 500;
-      backdrop-filter: blur(20px);
-      opacity: 0; transition: all 0.3s;
-      z-index: 1000; white-space: nowrap;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+      background: var(--bg-glass);
+      transition: all 0.3s;
+      position: relative; overflow: hidden;
     }
-    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-    #toast.success { border-color: rgba(34,197,94,0.4); color: var(--green); }
-    #toast.error   { border-color: rgba(239,68,68,0.4);  color: var(--red); }
+    .pipe-step.active {
+      border-color: var(--accent);
+      background: linear-gradient(135deg, rgba(99,102,241,0.12), rgba(139,92,246,0.08));
+      box-shadow: 0 0 28px var(--accent-glow);
+    }
+    .pipe-step.done {
+      border-color: rgba(34,197,94,0.3);
+      background: rgba(34,197,94,0.05);
+    }
+    .pipe-step.failed {
+      border-color: rgba(239,68,68,0.35);
+      background: rgba(239,68,68,0.07);
+    }
+    .pipe-step-glow {
+      position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(99,102,241,0.06), transparent);
+      animation: shimmer 2s infinite;
+      opacity: 0;
+    }
+    .pipe-step.active .pipe-step-glow { opacity: 1; }
+    @keyframes shimmer {
+      0%   { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
 
-    /* ── RIGHT — LOG PANEL ─────────────────────────────────────────── */
+    .pipe-icon {
+      font-size: 24px; width: 42px; height: 42px;
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.05); flex-shrink: 0;
+      transition: all 0.3s;
+    }
+    .pipe-step.active .pipe-icon { background: var(--accent-glow); box-shadow: 0 0 14px var(--accent-glow); }
+    .pipe-step.done  .pipe-icon { background: var(--green-glow); }
+
+    .pipe-info { flex: 1; min-width: 0; }
+    .pipe-label { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+    .pipe-sub   { font-size: 12px; color: var(--text-muted); }
+    .pipe-step.active .pipe-label { color: #a5b4fc; }
+    .pipe-step.done  .pipe-label { color: var(--green); }
+
+    .pipe-badge {
+      font-size: 10px; font-weight: 800; padding: 3px 10px;
+      border-radius: 20px; flex-shrink: 0;
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .badge-pending  { background: rgba(255,255,255,0.06); color: var(--text-dim); }
+    .badge-active   { background: var(--accent-glow); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.4); animation: pulseBadge 1.5s infinite; }
+    .badge-done     { background: var(--green-glow); color: var(--green); border: 1px solid rgba(34,197,94,0.3); }
+    .badge-failed   { background: var(--red-glow); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+    @keyframes pulseBadge { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    .pipe-connector {
+      width: 2px; height: 14px;
+      background: var(--border);
+      margin: 0 0 0 38px;
+      border-radius: 1px;
+    }
+
+    /* State panels in timeline */
+    .state-idle {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 60px 30px; text-align: center; color: var(--text-dim); gap: 16px;
+    }
+    .state-idle .big-icon { font-size: 64px; opacity: 0.3; }
+    .state-idle h3 { font-size: 20px; font-weight: 700; opacity: 0.4; }
+    .state-idle p  { font-size: 13px; line-height: 1.7; max-width: 360px; opacity: 0.35; }
+
+    /* Done banner */
+    .done-banner {
+      padding: 20px 24px; border-radius: var(--radius);
+      background: linear-gradient(135deg, rgba(34,197,94,0.12), rgba(6,182,212,0.08));
+      border: 1px solid rgba(34,197,94,0.3);
+      display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+    }
+    .done-banner .icon { font-size: 36px; }
+    .done-banner-text h3 { font-size: 16px; font-weight: 800; color: var(--green); }
+    .done-banner-text p  { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ── LOG PANEL ─────────────────────────────────────────────── */
     .log-panel {
       border-left: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      overflow: hidden;
+      display: flex; flex-direction: column; overflow: hidden;
     }
     .log-header {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      padding: 12px 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;
     }
-    .log-title { font-size: 11px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    .log-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.9px; }
     .live-dot {
       display: flex; align-items: center; gap: 6px;
       font-size: 11px; color: var(--green);
     }
     .live-dot::before {
-      content: '';
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--green);
-      box-shadow: 0 0 6px var(--green);
+      content: ''; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--green); box-shadow: 0 0 7px var(--green);
       animation: pulse 1.5s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
     }
     .log-body {
       flex: 1; overflow-y: auto; padding: 12px 14px;
       font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
-      font-size: 11px; line-height: 1.7;
-      color: var(--text-muted);
+      font-size: 10.5px; line-height: 1.75; color: var(--text-muted);
     }
-    .log-line {
-      padding: 1px 0;
-      word-break: break-all;
-      animation: fadeIn 0.2s ease;
-    }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .log-line { padding: 1px 0; word-break: break-all; animation: fadeIn 0.2s ease; }
     .log-line.success { color: #4ade80; }
     .log-line.error   { color: #f87171; }
     .log-line.warn    { color: #fbbf24; }
     .log-line.info    { color: #94a3b8; }
     .log-line.tiktok  { color: #a78bfa; }
+    .log-line.step    { color: #67e8f9; font-weight: 700; }
 
-    /* ── SCROLLBAR STYLING ─────────────────────────────────────────── */
+    /* ── TOAST ─────────────────────────────────────────────────── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 10px; padding: 12px 22px;
+      font-size: 13px; font-weight: 600;
+      backdrop-filter: blur(20px);
+      opacity: 0; transition: all 0.3s;
+      z-index: 2000; white-space: nowrap;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    #toast.success { border-color: rgba(34,197,94,0.4); color: var(--green); }
+    #toast.error   { border-color: rgba(239,68,68,0.4);  color: var(--red); }
+    #toast.info    { border-color: rgba(99,102,241,0.4); color: #a5b4fc; }
+
+    /* ── SETTINGS MODAL ────────────────────────────────────────── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.65); backdrop-filter: blur(6px);
+      z-index: 1000; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      width: 100%; max-width: 440px; margin: 20px;
+      background: #0a1628;
+      border: 1px solid var(--border-h);
+      border-radius: var(--radius);
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      padding: 24px;
+    }
+    .modal-header {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 20px;
+    }
+    .modal-title { font-size: 15px; font-weight: 800; }
+    .modal-close { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 18px; }
+    .hint { font-size: 11px; color: var(--text-dim); margin-top: 5px; line-height: 1.5; }
+
+    /* ── ANIMATIONS ────────────────────────────────────────────── */
+    @keyframes spin    { to { transform: rotate(360deg); } }
+    @keyframes pulse   { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+    @keyframes fadeIn  { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .spinner {
+      display: inline-block; width: 14px; height: 14px;
+      border: 2px solid rgba(255,255,255,0.25);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+
+    /* ── SCROLLBAR ─────────────────────────────────────────────── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
     ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
 
-    /* ── REFRESH PULSE ─────────────────────────────────────────────── */
-    .refresh-btn {
-      background: var(--bg-glass);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      color: var(--text-muted);
-      cursor: pointer; font-size: 13px;
-      padding: 4px 10px;
-      transition: all 0.15s;
-    }
-    .refresh-btn:hover { border-color: var(--accent); color: var(--text-primary); }
-
-    /* Responsive */
-    @media (max-width: 900px) {
-      .main { grid-template-columns: 280px 1fr; }
+    /* ── RESPONSIVE ────────────────────────────────────────────── */
+    @media (max-width: 1100px) {
+      .main { grid-template-columns: 300px 1fr; }
+      .panel-page.active { grid-template-columns: 300px 1fr; }
       .log-panel { display: none; }
     }
-    @media (max-width: 640px) {
+    @media (max-width: 720px) {
       .main { grid-template-columns: 1fr; }
-      .sidebar { max-height: 220px; }
+      .panel-page.active { grid-template-columns: 1fr; }
+      .sidebar { max-height: 220px; border-right: none; border-bottom: 1px solid var(--border); }
+      .tabs { overflow-x: auto; }
+      .field-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -410,96 +598,216 @@
       <div class="header-logo">🎬</div>
       <div>
         <div class="header-title">AMTCE Content Studio</div>
-        <div class="header-sub">Editorial Interruption Panel</div>
+        <div class="header-sub" id="headerSub">Cloud AI Video Editor</div>
       </div>
     </div>
-    <div class="header-stats" id="headerStats">
+    <div class="header-right">
       <div class="stat-pill" id="statMode">
         <span class="dot"></span>
-        <span id="modeLabel">Review Mode: OFF</span>
+        <span id="modeLabel">Connecting…</span>
       </div>
-      <div class="stat-pill" id="statQueue">
-        <span class="dot"></span>
+      <div class="stat-pill">
         <span>Queue:</span><span class="val" id="queueCount">—</span>
       </div>
-      <div class="stat-pill" id="statPending">
+      <div class="stat-pill">
         <span>Pending:</span><span class="val" id="pendingCount">0</span>
       </div>
-      <button class="settings-btn" onclick="toggleSettingsModal()">⚙️ Connection</button>
+      <button class="icon-btn" id="connectionBtn" onclick="openSettingsModal()">⚙️ Connection</button>
     </div>
   </header>
 
-  <!-- ── MAIN ───────────────────────────────────────────────────── -->
-  <div class="main">
+  <!-- ── TAB BAR ──────────────────────────────────────────────── -->
+  <nav class="tabs">
+    <div class="tab active" id="tab-create" onclick="switchTab('create')">
+      🚀 Create New Video
+    </div>
+    <div class="tab" id="tab-timeline" onclick="switchTab('timeline')">
+      📡 Live Render
+      <span class="tab-badge" id="timelineBadge">LIVE</span>
+    </div>
+    <div class="tab" id="tab-review" onclick="switchTab('review')">
+      📋 Review Queue
+      <span class="tab-badge" id="reviewBadge">0</span>
+    </div>
+  </nav>
 
-    <!-- LEFT: Queue -->
-    <aside class="sidebar">
-      <div class="sidebar-header">
-        <span class="sidebar-title">Review Queue</span>
-        <button class="refresh-btn" onclick="loadQueue()">↻</button>
-      </div>
-      <div id="queueList">
-        <div class="empty-state">
-          <div class="icon">📭</div>
-          <p>No clips in queue.<br>Expose your server or enter connection settings.</p>
+  <!-- ── CONTENT AREA ──────────────────────────────────────────── -->
+  <div style="flex:1;overflow:hidden;position:relative;z-index:1;">
+
+    <!-- ─── TAB 1: CREATE ─────────────────────────────────────── -->
+    <div class="panel-page active" id="page-create">
+      <!-- LEFT: quick queue preview -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <span class="sidebar-title">Recent Clips</span>
+          <button class="refresh-btn" onclick="loadQueue()">↻</button>
+        </div>
+        <div id="sidebarQueueList">
+          <div class="empty-state">
+            <div class="icon">📭</div>
+            <p>No clips yet.<br>Launch a job to get started.</p>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER: Create form -->
+      <main class="editor" id="createEditor">
+        <div class="card">
+          <div class="card-title">🎥 Source Video</div>
+          <div class="field">
+            <label>Video URL</label>
+            <div class="input-wrap">
+              <span class="input-icon">🔗</span>
+              <input type="url" id="inputUrl" placeholder="Paste YouTube, TikTok, Instagram or direct video link…" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Actress / Model</label>
+              <div class="input-wrap">
+                <span class="input-icon">🎭</span>
+                <input type="text" id="inputActress" placeholder="e.g. sakshitha" />
+              </div>
+            </div>
+            <div class="field">
+              <label>Niche</label>
+              <select id="inputNiche">
+                <option value="General">General</option>
+                <option value="Fashion">Fashion</option>
+                <option value="NSFW">NSFW</option>
+                <option value="Paparazzi">Paparazzi</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🧠 AI Editing Options</div>
+          <div class="field">
+            <label>Custom Voiceover Script <span style="color:var(--text-dim)">(optional — leave blank for AI-generated)</span></label>
+            <textarea id="inputVoiceover" placeholder="Type a custom TTS script here, or leave blank to let AMTCE auto-generate captions and audio…"></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Run Mode</label>
+              <select id="inputMode">
+                <option value="both">Both (Harvest + Publish)</option>
+                <option value="harvest">Harvest only</option>
+                <option value="publish">Publish only</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Review Gate</label>
+              <select id="inputReviewMode">
+                <option value="auto">Auto (based on settings)</option>
+                <option value="on">Force ON — review before publish</option>
+                <option value="off">Force OFF — auto-publish</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">📤 Publish To</div>
+          <div class="platform-grid" id="platformToggles">
+            <div class="platform-toggle on" id="toggle-youtube" onclick="this.classList.toggle('on')">
+              <span>▶️</span><span>YouTube</span><div class="toggle-dot"></div>
+            </div>
+            <div class="platform-toggle on" id="toggle-instagram" onclick="this.classList.toggle('on')">
+              <span>📸</span><span>Instagram</span><div class="toggle-dot"></div>
+            </div>
+            <div class="platform-toggle" id="toggle-tiktok" onclick="this.classList.toggle('on')">
+              <span>🎵</span><span>TikTok</span><div class="toggle-dot"></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="launch-btn" id="launchBtn" onclick="launchJob()">
+          🚀 Launch AI Video Editor
+        </button>
+        <p style="font-size:11px;color:var(--text-dim);text-align:center;margin-top:-8px;line-height:1.6;">
+          Triggers a cloud GitHub Actions runner that downloads, face-swaps, lip-syncs, mixes audio and renders your clip automatically.
+        </p>
+      </main>
+
+      <!-- RIGHT: Log panel -->
+      <aside class="log-panel">
+        <div class="log-header">
+          <span class="log-title">Live AMTCE Log</span>
+          <span class="live-dot" id="liveDotCreate">LIVE</span>
+        </div>
+        <div class="log-body" id="logBodyCreate"></div>
+      </aside>
+    </div>
+
+    <!-- ─── TAB 2: LIVE RENDER TIMELINE ──────────────────────── -->
+    <div class="panel-page full" id="page-timeline" style="display:none;">
+      <div class="timeline-section" id="timelineContent">
+        <!-- Populated by JS -->
+        <div class="state-idle" id="timelineIdle">
+          <div class="big-icon">📡</div>
+          <h3>No Active Render</h3>
+          <p>Launch a new job from the <strong>Create New Video</strong> tab to see the live render pipeline here.</p>
         </div>
       </div>
-    </aside>
+    </div>
 
-    <!-- CENTER: Editor -->
-    <main class="editor" id="editor">
-      <div class="editor-placeholder" id="editorPlaceholder">
-        <div class="icon">🎞️</div>
-        <h2>Select a clip to review</h2>
-        <p>Choose a clip from the queue to preview, edit metadata, and control where it publishes.</p>
-      </div>
-    </main>
+    <!-- ─── TAB 3: REVIEW QUEUE ───────────────────────────────── -->
+    <div class="panel-page active" id="page-review" style="display:none;">
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <span class="sidebar-title">Review Queue</span>
+          <button class="refresh-btn" onclick="loadQueue()">↻</button>
+        </div>
+        <div id="queueList">
+          <div class="empty-state">
+            <div class="icon">📭</div>
+            <p>No clips in queue.<br>Set <code>EDITORIAL_REVIEW_MODE=on</code><br>then trigger AMTCE.</p>
+          </div>
+        </div>
+      </aside>
+      <main class="editor" id="reviewEditor">
+        <div class="editor-placeholder" id="reviewPlaceholder">
+          <div class="icon">🎞️</div>
+          <h2>Select a clip to review</h2>
+          <p>Choose a clip from the queue to preview, edit metadata, and control where it publishes.</p>
+        </div>
+      </main>
+      <aside class="log-panel">
+        <div class="log-header">
+          <span class="log-title">Live AMTCE Log</span>
+          <span class="live-dot">LIVE</span>
+        </div>
+        <div class="log-body" id="logBodyReview"></div>
+      </aside>
+    </div>
 
-    <!-- RIGHT: Live Log -->
-    <aside class="log-panel">
-      <div class="log-header">
-        <span class="log-title">Live AMTCE Log</span>
-        <span class="live-dot">LIVE</span>
-      </div>
-      <div class="log-body" id="logBody"></div>
-    </aside>
-
-  </div><!-- .main -->
+  </div><!-- content area -->
 </div><!-- .app -->
 
-<!-- Settings Modal -->
-<div id="settingsModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(5px); z-index:1000; align-items:center; justify-content:center;">
-  <div class="card" style="width:100%; max-width:400px; margin:20px; background:#0f172a; border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 20px 50px rgba(0,0,0,0.5);">
-    <div class="card-title" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-      <span style="color:var(--text-primary); font-weight:700; font-size:14px;">Connection Settings</span>
-      <button onclick="toggleSettingsModal()" style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:16px;">✕</button>
+<!-- ── SETTINGS MODAL ───────────────────────────────────────────── -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-title">⚙️ Connection Settings</span>
+      <button class="modal-close" onclick="closeSettingsModal()">✕</button>
     </div>
-    
+
     <div class="field">
       <label>Connection Type</label>
-      <select id="settingConnType" onchange="toggleConnFields()" style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text-primary); font-family:var(--font); font-size:13px; padding:10px 12px; outline:none; cursor:pointer;">
+      <select id="settingConnType" onchange="toggleConnFields()">
+        <option value="github">GitHub API (Serverless Cloud) ✨</option>
         <option value="local">Local Review Server</option>
-        <option value="github">GitHub API (Serverless Cloud)</option>
       </select>
     </div>
-    
-    <div id="localFields">
-      <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
-        If you run the AMTCE engine locally, expose it via a free tunnel (like Cloudflare or ngrok) and enter the HTTPS URL. Default: <code>http://localhost:7862</code>.
+
+    <div id="githubFields">
+      <p class="hint" style="margin-bottom:16px;">
+        Reads your review queue and writes approval decisions directly to your GitHub repository. No server needed — works 100% from the browser.
       </p>
       <div class="field">
-        <label>Studio API Server URL</label>
-        <input type="text" id="settingApiUrl" placeholder="http://localhost:7862" />
-      </div>
-    </div>
-    
-    <div id="githubFields" style="display:none;">
-      <p style="font-size:12px; color:var(--text-muted); line-height:1.5; margin-bottom:16px;">
-        Connect directly to your repository in the cloud. Write decisions back to the repo using a GitHub Personal Access Token.
-      </p>
-      <div class="field">
-        <label>GitHub Repository (owner/repo)</label>
-        <input type="text" id="settingGhRepo" placeholder="swargawasal/AMTCE-Autonomous-Multimedia-Transformation-Compilation-Engine" />
+        <label>GitHub Repository</label>
+        <input type="text" id="settingGhRepo" placeholder="owner/repo-name" />
       </div>
       <div class="field">
         <label>Branch</label>
@@ -507,557 +815,717 @@
       </div>
       <div class="field">
         <label>Personal Access Token (PAT)</label>
-        <input type="password" id="settingGhPat" placeholder="ghp_..." style="width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:var(--radius-sm); color:var(--text-primary); font-family:var(--font); font-size:13px; padding:10px 12px; outline:none;" />
-        <span style="font-size:10px; color:var(--text-muted); display:block; margin-top:4px;">Requires 'contents: write' scope. Saved only in your browser storage.</span>
+        <input type="password" id="settingGhPat" placeholder="ghp_… or github_pat_…" />
+        <p class="hint">Needs <code>contents: write</code> + <code>actions: write</code> scopes. Saved only in your browser — never sent to any third party.</p>
       </div>
     </div>
-    
-    <div style="display:flex; gap:10px; margin-top:20px;">
-      <button class="btn btn-approve" onclick="saveSettings()">Save Settings</button>
-      <button class="btn btn-reject" onclick="toggleSettingsModal()">Cancel</button>
+
+    <div id="localFields" style="display:none;">
+      <p class="hint" style="margin-bottom:16px;">
+        Run the AMTCE engine locally, expose it via a tunnel (Cloudflare Tunnel or ngrok) and paste the HTTPS URL below.
+      </p>
+      <div class="field">
+        <label>Studio API Server URL</label>
+        <input type="text" id="settingApiUrl" placeholder="http://localhost:7862" />
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:22px;">
+      <button class="btn btn-approve" onclick="saveSettings()" style="font-size:13px;">Save Settings</button>
+      <button class="btn btn-reject" onclick="closeSettingsModal()" style="font-size:13px;flex:0;padding:12px 18px;">Cancel</button>
     </div>
   </div>
 </div>
 
-<!-- Toast -->
+<!-- ── TOAST ─────────────────────────────────────────────────────── -->
 <div id="toast"></div>
 
 <script>
-/* ── CONFIG ─────────────────────────────────────────────────────── */
-let connectionType = localStorage.getItem('amtce_conn_type') || 'local';
-let API            = localStorage.getItem('amtce_api_url') || 'http://localhost:7862';
-let ghRepo         = localStorage.getItem('amtce_gh_repo') || 'swargawasal/AMTCE-Autonomous-Multimedia-Transformation-Compilation-Engine';
+/* ═══════════════════════════════════════════════════════════════════
+   AMTCE CONTENT STUDIO — Cloud Controller
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── GLOBAL STATE ─────────────────────────────────────────────────── */
+let connectionType = localStorage.getItem('amtce_conn_type') || 'github';
+let API            = localStorage.getItem('amtce_api_url')   || 'http://localhost:7862';
+let ghRepo         = localStorage.getItem('amtce_gh_repo')   || 'swargawasal/AMTCE-Autonomous-Multimedia-Transformation-Compilation-Engine';
 let ghBranch       = localStorage.getItem('amtce_gh_branch') || 'gh-pages';
-let ghPat          = localStorage.getItem('amtce_gh_pat') || '';
+let ghPat          = localStorage.getItem('amtce_gh_pat')    || '';
 
-let currentClip = null;
-let allClips    = [];
+let currentClip  = null;
+let allClips     = [];
+let activeTab    = 'create';
+let renderStatus = null;   // active_run_status.json data
+let statusPollId = null;
 
-/* ── SETTINGS ───────────────────────────────────────────────────── */
-function toggleConnFields() {
-  const type = document.getElementById('settingConnType').value;
-  document.getElementById('localFields').style.display = type === 'local' ? 'block' : 'none';
-  document.getElementById('githubFields').style.display = type === 'github' ? 'block' : 'none';
+/* ── PIPELINE STEP CONFIG ─────────────────────────────────────────── */
+const PIPELINE_STEPS = [
+  { key: 'STEP_DOWNLOAD',  icon: '⬇️',  label: 'Downloading',   sub: 'Fetching source video from URL' },
+  { key: 'STEP_FACE_SWAP', icon: '🧬', label: 'Face Swapping',  sub: 'Replacing face with target actress' },
+  { key: 'STEP_LIP_SYNC',  icon: '👄', label: 'Lip Syncing',    sub: 'Syncing mouth movements to audio' },
+  { key: 'STEP_AUDIO_MIX', icon: '🎵', label: 'Mixing Audio',   sub: 'Background music + voiceover blend' },
+  { key: 'STEP_SUBTITLES', icon: '🗒️', label: 'Subtitles',      sub: 'AI captions + keyword highlights' },
+  { key: 'STEP_RENDER',    icon: '🖥️', label: 'Rendering',      sub: 'Final H.264 export at 1080p' },
+];
+
+/* ═══════════════════════════════════════════════════════════════════
+   TAB NAVIGATION
+   ══════════════════════════════════════════════════════════════════ */
+function switchTab(name) {
+  activeTab = name;
+  ['create','timeline','review'].forEach(t => {
+    document.getElementById(`tab-${t}`).classList.toggle('active', t === name);
+    document.getElementById(`page-${t}`).style.display = t === name ? (t === 'timeline' ? 'flex' : 'grid') : 'none';
+  });
+  if (name === 'timeline') renderTimeline();
 }
 
-function toggleSettingsModal() {
-  const modal = document.getElementById('settingsModal');
-  if (modal.style.display === 'none' || !modal.style.display) {
-    document.getElementById('settingConnType').value = connectionType;
-    document.getElementById('settingApiUrl').value = API;
-    document.getElementById('settingGhRepo').value = ghRepo;
-    document.getElementById('settingGhBranch').value = ghBranch;
-    document.getElementById('settingGhPat').value = ghPat;
-    toggleConnFields();
-    modal.style.display = 'flex';
-  } else {
-    modal.style.display = 'none';
-  }
+/* ═══════════════════════════════════════════════════════════════════
+   SETTINGS MODAL
+   ══════════════════════════════════════════════════════════════════ */
+function toggleConnFields() {
+  const t = document.getElementById('settingConnType').value;
+  document.getElementById('githubFields').style.display = t === 'github' ? 'block' : 'none';
+  document.getElementById('localFields').style.display  = t === 'local'  ? 'block' : 'none';
+}
+
+function openSettingsModal() {
+  document.getElementById('settingConnType').value   = connectionType;
+  document.getElementById('settingApiUrl').value     = API;
+  document.getElementById('settingGhRepo').value     = ghRepo;
+  document.getElementById('settingGhBranch').value   = ghBranch;
+  document.getElementById('settingGhPat').value      = ghPat;
+  toggleConnFields();
+  document.getElementById('settingsModal').classList.add('open');
+}
+function closeSettingsModal() {
+  document.getElementById('settingsModal').classList.remove('open');
 }
 
 function saveSettings() {
-  const type = document.getElementById('settingConnType').value;
-  localStorage.setItem('amtce_conn_type', type);
-  connectionType = type;
-  
-  if (type === 'local') {
-    let val = document.getElementById('settingApiUrl').value.trim();
-    if (!val) val = 'http://localhost:7862';
-    if (val.endsWith('/')) val = val.slice(0, -1);
-    API = val;
+  const t = document.getElementById('settingConnType').value;
+  connectionType = t;
+  localStorage.setItem('amtce_conn_type', t);
+  if (t === 'local') {
+    let v = document.getElementById('settingApiUrl').value.trim() || 'http://localhost:7862';
+    if (v.endsWith('/')) v = v.slice(0,-1);
+    API = v;
     localStorage.setItem('amtce_api_url', API);
   } else {
-    let repo = document.getElementById('settingGhRepo').value.trim();
-    if (!repo) repo = 'swargawasal/AMTCE-Autonomous-Multimedia-Transformation-Compilation-Engine';
-    let branch = document.getElementById('settingGhBranch').value.trim();
-    if (!branch) branch = 'gh-pages';
-    let pat = document.getElementById('settingGhPat').value.trim();
-    
-    ghRepo = repo;
-    ghBranch = branch;
-    ghPat = pat;
-    
-    localStorage.setItem('amtce_gh_repo', ghRepo);
+    ghRepo   = document.getElementById('settingGhRepo').value.trim()   || ghRepo;
+    ghBranch = document.getElementById('settingGhBranch').value.trim() || 'gh-pages';
+    ghPat    = document.getElementById('settingGhPat').value.trim();
+    localStorage.setItem('amtce_gh_repo',   ghRepo);
     localStorage.setItem('amtce_gh_branch', ghBranch);
-    localStorage.setItem('amtce_gh_pat', ghPat);
+    localStorage.setItem('amtce_gh_pat',    ghPat);
   }
-  
-  showToast('Settings saved! Reconnecting...', 'success');
-  toggleSettingsModal();
-  loadQueue();
-  if (window.es) {
-    window.es.close();
-  }
-  connectLogStream();
+  closeSettingsModal();
+  showToast('✅ Settings saved!', 'success');
+  init();
 }
 
-/* ── TOAST ──────────────────────────────────────────────────────── */
-function showToast(msg, type = 'success') {
+/* ═══════════════════════════════════════════════════════════════════
+   TOAST
+   ══════════════════════════════════════════════════════════════════ */
+function showToast(msg, type='success') {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.className = `show ${type}`;
-  setTimeout(() => { t.className = ''; }, 3000);
+  setTimeout(() => { t.className = ''; }, 3500);
 }
 
-/* ── TIME HELPERS ───────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════
+   TIME HELPER
+   ══════════════════════════════════════════════════════════════════ */
 function timeAgo(ts) {
-  const diff = Math.floor(Date.now() / 1000) - ts;
-  if (diff < 60)  return `${diff}s ago`;
-  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
-  return `${Math.floor(diff/3600)}h ago`;
+  const d = Math.floor(Date.now()/1000) - ts;
+  if (d < 60)   return `${d}s ago`;
+  if (d < 3600) return `${Math.floor(d/60)}m ago`;
+  return `${Math.floor(d/3600)}h ago`;
 }
 
-/* ── LOAD STATUS ────────────────────────────────────────────────── */
-async function loadStatus() {
-  if (connectionType === 'github') {
-    const pending = allClips.filter(c => c.status === 'PENDING_REVIEW').length;
-    const approved = allClips.filter(c => c.status === 'APPROVED').length;
-    
-    const modeEl = document.getElementById('statMode');
-    const modeLabel = document.getElementById('modeLabel');
-    modeEl.classList.add('active');
-    modeLabel.textContent = 'Cloud Review: ON';
-    
-    document.getElementById('queueCount').textContent = allClips.length;
-    document.getElementById('pendingCount').textContent = pending;
-    return;
-  }
-  
-  try {
-    const r = await fetch(`${API}/api/status`);
-    const s = await r.json();
-
-    const modeEl = document.getElementById('statMode');
-    const modeLabel = document.getElementById('modeLabel');
-    if (s.editorial_review_mode) {
-      modeEl.classList.add('active');
-      modeLabel.textContent = 'Review Mode: ON';
-    } else {
-      modeEl.classList.remove('active');
-      modeLabel.textContent = 'Review Mode: OFF';
-    }
-    document.getElementById('queueCount').textContent = s.publish_queue_depth;
-    document.getElementById('pendingCount').textContent = s.review_queue.pending;
-  } catch(e) {
-    /* server offline */
-  }
+function escHtml(s) {
+  return String(s||'')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-/* ── LOAD QUEUE ─────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════
+   LOAD QUEUE
+   ══════════════════════════════════════════════════════════════════ */
 async function loadQueue() {
   if (connectionType === 'github') {
     try {
-      const headers = ghPat ? { 'Authorization': `token ${ghPat}`, 'Accept': 'application/vnd.github.v3.raw' } : { 'Accept': 'application/vnd.github.v3.raw' };
+      const headers = ghPat
+        ? { 'Authorization': `token ${ghPat}`, 'Accept': 'application/vnd.github.v3.raw' }
+        : { 'Accept': 'application/vnd.github.v3.raw' };
       const url = `https://api.github.com/repos/${ghRepo}/contents/review_queue.json?ref=${ghBranch}&t=${Date.now()}`;
       const r = await fetch(url, { headers });
-      if (!r.ok) {
-        if (r.status === 404) {
-          allClips = [];
-          renderQueue([]);
-          loadStatus();
-          return;
-        }
-        throw new Error(`GitHub API Error: ${r.statusText}`);
-      }
+      if (!r.ok) { if (r.status === 404) { allClips = []; } else throw new Error(r.statusText); }
+      else allClips = await r.json();
+    } catch(e) { allClips = []; }
+  } else {
+    try {
+      const r = await fetch(`${API}/api/review-queue`);
       allClips = await r.json();
-      renderQueue(allClips);
-      loadStatus();
-    } catch(e) {
-      document.getElementById('queueList').innerHTML = `
-        <div class="empty-state">
-          <div class="icon">⚡</div>
-          <p>Cannot connect to GitHub Repository <code>${ghRepo}</code> branch <code>${ghBranch}</code>.<br>
-          Error: ${e.message}<br>
-          Click <strong>⚙️ Connection</strong> to update settings.</p>
-        </div>`;
-    }
-    return;
+    } catch(e) { allClips = []; }
   }
-  
-  try {
-    const r = await fetch(`${API}/api/review-queue`);
-    allClips = await r.json();
-    renderQueue(allClips);
-    loadStatus();
-  } catch(e) {
-    document.getElementById('queueList').innerHTML = `
-      <div class="empty-state">
-        <div class="icon">⚡</div>
-        <p>Cannot connect to AMTCE Studio Server at <code>${API}</code>.<br>
-        Click <strong>⚙️ Connection</strong> to change connection settings.</p>
-      </div>`;
-  }
+  updateHeader();
+  renderSidebarQueue();
+  renderReviewQueue();
 }
 
-/* ── RENDER QUEUE ───────────────────────────────────────────────── */
-function renderQueue(clips) {
-  const el = document.getElementById('queueList');
-  if (!clips.length) {
-    el.innerHTML = `<div class="empty-state"><div class="icon">📭</div>
-      <p>No clips in queue.<br>Set <code>EDITORIAL_REVIEW_MODE=on</code><br>then trigger AMTCE.</p></div>`;
+/* ── Header stats ─────────────────────────────────────────────────── */
+function updateHeader() {
+  const pending  = allClips.filter(c => c.status === 'PENDING_REVIEW').length;
+  const total    = allClips.length;
+  document.getElementById('queueCount').textContent   = total;
+  document.getElementById('pendingCount').textContent = pending;
+
+  const modeEl  = document.getElementById('statMode');
+  const modeLabel = document.getElementById('modeLabel');
+  if (connectionType === 'github') {
+    modeEl.classList.add('active');
+    modeLabel.textContent = 'Cloud: LIVE';
+  } else {
+    modeEl.classList.remove('active');
+    modeLabel.textContent = 'Local Server';
+  }
+  // Badge on review tab
+  const badge = document.getElementById('reviewBadge');
+  badge.textContent = pending;
+  badge.classList.toggle('show', pending > 0);
+}
+
+/* ── Sidebar (used on Create tab) ─────────────────────────────────── */
+function renderSidebarQueue() {
+  const el = document.getElementById('sidebarQueueList');
+  if (!allClips.length) {
+    el.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>No clips yet.<br>Launch a job to get started.</p></div>`;
     return;
   }
-  el.innerHTML = clips.map(c => {
-    const statusClass = c.status === 'PENDING_REVIEW' ? 'pending'
-                      : c.status === 'APPROVED' ? 'approved' : 'rejected';
-    const statusLabel = c.status === 'PENDING_REVIEW' ? 'Pending'
-                      : c.status === 'APPROVED' ? 'Approved' : 'Rejected';
-    const isActive = currentClip && currentClip.id === c.id ? 'active' : '';
+  const recent = [...allClips].reverse().slice(0, 8);
+  el.innerHTML = recent.map(c => {
+    const sc = c.status === 'PENDING_REVIEW' ? 'pending' : c.status === 'APPROVED' ? 'approved' : 'rejected';
+    const sl = c.status === 'PENDING_REVIEW' ? 'Pending'  : c.status === 'APPROVED' ? 'Approved' : 'Rejected';
     return `
-      <div class="clip-card ${isActive}" onclick="selectClip('${c.id}')">
-        <div class="clip-thumb-placeholder">🎥</div>
+      <div class="clip-card" onclick="switchTab('review');selectClip('${c.id}')">
+        <div class="clip-thumb-ph">🎥</div>
         <div class="clip-info">
           <div class="clip-name">${escHtml(c.actress_title || c.title || 'Untitled Clip')}</div>
           <div class="clip-meta">
             <span class="clip-time">${c.queued_at ? timeAgo(c.queued_at) : '—'}</span>
-            <span class="status-badge ${statusClass}">${statusLabel}</span>
+            <span class="status-badge ${sc}">${sl}</span>
           </div>
         </div>
       </div>`;
   }).join('');
 }
 
-/* ── SELECT CLIP ────────────────────────────────────────────────── */
+/* ── Review queue (used on Review tab) ───────────────────────────── */
+function renderReviewQueue() {
+  const el = document.getElementById('queueList');
+  if (!allClips.length) {
+    el.innerHTML = `<div class="empty-state"><div class="icon">📭</div><p>No clips in queue.<br>Set <code>EDITORIAL_REVIEW_MODE=on</code><br>then trigger AMTCE.</p></div>`;
+    return;
+  }
+  el.innerHTML = allClips.map(c => {
+    const sc = c.status === 'PENDING_REVIEW' ? 'pending' : c.status === 'APPROVED' ? 'approved' : 'rejected';
+    const sl = c.status === 'PENDING_REVIEW' ? 'Pending'  : c.status === 'APPROVED' ? 'Approved' : 'Rejected';
+    const active = currentClip && currentClip.id === c.id ? 'active' : '';
+    return `
+      <div class="clip-card ${active}" onclick="selectClip('${c.id}')">
+        <div class="clip-thumb-ph">🎥</div>
+        <div class="clip-info">
+          <div class="clip-name">${escHtml(c.actress_title || c.title || 'Untitled Clip')}</div>
+          <div class="clip-meta">
+            <span class="clip-time">${c.queued_at ? timeAgo(c.queued_at) : '—'}</span>
+            <span class="status-badge ${sc}">${sl}</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ── Select clip ──────────────────────────────────────────────────── */
 function selectClip(id) {
   currentClip = allClips.find(c => c.id === id);
   if (!currentClip) return;
-  renderQueue(allClips);
+  renderReviewQueue();
   renderEditor(currentClip);
 }
 
-/* ── RENDER EDITOR ──────────────────────────────────────────────── */
+/* ── Render editor ────────────────────────────────────────────────── */
 function renderEditor(clip) {
-  const isPending  = clip.status === 'PENDING_REVIEW';
-  const platforms  = clip.platforms || { youtube: true, instagram: true, tiktok: false };
-  const videoPath  = clip.video_path ? encodeURIComponent(clip.video_path.replace(/\\/g, '/').split('/').pop()) : '';
-
-  let videoSrc = "";
+  const isPending = clip.status === 'PENDING_REVIEW';
+  const platforms = clip.platforms || { youtube: true, instagram: true, tiktok: false };
+  const videoPath = clip.video_path ? clip.video_path.replace(/\\/g,'/').split('/').pop() : '';
+  let videoSrc = '';
   if (connectionType === 'github') {
-    const parts = ghRepo.split('/');
-    videoSrc = `https://${parts[0]}.github.io/${parts[1]}/previews/${videoPath}`;
+    const p = ghRepo.split('/');
+    videoSrc = `https://${p[0]}.github.io/${p[1]}/previews/${encodeURIComponent(videoPath)}`;
   } else {
-    videoSrc = `${API}/api/video/${videoPath}`;
+    videoSrc = `${API}/api/video/${encodeURIComponent(videoPath)}`;
   }
 
-  document.getElementById('editor').innerHTML = `
-    <!-- VIDEO PREVIEW -->
+  document.getElementById('reviewEditor').innerHTML = `
     <div class="card">
       <div class="card-title">Video Preview</div>
       <div class="video-wrap">
-        <video controls preload="metadata" id="videoPlayer"
-          src="${videoSrc}"
-          onerror="this.style.display='none';document.getElementById('videoErr').style.display='flex'">
-        </video>
+        <video controls preload="metadata" id="videoPlayer" src="${videoSrc}"
+          onerror="this.style.display='none';document.getElementById('videoErr').style.display='flex'"></video>
         <div id="videoErr" style="display:none;height:140px;align-items:center;justify-content:center;color:var(--text-dim);font-size:13px;">
-          Video preview unavailable — file may be on a local path only
+          Video preview unavailable — file may still be rendering
         </div>
       </div>
     </div>
 
-    <!-- METADATA EDITOR -->
     <div class="card">
       <div class="card-title">Content Metadata — ${isPending ? 'Edit before publishing' : 'Read-only (already ' + clip.status.toLowerCase() + ')'}</div>
-
       <div class="field">
         <label>Title</label>
-        <input type="text" id="editTitle" value="${escHtml(clip.title || '')}"
-          placeholder="Enter post title…" ${isPending ? '' : 'readonly'} />
+        <input type="text" id="editTitle" value="${escHtml(clip.title||'')}" placeholder="Enter post title…" ${isPending?'':'readonly'} />
       </div>
       <div class="field">
         <label>Caption</label>
-        <textarea id="editCaption" ${isPending ? '' : 'readonly'}>${escHtml(clip.caption || '')}</textarea>
+        <textarea id="editCaption" ${isPending?'':'readonly'}>${escHtml(clip.caption||'')}</textarea>
       </div>
       <div class="field">
         <label>Hashtags</label>
-        <input type="text" id="editHashtags" value="${escHtml(clip.hashtags || '')}"
-          placeholder="#viral #trending #reels…" ${isPending ? '' : 'readonly'} />
+        <input type="text" id="editHashtags" value="${escHtml(clip.hashtags||'')}" placeholder="#viral #trending…" ${isPending?'':'readonly'} />
       </div>
     </div>
 
-    <!-- PLATFORM TOGGLES -->
     <div class="card">
       <div class="card-title">Publish To</div>
       <div class="platform-grid">
-        ${platformToggle('youtube',   '▶️', 'YouTube',   platforms.youtube,   isPending)}
-        ${platformToggle('instagram', '📸', 'Instagram', platforms.instagram, isPending)}
-        ${platformToggle('tiktok',    '🎵', 'TikTok',    platforms.tiktok,    isPending)}
+        ${ptToggle('youtube',   '▶️','YouTube',   platforms.youtube,   isPending)}
+        ${ptToggle('instagram', '📸','Instagram', platforms.instagram, isPending)}
+        ${ptToggle('tiktok',    '🎵','TikTok',    platforms.tiktok,    isPending)}
       </div>
     </div>
 
-    <!-- ACTIONS -->
     ${isPending ? `
     <div class="card">
       <div class="card-title">Review Action</div>
       <div class="action-row">
-        <button class="btn btn-approve" id="approveBtn" onclick="approveClip('${clip.id}')">
-          ✅ Approve &amp; Publish
-        </button>
-        <button class="btn btn-reject" id="rejectBtn" onclick="rejectClip('${clip.id}')">
-          🗑️ Reject
-        </button>
+        <button class="btn btn-approve" id="approveBtn" onclick="approveClip('${clip.id}')">✅ Approve &amp; Publish</button>
+        <button class="btn btn-reject"  id="rejectBtn"  onclick="rejectClip('${clip.id}')">🗑️ Reject</button>
       </div>
     </div>` : `
-    <div class="card">
-      <div style="color:var(--text-dim);font-size:13px;text-align:center;padding:8px 0;">
-        This clip has already been <strong>${clip.status.toLowerCase()}</strong>.
-      </div>
+    <div class="card" style="text-align:center;color:var(--text-dim);font-size:13px;">
+      This clip has already been <strong>${clip.status.toLowerCase()}</strong>.
     </div>`}
   `;
 
   ['youtube','instagram','tiktok'].forEach(p => {
-    const el = document.getElementById(`toggle-${p}`);
-    if (el && isPending) {
-      el.addEventListener('click', () => {
-        el.classList.toggle('on');
-      });
-    }
+    const el = document.getElementById(`rToggle-${p}`);
+    if (el && isPending) el.addEventListener('click', () => el.classList.toggle('on'));
   });
 }
 
-function platformToggle(id, icon, label, checked, enabled) {
-  return `
-    <div class="platform-toggle ${checked ? 'on' : ''}" id="toggle-${id}"
-      style="${enabled ? '' : 'opacity:0.5;pointer-events:none'}">
-      <span class="pt-icon">${icon}</span>
-      <span>${label}</span>
-      <div class="toggle-dot"></div>
-    </div>`;
+function ptToggle(id, icon, label, checked, enabled) {
+  return `<div class="platform-toggle ${checked?'on':''}" id="rToggle-${id}"
+    style="${enabled?'':'opacity:0.5;pointer-events:none'}">
+    <span>${icon}</span><span>${label}</span><div class="toggle-dot"></div>
+  </div>`;
 }
 
-/* ── APPROVE ────────────────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════════
+   APPROVE / REJECT
+   ══════════════════════════════════════════════════════════════════ */
 async function approveClip(id) {
   const btn = document.getElementById('approveBtn');
-  const rejBtn = document.getElementById('rejectBtn');
-  btn.disabled = rejBtn.disabled = true;
+  const rej = document.getElementById('rejectBtn');
+  btn.disabled = rej.disabled = true;
   btn.innerHTML = '<span class="spinner"></span> Publishing…';
 
   const platforms = {
-    youtube:   document.getElementById('toggle-youtube')?.classList.contains('on')   ?? true,
-    instagram: document.getElementById('toggle-instagram')?.classList.contains('on') ?? true,
-    tiktok:    document.getElementById('toggle-tiktok')?.classList.contains('on')    ?? false,
+    youtube:   document.getElementById('rToggle-youtube')?.classList.contains('on')   ?? true,
+    instagram: document.getElementById('rToggle-instagram')?.classList.contains('on') ?? true,
+    tiktok:    document.getElementById('rToggle-tiktok')?.classList.contains('on')    ?? false,
   };
-
   const body = {
-    title:     document.getElementById('editTitle')?.value   || '',
-    caption:   document.getElementById('editCaption')?.value || '',
-    hashtags:  document.getElementById('editHashtags')?.value|| '',
+    title:    document.getElementById('editTitle')?.value    || '',
+    caption:  document.getElementById('editCaption')?.value  || '',
+    hashtags: document.getElementById('editHashtags')?.value || '',
     platforms,
   };
 
   if (connectionType === 'github') {
-    if (!ghPat) {
-      showToast('❌ Personal Access Token (PAT) is required for Cloud approval.', 'error');
-      btn.disabled = rejBtn.disabled = false;
-      btn.innerHTML = '✅ Approve &amp; Publish';
-      return;
-    }
+    if (!ghPat) { showToast('❌ PAT required for Cloud approval', 'error'); btn.disabled=rej.disabled=false; btn.innerHTML='✅ Approve &amp; Publish'; return; }
     try {
-      const url = `https://api.github.com/repos/${ghRepo}/contents/review_queue.json?ref=${ghBranch}`;
-      const metaRes = await fetch(url, {
-        headers: { 'Authorization': `token ${ghPat}` }
-      });
-      if (!metaRes.ok) throw new Error(`Fetch queue failed: ${metaRes.statusText}`);
-      const meta = await metaRes.json();
-      const sha = meta.sha;
-      const content = atob(meta.content.replace(/\s/g, ''));
-      const queue = JSON.parse(content);
-      
-      const item = queue.find(c => c.id === id);
-      if (!item) throw new Error("Clip not found in remote queue.");
-      
-      item.title = body.title;
-      item.caption = body.caption;
-      item.hashtags = body.hashtags;
-      item.platforms = body.platforms;
-      item.status = 'APPROVED';
-      item.approved_at = Math.floor(Date.now() / 1000);
-      
-      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(queue, null, 2))));
-      const updateRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/review_queue.json`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `token ${ghPat}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: `studio: approve clip ${id} [skip ci]`,
-          content: newContent,
-          sha: sha,
-          branch: ghBranch
-        })
-      });
-      if (!updateRes.ok) throw new Error(`Update failed: ${updateRes.statusText}`);
-      
+      const qData = await ghGetFile('review_queue.json');
+      const queue = JSON.parse(atob(qData.content.replace(/\s/g,'')));
+      const item  = queue.find(c => c.id === id);
+      if (!item) throw new Error('Clip not found');
+      Object.assign(item, body, { status: 'APPROVED', approved_at: Math.floor(Date.now()/1000) });
+      await ghPutFile('review_queue.json', qData.sha, queue, `studio: approve clip ${id} [skip ci]`);
       showToast('✅ Clip approved — syncing to cloud runner!', 'success');
       await loadQueue();
-    } catch(e) {
-      showToast('❌ Cloud Approve failed: ' + e.message, 'error');
-      btn.disabled = rejBtn.disabled = false;
-      btn.innerHTML = '✅ Approve &amp; Publish';
-    }
+    } catch(e) { showToast('❌ Cloud Approve failed: '+e.message, 'error'); btn.disabled=rej.disabled=false; btn.innerHTML='✅ Approve &amp; Publish'; }
     return;
   }
 
   try {
-    const r = await fetch(`${API}/api/approve/${id}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    });
+    const r = await fetch(`${API}/api/approve/${id}`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body) });
     if (!r.ok) throw new Error(await r.text());
-    showToast('✅ Clip approved — publishing queued!', 'success');
+    showToast('✅ Clip approved!', 'success');
     await loadQueue();
-  } catch(e) {
-    showToast('❌ Approve failed: ' + e.message, 'error');
-    btn.disabled = rejBtn.disabled = false;
-    btn.innerHTML = '✅ Approve &amp; Publish';
-  }
+  } catch(e) { showToast('❌ '+e.message, 'error'); btn.disabled=rej.disabled=false; btn.innerHTML='✅ Approve &amp; Publish'; }
 }
 
-/* ── REJECT ─────────────────────────────────────────────────────── */
 async function rejectClip(id) {
   if (!confirm('Reject and permanently delete this clip?')) return;
   const btn = document.getElementById('rejectBtn');
-  btn.disabled = true;
-  btn.textContent = 'Deleting…';
+  btn.disabled = true; btn.textContent = 'Deleting…';
 
   if (connectionType === 'github') {
-    if (!ghPat) {
-      showToast('❌ Personal Access Token (PAT) is required for Cloud rejection.', 'error');
-      btn.disabled = false;
-      btn.textContent = '🗑️ Reject';
-      return;
-    }
+    if (!ghPat) { showToast('❌ PAT required', 'error'); btn.disabled=false; btn.textContent='🗑️ Reject'; return; }
     try {
-      const url = `https://api.github.com/repos/${ghRepo}/contents/review_queue.json?ref=${ghBranch}`;
-      const metaRes = await fetch(url, {
-        headers: { 'Authorization': `token ${ghPat}` }
-      });
-      if (!metaRes.ok) throw new Error(`Fetch queue failed: ${metaRes.statusText}`);
-      const meta = await metaRes.json();
-      const sha = meta.sha;
-      const content = atob(meta.content.replace(/\s/g, ''));
-      const queue = JSON.parse(content);
-      
-      const item = queue.find(c => c.id === id);
-      if (!item) throw new Error("Clip not found in remote queue.");
-      
-      item.status = 'REJECTED';
-      item.rejected_at = Math.floor(Date.now() / 1000);
-      
-      const newContent = btoa(unescape(encodeURIComponent(JSON.stringify(queue, null, 2))));
-      const updateRes = await fetch(`https://api.github.com/repos/${ghRepo}/contents/review_queue.json`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `token ${ghPat}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: `studio: reject clip ${id} [skip ci]`,
-          content: newContent,
-          sha: sha,
-          branch: ghBranch
-        })
-      });
-      if (!updateRes.ok) throw new Error(`Update failed: ${updateRes.statusText}`);
-      
+      const qData = await ghGetFile('review_queue.json');
+      const queue = JSON.parse(atob(qData.content.replace(/\s/g,'')));
+      const item  = queue.find(c => c.id === id);
+      if (!item) throw new Error('Clip not found');
+      Object.assign(item, { status: 'REJECTED', rejected_at: Math.floor(Date.now()/1000) });
+      await ghPutFile('review_queue.json', qData.sha, queue, `studio: reject clip ${id} [skip ci]`);
       showToast('🗑️ Clip rejected.', 'error');
       currentClip = null;
-      document.getElementById('editor').innerHTML = `
-        <div class="editor-placeholder">
-          <div class="icon">🗑️</div>
-          <h2>Clip deleted</h2>
-          <p>Select another clip from the queue.</p>
-        </div>`;
+      document.getElementById('reviewEditor').innerHTML = `<div class="editor-placeholder"><div class="icon">🗑️</div><h2>Clip rejected</h2><p>Select another clip from the queue.</p></div>`;
       await loadQueue();
-    } catch(e) {
-      showToast('❌ Cloud Reject failed: ' + e.message, 'error');
-      btn.disabled = false;
-      btn.textContent = '🗑️ Reject';
-    }
+    } catch(e) { showToast('❌ '+e.message, 'error'); btn.disabled=false; btn.textContent='🗑️ Reject'; }
     return;
   }
 
   try {
-    const r = await fetch(`${API}/api/reject/${id}`, { method: 'POST' });
+    const r = await fetch(`${API}/api/reject/${id}`, { method:'POST' });
     if (!r.ok) throw new Error(await r.text());
-    showToast('🗑️ Clip rejected and deleted.', 'error');
+    showToast('🗑️ Clip rejected.', 'error');
     currentClip = null;
-    document.getElementById('editor').innerHTML = `
-      <div class="editor-placeholder">
-        <div class="icon">🗑️</div>
-        <h2>Clip deleted</h2>
-        <p>Select another clip from the queue.</p>
-      </div>`;
+    document.getElementById('reviewEditor').innerHTML = `<div class="editor-placeholder"><div class="icon">🗑️</div><h2>Clip rejected</h2><p>Select another clip.</p></div>`;
     await loadQueue();
-  } catch(e) {
-    showToast('❌ Reject failed: ' + e.message, 'error');
+  } catch(e) { showToast('❌ '+e.message, 'error'); btn.disabled=false; btn.textContent='🗑️ Reject'; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GITHUB API HELPERS
+   ══════════════════════════════════════════════════════════════════ */
+async function ghGetFile(path, ref) {
+  const headers = { 'Authorization': `token ${ghPat}`, 'Accept': 'application/vnd.github.v3+json' };
+  const r = await fetch(`https://api.github.com/repos/${ghRepo}/contents/${path}?ref=${ref||ghBranch}&t=${Date.now()}`, { headers });
+  if (!r.ok) throw new Error(`GitHub GET ${path}: ${r.statusText}`);
+  return r.json();
+}
+
+async function ghPutFile(path, sha, content, message) {
+  const b64 = btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2))));
+  const body = { message, content: b64, branch: ghBranch };
+  if (sha) body.sha = sha;
+  const r = await fetch(`https://api.github.com/repos/${ghRepo}/contents/${path}`, {
+    method: 'PUT',
+    headers: { 'Authorization': `token ${ghPat}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error(`GitHub PUT ${path}: ${r.statusText}`);
+  return r.json();
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LAUNCH JOB — triggers GitHub workflow_dispatch
+   ══════════════════════════════════════════════════════════════════ */
+async function launchJob() {
+  const url     = document.getElementById('inputUrl').value.trim();
+  const actress = document.getElementById('inputActress').value.trim();
+  const niche   = document.getElementById('inputNiche').value;
+  const voiceover = document.getElementById('inputVoiceover').value.trim();
+  const mode    = document.getElementById('inputMode').value;
+  const reviewMode = document.getElementById('inputReviewMode').value;
+
+  if (!url) { showToast('❌ Please enter a video URL first.', 'error'); return; }
+
+  if (!ghPat) {
+    showToast('❌ A GitHub PAT is required to trigger cloud jobs. Open ⚙️ Connection settings.', 'error');
+    return;
+  }
+
+  const btn = document.getElementById('launchBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Launching…';
+
+  try {
+    const body = {
+      ref: 'main',
+      inputs: {
+        mode:            mode,
+        target_url:      url,
+        actress_name:    actress,
+        niche:           niche,
+        custom_voiceover: voiceover,
+        review_mode:     reviewMode,
+      },
+    };
+
+    const r = await fetch(`https://api.github.com/repos/${ghRepo}/actions/workflows/amtce-runner.yml/dispatches`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `token ${ghPat}`,
+        'Content-Type':  'application/json',
+        'Accept':        'application/vnd.github.v3+json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    if (!r.ok) {
+      const errText = await r.text().catch(() => r.statusText);
+      throw new Error(`GitHub API ${r.status}: ${errText}`);
+    }
+
+    showToast('🚀 Job launched! Switching to Live Render…', 'info');
+
+    // Reset status, switch to timeline tab and start polling
+    renderStatus = null;
+    setTimeout(() => {
+      switchTab('timeline');
+      startStatusPoll();
+    }, 800);
+
+    addLog(logBodyCreate(), `🚀 Job dispatched! URL: ${url}`, 'step');
+    addLog(logBodyCreate(), `⏳ Waiting for runner to start…`, 'info');
+
     btn.disabled = false;
-    btn.textContent = '🗑️ Reject';
+    btn.innerHTML = '🚀 Launch AI Video Editor';
+
+  } catch(e) {
+    showToast('❌ Launch failed: ' + e.message, 'error');
+    btn.disabled = false;
+    btn.innerHTML = '🚀 Launch AI Video Editor';
   }
 }
 
-/* ── LIVE LOG STREAM ────────────────────────────────────────────── */
-function connectLogStream() {
-  const logBody = document.getElementById('logBody');
-  const MAX_LINES = 200;
+function logBodyCreate() { return document.getElementById('logBodyCreate'); }
 
-  function classifyLine(line) {
-    if (/✅|success|OK|complete/i.test(line)) return 'success';
-    if (/❌|error|CRITICAL|fail/i.test(line))  return 'error';
-    if (/⚠️|warn|WARNING/i.test(line))         return 'warn';
-    if (/tiktok/i.test(line))                  return 'tiktok';
-    return 'info';
-  }
+/* ═══════════════════════════════════════════════════════════════════
+   LIVE RENDER TIMELINE
+   ══════════════════════════════════════════════════════════════════ */
+function startStatusPoll() {
+  if (statusPollId) clearInterval(statusPollId);
+  pollStatus(); // immediate first fetch
+  statusPollId = setInterval(pollStatus, 5000);
+}
 
-  function addLine(text) {
-    const div = document.createElement('div');
-    div.className = `log-line ${classifyLine(text)}`;
-    div.textContent = text;
-    logBody.appendChild(div);
-    while (logBody.children.length > MAX_LINES) {
-      logBody.removeChild(logBody.firstChild);
+async function pollStatus() {
+  try {
+    let data = null;
+    if (connectionType === 'github') {
+      const headers = ghPat
+        ? { 'Authorization': `token ${ghPat}`, 'Accept': 'application/vnd.github.v3.raw' }
+        : { 'Accept': 'application/vnd.github.v3.raw' };
+      const r = await fetch(
+        `https://api.github.com/repos/${ghRepo}/contents/active_run_status.json?ref=${ghBranch}&t=${Date.now()}`,
+        { headers }
+      );
+      if (r.ok) data = await r.json();
+    } else {
+      const r = await fetch(`${API}/api/run-status`);
+      if (r.ok) data = await r.json();
     }
-    logBody.scrollTop = logBody.scrollHeight;
+    if (data) {
+      renderStatus = data;
+      if (activeTab === 'timeline') renderTimeline();
+
+      // Show badge when running
+      const badge = document.getElementById('timelineBadge');
+      const running = data.state === 'RUNNING';
+      badge.classList.toggle('show', running);
+
+      // Stop polling when done/failed
+      if (data.state === 'DONE' || data.state === 'FAILED') {
+        clearInterval(statusPollId);
+        statusPollId = null;
+      }
+    }
+  } catch(e) { /* silent — status file might not exist yet */ }
+}
+
+function renderTimeline() {
+  const container = document.getElementById('timelineContent');
+
+  if (!renderStatus || !renderStatus.job_id) {
+    container.innerHTML = `
+      <div class="state-idle" id="timelineIdle">
+        <div class="big-icon">📡</div>
+        <h3>No Active Render</h3>
+        <p>Launch a new job from the <strong>Create New Video</strong> tab to see the live render pipeline here.</p>
+        <button class="btn btn-primary" style="flex:0;padding:12px 24px;font-size:13px;margin-top:8px;" onclick="startStatusPoll()">🔄 Check for Active Run</button>
+      </div>`;
+    return;
   }
+
+  const s = renderStatus;
+  const progress = s.progress || 0;
+  const isRunning = s.state === 'RUNNING';
+  const isDone    = s.state === 'DONE';
+  const isFailed  = s.state === 'FAILED';
+
+  const stepsHtml = PIPELINE_STEPS.map((step, i) => {
+    const stepState = (s.steps || {})[step.key] || 'pending';
+    const isActive  = stepState === 'active';
+    const isDoneS   = stepState === 'done';
+    const isFailed  = stepState === 'failed';
+
+    let badgeClass = 'badge-pending', badgeLabel = 'Waiting';
+    if (isActive)  { badgeClass = 'badge-active'; badgeLabel = 'RUNNING'; }
+    if (isDoneS)   { badgeClass = 'badge-done';   badgeLabel = '✓ Done'; }
+    if (isFailed)  { badgeClass = 'badge-failed'; badgeLabel = '✗ Failed'; }
+
+    const connector = i < PIPELINE_STEPS.length - 1
+      ? `<div class="pipe-connector"></div>` : '';
+
+    return `
+      <div class="pipe-step ${isActive?'active':''} ${isDoneS?'done':''} ${isFailed?'failed':''}">
+        <div class="pipe-step-glow"></div>
+        <div class="pipe-icon">${step.icon}</div>
+        <div class="pipe-info">
+          <div class="pipe-label">${step.label}</div>
+          <div class="pipe-sub">${step.sub}</div>
+        </div>
+        <span class="pipe-badge ${badgeClass}">${badgeLabel}</span>
+      </div>
+      ${connector}`;
+  }).join('');
+
+  const doneBanner = isDone ? `
+    <div class="done-banner">
+      <div class="icon">🎉</div>
+      <div class="done-banner-text">
+        <h3>Render Complete!</h3>
+        <p>Your video is ready. Check the <strong>Review Queue</strong> tab to preview and publish.</p>
+      </div>
+      <button class="btn btn-approve" style="flex:0;padding:10px 18px;font-size:13px;" onclick="switchTab('review')">Go to Review →</button>
+    </div>` : '';
+
+  const failedBanner = isFailed ? `
+    <div class="done-banner" style="background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.35);">
+      <div class="icon">❌</div>
+      <div class="done-banner-text">
+        <h3 style="color:var(--red);">Render Failed</h3>
+        <p>${escHtml(s.error || 'An error occurred during rendering.')}</p>
+      </div>
+    </div>` : '';
+
+  container.innerHTML = `
+    <div style="max-width:780px;margin:0 auto;">
+      <div class="timeline-header">
+        <div>
+          <div class="timeline-title">🎬 <span>Live</span> Render Pipeline</div>
+          <div class="run-meta">
+            Job: <strong>${escHtml(s.job_id)}</strong>
+            ${s.actress ? ` · Actress: <strong>${escHtml(s.actress)}</strong>` : ''}
+            ${s.niche   ? ` · Niche: <strong>${escHtml(s.niche)}</strong>` : ''}
+            ${s.updated_at ? ` · Updated ${timeAgo(s.updated_at)}` : ''}
+          </div>
+        </div>
+        <button class="icon-btn" onclick="startStatusPoll()">🔄 Refresh</button>
+      </div>
+
+      ${doneBanner}${failedBanner}
+
+      <div class="global-progress">
+        <div class="gp-label">
+          <span class="gp-label-text">${isRunning ? '⚙️ Processing…' : isDone ? '✅ Complete' : isFailed ? '❌ Failed' : 'Idle'}</span>
+          <span class="gp-pct">${progress}%</span>
+        </div>
+        <div class="gp-bar-track">
+          <div class="gp-bar-fill" style="width:${progress}%"></div>
+        </div>
+      </div>
+
+      <div class="pipeline">${stepsHtml}</div>
+
+      ${s.source_url ? `
+      <div class="card" style="margin-top:20px;">
+        <div class="card-title">Source Video</div>
+        <a href="${escHtml(s.source_url)}" target="_blank" rel="noopener"
+           style="font-size:13px;color:var(--accent);word-break:break-all;">${escHtml(s.source_url)}</a>
+      </div>` : ''}
+    </div>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   LIVE LOG STREAM
+   ══════════════════════════════════════════════════════════════════ */
+function addLog(container, text, type='info') {
+  if (!container) return;
+  const div = document.createElement('div');
+  div.className = `log-line ${type}`;
+  div.textContent = text;
+  container.appendChild(div);
+  while (container.children.length > 300) container.removeChild(container.firstChild);
+  container.scrollTop = container.scrollHeight;
+}
+
+function classifyLine(l) {
+  if (/✅|success|OK|complete/i.test(l)) return 'success';
+  if (/❌|error|CRITICAL|fail/i.test(l))  return 'error';
+  if (/⚠️|warn|WARNING/i.test(l))         return 'warn';
+  if (/tiktok/i.test(l))                  return 'tiktok';
+  if (/STEP_|pipeline|render|face swap|lip sync/i.test(l)) return 'step';
+  return 'info';
+}
+
+function connectLogStream() {
+  const logCreate = document.getElementById('logBodyCreate');
+  const logReview = document.getElementById('logBodyReview');
 
   if (connectionType === 'github') {
-    logBody.innerHTML = `
-      <div class="log-line info">🎬 Cloud Serverless mode active.</div>
-      <div class="log-line info">Live real-time logs are disabled to save GitHub API quota.</div>
-      <div class="log-line info"><a href="https://github.com/${ghRepo}/actions" target="_blank" style="color:var(--accent); text-decoration:underline;">Click here to view live Action Runs</a></div>
-    `;
+    const msg = `🎬 Cloud Serverless mode active.\nLive real-time logs are disabled to save GitHub API quota.`;
+    msg.split('\n').forEach(l => { addLog(logCreate, l, 'info'); addLog(logReview, l, 'info'); });
+    const link = `<a href="https://github.com/${ghRepo}/actions" target="_blank" style="color:var(--accent);text-decoration:underline;">Click here to view live Action Runs</a>`;
+    [logCreate, logReview].forEach(el => {
+      if (!el) return;
+      const d = document.createElement('div');
+      d.className = 'log-line info';
+      d.innerHTML = link;
+      el.appendChild(d);
+    });
     return;
   }
 
   try {
+    if (window.es) window.es.close();
     window.es = new EventSource(`${API}/api/logs`);
-    window.es.onmessage = e => addLine(e.data);
-    window.es.onerror   = () => {
-      addLine('⚡ Log stream disconnected. Reconnecting…');
+    window.es.onmessage = e => {
+      addLog(logCreate, e.data, classifyLine(e.data));
+      addLog(logReview, e.data, classifyLine(e.data));
+    };
+    window.es.onerror = () => {
+      addLog(logCreate, '⚡ Log stream disconnected. Reconnecting…', 'warn');
       window.es.close();
       setTimeout(connectLogStream, 3000);
     };
   } catch(e) {
-    addLine('⚡ Cannot connect to log stream.');
+    addLog(logCreate, '⚡ Cannot connect to log stream.', 'error');
     setTimeout(connectLogStream, 5000);
   }
 }
 
-/* ── HTML ESCAPE ────────────────────────────────────────────────── */
-function escHtml(s) {
-  return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+/* ═══════════════════════════════════════════════════════════════════
+   INIT
+   ══════════════════════════════════════════════════════════════════ */
+function init() {
+  loadQueue();
+  connectLogStream();
+  pollStatus();
+  setInterval(loadQueue, 10000);
+  setInterval(pollStatus, 8000);
 }
 
-/* ── INIT ───────────────────────────────────────────────────────── */
-loadQueue();
-connectLogStream();
-setInterval(loadQueue, 8000);
-setInterval(loadStatus, 5000);
+// Auto-open settings if no PAT and using github mode
+if (connectionType === 'github' && !ghPat) {
+  window.addEventListener('load', () => { setTimeout(openSettingsModal, 800); });
+}
+
+init();
 </script>
 </body>
 </html>
