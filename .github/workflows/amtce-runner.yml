@@ -59,14 +59,12 @@ on:
 
 
 # ── Concurrency Control ────────────────────────────────────────────────────
-# The main bot run holds the 'amtce-bot' concurrency lock for the full 5.25h
-# session. The chain-restart job has NO concurrency key so it can always fire
-# after the main job exits — even if another run is starting at the same time.
-# Dispatch runs use a unique group name (run_id) so they can run concurrently
-# with the main persistent bot and execute immediately.
+# Unify all runs under a single concurrency group. If a new run is triggered
+# (either manually or scheduled), it will cancel any currently active run
+# to prevent state and upload conflicts.
 concurrency:
-  group: ${{ github.event_name == 'workflow_dispatch' && format('amtce-dispatch-{0}', github.run_id) || 'amtce-bot' }}
-  cancel-in-progress: false
+  group: amtce-bot
+  cancel-in-progress: true
 
 jobs:
   run-amtce:
@@ -407,7 +405,7 @@ jobs:
   chain-restart:
     runs-on: ubuntu-latest
     needs: run-amtce
-    if: always()
+    if: always() && needs.run-amtce.result != 'cancelled'
     permissions:
       actions: write
     steps:
