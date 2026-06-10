@@ -1250,12 +1250,12 @@ _XFADE_CUSTOM: dict = {
     "diagonal_tl":    "if(lt((X/W+Y/H)/2,P),B,A)",
     "diagonal_tr":    "if(lt((1-X/W+Y/H)/2,P),B,A)",
     "zoom_in":        "if(between(X,W/2*(1-P),W-W/2*(1-P))*between(Y,H/2*(1-P),H-H/2*(1-P)),B,A)",
-    "wipe_soft":      "if(gt(X/(W*P),1+0.1),A,if(lt(X/(W*P),0.9),B,mix(A,B,(X/(W*P)-0.9)/0.2)))",
-    "crossfade":      "mix(A,B,P)",
+    "wipe_soft":      "if(gt(X/(W*P),1.1),A,if(lt(X/(W*P),0.9),B,A*(1-(X/(W*P)-0.9)/0.2)+B*((X/(W*P)-0.9)/0.2)))",
+    "crossfade":      "A*(1-P)+B*P",
     "pixel_dissolve": "if(gt(random(0),1-P),B,A)",
-    "flash_white":    "if(lt(P,0.15),mix(A,between(X,0,W)*1+between(Y,0,H)*1,P*6),if(gt(P,0.85),mix(between(X,0,W)*1+between(Y,0,H)*1,B,(P-0.85)*6),B))",
+    "flash_white":    "if(lt(P,0.15),A*(1-P*6)+P*6,if(gt(P,0.85),(1-(P-0.85)*6)+B*((P-0.85)*6),B))",
     "dip_black":      "if(lt(P,0.5),mul(A,1-P*2),mul(B,(P-0.5)*2))",
-    "punch":          "mix(A,B,pow(P,3))",
+    "punch":          "A*(1-pow(P,3))+B*pow(P,3)",
 }
 
 # FFmpeg native xfade names (no expr= needed)
