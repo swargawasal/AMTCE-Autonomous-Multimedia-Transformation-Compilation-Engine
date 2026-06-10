@@ -1239,6 +1239,71 @@ def sanitize_segments(segments: list, duration: float, preserve_order: bool = Fa
     return sanitized
 
 
+# ── CapCut-grade xfade transition library (inline, no ceie import needed) ──
+# Custom pixel-math expressions — identical to ceie/tools/xfade_transitions.py
+_XFADE_CUSTOM: dict = {
+    "slide_left":     "if(gt(X,W*P),A,B)",
+    "slide_right":    "if(lt(X,W*(1-P)),A,B)",
+    "slide_up":       "if(gt(Y,H*P),A,B)",
+    "slide_down":     "if(lt(Y,H*(1-P)),A,B)",
+    "circle_reveal":  "if(lte(hypot(X-W/2,Y-H/2),hypot(W/2,H/2)*P),B,A)",
+    "diagonal_tl":    "if(lt((X/W+Y/H)/2,P),B,A)",
+    "diagonal_tr":    "if(lt((1-X/W+Y/H)/2,P),B,A)",
+    "zoom_in":        "if(between(X,W/2*(1-P),W-W/2*(1-P))*between(Y,H/2*(1-P),H-H/2*(1-P)),B,A)",
+    "wipe_soft":      "if(gt(X/(W*P),1+0.1),A,if(lt(X/(W*P),0.9),B,mix(A,B,(X/(W*P)-0.9)/0.2)))",
+    "crossfade":      "mix(A,B,P)",
+    "pixel_dissolve": "if(gt(random(0),1-P),B,A)",
+    "flash_white":    "if(lt(P,0.15),mix(A,between(X,0,W)*1+between(Y,0,H)*1,P*6),if(gt(P,0.85),mix(between(X,0,W)*1+between(Y,0,H)*1,B,(P-0.85)*6),B))",
+    "dip_black":      "if(lt(P,0.5),mul(A,1-P*2),mul(B,(P-0.5)*2))",
+    "punch":          "mix(A,B,pow(P,3))",
+}
+
+# FFmpeg native xfade names (no expr= needed)
+_XFADE_BUILTIN: set = {
+    "fade", "wipeleft", "wiperight", "wipeup", "wipedown",
+    "slideleft", "slideright", "slideup", "slidedown",
+    "circlecrop", "rectcrop", "distance", "fadeblack", "fadewhite",
+    "radial", "smoothleft", "smoothright", "smoothup", "smoothdown",
+    "circleopen", "circleclose", "vertopen", "vertclose",
+    "horzopen", "horzclose", "dissolve", "pixelize",
+    "diagtl", "diagtr", "diagbl", "diagbr",
+    "hlslice", "hrslice", "vuslice", "vdslice",
+    "hblur", "fadegrays", "wipetl", "wipetr", "wipebl", "wipebr",
+    "squeezeh", "squeezev", "zoomin",
+}
+
+# Style-name aliases that map old AMTCE style names to xfade names
+_STYLE_ALIAS: dict = {
+    "whip_pan":      "slide_left",
+    "zoom_blur":     "zoom_in",
+    "zoom_pop":      "zoom_in",
+    "blur_cut":      "crossfade",
+    "punch_cut":     "punch",
+    "glitch_pop":    "pixel_dissolve",
+    "flash":         "flash_white",
+    "glow_fade":     "crossfade",
+    "slow_fade":     "crossfade",
+    "zoom_blur_fade":"zoom_in",
+    "fade":          "fade",          # native
+}
+
+
+def _resolve_xfade(name: str) -> str:
+    """
+    Returns the xfade filter fragment (transition=... part only — no duration/offset).
+    Resolves custom expr transitions AND FFmpeg native builtins.
+    """
+    # Normalise via alias map first
+    name = _STYLE_ALIAS.get(name, name)
+    if name in _XFADE_CUSTOM:
+        return f"transition=custom:expr='{_XFADE_CUSTOM[name]}'"
+    if name in _XFADE_BUILTIN:
+        return f"transition={name}"
+    # Unknown → safe default
+    logger.debug(f"[xfade] Unknown transition '{name}' — falling back to crossfade")
+    return f"transition=custom:expr='{_XFADE_CUSTOM['crossfade']}'"
+
+
 def build_concat_pipeline(
     trim_data: dict,
     text_filters: list = None,
@@ -1246,44 +1311,46 @@ def build_concat_pipeline(
     color_intensity: float = 0.7,
 ) -> list:
     """
-    Step 3: Build the concat filter, master color grade, and optional text overlays.
+    Step 3: Build the xfade transition chain, master color grade, and optional text overlays.
 
-    Pipeline order:
-      concat → master grade (eq + hue + vignette) → [text overlays] → [v_out]
+    Pipeline order (≥2 segments):
+      xfade/acrossfade chain → master grade (eq + hue + vignette) → [text overlays] → [v_out]
 
-    The color grade is applied ONCE over the entire assembled output so every
-    segment looks uniformly graded. Per-segment grading caused visible saturation
-    and brightness flashes at every cut — this eliminates that completely.
+    For a single segment, skips the chain entirely and just grades directly.
+
+    Transitions are resolved per boundary from trim_data["valid_segments"][i]["transition"].
+    Unrecognised or hard-cut styles fall back to a short crossfade (d=0.20 s).
+    The xfade offset is computed from cumulative real segment durations minus
+    the overlap window, preventing timebase drift across the chain.
 
     filter_type controls the grade preset:
       "fashion"   → warm skin tones, punchy saturation, soft vignette
       "vibrant"   → higher saturation, higher contrast, vignette
       "cinematic" → subtle contrast lift, cool tones, vignette
 
-    Returns list of graph_parts to append.
+    Returns list of graph_parts to append to the filter_complex.
     """
     v_labels = trim_data["vid_labels"]
     a_labels = trim_data["aud_labels"]
+    durations = trim_data.get("durations", [])
+    valid_segs = trim_data.get("valid_segments", [])
 
-    # [MULTI_CLIP FIX] zip() silently stops at the shorter list, which would cause
-    # concat=n= to be driven from valid_segments length while only len(aud_labels)
-    # pairs are actually present — crashing FFmpeg with an input count mismatch.
-    # Drive n from the paired count (aud_labels) and discard surplus vid labels.
     has_audio_track = len(a_labels) > 0
+
     if has_audio_track:
         paired = list(zip(v_labels, a_labels))
         if len(paired) < len(v_labels):
             logger.warning(
                 f"[MULTI_CLIP] {len(v_labels) - len(paired)} video segment(s) had no audio partner "
-                f"and were excluded from the A/V concat to prevent FFmpeg n= mismatch."
+                f"and were excluded from the A/V chain to prevent stream-count mismatch."
             )
         n = len(paired)
-        # FFmpeg concat requires interleaved: v0 a0 v1 a1 ... vN aN
-        interleaved = "".join(v + a for v, a in paired)
+        paired_v = [p[0] for p in paired]
+        paired_a = [p[1] for p in paired]
     else:
-        # No audio at all: video-only concat
         n = len(v_labels)
-        interleaved = "".join(v_labels)
+        paired_v = list(v_labels)
+        paired_a = []
 
     # ── Build master grade filter string ─────────────────────────────────
     grade_filters = []
@@ -1306,30 +1373,126 @@ def build_concat_pipeline(
 
     # Vignette always applied — PI/6 is softer and more cinematic than PI/5
     grade_filters.append("vignette=PI/6")
-
     MASTER_GRADE = ",".join(grade_filters)
     # ─────────────────────────────────────────────────────────────────────
 
     parts = []
     safe_text = [f for f in (text_filters or []) if f]
 
+    # ── Single-segment or empty: skip chain, go straight to grade ────────
+    if n <= 1:
+        if n == 0:
+            return []
+        # Only one segment — no transition possible
+        v_single = paired_v[0]
+        a_single = paired_a[0] if has_audio_track else None
+        if has_audio_track:
+            # Rename audio label so downstream can still use [a_out]
+            parts.append(f"{a_single}acopy[a_out]")
+        if safe_text:
+            parts.append(f"{v_single}{MASTER_GRADE}[v_grade]")
+            parts.append(f"[v_grade]{','.join(safe_text)}[v_out]")
+        else:
+            parts.append(f"{v_single}{MASTER_GRADE}[v_out]")
+        return parts
+
+    # ── Multi-segment: xfade video chain + acrossfade audio chain ────────
+    #
+    # xfade offset formula:
+    #   offset_k = (sum of durations d0..dk) - (k+1) * trans_dur_k
+    #   (each overlap eats `trans_dur` from the running total)
+    #
+    # We clamp trans_dur to leave at least 0.1 s of non-overlapping content
+    # in each segment so very short clips never produce a negative offset.
+
+    xfade_parts   = []   # filter_complex fragments for video chain
+    afade_parts   = []   # filter_complex fragments for audio chain
+    cumulative_dur = 0.0
+    total_overlap  = 0.0  # sum of all transition windows consumed so far
+
+    prev_v = paired_v[0]
+    prev_a = paired_a[0] if has_audio_track else None
+    seg_dur_0 = durations[0] if durations else 3.0
+    cumulative_dur += seg_dur_0
+
+    for i in range(1, n):
+        cur_v = paired_v[i]
+        cur_a = paired_a[i] if has_audio_track else None
+        seg_dur = durations[i] if i < len(durations) else 3.0
+
+        # ── Resolve transition for this boundary ─────────────────────────
+        # Boundary i-1→i: use segment i-1's "transition" field
+        seg_meta  = valid_segs[i - 1] if (i - 1) < len(valid_segs) else {}
+        raw_style = seg_meta.get(
+            "transition",
+            seg_meta.get("style", seg_meta.get("transition_after", "crossfade"))
+        )
+        # Hard-cut styles → very short crossfade (visually imperceptible, technically safe)
+        HARD_CUT_STYLES = {"clean", "cut", "match_cut", "hard_cut", "", None}
+        if raw_style in HARD_CUT_STYLES:
+            xfade_name = "crossfade"
+            trans_dur  = 0.06   # 2 frames @ 30fps — visually a hard cut
+        else:
+            xfade_name = raw_style
+            # Honour explicit transition_duration if set by STIE
+            stie_dur = seg_meta.get("transition_duration")
+            if stie_dur and float(stie_dur) > 0:
+                trans_dur = round(max(0.06, min(0.60, float(stie_dur))), 3)
+            else:
+                beat_iv = seg_meta.get("beat_interval")
+                if beat_iv and float(beat_iv) > 0:
+                    trans_dur = round(min(0.40, max(0.12, float(beat_iv) * 0.25)), 3)
+                else:
+                    trans_dur = 0.30   # default CapCut-style
+
+        # Safety: trans_dur must be < the shorter of the two neighbouring segments
+        max_allowed = min(cumulative_dur - total_overlap, seg_dur) * 0.45
+        trans_dur = round(min(trans_dur, max(0.06, max_allowed)), 3)
+
+        # xfade offset = start time of incoming clip in the assembled video timeline
+        xfade_offset = round(cumulative_dur - total_overlap - trans_dur, 3)
+        xfade_offset = max(0.01, xfade_offset)  # never negative
+
+        # ── Build xfade fragment ─────────────────────────────────────────
+        frag = _resolve_xfade(xfade_name)
+        is_last = (i == n - 1)
+        out_v_label = "[v_chained]" if is_last else f"[xv{i}]"
+
+        xfade_parts.append(
+            f"{prev_v}{cur_v}xfade={frag}:duration={trans_dur}:offset={xfade_offset}{out_v_label}"
+        )
+        logger.debug(
+            f"[XFADE] boundary {i-1}→{i}: '{xfade_name}' d={trans_dur}s offset={xfade_offset}s"
+        )
+
+        # ── Build acrossfade fragment ────────────────────────────────────
+        if has_audio_track:
+            # acrossfade: d=duration, c1=curve, c2=curve
+            a_out_label = "[a_chained]" if is_last else f"[xa{i}]"
+            afade_parts.append(
+                f"{prev_a}{cur_a}acrossfade=d={trans_dur}:c1=tri:c2=tri{a_out_label}"
+            )
+
+        # Advance tracking state
+        cumulative_dur  += seg_dur
+        total_overlap   += trans_dur
+        prev_v = out_v_label
+        prev_a = a_out_label if has_audio_track else None
+
+    # ── Emit all chain fragments ─────────────────────────────────────────
+    parts.extend(xfade_parts)
     if has_audio_track:
-        if safe_text:
-            parts.append(f"{interleaved}concat=n={n}:v=1:a=1[v_concat][a_out]")
-            parts.append(f"[v_concat]{MASTER_GRADE}[v_grade]")
-            parts.append(f"[v_grade]{','.join(safe_text)}[v_out]")
-        else:
-            parts.append(f"{interleaved}concat=n={n}:v=1:a=1[v_concat][a_out]")
-            parts.append(f"[v_concat]{MASTER_GRADE}[v_out]")
+        parts.extend(afade_parts)
+        # Rename chained audio to canonical [a_out] label
+        parts.append("[a_chained]acopy[a_out]")
+
+    # ── Apply master grade + text overlays over assembled output ─────────
+    chained_v = "[v_chained]"
+    if safe_text:
+        parts.append(f"{chained_v}{MASTER_GRADE}[v_grade]")
+        parts.append(f"[v_grade]{','.join(safe_text)}[v_out]")
     else:
-        # Video-only concat (no audio stream in any input)
-        if safe_text:
-            parts.append(f"{interleaved}concat=n={n}:v=1:a=0[v_concat]")
-            parts.append(f"[v_concat]{MASTER_GRADE}[v_grade]")
-            parts.append(f"[v_grade]{','.join(safe_text)}[v_out]")
-        else:
-            parts.append(f"{interleaved}concat=n={n}:v=1:a=0[v_concat]")
-            parts.append(f"[v_concat]{MASTER_GRADE}[v_out]")
+        parts.append(f"{chained_v}{MASTER_GRADE}[v_out]")
 
     return parts
 
