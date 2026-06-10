@@ -365,15 +365,16 @@
       "version": 2
     },
     "Kaydu_lohar.mp3": {
+      "is_speech_only": true,
       "usage_count": 0,
       "last_used": 0,
       "bpm": 0.0,
-      "energy": 0.5,
-      "created_at": 1780391156.9460042,
+      "energy": 0.889,
+      "created_at": 1781098301.3022904,
       "beat_data_path": null,
       "drop_times": [],
       "sample_rate": 44100,
-      "audio_hash": "358128_1778536091",
+      "audio_hash": "",
       "version": 2
     },
     "Mahi_kapoor.mp3": {
@@ -937,8 +938,8 @@
       "version": 2
     },
     "Zareena_khan.mp3": {
-      "usage_count": 0,
-      "last_used": 0,
+      "usage_count": 1,
+      "last_used": 1781098301.3044622,
       "bpm": 37.9,
       "energy": 0.7444,
       "created_at": 1780483720.8511014,
