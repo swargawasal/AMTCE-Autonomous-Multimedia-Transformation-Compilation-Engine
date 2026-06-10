@@ -5573,28 +5573,54 @@ def compile_video(
                     f"Output the narration text ONLY."
                 )
 
-                # ── 4. Call Gemini with the uploaded video ─────────────────────────
-                _late_model = os.getenv("LATE_SCRIPT_MODEL", "gemini-2.0-flash")
-                logger.info(
-                    f"🧠 [LATE_SCRIPT] Requesting {_word_target}-word script from {_late_model} "
-                    f"(video={_render_dur:.1f}s)..."
-                )
-                _late_response = _late_client.models.generate_content(
-                    model=_late_model,
-                    contents=[
-                        _late_types.Part.from_uri(
-                            file_uri=_uploaded_file.uri,
-                            mime_type="video/mp4",
-                        ),
-                        _late_prompt,
-                    ],
-                    config=_late_types.GenerateContentConfig(
-                        temperature=0.7,
-                        max_output_tokens=256,
-                    ),
-                )
-
-                _late_script_raw = _late_response.text.strip() if _late_response.text else ""
+                # ── 4. Call Gemini with the uploaded video (multi-model retry) ────
+                _late_model_primary = os.getenv("LATE_SCRIPT_MODEL", "gemini-2.5-flash-lite")
+                _late_model_fallbacks = [
+                    _late_model_primary,
+                    "gemini-2.5-flash",
+                    "gemini-2.0-flash",
+                    "gemini-2.5-pro",
+                    "gemini-pro-latest",
+                ]
+                _late_response = None
+                _late_script_raw = ""
+                for _attempt_model in _late_model_fallbacks:
+                    try:
+                        logger.info(
+                            f"🧠 [LATE_SCRIPT] Requesting {_word_target}-word script from {_attempt_model} "
+                            f"(video={_render_dur:.1f}s)..."
+                        )
+                        _late_response = _late_client.models.generate_content(
+                            model=_attempt_model,
+                            contents=[
+                                _late_types.Part.from_uri(
+                                    file_uri=_uploaded_file.uri,
+                                    mime_type="video/mp4",
+                                ),
+                                _late_prompt,
+                            ],
+                            config=_late_types.GenerateContentConfig(
+                                temperature=0.7,
+                                max_output_tokens=256,
+                            ),
+                        )
+                        _late_script_raw = _late_response.text.strip() if _late_response.text else ""
+                        if _late_script_raw:
+                            logger.info(f"✅ [LATE_SCRIPT] Got response from {_attempt_model}.")
+                            break
+                    except Exception as _model_err:
+                        _err_str = str(_model_err).lower()
+                        if "429" in _err_str or "quota" in _err_str or "resource_exhausted" in _err_str:
+                            logger.warning(
+                                f"⚠️ [LATE_SCRIPT] {_attempt_model} returned 429/quota — trying next model..."
+                            )
+                        else:
+                            logger.warning(
+                                f"⚠️ [LATE_SCRIPT] {_attempt_model} failed ({_model_err}) — trying next model..."
+                            )
+                        _late_response = None
+                        _late_script_raw = ""
+                        continue
 
                 # ── 5. Validate and propagate the new script ───────────────────────
                 if _late_script_raw and len(_late_script_raw) > 10:

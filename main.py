@@ -8701,8 +8701,8 @@ def run_cli_mode(args):
         _cli_result = _cli_director.execute_mission(
             niche=os.getenv("DEFAULT_NICHE", "viral"),
             video_request=(
-                f"CLI: Process '{title_val}'"
-                + (" with enhanced quality." if enhance_mode else ".")
+                title_val
+                + (". Enhanced quality output." if enhance_mode else ".")
             ),
             input_paths=[video_path],
         )
@@ -8740,7 +8740,7 @@ def process_clip(video_path: str, actress_title: str) -> str | None:
 
         result = director.execute_mission(
             niche=os.getenv("DEFAULT_NICHE", "viral"),
-            video_request=video_request,
+            video_request=title_val,
             input_paths=[video_path],
         )
 
