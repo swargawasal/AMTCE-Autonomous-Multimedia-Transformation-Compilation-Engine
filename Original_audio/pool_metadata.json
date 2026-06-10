@@ -65,8 +65,8 @@
       "version": 2
     },
     "Aishwarya_Laxmi.mp3": {
-      "usage_count": 0,
-      "last_used": 0,
+      "usage_count": 1,
+      "last_used": 1781088426.9875305,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.9428434,
@@ -1162,6 +1162,18 @@
       "drop_times": [],
       "sample_rate": 44100,
       "audio_hash": "",
+      "version": 2
+    },
+    "Aditi_mistry.mp3": {
+      "usage_count": 0,
+      "last_used": 0,
+      "bpm": 105.3,
+      "energy": 0.907,
+      "created_at": 1781088140.2822826,
+      "beat_data_path": "beats/Aditi_mistry.npz",
+      "drop_times": [],
+      "sample_rate": 44100,
+      "audio_hash": "225214_1781088426",
       "version": 2
     }
   }
