@@ -1,7 +1,7 @@
 # Graph Report - D:\AMTCE  (2026-06-10)
 
 ## Corpus Check
-- 324 files · ~911,647 words
+- 324 files · ~911,555 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -5161,11 +5161,11 @@ Nodes (1): Prints a formatted summary of the system health.
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `get()` connect `Community 0` to `Community 1`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 33`, `Community 35`, `Community 37`, `Community 38`?**
-  _High betweenness centrality (0.506) - this node is a cross-community bridge._
+  _High betweenness centrality (0.475) - this node is a cross-community bridge._
 - **Why does `compile_video()` connect `Community 1` to `Community 0`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 17`, `Community 18`, `Community 21`, `Community 23`, `Community 25`, `Community 26`, `Community 28`, `Community 33`, `Community 37`, `Community 40`?**
-  _High betweenness centrality (0.069) - this node is a cross-community bridge._
-- **Why does `GeminiCaptionGenerator` connect `Community 6` to `Community 1`, `Community 4`, `Community 7`?**
-  _High betweenness centrality (0.034) - this node is a cross-community bridge._
+  _High betweenness centrality (0.058) - this node is a cross-community bridge._
+- **Why does `fix_file()` connect `Community 3` to `Community 5`?**
+  _High betweenness centrality (0.028) - this node is a cross-community bridge._
 - **Are the 647 inferred relationships involving `get()` (e.g. with `_get_session_niche()` and `detect_hardware_capabilities()`) actually correct?**
   _`get()` has 647 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 336 inferred relationships involving `SelfOptimizingEditor` (e.g. with `PollingFilter` and `GlobalState`) actually correct?**

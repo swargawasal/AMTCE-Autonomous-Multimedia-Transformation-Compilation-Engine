@@ -3217,15 +3217,15 @@ def compile_video(
                                 profile_data["cold_open"] = selected_shots[0]
 
                     # Overlay defaults
-                    ol = ext.monetization.get("overlay_data", {})
+                    _enable_fs = os.getenv("ENABLE_FASHION_SCOUT", "yes").lower() in ("yes", "true", "on")
+                    ol = ext.monetization.get("overlay_data", {}) if _enable_fs else {}
                     profile_data.update(
                         {
                             "brand_text": os.getenv("BRAND_NAME")
                             or ol.get("brand_text")
                             or "Fashion Analysis",
-                            "item_name": ol.get("item_name")
-                            or ol.get("commercial_item_name", "Style"),
-                            "price_tag": ol.get("price_tag", ""),
+                            "item_name": (ol.get("item_name") or ol.get("commercial_item_name")) if _enable_fs else "Style",
+                            "price_tag": ol.get("price_tag", "") if _enable_fs else "",
                             "price_tag_time": ol.get("price_tag_time", 0.75),
                         }
                     )
@@ -3241,7 +3241,7 @@ def compile_video(
                     # This block re-wires the scout directly into the orchestrator pipeline
                     # so that fashion_scout data is always present in the sidecar JSON
                     # and available to main.py via mon_meta.get("fashion_scout").
-                    _enable_fs = os.getenv("ENABLE_FASHION_SCOUT", "yes").lower() in ("yes", "true", "on")
+                    # _enable_fs already resolved above
                     _active_niche_fs = profile_data.get("niche_category", "")
                     _is_nsfw_fs = bool(_active_niche_fs) and any(
                         kw in _active_niche_fs.lower()
