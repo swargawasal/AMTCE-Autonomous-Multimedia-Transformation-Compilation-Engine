@@ -3,7 +3,7 @@
   "actress": "",
   "niche": "General",
   "source_url": "",
-  "state": "RUNNING",
+  "state": "FAILED",
   "current_step": null,
   "progress": 0,
   "steps": {
@@ -15,6 +15,6 @@
     "STEP_RENDER": "pending"
   },
   "started_at": 1781087787,
-  "updated_at": 1781087787,
-  "error": null
+  "updated_at": 1781087788,
+  "error": "No videos found in pool/downloads for actress: "
 }
