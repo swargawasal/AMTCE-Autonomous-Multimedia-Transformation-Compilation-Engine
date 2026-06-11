@@ -1,9 +1,11 @@
 {
   "harvest": {
     "last_run_date": "2026-06-11",
-    "slots_completed_today": [],
+    "slots_completed_today": [
+      "20:30"
+    ],
     "catchup_fired_today": false,
-    "total_runs_all_time": 27
+    "total_runs_all_time": 28
   },
   "publisher": {
     "last_check_date": "2026-06-11",
@@ -14,13 +16,14 @@
       "09:00",
       "10:00",
       "13:00",
-      "14:00"
+      "14:00",
+      "20:00"
     ],
     "catchup_slots_today": [
       "12:50",
       "13:10"
     ],
-    "deficit_videos": 5
+    "deficit_videos": 6
   },
   "apify": {
     "quota_date": "2026-06-11",
