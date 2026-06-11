@@ -4140,6 +4140,16 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         except:
             pass
 
+        # Sanitize title to strip any system/CLI/niche prefixes
+        title = re.sub(r"(?i)^(?:viral|fashion|entertainment|nsfw|adult|paparazzi|general):\s*", "", title)
+        title = re.sub(r"(?i)^(?:cli:\s*)?process\s+(?:short\s+)?titled\s+", "", title)
+        title = re.sub(r"(?i)^cli:\s*process\s+", "", title)
+        title = re.sub(r"(?i)^retry\s+#\d+:\s*reprocess\s+", "", title)
+        title = re.sub(r"(?i)^retry\s+#\d+:\s*", "", title)
+        title = re.sub(r"(?i)^reprocess\s+", "", title)
+        title = re.sub(r"(?i)^cli\s+mission", "", title)
+        title = title.strip(" '\".,-_")
+
         # Default Safety Values
         ypp_risk = mon_meta.get("risk_level", "UNKNOWN")
         is_approved = ypp_risk in ["LOW", "MEDIUM"]

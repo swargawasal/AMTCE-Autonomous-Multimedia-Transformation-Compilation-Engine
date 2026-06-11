@@ -110,8 +110,16 @@ def tool_compile_video(**kwargs):
         match = re.search(r"titled '(.*?)'", request)
         raw_title = match.group(1) if match else request[:30]
     
-    # Sanitize: ensure no conversational prefixes survive
-    clean_title = str(raw_title).replace("Process short titled", "").replace("Process batch of", "").strip(" '\"")
+    # Sanitize: ensure no conversational prefixes, niche prefixes, or CLI info survive
+    clean_title = str(raw_title)
+    clean_title = re.sub(r"(?i)^(?:viral|fashion|entertainment|nsfw|adult|paparazzi|general):\s*", "", clean_title)
+    clean_title = re.sub(r"(?i)^(?:cli:\s*)?process\s+(?:short\s+)?titled\s+", "", clean_title)
+    clean_title = re.sub(r"(?i)^cli:\s*process\s+", "", clean_title)
+    clean_title = re.sub(r"(?i)^retry\s+#\d+:\s*reprocess\s+", "", clean_title)
+    clean_title = re.sub(r"(?i)^retry\s+#\d+:\s*", "", clean_title)
+    clean_title = re.sub(r"(?i)^reprocess\s+", "", clean_title)
+    clean_title = re.sub(r"(?i)^cli\s+mission", "", clean_title)
+    clean_title = clean_title.strip(" '\".,-_")
 
     # 2. Generate Metadata
     mission_id = f"vanguard_{int(time.time())}"
@@ -131,7 +139,7 @@ def tool_compile_video(**kwargs):
         uuid_str=mission_id,
         input_path=input_paths,
         output_path=output_path,
-        title=f"{niche.upper()}: {clean_title}",
+        title=clean_title,
         description=request,
         profile_data=profile_data
     )

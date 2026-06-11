@@ -118,13 +118,24 @@ class MonetizationStrategist:
         Analyzes content using Gemini as the sole authority with Professional Reviewer persona.
         Implements a retry layer for maximum reliability.
         """
+        # 1. Input Sanitization
+        clean_title = re.sub(r"[\x00-\x1F\x7F]", "", title).strip()
+        # Strip any leading niche prefixes like "VIRAL:", "FASHION:", etc.
+        clean_title = re.sub(r"(?i)^(?:viral|fashion|entertainment|nsfw|adult|paparazzi|general):\s*", "", clean_title)
+        # Strip common system/CLI prefixes
+        clean_title = re.sub(r"(?i)^(?:cli:\s*)?process\s+(?:short\s+)?titled\s+", "", clean_title)
+        clean_title = re.sub(r"(?i)^cli:\s*process\s+", "", clean_title)
+        clean_title = re.sub(r"(?i)^retry\s+#\d+:\s*reprocess\s+", "", clean_title)
+        clean_title = re.sub(r"(?i)^retry\s+#\d+:\s*", "", clean_title)
+        clean_title = re.sub(r"(?i)^reprocess\s+", "", clean_title)
+        clean_title = re.sub(r"(?i)^cli\s+mission", "", clean_title)
+        clean_title = clean_title.strip(" '\".,-_")
+        clean_title = clean_title[:200]
+
         if not self.router:
-            return self._fallback_response(title, visual_context=visual_context)
+            return self._fallback_response(clean_title, visual_context=visual_context)
 
         try:
-            # 1. Input Sanitization
-            clean_title = re.sub(r"[\x00-\x1F\x7F]", "", title).strip()
-            clean_title = clean_title[:200]
 
             # Calculate target word count based on 140 WPM
             word_target = max(20, min(int((duration / 60) * 140), 55))
@@ -389,16 +400,16 @@ class MonetizationStrategist:
                 except Exception as e:
                     logger.error(f"❌ Gemini Attempt {attempt+1} Error: {e}")
 
-            return self._fallback_response(title, error="Max retry attempts reached or validation failed", transformations=transformations)
+            return self._fallback_response(clean_title, error="Max retry attempts reached or validation failed", transformations=transformations)
 
         except Exception as e:
             logger.error(f"🧠 Brain Analysis Critical Error: {e}")
-            return self._fallback_response(title, error=e, transformations=transformations)
+            return self._fallback_response(clean_title, error=e, transformations=transformations)
 
         except Exception as e:
             logger.error(f"🧠 Brain Analysis Error: {e}")
             return self._fallback_response(
-                title, error=e, transformations=transformations
+                clean_title, error=e, transformations=transformations
             )
 
     def _adaptive_truncate(
@@ -829,7 +840,18 @@ class MonetizationStrategist:
         if error:
             reason = f"Brain Error: {str(error)}"
 
-        script = sanitize_caption_text(caption, target_max=4, hard_max=6)
+        # Strip any system prefixes from fallback caption
+        clean_caption = str(caption)
+        clean_caption = re.sub(r"(?i)^(?:viral|fashion|entertainment|nsfw|adult|paparazzi|general):\s*", "", clean_caption)
+        clean_caption = re.sub(r"(?i)^(?:cli:\s*)?process\s+(?:short\s+)?titled\s+", "", clean_caption)
+        clean_caption = re.sub(r"(?i)^cli:\s*process\s+", "", clean_caption)
+        clean_caption = re.sub(r"(?i)^retry\s+#\d+:\s*reprocess\s+", "", clean_caption)
+        clean_caption = re.sub(r"(?i)^retry\s+#\d+:\s*", "", clean_caption)
+        clean_caption = re.sub(r"(?i)^reprocess\s+", "", clean_caption)
+        clean_caption = re.sub(r"(?i)^cli\s+mission", "", clean_caption)
+        clean_caption = clean_caption.strip(" '\".,-_")
+
+        script = sanitize_caption_text(clean_caption, target_max=4, hard_max=6)
         if failed_script and len(failed_script) > 10:
             script = sanitize_caption_text(failed_script, target_max=4, hard_max=6)
             reason += " (Using Recovered AI Script)"
@@ -860,7 +882,7 @@ class MonetizationStrategist:
         # [mkpv-fix] Remove forced "Link in description" (User considers this low-quality/forced)
         # We use the script as-is for the editorial script (voiceover).
         editorial_script = script
-        clean_cap = caption.lower().strip()
+        clean_cap = clean_caption.lower().strip()
         script_lower = script.lower()
         cap_words = set(re.findall(r'\w+', clean_cap))
         # If the caption is essentially the same as the sanitized script or vice versa, don't repeat it
@@ -868,7 +890,7 @@ class MonetizationStrategist:
         
         if clean_cap not in script_lower and not significant_overlap:
             # If caption is not in script and not significantly overlapping, use it as a lead-in
-            editorial_script = f"{caption}. {script}"
+            editorial_script = f"{clean_caption}. {script}"
 
         # Apply commentary refinement in fallback path
         if voiceover and editorial_script:
@@ -908,7 +930,7 @@ class MonetizationStrategist:
             "policy_citation": "System Recovery",
             "source": "fallback_recovery",
             "monetization_cta": "Find this look linked in the description",
-            "editorial_title": f"Style Edit: {caption[:30]}...",
+            "editorial_title": f"Style Edit: {clean_caption[:30]}...",
             "overlay_data": [
                 {
                     "brand_text": sanitize_caption_text(

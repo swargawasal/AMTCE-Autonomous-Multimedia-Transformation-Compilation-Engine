@@ -23,7 +23,7 @@ def test_fallback_logic():
     print(f"Title: {title}")
     print(f"Editorial Script: {res['editorial_script']}")
     print(f"Final Caption: {res['final_caption']}")
-    print(f"Brand Text: {res['overlay_data']['brand_text']}")
+    print(f"Brand Text: {res['overlay_data'][0]['brand_text']}")
     
     assert "Link in description." not in res['editorial_script']
     assert res['final_caption'] in res['editorial_script']
@@ -40,9 +40,12 @@ def test_fallback_logic():
     assert "link in description" not in res2['final_caption'].lower()
     
     # Test 3: Cache Rotation
+    cache_path = os.path.join("The_json", "captions_cache.json")
     state_path = os.path.join("The_json", "caption_state.json")
     with open(state_path, "r") as f:
         state_before = json.load(f)
+    with open(cache_path, "r", encoding="utf-8") as f:
+        captions = json.load(f)
     
     idx_before = state_before.get("fallback_index", 0)
     print(f"\n--- Test 3: Cache Rotation ---")
@@ -56,13 +59,14 @@ def test_fallback_logic():
     idx_after = state_after.get("fallback_index", 0)
     print(f"Index After: {idx_after}")
     
-    assert idx_after != idx_before or (idx_before == 0 and idx_after > 0)
+    if len(captions) > 1:
+        assert idx_after != idx_before
 
 if __name__ == "__main__":
     try:
         test_fallback_logic()
-        print("\n✅ ALL TESTS PASSED!")
+        print("\n[SUCCESS] ALL TESTS PASSED!")
     except Exception as e:
-        print(f"\n❌ TEST FAILED: {e}")
+        print(f"\n[FAILURE] TEST FAILED: {e}")
         import traceback
         traceback.print_exc()
