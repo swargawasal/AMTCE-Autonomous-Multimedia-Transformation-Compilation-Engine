@@ -6,7 +6,7 @@ from typing import List
 from dotenv import load_dotenv
 
 load_dotenv()
-load_dotenv("Credentials/.env")
+load_dotenv("Credentials/.env", override=True)
 
 # Suppress Python 3.10 EOL warning from Google SDKs
 warnings.filterwarnings("ignore", category=FutureWarning, module="google")
@@ -51,7 +51,7 @@ from urllib.parse import urlparse
 # External Libs (Safe Imports)
 try:
     from dotenv import load_dotenv
-    load_dotenv("Credentials/.env")
+    load_dotenv("Credentials/.env", override=True)
 except ImportError:
     load_dotenv = lambda **kwargs: None  # Dummy fallback
     logging.warning(
@@ -3489,7 +3489,7 @@ async def handle_attachment(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await safe_reply(update, "❌ System Error: Module Portal Failed.")
         return
 
-    load_dotenv(override=True)
+    load_dotenv("Credentials/.env", override=True)
 
     user_id = update.effective_user.id
     message = update.message
@@ -3634,7 +3634,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     monetization_brain = getattr(portal, "monetization_brain", None)
     narrative_brain = getattr(portal, "narrative_brain", None)
 
-    load_dotenv(override=True)
+    load_dotenv("Credentials/.env", override=True)
     send_to_youtube = os.getenv("SEND_TO_YOUTUBE", "off").lower() in [
         "on",
         "yes",

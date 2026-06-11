@@ -364,6 +364,11 @@ def _get_active_publish_slots():
 
 def _process_queue_item():
     """Pops one item from the queue and runs it through the full AMTCE pipeline."""
+    from dotenv import load_dotenv
+    _master_env = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Credentials", ".env")
+    if os.path.exists(_master_env):
+        load_dotenv(_master_env, override=True)
+
     item = PublishQueue.pop_one()
     if not item:
         logger.info("📭 Publish queue is empty. Nothing to process.")
@@ -603,6 +608,11 @@ def _publish_loop():
 
     while True:
         try:
+            from dotenv import load_dotenv
+            _master_env = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "Credentials", ".env")
+            if os.path.exists(_master_env):
+                load_dotenv(_master_env, override=True)
+
             now        = datetime.now()
             slots      = _get_active_publish_slots()
 

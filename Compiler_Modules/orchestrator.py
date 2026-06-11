@@ -3508,69 +3508,75 @@ def compile_video(
             logger.info("🔤 [TITLE_OVERLAY] SHOW_USER_TITLE_OVERLAY=no — title overlay skipped.")
 
         # ---- VOICEOVER / SCRIPT GENERATION -----------------------------------------
-        # IMPORTANT: Script generation ALWAYS runs — the editorial_script feeds
-        # the caption, price tag, Telegram hook and YouTube description downstream.
-        # Only the TTS audio step is gated by feature flags + ENABLE_MICRO_VOICEOVER.
+        _narrator_enabled = os.getenv("CINEMATIC_NARRATOR_ENABLED", "yes").lower() == "yes"
+        _vo_env = os.getenv("ENABLE_MICRO_VOICEOVER", "yes").lower()
+        _vo_enabled = _vo_env == "yes"
+        
         voiceover_path = None
         _pm_vo = profile_data.get("pipeline_metrics", {})
-        _mon_vo = profile_data.get("monetization", {}) or profile_data.get("monetization_data", {}) or _pm_vo.get("monetization", {})
-        _has_editorial_script = bool(
-            _mon_vo.get("editorial_script")
-            or profile_data.get("editorial_script")
-        )
-        _vo_env = os.getenv("ENABLE_MICRO_VOICEOVER", "yes").lower()
-        _micro_vo_forced = _vo_env == "yes"
-        # Script generation block — always runs regardless of feature flags
-        _pm_vo = profile_data.get("pipeline_metrics", {})
         mon_data = profile_data.get("monetization", {}) or profile_data.get("monetization_data", {}) or _pm_vo.get("monetization", {})
-        full_script = (
-            mon_data.get("editorial_script")
-            or mon_data.get("fashion_scout", {}).get("editorial_script")
-            or profile_data.get("editorial_script")
-            or ""
-        )
+        
+        if not _narrator_enabled or not _vo_enabled:
+            logger.info("🎙️ [VOICEOVER] Voiceover or narrator is disabled — bypassing script generation completely.")
+            full_script = ""
+            profile_data["editorial_script"] = ""
+            if isinstance(mon_data, dict):
+                mon_data["editorial_script"] = ""
+        else:
+            _has_editorial_script = bool(
+                mon_data.get("editorial_script")
+                or profile_data.get("editorial_script")
+            )
+            _micro_vo_forced = _vo_env == "yes"
+            # Script generation block — runs when narration is enabled
+            full_script = (
+                mon_data.get("editorial_script")
+                or mon_data.get("fashion_scout", {}).get("editorial_script")
+                or profile_data.get("editorial_script")
+                or ""
+            )
 
-        # [FASHION NARRATION] Removed override — FashionScout editorial_script is now the primary source.
+            # [FASHION NARRATION] Removed override — FashionScout editorial_script is now the primary source.
 
-        # [FALLBACK SCRIPT] Synthesize from title/caption signals when Gemini didn't produce one
-        if not full_script:
-            _fb_caption = profile_data.get("caption") or ""
-            _fb_title = title or ""
-            _fb_parts = [p for p in [_fb_title, _fb_caption] if p]
-            if _fb_parts:
-                full_script = ". ".join(_fb_parts)
-            else:
+            # [FALLBACK SCRIPT] Synthesize from title/caption signals when Gemini didn't produce one
+            if not full_script:
+                _fb_caption = profile_data.get("caption") or ""
+                _fb_title = title or ""
+                _fb_parts = [p for p in [_fb_title, _fb_caption] if p]
+                if _fb_parts:
+                    full_script = ". ".join(_fb_parts)
+                else:
+                    try:
+                        from Audio_Modules.voiceover import EDITORIAL_TEMPLATES
+                        import random as _r
+                        full_script = _r.choice(EDITORIAL_TEMPLATES)
+                    except Exception:
+                        full_script = "A masterclass in style and craftsmanship, defining the intersection of luxury and design."
+                logger.info(f"[VOICEOVER_FALLBACK] Built script from profile signals: {len(full_script)} chars")
+
+            if full_script:
                 try:
-                    from Audio_Modules.voiceover import EDITORIAL_TEMPLATES
-                    import random as _r
-                    full_script = _r.choice(EDITORIAL_TEMPLATES)
-                except Exception:
-                    full_script = "A masterclass in style and craftsmanship, defining the intersection of luxury and design."
-            logger.info(f"[VOICEOVER_FALLBACK] Built script from profile signals: {len(full_script)} chars")
-
-        if full_script:
-            try:
-                ref_result = voiceover.refine_commentary(full_script)
-                _refined_text = ref_result.get("text", full_script)
-                if not isinstance(_refined_text, str):
-                    logger.warning(
-                        "[COMMENTARY_ENGINE] ref_result['text'] is %s not str — keeping original.",
-                        type(_refined_text).__name__,
+                    ref_result = voiceover.refine_commentary(full_script)
+                    _refined_text = ref_result.get("text", full_script)
+                    if not isinstance(_refined_text, str):
+                        logger.warning(
+                            "[COMMENTARY_ENGINE] ref_result['text'] is %s not str — keeping original.",
+                            type(_refined_text).__name__,
+                        )
+                        _refined_text = full_script
+                    profile_data["editorial_script"] = _refined_text
+                    mon_data["editorial_script"] = _refined_text
+                    profile_data["monetization_data"] = mon_data
+                    full_script = _refined_text
+                    logger.info(
+                        "[COMMENTARY_ENGINE] narration_refined=%s | "
+                        'original="%s" | refined="%s"',
+                        ref_result.get("changed", False),
+                        ref_result.get("original", "")[:200],
+                        full_script[:200],
                     )
-                    _refined_text = full_script
-                profile_data["editorial_script"] = _refined_text
-                mon_data["editorial_script"] = _refined_text
-                profile_data["monetization_data"] = mon_data
-                full_script = _refined_text
-                logger.info(
-                    "[COMMENTARY_ENGINE] narration_refined=%s | "
-                    'original="%s" | refined="%s"',
-                    ref_result.get("changed", False),
-                    ref_result.get("original", "")[:200],
-                    full_script[:200],
-                )
-            except Exception as e:
-                logger.warning(f"[COMMENTARY_ENGINE] refinement_failed: {e}")
+                except Exception as e:
+                    logger.warning(f"[COMMENTARY_ENGINE] refinement_failed: {e}")
 
         # ---- TTS AUDIO — gated separately from script generation ----------------
         # [LATE_SCRIPT_GENERATION] When LATE_SCRIPT_GENERATION=yes, TTS is deferred to
@@ -5310,42 +5316,43 @@ def compile_video(
         elif (not _caption_text_for_overlay or _caption_text_for_overlay in _bad_wear_names) and profile_data.get("caption"):
             _caption_text_for_overlay = profile_data["caption"]
 
-        # [VIRAL_HOOK] When FashionScout is off or returned nothing useful:
-        # - If ENABLE_STATIC_HOOK_SUBTITLE=yes  → store hook for the static ASS subtitle step below
-        #   (hook is NOT placed in the caption lane so it doesn't show full-duration as boring text)
-        # - If ENABLE_STATIC_HOOK_SUBTITLE=no   → fallback to old caption-lane behaviour
-        if not _caption_text_for_overlay or _caption_text_for_overlay in _bad_wear_names:
-            try:
-                _static_hook_mode = os.getenv("ENABLE_STATIC_HOOK_SUBTITLE", "no").lower() in ("yes", "true", "1", "on")
-                _raw_ol_vh = profile_data.get("overlay_data") or {}
-                # overlay_data can be a list (main path) or a plain dict (lite path)
-                if isinstance(_raw_ol_vh, list) and _raw_ol_vh:
-                    _raw_ol_vh = _raw_ol_vh[0]
-                _viral_hook_text = (
-                    (_raw_ol_vh.get("viral_hook") if isinstance(_raw_ol_vh, dict) else None)
-                    or ""
-                )
-                # If brain didn't pre-select a hook, do it now with available context
-                if not _viral_hook_text:
-                    from Text_Modules.overlay_engine import select_viral_hook as _svh_orch
-                    _viral_hook_text = _svh_orch({
-                        "title": title or "",
-                        "niche_category": profile_data.get("niche_category", "entertainment"),
-                        "energy_score": profile_data.get("energy_score", 0.5),
-                    })
-                if _viral_hook_text:
-                    if _static_hook_mode:
-                        # Store for static ASS subtitle step — do NOT pollute caption lane
-                        profile_data["static_hook_text"] = _viral_hook_text
-                        logger.info(f"🪝 [VIRAL_HOOK] Hook reserved for static ASS subtitle: \"{_viral_hook_text}\"")
-                        auditor.mark_executed("viral_hook_overlay")
-                    else:
-                        # Legacy fallback: show in caption lane
-                        _caption_text_for_overlay = _viral_hook_text
-                        logger.info(f"🪝 [VIRAL_HOOK] Using hook as caption overlay: \"{_viral_hook_text}\"")
-                        auditor.mark_executed("viral_hook_overlay")
-            except Exception as _vho_err:
-                logger.warning(f"⚠️ [VIRAL_HOOK] Hook selection failed (non-fatal): {_vho_err}")
+        # [VIRAL_HOOK] Reroute hook to static ASS subtitle or caption lane
+        _static_hook_mode = os.getenv("ENABLE_STATIC_HOOK_SUBTITLE", "no").lower() in ("yes", "true", "1", "on")
+        
+        # Determine the viral hook text
+        try:
+            _raw_ol_vh = profile_data.get("overlay_data") or {}
+            # overlay_data can be a list (main path) or a plain dict (lite path)
+            if isinstance(_raw_ol_vh, list) and _raw_ol_vh:
+                _raw_ol_vh = _raw_ol_vh[0]
+            _viral_hook_text = (
+                (_raw_ol_vh.get("viral_hook") if isinstance(_raw_ol_vh, dict) else None)
+                or ""
+            )
+            if not _viral_hook_text:
+                from Text_Modules.overlay_engine import select_viral_hook as _svh_orch
+                _viral_hook_text = _svh_orch({
+                    "title": title or "",
+                    "niche_category": profile_data.get("niche_category", "entertainment"),
+                    "energy_score": profile_data.get("energy_score", 0.5),
+                })
+        except Exception as _vho_err:
+            logger.warning(f"⚠️ [VIRAL_HOOK] Hook selection failed (non-fatal): {_vho_err}")
+            _viral_hook_text = ""
+
+        if _static_hook_mode and _viral_hook_text:
+            # When static hook ASS mode is enabled, ALWAYS reserve the hook for static ASS subtitle
+            profile_data["static_hook_text"] = _viral_hook_text
+            logger.info(f"🪝 [VIRAL_HOOK] Hook reserved for static ASS subtitle: \"{_viral_hook_text}\"")
+            auditor.mark_executed("viral_hook_overlay")
+            # Clear caption lane to prevent double captioning or clashing full-duration text
+            _caption_text_for_overlay = None
+        elif not _caption_text_for_overlay or _caption_text_for_overlay in _bad_wear_names:
+            # Fallback to old caption-lane behavior
+            if _viral_hook_text:
+                _caption_text_for_overlay = _viral_hook_text
+                logger.info(f"🪝 [VIRAL_HOOK] Using hook as caption overlay: \"{_viral_hook_text}\"")
+                auditor.mark_executed("viral_hook_overlay")
 
         has_caption = bool(_caption_text_for_overlay)
         has_brand = _add_text_overlay and bool(_brand_text_for_overlay)
@@ -5542,6 +5549,12 @@ def compile_video(
         #
         # ⚠️  AMTCE-ONLY: Do NOT touch this block when modifying CEIE.
         _late_script_mode = os.getenv("LATE_SCRIPT_GENERATION", "yes").strip().lower() == "yes"
+        _narrator_enabled = os.getenv("CINEMATIC_NARRATOR_ENABLED", "yes").lower() == "yes"
+        _vo_enabled = os.getenv("ENABLE_MICRO_VOICEOVER", "yes").lower() == "yes"
+        if _late_script_mode and not (_narrator_enabled and _vo_enabled):
+            logger.info("🧠 [LATE_SCRIPT] Voiceover/narration is disabled. Bypassing late script generation.")
+            _late_script_mode = False
+            
         if _late_script_mode and os.path.exists(temp_visual_render):
             logger.info("🧠 [LATE_SCRIPT] Starting post-render duration-aware script generation...")
             _late_script_generated = False

@@ -57,7 +57,12 @@ class KaraokeConfig:
     @classmethod
     def load(cls) -> "KaraokeConfig":
         cfg = cls()
-        cfg.enabled          = _env_bool("CINEMATIC_NARRATOR_ENABLED", _env_bool("KARAOKE_ENABLED", True))
+        # Full karaoke is only possible if narrator, voiceover, and karaoke are all enabled
+        cfg.enabled          = (
+            _env_bool("CINEMATIC_NARRATOR_ENABLED", True)
+            and _env_bool("ENABLE_MICRO_VOICEOVER", True)
+            and _env_bool("KARAOKE_ENABLED", True)
+        )
         cfg.font_size        = _env_int("KARAOKE_FONT_SIZE", 64)
         cfg.safe_zone_margin = _env_int("KARAOKE_SAFE_ZONE", 670)
         cfg.side_margin      = _env_int("KARAOKE_MARGIN_SIDE", 120)
@@ -96,7 +101,9 @@ def _format_ass_time(seconds: float) -> str:
 
 def _clean_word(word: str) -> str:
     """Strip punctuation and uppercase for display."""
-    return re.sub(r'[^\w]', '', word).upper()
+    # Strip common punctuation but keep letters, numbers, spaces, and emoji characters
+    cleaned = re.sub(r'[.,!?;:\"\'\(\)\[\]\{\}\<\>\-\_\+\=\*\&\^\%\$\#\@\~\`\|\/\\]', '', word)
+    return cleaned.upper()
 
 
 def _bridge_timestamps(words: List[Dict]) -> List[Dict]:
@@ -337,7 +344,11 @@ def apply_karaoke_subtitles(
 # Convenience singleton check
 def is_karaoke_enabled() -> bool:
     """Quick check without loading full config."""
-    return _env_bool("CINEMATIC_NARRATOR_ENABLED", _env_bool("KARAOKE_ENABLED", True))
+    if not _env_bool("CINEMATIC_NARRATOR_ENABLED", True):
+        return False
+    if not _env_bool("ENABLE_MICRO_VOICEOVER", True):
+        return False
+    return _env_bool("KARAOKE_ENABLED", True)
 
 
 # ────────────────────────────────────────────────────────────────────────────────

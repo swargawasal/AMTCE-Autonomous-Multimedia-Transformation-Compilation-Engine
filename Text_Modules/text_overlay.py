@@ -361,19 +361,46 @@ class TextOverlay:
         # Calc MarginV based on Lane Percentage
         pct = TEXT_LANES.get(lane, TEXT_LANES["caption"])
 
-        if lane == "caption":
-            alignment = 8
-            margin_v = int(ASS_PLAYRES_Y * 0.05)
-        elif lane == "top":
-            alignment = 8
-            margin_v = int(ASS_PLAYRES_Y * pct)
-        elif lane == "center":
-            alignment = 5
-            margin_v = 0
+        # Check if voiceover is off
+        _narrator_enabled = os.getenv("CINEMATIC_NARRATOR_ENABLED", "yes").lower() == "yes"
+        _vo_enabled = os.getenv("ENABLE_MICRO_VOICEOVER", "yes").lower() == "yes"
+        _voiceover_off = (not _narrator_enabled or not _vo_enabled)
+
+        if lane == "caption" and _voiceover_off:
+            font_name = "Inter Bold"
+            font_size = int(os.getenv("KARAOKE_FONT_SIZE", "64"))
+            primary_color = f"&H00{os.getenv('KARAOKE_BASE_COLOR', 'FFFFFF')}"
+            secondary_color = f"&H00{os.getenv('KARAOKE_HIGHLIGHT_COLOR', '00FFFF')}"
+            outline_color = "&H00000000"
+            back_color = "&H00000000"
+            bold_val = 1
+            outline_width = int(os.getenv("KARAOKE_OUTLINE_WIDTH", "4"))
+            shadow_depth = int(os.getenv("KARAOKE_SHADOW_DEPTH", "6"))
+            alignment = 2
+            margin_v = int(os.getenv("KARAOKE_SAFE_ZONE", "670"))
         else:
-            # Bottom Logic (Caption/Fixed)
-            # MarginV = Distance from Bottom
-            margin_v = int(ASS_PLAYRES_Y * (1.0 - pct))
+            font_name = "Playfair Display"
+            font_size = 85
+            primary_color = "&H0000D7FF"
+            secondary_color = "&H0000D7FF"
+            outline_color = "&H00000000"
+            back_color = "&H00000000"
+            bold_val = -1
+            outline_width = 0
+            shadow_depth = 0
+            if lane == "caption":
+                alignment = 8
+                margin_v = int(ASS_PLAYRES_Y * 0.05)
+            elif lane == "top":
+                alignment = 8
+                margin_v = int(ASS_PLAYRES_Y * pct)
+            elif lane == "center":
+                alignment = 5
+                margin_v = 0
+            else:
+                # Bottom Logic (Caption/Fixed)
+                # MarginV = Distance from Bottom
+                margin_v = int(ASS_PLAYRES_Y * (1.0 - pct))
 
         escaped_text = self._escape_ass(text)
 
@@ -385,7 +412,7 @@ WrapStyle: 1
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,Playfair Display,85,&H0000D7FF,&H0000D7FF,&H00000000,&H00000000,-1,0,0,0,100,100,0,0,1,0,0,{alignment},20,20,{margin_v},1
+Style: Default,{font_name},{font_size},{primary_color},{secondary_color},{outline_color},{back_color},{bold_val},0,0,0,100,100,0,0,1,{outline_width},{shadow_depth},{alignment},20,20,{margin_v},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -483,7 +510,12 @@ Dialogue: 0,0:00:00.00,9:59:59.00,Default,,0,0,0,,{escaped_text}
             "lane": lane,
         }
 
-        if lane == "caption":
+        # Check if voiceover/narration is off
+        _narrator_enabled = os.getenv("CINEMATIC_NARRATOR_ENABLED", "yes").lower() == "yes"
+        _vo_enabled = os.getenv("ENABLE_MICRO_VOICEOVER", "yes").lower() == "yes"
+        _voiceover_off = (not _narrator_enabled or not _vo_enabled)
+
+        if lane == "caption" and not _voiceover_off and self._is_safe_ascii(text):
             # ── New PNG-based Caption Rendering ──────────────────────────
             vw, vh = self._get_video_dimensions(video_path)
             caption_png = render_caption_png(wrapped_text, vw, vh)
