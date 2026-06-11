@@ -624,12 +624,32 @@ class MonetizationStrategist:
 
             # 5. Map to legacy overlay structure for compiler compatibility
             # We wrap it in a list as the pipeline expects 'overlay_data' to be a list
+
+            # ── VIRAL HOOK SELECTION (intelligent, context-aware) ────────────────
+            # select_viral_hook() reads title/actress name + niche/mood and picks
+            # the most appropriate persuasive Hinglish hook from VIRAL_HOOKS pool.
+            _viral_hook_text = ""
+            try:
+                from Text_Modules.overlay_engine import select_viral_hook as _svh
+                _hook_ctx = {
+                    "title": clean_title,
+                    "actress_name": data.get("actress_name") or data.get("actor_name") or "",
+                    "niche_category": niche_category,
+                    "energy_score": float(data.get("energy_score", 0.5) or 0.5),
+                    "mood": data.get("mood", ""),
+                }
+                _viral_hook_text = _svh(_hook_ctx)
+                logger.info(f"[VIRAL_HOOK] hook_selected=\"{_viral_hook_text}\"")
+            except Exception as _vh_err:
+                logger.debug(f"[VIRAL_HOOK] selection_skipped: {_vh_err}")
+
             overlay = {
                 "item_name": clean_name,
                 "trend_text": category.upper(),
                 "brand_text": original_title.upper(),
                 "price_tag": f"₹{primary_item.get('price_tag_estimate', random.randint(2500, 9500)):,}",
-                "price_tag_time": float(primary_item.get("price_tag_time", 0.75))
+                "price_tag_time": float(primary_item.get("price_tag_time", 0.75)),
+                "viral_hook": _viral_hook_text,
             }
 
             # ── Extract all hook outputs from the master Gemini response ─────────
@@ -941,6 +961,7 @@ class MonetizationStrategist:
                     "trend_text": "Viral Trend",
                     "item_name": script,
                     "context_text": script,
+                    "viral_hook": (lambda: __import__("Text_Modules.overlay_engine", fromlist=["select_viral_hook"]).select_viral_hook({"title": clean_caption, "niche_category": "entertainment"}))(),
                 }
             ],
         }
