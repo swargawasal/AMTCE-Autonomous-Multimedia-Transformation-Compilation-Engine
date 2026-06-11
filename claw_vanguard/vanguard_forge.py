@@ -61,17 +61,18 @@ class VanguardForge:
         os.makedirs(self.history_dir, exist_ok=True)
         os.makedirs("backups", exist_ok=True)
 
-    def can_forge(self, file_path: str) -> Tuple[bool, str]:
+    def can_forge(self, file_path: str, bypass_cooldown: bool = False) -> Tuple[bool, str]:
         """Guardrail 1 & 2: Protected Files & Cooldown."""
         base_name = os.path.basename(file_path)
         
         if base_name in self.PROTECTED_FILES:
             return False, f"❌ REJECTED: {base_name} is a PROTECTED core brain file."
             
-        last_time = self.FORGE_COOLDOWN.get(file_path, 0)
-        if time.time() - last_time < self.COOLDOWN_PERIOD:
-            remaining = int(self.COOLDOWN_PERIOD - (time.time() - last_time))
-            return False, f"⚠️ COOLDOWN: {base_name} is cooling down ({remaining}s remains)."
+        if not bypass_cooldown:
+            last_time = self.FORGE_COOLDOWN.get(file_path, 0)
+            if time.time() - last_time < self.COOLDOWN_PERIOD:
+                remaining = int(self.COOLDOWN_PERIOD - (time.time() - last_time))
+                return False, f"⚠️ COOLDOWN: {base_name} is cooling down ({remaining}s remains)."
             
         return True, "Ready"
 
@@ -203,12 +204,12 @@ class VanguardForge:
             
         return {"approved": False, "score": 0.0, "critique": "Malformed Auditor Response", "risks": [], "fix_suggestions": []}
 
-    def run_forge_pipeline(self, target_file: str, optimization_task: str) -> ForgeResult:
+    def run_forge_pipeline(self, target_file: str, optimization_task: str, bypass_cooldown: bool = False) -> ForgeResult:
         """
         The Elite Forge Workflow: Clone -> Optimize -> Risk Check -> Test -> Audit -> Result.
         """
         # 1. Permission Check
-        allowed, msg = self.can_forge(target_file)
+        allowed, msg = self.can_forge(target_file, bypass_cooldown=bypass_cooldown)
         if not allowed:
             return ForgeResult(False, msg)
             
@@ -244,6 +245,10 @@ class VanguardForge:
         if not optimized_code:
             return ForgeResult(False, "❌ AI failed to generate optimization.")
             
+        # Write to forge_path first so verify_with_swap has the optimized code to test!
+        with open(forge_path, 'w', encoding='utf-8') as f:
+            f.write(optimized_code)
+            
         # 5. Signal 1: Computational (Tests)
         logger.info(f"🧪 Vanguard Forge: Running Pytest Verification for {target_file}")
         test_success, test_msg = self.verify_with_swap(forge_path, target_file)
@@ -263,10 +268,6 @@ class VanguardForge:
         
         if risk_level == "CRITICAL":
             return ForgeResult(False, f"❌ REJECTED: Critical Risk Detected.\n" + "\n".join(warnings))
-            
-        # 9. Writing to Forge
-        with open(forge_path, 'w', encoding='utf-8') as f:
-            f.write(optimized_code)
             
         # 10. Multi-Signal Fusion & Bias Control
         # Each signal provides exactly 1.0 points if successful
