@@ -5277,11 +5277,11 @@ Nodes (1): Prints a formatted summary of the system health.
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `get()` connect `Community 0` to `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 16`, `Community 17`, `Community 18`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 27`, `Community 28`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 33`, `Community 34`, `Community 35`, `Community 37`, `Community 38`, `Community 40`, `Community 42`?**
-  _High betweenness centrality (0.503) - this node is a cross-community bridge._
+  _High betweenness centrality (0.539) - this node is a cross-community bridge._
 - **Why does `compile_video()` connect `Community 0` to `Community 2`, `Community 3`, `Community 4`, `Community 5`, `Community 6`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 11`, `Community 12`, `Community 13`, `Community 14`, `Community 15`, `Community 17`, `Community 18`, `Community 23`, `Community 24`, `Community 25`, `Community 26`, `Community 35`, `Community 44`?**
-  _High betweenness centrality (0.059) - this node is a cross-community bridge._
-- **Why does `RhythmTimelineBuilder` connect `Community 1` to `Community 0`, `Community 2`, `Community 4`, `Community 6`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
+- **Why does `LinkOptimizer` connect `Community 19` to `Community 0`, `Community 2`, `Community 6`?**
+  _High betweenness centrality (0.034) - this node is a cross-community bridge._
 - **Are the 709 inferred relationships involving `get()` (e.g. with `_get_session_niche()` and `detect_hardware_capabilities()`) actually correct?**
   _`get()` has 709 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 444 inferred relationships involving `SelfOptimizingEditor` (e.g. with `PollingFilter` and `GlobalState`) actually correct?**
