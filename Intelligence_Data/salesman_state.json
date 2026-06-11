@@ -12,13 +12,15 @@
     ],
     "slots_missed_today": [
       "09:00",
-      "10:00"
+      "10:00",
+      "13:00",
+      "14:00"
     ],
     "catchup_slots_today": [
       "12:50",
       "13:10"
     ],
-    "deficit_videos": 3
+    "deficit_videos": 5
   },
   "apify": {
     "quota_date": "2026-06-11",
