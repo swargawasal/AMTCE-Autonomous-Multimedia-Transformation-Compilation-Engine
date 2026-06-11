@@ -2,7 +2,7 @@ import requests
 import json
 
 def check_runs():
-    url = "https://api.github.com/repos/swargawasal/AMTCE_247/actions/runs"
+    url = "https://api.github.com/repos/swargawasal/AMTCE-Autonomous-Multimedia-Transformation-Compilation-Engine/actions/runs"
     headers = {
         "Accept": "application/vnd.github+json"
     }

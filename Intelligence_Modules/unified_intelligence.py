@@ -655,8 +655,8 @@ class UnifiedIntelligence:
         cache_file = os.path.join(self.cache_dir, f"{video_hash}.json")
         start_time = time.time()
 
-        # 1. Load from Disk Cache
-        if os.path.exists(cache_file):
+        # 1. Load from Disk Cache (bypass on repair)
+        if os.path.exists(cache_file) and not context.get("vanguard_repair_data"):
             try:
                 with open(cache_file, "r", encoding="utf-8") as f:
                     data = json.load(f)
@@ -965,6 +965,18 @@ class UnifiedIntelligence:
 
         if context.get("retry_hint"):
             prompt += context["retry_hint"]
+
+        # VANGUARD REPAIR INJECTION
+        _vanguard_repair = context.get("vanguard_repair_data")
+        if _vanguard_repair:
+            prompt += (
+                f"\n\n{'='*60}\n"
+                f"# VANGUARD REPAIR ACTION PLAN:\n"
+                f"This is a repair attempt. The visual critique of the previous output noted:\n"
+                f"{_vanguard_repair}\n"
+                f"Please adjust the edited segments, style, overlay text, or pacing options to resolve these issues.\n"
+                f"{'='*60}\n"
+            )
 
         cache = IntelligenceCache(source_video=video_path)
 

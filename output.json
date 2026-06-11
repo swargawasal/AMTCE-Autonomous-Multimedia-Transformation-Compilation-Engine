@@ -1,27 +1,19 @@
 {
   "pipeline": "audit_passed",
-  "verdict": {
-    "classification": "safe",
-    "monetization_safe": true
-  },
+  "verdict": "unknown",
   "editorial_title": null,
   "caption_data": {
-    "caption": "This edit crafts an unforgettable narrative around a stunning gown. We open with a show-stopping moment (Hook) – perhaps a fluid twirl or a dramatic curtain reveal, immediately showcasing the garment's breathtaking appeal. Then, we transition to the initial journey (Buildup 1), setting the stage. Intriguing close-ups of intricate embroidery or fabric texture (Buildup 2) draw the viewer deeper, building anticipation. Further elegant movements (Buildup 3) ensure continuous engagement, leading to the grand unveiling (Climax) where the gown's full magnificence is displayed in all its glory. Finally, a unique design element is highlighted (Reveal), providing a deeper appreciation for the artistry, concluding an emotional arc from awe to full admiration.",
-    "editorial_script": "This edit crafts an unforgettable narrative around a stunning gown. We open with a show-stopping moment (Hook) – perhaps a fluid twirl or a dramatic curtain reveal, immediately showcasing the garment's breathtaking appeal. Then, we transition to the initial journey (Buildup 1), setting the stage. Intriguing close-ups of intricate embroidery or fabric texture (Buildup 2) draw the viewer deeper, building anticipation. Further elegant movements (Buildup 3) ensure continuous engagement, leading to the grand unveiling (Climax) where the gown's full magnificence is displayed in all its glory. Finally, a unique design element is highlighted (Reveal), providing a deeper appreciation for the artistry, concluding an emotional arc from awe to full admiration."
+    "caption": "Test Title Long Enough",
+    "editorial_script": "Test Title Long Enough"
   },
   "metadata": {
     "hook_score": 0.0,
-    "quality_score": 0.5,
-    "transformation_score": 95.0,
+    "quality_score": 0.0,
+    "transformation_score": 0.0,
     "item_name": "Style",
     "price_tag": "",
-    "gemini_total_calls": 6,
+    "gemini_total_calls": 1,
     "gemini_call_log": [
-      "MASTER_INTELLIGENCE",
-      "MASTER_INTELLIGENCE",
-      "MASTER_INTELLIGENCE",
-      "MASTER_INTELLIGENCE",
-      "MASTER_INTELLIGENCE",
       "MASTER_INTELLIGENCE"
     ],
     "editing_diagnostics": {},
@@ -32,7 +24,7 @@
       "music_engine": true,
       "voiceover_generation": true,
       "beat_detection": false,
-      "price_tag_engine": true,
+      "price_tag_engine": false,
       "subject_tracking": false,
       "scene_reconstruction": true,
       "watermark_detection": true,
@@ -41,23 +33,18 @@
   },
   "pipeline_metrics": {
     "monetization": {
-      "editorial_script": "This edit crafts an unforgettable narrative around a stunning gown. We open with a show-stopping moment (Hook) – perhaps a fluid twirl or a dramatic curtain reveal, immediately showcasing the garment's breathtaking appeal. Then, we transition to the initial journey (Buildup 1), setting the stage. Intriguing close-ups of intricate embroidery or fabric texture (Buildup 2) draw the viewer deeper, building anticipation. Further elegant movements (Buildup 3) ensure continuous engagement, leading to the grand unveiling (Climax) where the gown's full magnificence is displayed in all its glory. Finally, a unique design element is highlighted (Reveal), providing a deeper appreciation for the artistry, concluding an emotional arc from awe to full admiration.",
-      "final_caption": "This edit crafts an unforgettable narrative around a stunning gown. We open with a show-stopping moment (Hook) – perhaps a fluid twirl or a dramatic curtain reveal, immediately showcasing the garment's breathtaking appeal. Then, we transition to the initial journey (Buildup 1), setting the stage. Intriguing close-ups of intricate embroidery or fabric texture (Buildup 2) draw the viewer deeper, building anticipation. Further elegant movements (Buildup 3) ensure continuous engagement, leading to the grand unveiling (Climax) where the gown's full magnificence is displayed in all its glory. Finally, a unique design element is highlighted (Reveal), providing a deeper appreciation for the artistry, concluding an emotional arc from awe to full admiration.",
-      "caption": "This edit crafts an unforgettable narrative around a stunning gown. We open with a show-stopping moment (Hook) – perhaps a fluid twirl or a dramatic curtain reveal, immediately showcasing the garment's breathtaking appeal. Then, we transition to the initial journey (Buildup 1), setting the stage. Intriguing close-ups of intricate embroidery or fabric texture (Buildup 2) draw the viewer deeper, building anticipation. Further elegant movements (Buildup 3) ensure continuous engagement, leading to the grand unveiling (Climax) where the gown's full magnificence is displayed in all its glory. Finally, a unique design element is highlighted (Reveal), providing a deeper appreciation for the artistry, concluding an emotional arc from awe to full admiration.",
+      "editorial_script": "Test Title Long Enough",
+      "final_caption": "Test Title Long Enough",
+      "caption": "Test Title Long Enough",
       "cta": null,
       "monetization_cta": null,
       "ypp_safe": true,
       "risk_level": "UNKNOWN",
       "risk_reason": "Analysis pending or not performed.",
       "reason": "Analysis pending or not performed.",
-      "transformation_score": 95.0,
+      "transformation_score": 0.0,
       "policy_citation": "Significant Original Commentary",
-      "fashion_scout": {
-        "wearer_name": "Elite Fashion Model",
-        "designer_or_brand": "Prestigious Atelier",
-        "outfit_type": "Western formal gown",
-        "educational_fact": "Evening gowns, particularly in rich colors like crimson, are often intricately embroidered to catch light and enhance movement, making them a centerpiece for galas and red-carpet events."
-      },
+      "fashion_scout": {},
       "item_name": "Style",
       "improvement_tips": [],
       "overlay_data": {},
@@ -68,25 +55,118 @@
       "hashtags": null
     }
   },
-  "editing_timeline": [],
+  "editing_timeline": [
+    {
+      "clip_id": 0,
+      "start": 0.0,
+      "end": 3.2,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.00). No tonal bridge is needed.",
+          "narrative_gap": "Same scene continuation. Clips share spatial context. A match_cut or hard cut will feel invisible."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.0,
+          "scene_jump": false
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "_pacing_band": "setup",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.5,
+      "importance": 0.5
+    },
+    {
+      "clip_id": 0,
+      "start": 3.2,
+      "end": 5.699,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.0,
+      "transition_intensity": 0.5,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": {
+        "analysis": {
+          "kinetic_flow": "Soft vector match: both clips are 'static' with low energy. A clean cut or gentle fade will preserve the calm momentum.",
+          "emotional_shift": "Emotional continuity: both clips hold a 'medium' energy (Δ=+0.00). No tonal bridge is needed.",
+          "narrative_gap": "Same scene continuation. Clips share spatial context. A match_cut or hard cut will feel invisible."
+        },
+        "decision": {
+          "transition_type": "clean",
+          "rationale": "Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous."
+        },
+        "execution": {
+          "duration_frames": 0,
+          "alignment": "End",
+          "easing": "Ease-In-Out",
+          "audio_bleed": "None"
+        },
+        "_internal": {
+          "duration_s": 0.0,
+          "audio_bleed_frames": 0,
+          "vectors_match": true,
+          "energy_delta": 0.0,
+          "scene_jump": false
+        }
+      },
+      "reason": "STIE:TIE: Energy is continuous, vectors are aligned, and the beat is weak. A hard cut is the default — any effect would feel gratuitous. @ 0ms",
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.5,
+      "importance": 0.5
+    },
+    {
+      "clip_id": 0,
+      "start": 6.4,
+      "end": 8.881,
+      "style": "clean",
+      "transition": "clean",
+      "transition_duration": 0.04,
+      "transition_intensity": 0.0,
+      "transition_context": "",
+      "transition_rag_hit": false,
+      "tie_decision": null,
+      "reason": "STIE:last_segment @ 40ms",
+      "_pacing_band": "build",
+      "_pacing_style": "rhythm_driven",
+      "energy_score": 0.5,
+      "importance": 0.5
+    }
+  ],
   "monetization": {
-    "editorial_script": "This edit crafts an unforgettable narrative around a stunning gown. We open with a show-stopping moment (Hook) – perhaps a fluid twirl or a dramatic curtain reveal, immediately showcasing the garment's breathtaking appeal. Then, we transition to the initial journey (Buildup 1), setting the stage. Intriguing close-ups of intricate embroidery or fabric texture (Buildup 2) draw the viewer deeper, building anticipation. Further elegant movements (Buildup 3) ensure continuous engagement, leading to the grand unveiling (Climax) where the gown's full magnificence is displayed in all its glory. Finally, a unique design element is highlighted (Reveal), providing a deeper appreciation for the artistry, concluding an emotional arc from awe to full admiration.",
-    "final_caption": "This edit crafts an unforgettable narrative around a stunning gown. We open with a show-stopping moment (Hook) – perhaps a fluid twirl or a dramatic curtain reveal, immediately showcasing the garment's breathtaking appeal. Then, we transition to the initial journey (Buildup 1), setting the stage. Intriguing close-ups of intricate embroidery or fabric texture (Buildup 2) draw the viewer deeper, building anticipation. Further elegant movements (Buildup 3) ensure continuous engagement, leading to the grand unveiling (Climax) where the gown's full magnificence is displayed in all its glory. Finally, a unique design element is highlighted (Reveal), providing a deeper appreciation for the artistry, concluding an emotional arc from awe to full admiration.",
-    "caption": "This edit crafts an unforgettable narrative around a stunning gown. We open with a show-stopping moment (Hook) – perhaps a fluid twirl or a dramatic curtain reveal, immediately showcasing the garment's breathtaking appeal. Then, we transition to the initial journey (Buildup 1), setting the stage. Intriguing close-ups of intricate embroidery or fabric texture (Buildup 2) draw the viewer deeper, building anticipation. Further elegant movements (Buildup 3) ensure continuous engagement, leading to the grand unveiling (Climax) where the gown's full magnificence is displayed in all its glory. Finally, a unique design element is highlighted (Reveal), providing a deeper appreciation for the artistry, concluding an emotional arc from awe to full admiration.",
+    "editorial_script": "Test Title Long Enough",
+    "final_caption": "Test Title Long Enough",
+    "caption": "Test Title Long Enough",
     "cta": null,
     "monetization_cta": null,
     "ypp_safe": true,
     "risk_level": "UNKNOWN",
     "risk_reason": "Analysis pending or not performed.",
     "reason": "Analysis pending or not performed.",
-    "transformation_score": 95.0,
+    "transformation_score": 0.0,
     "policy_citation": "Significant Original Commentary",
-    "fashion_scout": {
-      "wearer_name": "Elite Fashion Model",
-      "designer_or_brand": "Prestigious Atelier",
-      "outfit_type": "Western formal gown",
-      "educational_fact": "Evening gowns, particularly in rich colors like crimson, are often intricately embroidered to catch light and enhance movement, making them a centerpiece for galas and red-carpet events."
-    },
+    "fashion_scout": {},
     "item_name": "Style",
     "improvement_tips": [],
     "overlay_data": {},
@@ -98,4 +178,35 @@
   },
   "processed_only_path": "",
   "bgm_audio_path": "D:\\AMTCE\\Original_audio\\cooldown\\Giorgia_1.mp3",
-  "extracted_audio_path": 
+  "extracted_audio_path": "<Mock MagicMock>",
+  "all_extracted_audio": [
+    "<Mock MagicMock>"
+  ],
+  "audit": {
+    "verdict": "DEGRADED",
+    "creative_score": 0.202,
+    "silent_failures": [
+      "beat_detection → disabled or produced 0 beats",
+      "editor_brain → failed or produced confidence=0",
+      "candidate_moments → empty (MomentMiner never called or returned 0 moments)",
+      "SIGNAL_POVERTY: health=0.0 (under 0.25 threshold)",
+      "CreativeEditorBridge → bgm_classified_beats absent (bridge never ran)"
+    ],
+    "health_report": {
+      "modules_connected": 22,
+      "modules_total": 22,
+      "modules_disconnected": [],
+      "signals": {
+        "beats": 0,
+        "retention_peaks": 5,
+        "emotional_spikes": 0,
+        "fused_moments": 0,
+        "candidate_moments": 0
+      },
+      "segments_generated": 5,
+      "diversity_score": 0.56,
+      "creative_edit_score": 0.202,
+      "creative_pipeline_integrity": false
+    }
+  }
+}

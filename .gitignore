@@ -124,4 +124,6 @@ Original_audio/**
 # EXCLUDED MODULES
 # ============================================================
 Telegram_Video_Uploader/
+ceie/output/
+Compilations/viral_vanguard_*.json
 

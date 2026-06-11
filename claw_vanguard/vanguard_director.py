@@ -131,84 +131,144 @@ class VanguardDirector:
         self._log_turn(2, "FFmpeg Rendering", "Local / FFmpeg", 1.0, "Success" if result.success else "Failed", latency)
 
 
-        # --- TURN 3: VERIFICATION (Hybrid Conditional) ---
-        # Gemini Vision ONLY triggers if critical visual modifications are required
+        # --- TURN 3: VERIFICATION (Post-Render Visual Audit) ---
         verification = {"ok": True, "reason": "Skipped — no output.", "confidence": 0.5}
         
         if result.success and result.output and os.path.exists(str(result.output)):
-            critical_vision_keywords = ["watermark", "remove", "blur", "overlay", "mask"]
-            req_lower = str(video_request).lower() + " " + str(niche).lower()
-            critical_edit_applied = any(k in req_lower for k in critical_vision_keywords)
-
-            if critical_edit_applied:
-                logger.info("👁️ Executing Turn 3: Visual Audit (Critical visual edits detected)")
-                start_t = time.monotonic()
+            logger.info("👁️ Executing Turn 3: Visual Audit (Unconditional Post-Render Verification)")
+            start_t = time.monotonic()
+            uploaded_file = None
+            client = None
+            try:
+                # 1. Upload video to Gemini File API
+                api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+                if not api_key:
+                    raise RuntimeError("Missing GEMINI_API_KEY — skipping video upload.")
+                
+                from google import genai
+                from google.genai import types
+                
+                client = genai.Client(api_key=api_key)
+                _render_size_mb = os.path.getsize(str(result.output)) / (1024 * 1024)
+                logger.info(f"📤 [VANGUARD_VERIFY] Uploading output video ({_render_size_mb:.1f} MB) to Gemini File API...")
+                uploaded_file = client.files.upload(file=str(result.output))
+                logger.info(f"📤 [VANGUARD_VERIFY] Upload complete: name={uploaded_file.name} | state={getattr(uploaded_file, 'state', 'unknown')}")
+                
+                # 2. Wait/poll until ACTIVE
+                wait_start = time.time()
+                wait_timeout = 120  # seconds
+                while True:
+                    file_state = getattr(uploaded_file, "state", None)
+                    state_name = file_state.name if hasattr(file_state, "name") else str(file_state)
+                    if state_name == "ACTIVE":
+                        logger.info("✅ [VANGUARD_VERIFY] Gemini file is ACTIVE — ready for analysis.")
+                        break
+                    if state_name == "FAILED":
+                        raise RuntimeError("Gemini file processing FAILED.")
+                    if time.time() - wait_start > wait_timeout:
+                        logger.warning(f"⚠️ [VANGUARD_VERIFY] File not ACTIVE after {wait_timeout}s — proceeding anyway.")
+                        break
+                    time.sleep(3)
+                    uploaded_file = client.files.get(name=uploaded_file.name)
+                
+                # 3. Request visual audit from Gemini
                 verify_prompt = (
-                    f"Vision check: Is the output style consistent for niche='{niche}'? "
-                    f"JSON: {{\"ok\": bool, \"reason\": str, \"confidence\": float}}"
+                    "You are an elite video editor and quality control auditor.\n"
+                    "Review this rendered video carefully and analyze its editing quality, pacing, visual transitions, "
+                    "micro-captions alignment, overlay text, and overall composition.\n"
+                    f"Target niche: '{niche}'\n"
+                    f"User video request: '{video_request}'\n\n"
+                    "Identify issues such as:\n"
+                    "  - Poor visual pacing or transitions (too slow, too jarring, or missing transitions)\n"
+                    "  - Poor caption/text alignment, positioning, or cut-offs\n"
+                    "  - Wrong segments selected (not matching the fashion/niche style)\n"
+                    "  - Visual issues or awkward cuts\n\n"
+                    "If the video is highly engaging and well-edited with no major style issues, set ok=true.\n"
+                    "If the video requires improvement or has visual/composition issues, set ok=false.\n\n"
+                    "Return ONLY a JSON object matching this schema:\n"
+                    "{\n"
+                    '  "ok": bool,\n'
+                    '  "reason": "short summary of visual audit",\n'
+                    '  "adjustments": "detailed editing strategies, improvements, and instructions on what should be placed where to fix it in the next render",\n'
+                    '  "confidence": float\n'
+                    "}"
                 )
+                
+                verify_payload = [
+                    types.Part.from_uri(file_uri=uploaded_file.uri, mime_type="video/mp4"),
+                    verify_prompt
+                ]
+                
                 verification_raw = self.governor.generate(
                     task_type="master", # High-cost Vision Call
-                    prompt=verify_prompt,
+                    prompt=verify_payload,
                     module_name="vanguard_vision",
                     session_id=self.state.mission_id,
                     gen_config={"response_mime_type": "application/json"}
                 )
-                latency = time.monotonic() - start_t
-                try:
-                    if not verification_raw:
-                        raise ValueError("Governor returned None")
+                
+                if not verification_raw:
+                    raise ValueError("Governor returned None")
+                
+                # Clean markdown wrappers in case a fallback model is used
+                clean_raw = str(verification_raw).strip()
+                if clean_raw.startswith("```json"):
+                    clean_raw = clean_raw[7:]
+                elif clean_raw.startswith("```"):
+                    clean_raw = clean_raw[3:]
+                if clean_raw.endswith("```"):
+                    clean_raw = clean_raw[:-3]
+                clean_raw = clean_raw.strip()
                     
-                    # Clean markdown wrappers in case a fallback model is used
-                    clean_raw = str(verification_raw).strip()
-                    if clean_raw.startswith("```json"):
-                        clean_raw = clean_raw[7:]
-                    elif clean_raw.startswith("```"):
-                        clean_raw = clean_raw[3:]
-                    if clean_raw.endswith("```"):
-                        clean_raw = clean_raw[:-3]
-                    clean_raw = clean_raw.strip()
-                        
-                    verification = json.loads(clean_raw)
-                except Exception as _ve:
-                    logger.warning(f"⚠️ [VANGUARD] Turn 3 parse failed ({_ve}). Assuming visual OK.")
-                    verification = {"ok": True, "reason": "AI unavailable — visual check skipped.", "confidence": 0.5}
-
-                confidence = verification.get("confidence", 1.0)
-                if verification.get("ok"):
-                    self._log_turn(3, "Visual Verification", "gemini-flash", confidence, "Success", latency)
-            else:
-                logger.info("⏭️ [TURN 3] Skipped Vision — standard render, no critical edits to verify.")
-                verification = {"ok": True, "reason": "Standard render — visual check skipped.", "confidence": 1.0}
+                verification = json.loads(clean_raw)
+            except Exception as _ve:
+                logger.warning(f"⚠️ [VANGUARD] Turn 3 visual audit failed ({_ve}). Assuming visual OK.")
+                verification = {"ok": True, "reason": f"AI vision check failed or timed out: {str(_ve)}", "confidence": 0.5}
+            finally:
+                if uploaded_file and client:
+                    try:
+                        logger.info(f"🗑️ [VANGUARD_VERIFY] Cleaning up uploaded file: {uploaded_file.name}")
+                        client.files.delete(name=uploaded_file.name)
+                    except Exception as delete_err:
+                        logger.warning(f"⚠️ [VANGUARD_VERIFY] Failed to delete uploaded file: {delete_err}")
+            
+            latency = time.monotonic() - start_t
+            confidence = verification.get("confidence", 1.0)
+            self._log_turn(3, "Visual Verification", "gemini-vision", confidence, "Success" if verification.get("ok") else "Failed Quality Audit", latency)
         else:
             logger.info("⏭️ [TURN 3] Skipped — no output file to verify.")
 
-        # --- TURN 4: REPAIR (only for classified hard errors) ---
+        # --- TURN 4: REPAIR (only for classified hard errors or quality failure) ---
         # 'AI unavailable' is NOT a reason to burn another API call
         HARD_ERRORS = {"codec", "timing", "file", "system"}
         error_type = result.error_type if result.error_type else "unknown"
-        confidence = verification.get("confidence", 1.0)
         is_hard_failure = (
             (not result.success and error_type in HARD_ERRORS) or
-            (confidence < 0.6 and verification.get("ok") is False)
+            (verification.get("ok") is False)
         )
 
         if is_hard_failure and self.state.retries < self.state.max_retries:
             logger.warning(f"🩹 Turn 4: Repair triggered | error_type={error_type}")
             self.state.retries += 1
             start_t = time.monotonic()
-            repair_prompt = (
-                f"Fix required for {niche}. Error: {error_type}. "
-                f"Reason: {verification.get('reason', result.error or 'unknown')}. "
-                f"Generate repair command."
-            )
-            repair_cmd = self.governor.generate(
-                task_type="reasoning",
-                prompt=repair_prompt,
-                session_id=self.state.mission_id
-            )
-            if not repair_cmd:
-                logger.warning("⚠️ [VANGUARD] Turn 4: AI repair unavailable. Re-executing with default params.")
+            
+            # If visual verification failed, forward adjustments as the repair_cmd
+            if verification.get("ok") is False and "adjustments" in verification:
+                logger.info("🎨 Using visual verification adjustments as repair command.")
+                repair_cmd = verification["adjustments"]
+            else:
+                repair_prompt = (
+                    f"Fix required for {niche}. Error: {error_type}. "
+                    f"Reason: {verification.get('reason', result.error or 'unknown')}. "
+                    f"Generate repair command."
+                )
+                repair_cmd = self.governor.generate(
+                    task_type="reasoning",
+                    prompt=repair_prompt,
+                    session_id=self.state.mission_id
+                )
+                if not repair_cmd:
+                    logger.warning("⚠️ [VANGUARD] Turn 4: AI repair unavailable. Re-executing with default params.")
 
             # Forge: only for code-level errors
             code_errors = ["AttributeError", "TypeError", "ImportError", "ModuleNotFoundError"]
