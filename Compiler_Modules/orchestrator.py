@@ -926,8 +926,10 @@ def apply_rag_to_editing_plan(editing_plan: dict, rag_strategy: dict, profile_da
 
 
 def compile_video(
-    uuid_str, input_path, output_path, title, description, profile_data={}
+    uuid_str, input_path, output_path, title, description, profile_data=None
 ):
+    if profile_data is None:
+        profile_data = {}
     """
     Narrative Intelligence Pipeline — 8-Stage Architecture.
 
@@ -5293,17 +5295,48 @@ def compile_video(
             auditor.mark_skipped("quality_evaluator")
 
         # ---- POST-RENDER OVERLAY ----------------------------------------------------
-        # [mkpv-fix] Preference Alignment: Use Wear Name (item_name) for overlay instead of complex captions
+        # Priority order for caption lane (same position as fashion scout wear text):
+        #   1. Wear Name from FashionScout  (best — specific item name)
+        #   2. profile_data["caption"]       (AI-generated caption fallback)
+        #   3. Viral Hook                    (engagement hook when 1 & 2 are unavailable)
+        #   4. No caption                    (brand-only overlay)
         _wear_name = profile_data.get("item_name")
         _bad_wear_names = ("Dress", "Outfit", "Look", "Style", "Ensemble", "City pace active", "Style Analysis")
         if _wear_name and _wear_name not in _bad_wear_names:
              _caption_text_for_overlay = _wear_name
              logger.info(f"🎨 [OVERLAY_ALIGN] Using garment name (Wear Name) for overlay: '{_wear_name}'")
-             
+
         # [FIX 3] Safety net: if caption resolution ran earlier, use it
         elif (not _caption_text_for_overlay or _caption_text_for_overlay in _bad_wear_names) and profile_data.get("caption"):
             _caption_text_for_overlay = profile_data["caption"]
 
+        # [VIRAL_HOOK] Fallback: when FashionScout is off or returned nothing useful,
+        # use the intelligently-selected viral Hinglish hook in the same caption lane.
+        # This keeps the bottom text overlay alive even without fashion data.
+        if not _caption_text_for_overlay or _caption_text_for_overlay in _bad_wear_names:
+            try:
+                _raw_ol_vh = profile_data.get("overlay_data") or {}
+                # overlay_data can be a list (main path) or a plain dict (lite path)
+                if isinstance(_raw_ol_vh, list) and _raw_ol_vh:
+                    _raw_ol_vh = _raw_ol_vh[0]
+                _viral_hook_text = (
+                    (_raw_ol_vh.get("viral_hook") if isinstance(_raw_ol_vh, dict) else None)
+                    or ""
+                )
+                # If brain didn't pre-select a hook, do it now with available context
+                if not _viral_hook_text:
+                    from Text_Modules.overlay_engine import select_viral_hook as _svh_orch
+                    _viral_hook_text = _svh_orch({
+                        "title": title or "",
+                        "niche_category": profile_data.get("niche_category", "entertainment"),
+                        "energy_score": profile_data.get("energy_score", 0.5),
+                    })
+                if _viral_hook_text:
+                    _caption_text_for_overlay = _viral_hook_text
+                    logger.info(f"🪝 [VIRAL_HOOK] Using hook as caption overlay: \"{_viral_hook_text}\"")
+                    auditor.mark_executed("viral_hook_overlay")
+            except Exception as _vho_err:
+                logger.warning(f"⚠️ [VIRAL_HOOK] Hook selection failed (non-fatal): {_vho_err}")
 
         has_caption = bool(_caption_text_for_overlay)
         has_brand = _add_text_overlay and bool(_brand_text_for_overlay)
@@ -5342,54 +5375,6 @@ def compile_video(
                     auditor.mark_failed("caption_generation")
                 if has_brand:
                     auditor.mark_failed("brand_overlay")
-
-        # ---- [VIRAL_HOOK] OVERLAY — Second pass: burn hook text at top of video ----
-        # The viral_hook is a persuasive Hinglish hook selected by select_viral_hook()
-        # and stored in overlay_data[0]["viral_hook"] by monetization_brain.
-        # We burn it at the "top" lane (h*0.10) so it appears above the caption/brand.
-        try:
-            _raw_ol_vh = profile_data.get("overlay_data") or {}
-            # overlay_data can be a list (main path) or a dict (lite path)
-            if isinstance(_raw_ol_vh, list) and _raw_ol_vh:
-                _raw_ol_vh = _raw_ol_vh[0]
-            _viral_hook_overlay = (
-                (_raw_ol_vh.get("viral_hook") if isinstance(_raw_ol_vh, dict) else None)
-                or ""
-            )
-
-            # Fallback: if overlay_data didn't have it (e.g. lite_monetization path),
-            # call select_viral_hook() directly now.
-            if not _viral_hook_overlay:
-                try:
-                    from Text_Modules.overlay_engine import select_viral_hook as _svh_orch
-                    _viral_hook_overlay = _svh_orch({
-                        "title": title or "",
-                        "niche_category": profile_data.get("niche_category", "entertainment"),
-                        "energy_score": profile_data.get("energy_score", 0.5),
-                    })
-                except Exception as _svh_e:
-                    logger.debug(f"[VIRAL_HOOK_ORCH] fallback_select failed: {_svh_e}")
-
-            if _viral_hook_overlay and os.path.exists(temp_visual_render):
-                _hook_overlay_out = os.path.join(job_dir, "visual_viral_hook.mp4")
-                from Text_Modules.text_overlay import apply_text_overlay_safe
-                _hook_ok = apply_text_overlay_safe(
-                    temp_visual_render,
-                    _hook_overlay_out,
-                    _viral_hook_overlay,
-                    lane="top",
-                    size=52,
-                )
-                if _hook_ok and os.path.exists(_hook_overlay_out):
-                    temp_visual_render = _hook_overlay_out
-                    logger.info(f"✅ [VIRAL_HOOK] Hook overlay applied: \"{_viral_hook_overlay}\"")
-                    auditor.mark_executed("viral_hook_overlay")
-                else:
-                    logger.warning(f"⚠️ [VIRAL_HOOK] Hook overlay failed for: \"{_viral_hook_overlay}\"")
-            else:
-                logger.info("ℹ️ [VIRAL_HOOK] No hook text resolved — viral hook overlay skipped.")
-        except Exception as _vho_err:
-            logger.warning(f"⚠️ [VIRAL_HOOK] Overlay step crashed (non-fatal): {_vho_err}")
 
         # ---- [NEW] INTEGRATED DIAGNOSTICS (Step 9) -----------------------------------
         logger.info("🔍 [Step 9] Running Integrated Diagnostics...")
@@ -6040,8 +6025,24 @@ def compile_video(
             "all_extracted_audio": list(profile_data.get("_all_clip_audios_paths", [])),
         }
 
+        def _sanitize_for_json(obj):
+            if isinstance(obj, dict):
+                return {str(k): _sanitize_for_json(v) for k, v in obj.items()}
+            elif isinstance(obj, (list, tuple)):
+                return [_sanitize_for_json(x) for x in obj]
+            elif isinstance(obj, (str, int, float, bool)) or obj is None:
+                return obj
+            elif hasattr(obj, "__class__") and "Mock" in obj.__class__.__name__:
+                return f"<Mock {obj.__class__.__name__}>"
+            else:
+                try:
+                    json.dumps(obj)
+                    return obj
+                except Exception:
+                    return str(obj)
+
         with open(sidecar_path, "w", encoding="utf-8") as f:
-            json.dump(sidecar_payload, f, indent=2, ensure_ascii=False)
+            json.dump(_sanitize_for_json(sidecar_payload), f, indent=2, ensure_ascii=False)
 
         _total = profile_data.get("gemini_calls", 0)
         _log = ", ".join(profile_data.get("gemini_log", []))
@@ -6210,8 +6211,10 @@ def compile_batch(
 
 
 def compile_juxtaposition(
-    uuid_str, input_a, input_b, output_path, title, profile_data={}
+    uuid_str, input_a, input_b, output_path, title, profile_data=None
 ):
+    if profile_data is None:
+        profile_data = {}
     """Side-by-side comparison for newsroom style."""
     job_dir = os.path.join("temp", uuid_str)
     os.makedirs(job_dir, exist_ok=True)

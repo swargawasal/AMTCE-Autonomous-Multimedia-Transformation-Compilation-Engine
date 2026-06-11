@@ -15,6 +15,7 @@ class TestTitleToggle(unittest.TestCase):
         self.patcher_text = patch('Text_Modules.text_overlay.TextOverlay')
         self.patcher_timed = patch('Text_Modules.text_overlay.get_timed_overlay_filter')
         self.patcher_run = patch('subprocess.run')
+        self.patcher_intel = patch('Compiler_Modules.orchestrator.unified_intel')
         
         # Start patchers and keep track of mocks
         self.mock_video = self.patcher_video.start()
@@ -23,11 +24,30 @@ class TestTitleToggle(unittest.TestCase):
         self.mock_text = self.patcher_text.start()
         self.mock_timed = self.patcher_timed.start()
         self.mock_run = self.patcher_run.start()
+        self.mock_intel = self.patcher_intel.start()
         
         # Default mock behavior
         self.mock_video.get_video_info.return_value = {"duration": 10.0, "width": 1080, "height": 1920}
         self.mock_run.return_value = MagicMock(returncode=0)
         self.mock_voice.generate_voiceover.return_value = True
+
+        # Mock Intelligence Cache to bypass real Gemini API and cache file lookups
+        from Intelligence_Modules.unified_intelligence import IntelligenceCache, CoreAnalysis, Extensions
+        mock_cache = IntelligenceCache(
+            core_analysis=CoreAnalysis(
+                editing_plan={"logic": "story-driven", "segments": []},
+                feature_proposals={"voiceover_generation": True}
+            ),
+            extensions=Extensions(),
+            raw_data={
+                "status": "EDIT",
+                "edited_segments": [
+                    {"clip_id": 0, "start": 0.0, "end": 5.0, "role": "hook", "reason": "test"}
+                ]
+            }
+        )
+        self.mock_intel.perform_intelligence_cycle.return_value = mock_cache
+        self.mock_intel.perform_intelligence_cycle_retry.return_value = mock_cache
 
     def tearDown(self):
         # Stop all patchers
@@ -37,8 +57,9 @@ class TestTitleToggle(unittest.TestCase):
         self.patcher_text.stop()
         self.patcher_timed.stop()
         self.patcher_run.stop()
+        self.patcher_intel.stop()
 
-    @patch.dict(os.environ, {"SHOW_USER_TITLE_OVERLAY": "no"})
+    @patch.dict(os.environ, {"SHOW_USER_TITLE_OVERLAY": "no", "LATE_SCRIPT_GENERATION": "no"})
     def test_title_disabled(self):
         from Compiler_Modules import orchestrator
         orchestrator.ADAPTIVE_BRAIN_AVAILABLE = False
@@ -63,7 +84,7 @@ class TestTitleToggle(unittest.TestCase):
         # Verify voiceover was not called for title (since title length > 10 is needed for has_voiceover if no script)
         # title="Test Title" is < 10, so let's try a longer one to be sure
         
-    @patch.dict(os.environ, {"SHOW_USER_TITLE_OVERLAY": "no"})
+    @patch.dict(os.environ, {"SHOW_USER_TITLE_OVERLAY": "no", "LATE_SCRIPT_GENERATION": "no"})
     @patch("Compiler_Modules.orchestrator.VOICEOVER_AVAILABLE", False)
     def test_title_disabled_voice_blocked(self):
         from Compiler_Modules import orchestrator
@@ -82,7 +103,7 @@ class TestTitleToggle(unittest.TestCase):
         # If title is disabled, vo_full_text should be empty if no script
         self.mock_voice.generate_voiceover.assert_not_called()
 
-    @patch.dict(os.environ, {"SHOW_USER_TITLE_OVERLAY": "yes"})
+    @patch.dict(os.environ, {"SHOW_USER_TITLE_OVERLAY": "yes", "LATE_SCRIPT_GENERATION": "no", "ENABLE_MICRO_VOICEOVER": "yes"})
     def test_title_enabled(self):
         from Compiler_Modules import orchestrator
         orchestrator.ADAPTIVE_BRAIN_AVAILABLE = False
