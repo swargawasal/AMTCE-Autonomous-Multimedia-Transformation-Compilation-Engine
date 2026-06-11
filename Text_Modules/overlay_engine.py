@@ -28,26 +28,50 @@ logger = logging.getLogger("overlay_engine")
 #   {name}  → actress / user title resolved from context (falls back to "Bhai")
 # ─────────────────────────────────────────────────────────────────────────────
 VIRAL_HOOKS: List[str] = [
-    "Bhai tu bas pin comment dekh",
-    "Save krle rat ko manna 🥵",
-    "Bhai tu bas Pin Comment Dekh 🤪",
-    "Kaun kaun aise Ride kiya hai 😜",
-    "Aisi maal 910 me hai 🥵",
-    "kya Seen Hai yaar..",
-    "Agar tumhe ek din ke liye ye mil jaye",
-    "To kaun kaun si po$ition try kroge 😁",
-    "Aisi Biwi To Tu Bhi Deserve Krta Hai 😍",
-    "{name} Expression 😍",
-    "Kya Krne Ki Bat Kar Rahe Hai 😁",
-    "Ek Din Ke Liye {name} Mil Jaye To Kya Kroge 🥵",
-    "Battery charge kar rha hai 🥵",
-    "Le Bhai Mood Bana Le 🥵",
-    "Uff {name} 🥵",
-    "Save kar le Raat ko kam aayega 🥵",
-    "Kaun kaun aise Ride kiya hai 😍",
-    "Save kr le rat ko marna 😍",
-    "Asli maal B!O me hai 🥵",
-    "Bhai tu bas Pin Comment Dekh 🥵",
+    # ── no-name / generic — high energy ──────────────────────────────────────
+    "Bhai tu bas pin comment dekh 🤪",                          # 0
+    "Save krle rat ko manna 🥵",                                # 1
+    "Battery full charge ho gayi 🥵🔋",                          # 2
+    "Kaun kaun aise Ride kiya hai 😜",                          # 3
+    "Asli maal B!O pe hai 🥵🔥",                               # 4
+    "Yaar kya seen hai 😬👀",                                   # 5
+    "Bhai mood ON ho gaya ek second mein 🚀",                  # 6
+    "Log pagal ho rahe hain iske liye 😜🔥",                   # 7
+    "Aisi biwi to tu bhi deserve krta hai 😍",                # 8
+    "Ek baar dekh le poori raat yaad rahegi 🌙🥵",           # 9
+    "Iska jawab nahi 🤯🔥",                                    # 10
+    "Le bhai mood bana le 🙈🥵",                               # 11
+    "Asli cheez toh aage hai 🙈🔥",                            # 12
+    "Save kar le raat ko kam aayega 🌙👉",                    # 13
+    "Bhai ruk mat isko share kr 🙏🔥",                         # 14
+    "Ek din ke liye mil jaye to kya kroge 🤔🥵",              # 15
+    "Yaar aisa kya hai isme 😱📥",                             # 16
+    "Pin comment me link hai 🤫👀",                            # 17
+    "Bhai teri aankh mat hhata isko dekh 😱🔥",              # 18
+    "Kya krne ki baat kar rahe ho 😂🥵",                      # 19
+    "Isko dekh ke dil khush ho gaya 😍✨",                      # 20
+    "Ek min ruk zara 😱👀",                                   # 21
+    "Scroll mat kar yaar zara ruk ✋😏",                       # 22
+    "Ye dekhke neend udh jayegi bhai 😵🌙",                  # 23
+    "Pin comment mein sab kuch hai sach bol raha 🤫",         # 24
+    "Bhai tune kya dekh liya 🤯🔥",                          # 25
+    # ── name-resolved hooks ───────────────────────────────────────────────────
+    "{name} expression 😍🥵",                                 # 26
+    "Ek din ke liye {name} mil jaye to kya kroge 🥵✨",       # 27
+    "Uff {name} yaar 🥵🔥",                                   # 28
+    "{name} ki ye wali video save karna mat bhoolna 🙏",       # 29
+    "Bhai {name} ne toh dil chheen liya 💘🔥",               # 30
+    "{name} ke liye log pagal hain aur baat bhi kya hai 🤯",  # 31
+    # ── curiosity / tease ─────────────────────────────────────────────────────
+    "Isko sunoge toh raat neend nahi aayegi 😱🌙",           # 32
+    "Bhai ye wala secret kisi ko mat batana 🙈🤫",             # 33
+    "Aage kya hoga koi nahi jaanta 😱👀",                     # 34
+    "Duniya dekh rahi hai tu bhi dekh 🌍🔥",                 # 35
+    "3 second mein sab clear ho jayega ⏱🤯",                 # 36
+    # ── romantic / soft ───────────────────────────────────────────────────────
+    "Kash aisa ek pal mujhe bhi mil jata 😢😍",              # 37
+    "Aisi nazar kissi pe nahi padni chahiye 😍✨",             # 38
+    "Ye wala feel describe nahi hota 💘😢",                    # 39
 ]
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -56,15 +80,15 @@ VIRAL_HOOKS: List[str] = [
 # ─────────────────────────────────────────────────────────────────────────────
 _HOOK_RULES: Dict[str, List[int]] = {
     # When actress/title name is known — prefer hooks with {name} placeholder
-    "has_name":      [9, 11, 14],
-    # Generic / no name — prefer nameless hooks
-    "no_name":       [0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 13, 15, 16, 17, 18, 19],
+    "has_name":  [26, 27, 28, 29, 30, 31],
+    # Generic / no name
+    "no_name":   [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25],
     # Energetic / party vibe
-    "energetic":     [3, 6, 7, 11, 12],
+    "energetic": [2, 3, 6, 7, 11, 14, 15, 18, 35, 36],
     # Romantic / soft vibe
-    "romantic":      [8, 9, 10, 14],
+    "romantic":  [8, 9, 20, 37, 38, 39],
     # Curiosity / tease
-    "curiosity":     [0, 1, 2, 18, 19],
+    "curiosity": [0, 1, 5, 12, 16, 17, 21, 22, 23, 24, 32, 33, 34],
 }
 
 _VIRAL_HOOK_MEMORY_PATH = "The_json/viral_hook_memory.json"
