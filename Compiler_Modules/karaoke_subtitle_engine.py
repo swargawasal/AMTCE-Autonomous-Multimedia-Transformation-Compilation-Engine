@@ -333,7 +333,191 @@ def apply_karaoke_subtitles(
                     pass
 
 
+
 # Convenience singleton check
 def is_karaoke_enabled() -> bool:
     """Quick check without loading full config."""
     return _env_bool("CINEMATIC_NARRATOR_ENABLED", _env_bool("KARAOKE_ENABLED", True))
+
+
+# ────────────────────────────────────────────────────────────────────────────────
+# STATIC HOOK SUBTITLE ENGINE
+# Renders a Hinglish hook as a karaoke-style .ASS subtitle for the first N seconds
+# with NO voiceover or Whisper transcription required.
+#
+# ENV CONTROLS:
+#   ENABLE_STATIC_HOOK_SUBTITLE = yes   # master toggle
+#   HOOK_SUBTITLE_DURATION      = 4     # seconds the hook is visible (default 4)
+# ────────────────────────────────────────────────────────────────────────────────
+
+def is_static_hook_subtitle_enabled() -> bool:
+    """Quick check — returns True if static Hinglish hook mode is active."""
+    return _env_bool("ENABLE_STATIC_HOOK_SUBTITLE", False)
+
+
+def _build_static_hook_ass(hook_text: str, duration_sec: float, cfg: "KaraokeConfig") -> str:
+    """
+    Build a .ASS subtitle file that displays the hook text for `duration_sec` seconds.
+
+    Words are distributed evenly across the duration with per-word karaoke highlighting
+    (same visual style as the full karaoke engine). After `duration_sec` the screen
+    is clean — no subtitle for the rest of the video.
+    """
+    words_raw = [w.strip() for w in hook_text.split() if w.strip()]
+    if not words_raw:
+        return ""
+
+    word_duration = duration_sec / len(words_raw)
+
+    # Build pseudo word-list with even timestamps
+    words = []
+    for i, w in enumerate(words_raw):
+        words.append({
+            "word": w,
+            "start": i * word_duration,
+            "end": (i + 1) * word_duration,
+        })
+
+    # Bridge timestamps (eliminate gaps)
+    words = _bridge_timestamps(words)
+
+    YELLOW_TAG = r"{\1c&H" + cfg.highlight_color + r"&}"
+    WHITE_TAG  = r"{\1c&H" + cfg.base_color + r"&}"
+
+    lines = [
+        "[Script Info]",
+        "ScriptType: v4.00+",
+        "PlayResX: 1080",
+        "PlayResY: 1920",
+        "ScaledBorderAndShadow: yes",
+        "",
+        "[V4+ Styles]",
+        "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding",
+        f"Style: Default,Inter Bold,{cfg.font_size},&H00{cfg.base_color},&H000000FF,&H00000000,&H00000000,1,0,0,0,100,100,0,0,1,{cfg.outline_width},{cfg.shadow_depth},2,{cfg.side_margin},{cfg.side_margin},{cfg.safe_zone_margin},1",
+        "",
+        "[Events]",
+        "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text",
+    ]
+
+    # Group into chunks (same chunk_size as full karaoke)
+    chunks = [words[i:i + cfg.chunk_size] for i in range(0, len(words), cfg.chunk_size)]
+
+    for chunk in chunks:
+        for active_idx, active_word in enumerate(chunk):
+            w_start = _format_ass_time(active_word["start"])
+            w_end   = _format_ass_time(active_word["end"])
+
+            parts = []
+            for j, w in enumerate(chunk):
+                cleaned = _clean_word(w["word"])
+                if not cleaned:
+                    continue
+                if j == active_idx:
+                    parts.append(f"{YELLOW_TAG}{cleaned}{WHITE_TAG}")
+                else:
+                    parts.append(cleaned)
+
+            if parts:
+                full_line = " ".join(parts)
+                lines.append(f"Dialogue: 0,{w_start},{w_end},Default,,0,0,0,,{full_line}")
+
+    return "\n".join(lines)
+
+
+def apply_static_hook_subtitle(
+    input_video: str,
+    output_video: str,
+    hook_text: str,
+    duration_sec: Optional[float] = None,
+) -> bool:
+    """
+    Apply a Hinglish hook as a karaoke-style .ASS subtitle for the first N seconds.
+
+    No voiceover generation or Whisper transcription is required — timing is
+    computed from HOOK_SUBTITLE_DURATION alone.  After the hook fades out the
+    rest of the video plays without any subtitle.
+
+    Args:
+        input_video:  Rendered video (with brand overlay already applied)
+        output_video: Path to write the final video with hook subtitle
+        hook_text:    The Hinglish hook string (from select_viral_hook())
+        duration_sec: Override duration in seconds (reads HOOK_SUBTITLE_DURATION
+                      from env if None — defaults to 4.0)
+
+    Returns:
+        True on success, False on failure (original video untouched on failure)
+    """
+    cfg = KaraokeConfig.load()
+
+    if not hook_text or not hook_text.strip():
+        logger.warning("[STATIC_HOOK] Empty hook_text — skipping subtitle injection.")
+        return False
+
+    if not os.path.exists(input_video):
+        logger.error(f"[STATIC_HOOK] Input video not found: {input_video}")
+        return False
+
+    # Resolve duration
+    if duration_sec is None:
+        try:
+            duration_sec = float(os.getenv("HOOK_SUBTITLE_DURATION", "4").strip())
+        except (ValueError, TypeError):
+            duration_sec = 4.0
+    duration_sec = max(1.0, duration_sec)  # sanity floor
+
+    logger.info(
+        f"🪝 [STATIC_HOOK] Applying hook='{hook_text}' for {duration_sec:.1f}s → {os.path.basename(output_video)}"
+    )
+
+    # ── Build .ASS in a temp directory ────────────────────────────────────────
+    temp_dir = os.path.join(os.path.dirname(input_video), "_karaoke_tmp")
+    os.makedirs(temp_dir, exist_ok=True)
+    ass_path = os.path.join(temp_dir, "static_hook.ass")
+
+    try:
+        ass_content = _build_static_hook_ass(hook_text, duration_sec, cfg)
+        if not ass_content:
+            logger.error("[STATIC_HOOK] Failed to build .ASS content.")
+            return False
+
+        with open(ass_path, "w", encoding="utf-8") as f:
+            f.write(ass_content)
+        logger.info(f"✅ [STATIC_HOOK] ASS file written: {ass_path}")
+
+        # Use relative path to avoid FFmpeg Windows drive-letter parsing bug
+        rel_ass = os.path.relpath(ass_path, os.getcwd())
+        safe_ass = rel_ass.replace("\\", "/").replace(":", "\\\\:")
+
+        cmd = [
+            "ffmpeg", "-y",
+            "-i", input_video,
+            "-vf", f"format=yuv420p,scale=trunc(iw/2)*2:trunc(ih/2)*2,subtitles='{safe_ass}'",
+            "-c:v", "libx264",
+            "-preset", "fast" if os.getenv("RENDER_TARGET", "quality").strip().lower() == "speed" else "medium",
+            "-crf", "26" if os.getenv("RENDER_TARGET", "quality").strip().lower() == "speed" else "20",
+            "-c:a", "copy",   # audio pass-through — no re-encode needed
+            output_video,
+        ]
+
+        result = subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+        if result.returncode != 0:
+            err = result.stderr.decode(errors="ignore")[-1000:]
+            logger.error(f"❌ [STATIC_HOOK] FFmpeg render failed:\n{err}")
+            return False
+
+        logger.info(f"✨ [STATIC_HOOK] Hook subtitle applied: {os.path.basename(output_video)}")
+        return True
+
+    except Exception as e:
+        logger.exception(f"❌ [STATIC_HOOK] Unexpected error: {e}")
+        return False
+
+    finally:
+        # Clean up .ass file unless debug mode
+        if os.getenv("DEBUG_JSON", "0") != "1":
+            try:
+                if os.path.exists(ass_path):
+                    os.remove(ass_path)
+            except Exception:
+                pass
+

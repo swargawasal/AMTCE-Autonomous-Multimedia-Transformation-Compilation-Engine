@@ -127,3 +127,8 @@ Telegram_Video_Uploader/
 ceie/output/
 Compilations/viral_vanguard_*.json
 
+# Runtime temp files
+last_failed_reconstruction.txt
+processed_video_feature_report.json
+
+

@@ -5310,11 +5310,13 @@ def compile_video(
         elif (not _caption_text_for_overlay or _caption_text_for_overlay in _bad_wear_names) and profile_data.get("caption"):
             _caption_text_for_overlay = profile_data["caption"]
 
-        # [VIRAL_HOOK] Fallback: when FashionScout is off or returned nothing useful,
-        # use the intelligently-selected viral Hinglish hook in the same caption lane.
-        # This keeps the bottom text overlay alive even without fashion data.
+        # [VIRAL_HOOK] When FashionScout is off or returned nothing useful:
+        # - If ENABLE_STATIC_HOOK_SUBTITLE=yes  → store hook for the static ASS subtitle step below
+        #   (hook is NOT placed in the caption lane so it doesn't show full-duration as boring text)
+        # - If ENABLE_STATIC_HOOK_SUBTITLE=no   → fallback to old caption-lane behaviour
         if not _caption_text_for_overlay or _caption_text_for_overlay in _bad_wear_names:
             try:
+                _static_hook_mode = os.getenv("ENABLE_STATIC_HOOK_SUBTITLE", "no").lower() in ("yes", "true", "1", "on")
                 _raw_ol_vh = profile_data.get("overlay_data") or {}
                 # overlay_data can be a list (main path) or a plain dict (lite path)
                 if isinstance(_raw_ol_vh, list) and _raw_ol_vh:
@@ -5332,9 +5334,16 @@ def compile_video(
                         "energy_score": profile_data.get("energy_score", 0.5),
                     })
                 if _viral_hook_text:
-                    _caption_text_for_overlay = _viral_hook_text
-                    logger.info(f"🪝 [VIRAL_HOOK] Using hook as caption overlay: \"{_viral_hook_text}\"")
-                    auditor.mark_executed("viral_hook_overlay")
+                    if _static_hook_mode:
+                        # Store for static ASS subtitle step — do NOT pollute caption lane
+                        profile_data["static_hook_text"] = _viral_hook_text
+                        logger.info(f"🪝 [VIRAL_HOOK] Hook reserved for static ASS subtitle: \"{_viral_hook_text}\"")
+                        auditor.mark_executed("viral_hook_overlay")
+                    else:
+                        # Legacy fallback: show in caption lane
+                        _caption_text_for_overlay = _viral_hook_text
+                        logger.info(f"🪝 [VIRAL_HOOK] Using hook as caption overlay: \"{_viral_hook_text}\"")
+                        auditor.mark_executed("viral_hook_overlay")
             except Exception as _vho_err:
                 logger.warning(f"⚠️ [VIRAL_HOOK] Hook selection failed (non-fatal): {_vho_err}")
 
@@ -5942,6 +5951,48 @@ def compile_video(
             logger.warning(
                 f"⚠️ [KARAOKE] Non-fatal error (main pipeline unaffected): {_karaoke_err}"
             )
+        # ─────────────────────────────────────────────────────────────────────────────
+
+        # ── [STATIC HINGLISH HOOK SUBTITLE] Post-render (Step 9.8) ───────────────────
+        # Activated via ENABLE_STATIC_HOOK_SUBTITLE=yes in Credentials/.env
+        # Applies the viral Hinglish hook as a Cinema-Grade .ASS karaoke subtitle
+        # for the first HOOK_SUBTITLE_DURATION seconds (default 4s), then clean visuals.
+        # No voiceover or Whisper needed — pure static text with word-highlight animation.
+        _static_hook_text = profile_data.get("static_hook_text", "")
+        if _static_hook_text and os.path.exists(output_path):
+            try:
+                from Compiler_Modules.karaoke_subtitle_engine import (
+                    apply_static_hook_subtitle,
+                    is_static_hook_subtitle_enabled,
+                )
+                if is_static_hook_subtitle_enabled():
+                    _hook_subtitle_out = os.path.splitext(output_path)[0] + "_hook.mp4"
+                    logger.info(
+                        f"🪝 [STATIC_HOOK] Injecting Hinglish hook subtitle → "
+                        f"{os.path.basename(_hook_subtitle_out)}"
+                    )
+                    _hook_ok = apply_static_hook_subtitle(
+                        input_video=output_path,
+                        output_video=_hook_subtitle_out,
+                        hook_text=_static_hook_text,
+                    )
+                    if _hook_ok and os.path.exists(_hook_subtitle_out):
+                        import shutil as _shutil_hook
+                        _shutil_hook.move(_hook_subtitle_out, output_path)
+                        profile_data["static_hook_applied"] = True
+                        logger.info(
+                            f"✅ [STATIC_HOOK] Hook karaoke subtitle applied: "
+                            f"{os.path.basename(output_path)}"
+                        )
+                    else:
+                        logger.warning("⚠️ [STATIC_HOOK] Subtitle render failed — original video preserved.")
+                        profile_data["static_hook_applied"] = False
+            except ImportError:
+                pass  # Module not available — silently skip
+            except Exception as _sh_err:
+                logger.warning(
+                    f"⚠️ [STATIC_HOOK] Non-fatal error (main pipeline unaffected): {_sh_err}"
+                )
         # ─────────────────────────────────────────────────────────────────────────────
 
         # ---- SIDECAR JSON (Step 10) -------------------------------------------------

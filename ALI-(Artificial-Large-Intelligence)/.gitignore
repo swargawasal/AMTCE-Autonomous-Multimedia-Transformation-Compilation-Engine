@@ -1,0 +1,20 @@
+# Security — never commit these
+.env
+*.env
+Credentials/
+gemini_states.json
+logs/
+__pycache__/
+*.pyc
+ruflow_brain/*.db
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python
+env/
+venv/
+.venv/

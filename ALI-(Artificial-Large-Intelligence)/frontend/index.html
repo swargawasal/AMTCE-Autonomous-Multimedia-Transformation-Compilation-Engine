@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALI - Artificial Large Intelligence</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>ALI Engine</h1>
+            <div id="status-indicator" class="status-offline">Offline</div>
+        </header>
+
+        <div id="chat-container">
+            <div id="chat-history"></div>
+            
+            <div class="input-area">
+                <textarea id="user-input" placeholder="Ask ALI a question..."></textarea>
+                <button id="send-btn">Send</button>
+            </div>
+        </div>
+        
+        <div id="graph-panel">
+            <h3>Visual Graph / Anton Reasoning</h3>
+            <div id="graph-display">
+                <p class="placeholder">No active graphs</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

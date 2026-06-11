@@ -1,0 +1,134 @@
+:root {
+    --bg: #121212;
+    --panel-bg: #1e1e1e;
+    --text: #ffffff;
+    --accent: #00ffcc;
+    --border: #333;
+}
+
+body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: auto 1fr;
+    gap: 20px;
+    height: 90vh;
+}
+
+header {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+}
+
+h1 {
+    margin: 0;
+    color: var(--accent);
+}
+
+.status-online { color: #00ffcc; font-weight: bold; }
+.status-offline { color: #ff4444; font-weight: bold; }
+
+#chat-container {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+#chat-history {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.message {
+    padding: 10px 15px;
+    border-radius: 8px;
+    max-width: 80%;
+}
+
+.msg-user {
+    background-color: #2a2a35;
+    align-self: flex-end;
+}
+
+.msg-ali {
+    background-color: #1a2a2a;
+    border: 1px solid var(--accent);
+    align-self: flex-start;
+}
+
+.input-area {
+    display: flex;
+    padding: 15px;
+    border-top: 1px solid var(--border);
+    background-color: #151515;
+}
+
+textarea {
+    flex-grow: 1;
+    background-color: #222;
+    color: white;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 10px;
+    resize: none;
+    height: 50px;
+}
+
+button {
+    background-color: var(--accent);
+    color: black;
+    border: none;
+    padding: 0 20px;
+    margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+#graph-panel {
+    background-color: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+#graph-display {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px dashed var(--border);
+    margin-top: 10px;
+}
+
+.placeholder {
+    color: #888;
+}

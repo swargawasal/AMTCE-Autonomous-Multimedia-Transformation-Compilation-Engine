@@ -1,0 +1,41 @@
+# ==============================================================================
+# ALI — Requirements (venv-compatible, conflict-free)
+# Last resolved: 2026-05-31
+# ==============================================================================
+
+# Core API framework
+fastapi>=0.110.0
+uvicorn>=0.27.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+
+# Pydantic — let pip resolve the best version for all packages below
+pydantic>=2.5.0
+
+# AI Providers
+google-genai>=0.8.0
+mistralai>=1.2.0
+huggingface-hub>=0.23.4
+openai>=1.14.0              # DeepSeek uses OpenAI-compatible client
+
+# LangChain / LangGraph (use compatible set — NOT pinned exactly)
+langchain>=0.2.0
+langchain-core>=0.2.0
+langgraph>=0.1.0
+
+# Observability
+langfuse>=2.27.3
+
+# Testing
+pytest>=7.4.2
+
+# Graphify visualization
+graphviz>=0.20.3
+networkx>=3.3
+matplotlib>=3.9.0
+pygments>=2.18.0
+
+# Phase 20: UBI Statistical Engine
+numpy>=1.26.0
+scipy>=1.13.0
+sentence-transformers>=3.0.0

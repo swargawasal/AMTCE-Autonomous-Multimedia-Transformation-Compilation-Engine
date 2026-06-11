@@ -461,7 +461,7 @@ def _process_queue_item():
         if _editorial_mode:
             # Poll remote/local review queue until status changes from PENDING_REVIEW
             _poll_interval = 10
-            _max_wait_s    = int(os.getenv("STUDIO_REVIEW_TIMEOUT_MINUTES", "60")) * 60
+            _max_wait_s    = int(os.getenv("STUDIO_REVIEW_TIMEOUT_MINUTES", "10")) * 60
             _elapsed       = 0
             _final_status  = "PENDING_REVIEW"
             _approved_entry = None
