@@ -693,8 +693,8 @@
       "version": 2
     },
     "Sakshi_malik_3.mp3": {
-      "usage_count": 1,
-      "last_used": 1780483756.008112,
+      "usage_count": 2,
+      "last_used": 1781267827.1259775,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.9501328,
@@ -705,8 +705,8 @@
       "version": 2
     },
     "Sara_Tendulkar.mp3": {
-      "usage_count": 1,
-      "last_used": 1780578683.004878,
+      "usage_count": 2,
+      "last_used": 1781267572.633809,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.9501328,
@@ -1747,6 +1747,18 @@
       "drop_times": [],
       "sample_rate": 44100,
       "audio_hash": "",
+      "version": 2
+    },
+    "Rai_laxmi.mp3": {
+      "usage_count": 0,
+      "last_used": 0,
+      "bpm": 94.3,
+      "energy": 0.7187391304347825,
+      "created_at": 1781267481.9576705,
+      "beat_data_path": "beats/Rai_laxmi.npz",
+      "drop_times": [],
+      "sample_rate": 44100,
+      "audio_hash": "368783_1781267481",
       "version": 2
     }
   }
