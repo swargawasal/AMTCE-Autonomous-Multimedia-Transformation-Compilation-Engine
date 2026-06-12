@@ -861,8 +861,8 @@
       "version": 2
     },
     "Wamiqa_gabbi_1.mp3": {
-      "usage_count": 1,
-      "last_used": 1780481668.6608477,
+      "usage_count": 2,
+      "last_used": 1781296241.7037609,
       "bpm": 0.0,
       "energy": 0.5,
       "created_at": 1780391156.9516847,
@@ -1750,8 +1750,8 @@
       "version": 2
     },
     "Rai_laxmi.mp3": {
-      "usage_count": 0,
-      "last_used": 0,
+      "usage_count": 1,
+      "last_used": 1781296082.288474,
       "bpm": 94.3,
       "energy": 0.7187391304347825,
       "created_at": 1781267481.9576705,
@@ -1760,6 +1760,35 @@
       "sample_rate": 44100,
       "audio_hash": "368783_1781267481",
       "version": 2
+    },
+    "Indian_baddies.mp3": {
+      "usage_count": 0,
+      "last_used": 0,
+      "bpm": 54.0,
+      "energy": 0.546,
+      "created_at": 1781296067.2556438,
+      "beat_data_path": "beats/Indian_baddies.npz",
+      "drop_times": [],
+      "sample_rate": 44100,
+      "audio_hash": "245276_1781296067",
+      "version": 2,
+      "gemini_genre": "unknown",
+      "gemini_mood_tags": [
+        "calm",
+        "peaceful"
+      ],
+      "gemini_energy_level": "low",
+      "gemini_has_vocals": false,
+      "gemini_content_match": [
+        "nature",
+        "travel",
+        "aesthetic"
+      ],
+      "gemini_avoid_match": [
+        "fitness",
+        "dance"
+      ],
+      "gemini_analyzed": true
     }
   }
 }
