@@ -3,17 +3,20 @@
     "last_run_date": "2026-06-13",
     "slots_completed_today": [
       "10:00",
-      "11:00"
+      "11:00",
+      "14:00"
     ],
     "catchup_fired_today": false,
-    "total_runs_all_time": 37
+    "total_runs_all_time": 38
   },
   "publisher": {
     "last_check_date": "2026-06-13",
     "slots_published_today": [
       "09:00",
       "09:00[catchup]",
-      "10:00"
+      "10:00",
+      "13:00",
+      "14:00"
     ],
     "slots_missed_today": [],
     "catchup_slots_today": [
