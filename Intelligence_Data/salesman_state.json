@@ -4,10 +4,11 @@
     "slots_completed_today": [
       "10:00",
       "11:00",
-      "14:00"
+      "14:00",
+      "15:00"
     ],
     "catchup_fired_today": false,
-    "total_runs_all_time": 38
+    "total_runs_all_time": 39
   },
   "publisher": {
     "last_check_date": "2026-06-13",
@@ -26,9 +27,9 @@
   },
   "apify": {
     "quota_date": "2026-06-13",
-    "quota_used": 5,
+    "quota_used": 6,
     "quota_limit": 80,
-    "total_calls_all_time": 283
+    "total_calls_all_time": 284
   },
   "scraped_posts": {
     "shortcodes": [
